@@ -9,7 +9,7 @@
         </div>
         <header class="modal-card-head">
           <p class="modal-card-title">
-            Select your EOS transit
+            Select your EOS wallet
           </p>
           <button class="delete" aria-label="close" @click="modal = false" />
         </header>

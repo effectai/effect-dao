@@ -1,60 +1,81 @@
 <template>
-  <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
-    <div class="container is-max-widescreen">
-      <div class="navbar-start">
-        <a class="navbar-item navbar-title" href="#">
-          <img src="@/assets/img/logo.png" class="logo">
-          Effect Dashboard
-        </a>
+  <div>
+    <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
+      <div class="container is-max-widescreen">
+        <div class="navbar-start">
+          <a class="navbar-item navbar-title" href="#">
+            <img src="@/assets/img/logo.png" class="logo">
+            Effect Dashboard
+          </a>
 
-        <a
-          role="button"
-          class="navbar-burger burger"
-          aria-label="menu"
-          aria-expanded="false"
-          data-target="navbarBasicExample"
-        >
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-        </a>
-      </div>
+          <a
+            role="button"
+            class="navbar-burger burger"
+            aria-label="menu"
+            aria-expanded="false"
+            data-target="navbarBasicExample"
+          >
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+          </a>
+        </div>
 
-      <div id="navbarBasicExample" class="navbar-menu">
-        <a class="navbar-item">
-          Home
-        </a>
+        <div id="navbarBasicExample" class="navbar-menu">
+          <a class="navbar-item">
+            Home
+          </a>
 
-        <a class="navbar-item">
-          Stake
-        </a>
+          <a class="navbar-item">
+            Stake
+          </a>
 
-        <a class="navbar-item">
-          Vote
-        </a>
+          <a class="navbar-item">
+            Vote
+          </a>
 
-        <a class="navbar-item">
-          DAO
-        </a>
+          <a class="navbar-item">
+            DAO
+          </a>
 
-        <a class="navbar-item">
-          Galaxy Pool
-        </a>
-      </div>
+          <a class="navbar-item">
+            Galaxy Pool
+          </a>
+        </div>
 
-      <div class="navbar-end">
-        <div class="navbar-item">
-          <div class="buttons">
-            <!--            <ConnectWallet />-->
-            <ConnectWallet v-if="!wallet || !wallet.connected" />
-            <a v-else class="button is-primary">
-              <strong>{{ wallet.auth.accountName }}</strong>
-            </a>
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="buttons">
+              <ConnectWallet v-if="!wallet || !wallet.connected" />
+              <a v-else class="button is-primary" @click="walletModal = true">
+                <strong>{{ wallet.auth.accountName }}</strong>
+              </a>
+            </div>
           </div>
         </div>
       </div>
+    </nav>
+
+    <div v-if="wallet && wallet.connected && walletModal">
+      <div class="modal is-active">
+        <div class="modal-background" />
+
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">
+              {{ wallet.auth.accountName }}
+            </p>
+            <button class="delete" aria-label="close" @click="walletModal = false" />
+          </header>
+          <section class="modal-card-body">
+            <button class="button is-medium is-fullwidth is-danger" :class="{ 'is-loading': loading }" @click="logout()">
+              Disconnect
+            </button>
+          </section>
+        </div>
+      </div>
     </div>
-  </nav>
+  </div>
 </template>
 
 <script>
@@ -65,9 +86,25 @@ export default {
     ConnectWallet
   },
 
+  data () {
+    return {
+      walletModal: false,
+      loading: false
+    }
+  },
+
   computed: {
     wallet () {
       return this.$transit.wallet
+    }
+  },
+
+  methods: {
+    async logout () {
+      this.loading = true
+      await this.$transit.logout()
+      this.loading = false
+      this.walletModal = false
     }
   }
 }
@@ -104,5 +141,9 @@ export default {
     .navbar-end {
       margin-top: 2px;
     }
+  }
+
+  .modal-card {
+    max-width: 500px;
   }
 </style>

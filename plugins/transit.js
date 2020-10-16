@@ -3,9 +3,11 @@ import scatter from 'eos-transit-scatter-provider'
 import anchor from 'eos-transit-anchorlink-provider'
 import tp from 'eos-transit-tokenpocket-provider'
 import Vue from 'vue'
+// import lynx from 'eos-transit-lynx-provider'
 
+const appName = 'effect_dashboard'
 const accessContext = initAccessContext({
-  appName: 'Effect Dashboard',
+  appName,
   network: {
     host: process.env.eosNodeUrl,
     port: 443,
@@ -14,8 +16,9 @@ const accessContext = initAccessContext({
   },
   walletProviders: [
     scatter(),
-    anchor('effect-dashboard'),
+    anchor(appName),
     tp()
+    // lynx()
   ]
 })
 
@@ -23,19 +26,27 @@ export default (context, inject) => {
   const transit = new Vue({
     data () {
       return {
-        wallet: null
+        wallet: null,
+        providers: {
+          scatter: 'scatter',
+          anchor: 'anchor-link',
+          tokenpocket: 'TokenPocket',
+          lynx: 'EOS Lynx'
+        }
       }
     },
     methods: {
-      async login (index) {
+      async login (provider) {
         const providers = accessContext.getWalletProviders()
-        const selectedProvider = providers[index]
-
+        const selectedProvider = providers.find(r => r.id === provider)
         const wallet = accessContext.initWallet(selectedProvider)
         await wallet.connect()
         await wallet.login()
 
         this.wallet = wallet
+      },
+      async logout () {
+        this.wallet = await this.wallet.logout()
       }
     }
   })

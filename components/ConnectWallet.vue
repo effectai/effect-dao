@@ -19,13 +19,13 @@
           </div>
           <div class="columns">
             <div class="column is-half">
-              <div class="provider anchor" @click="selectWallet(1)">
+              <div class="provider anchor" @click="selectWallet(providers.anchor)">
                 <img src="@/assets/img/providers/anchor.svg">
                 Anchor
               </div>
             </div>
             <div class="column is-half">
-              <div class="provider scatter" @click="selectWallet(0)">
+              <div class="provider scatter" @click="selectWallet(providers.scatter)">
                 <img src="@/assets/img/providers/scatter.svg">
                 Scatter
               </div>
@@ -33,13 +33,13 @@
           </div>
           <div class="columns">
             <div class="column is-half">
-              <div class="provider lynx is-mobile" @click="selectWallet(2)">
+              <div class="provider lynx is-mobile" @click="selectWallet(providers.lynx)">
                 <img src="@/assets/img/providers/lynx.svg">
                 Lynx
               </div>
             </div>
             <div class="column is-half">
-              <div class="provider tokenpocket is-mobile" @click="selectWallet(3)">
+              <div class="provider tokenpocket is-mobile" @click="selectWallet(providers.tokenpocket)">
                 <img src="@/assets/img/providers/tokenpocket.png">
                 Token Pocket
               </div>
@@ -66,7 +66,16 @@ export default {
     }
   },
 
+  computed: {
+    providers () {
+      return this.$transit.providers
+    }
+  },
+
   methods: {
+    initMobileProviders () {
+      this.$transit.initMobileProviders()
+    },
     async selectWallet (index) {
       this.loading = true
       await this.$transit.login(index)

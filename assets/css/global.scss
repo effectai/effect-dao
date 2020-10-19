@@ -32,3 +32,16 @@ body {
   }
 }
 
+.block-shadow {
+  box-shadow: rgba(20, 1, 8, 0.15) -2px 2px 4px inset, rgb(255, 255, 255) 2px -2px 4px inset;
+  border-radius: 6px;
+  padding: 24px;
+}
+
+.block-title {
+  font-size: 18px !important;
+  text-align: center;
+  border-bottom: 1px solid #CCC;
+  padding-bottom: 20px;
+  margin-top: 10px;
+}

@@ -22,13 +22,13 @@
         </div>
 
         <div id="navbarBasicExample" class="navbar-menu">
-          <a class="navbar-item">
+          <nuxt-link class="navbar-item" to="/" active-class="is-active">
             Home
-          </a>
+          </nuxt-link>
 
-          <a class="navbar-item">
+          <nuxt-link class="navbar-item" to="/stake" active-class="is-active">
             Stake
-          </a>
+          </nuxt-link>
 
           <a class="navbar-item">
             Vote
@@ -95,7 +95,7 @@ export default {
 
   computed: {
     wallet () {
-      return this.$transit.wallet
+      return (this.$transit) ? this.$transit.wallet : null
     }
   },
 
@@ -135,6 +135,9 @@ export default {
       justify-content: center;
       .navbar-item {
         font-weight: 700;
+        &.is-active {
+          color: #00d1b2;
+        }
       }
     }
 

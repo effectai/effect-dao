@@ -3,7 +3,7 @@ import scatter from 'eos-transit-scatter-provider'
 import anchor from 'eos-transit-anchorlink-provider'
 import tp from 'eos-transit-tokenpocket-provider'
 import Vue from 'vue'
-// import lynx from 'eos-transit-lynx-provider'
+import lynx from 'eos-transit-lynx-provider'
 
 const appName = 'effect_dashboard'
 const accessContext = initAccessContext({
@@ -17,8 +17,8 @@ const accessContext = initAccessContext({
   walletProviders: [
     scatter(),
     anchor(appName),
-    tp()
-    // lynx()
+    tp(),
+    lynx()
   ]
 })
 

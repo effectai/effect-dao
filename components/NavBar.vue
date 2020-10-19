@@ -22,11 +22,11 @@
         </div>
 
         <div id="navbarBasicExample" class="navbar-menu">
-          <nuxt-link class="navbar-item" to="/" active-class="is-active">
+          <nuxt-link class="navbar-item" to="/" exact-active-class="is-active">
             Home
           </nuxt-link>
 
-          <nuxt-link class="navbar-item" to="/stake" active-class="is-active">
+          <nuxt-link class="navbar-item" to="/stake" exact-active-class="is-active">
             Stake
           </nuxt-link>
 

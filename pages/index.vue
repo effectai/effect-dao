@@ -5,11 +5,48 @@
       <h4>Stake, vote and swap all in one place!</h4>
     </div>
 
+    <div v-if="this.wallet" class="columns balances">
+      <div class="column">
+        <div class="treasury block-shadow mt-5">
+          <h2 class="block-title">
+            <img src="@/assets/img/efx-icon.png" class="token-icon">EFX Balance
+          </h2>
+          <div class="balance">
+            <p>
+              <ICountUp :end-val="efxAvailable + efxStaked" /> <span class="symbol">EFX</span>
+            </p>
+            <span>Staked: <ICountUp :end-val="efxStaked" /> EFX</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="treasury block-shadow mt-5">
+          <h2 class="block-title">
+            <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">NFX Balance
+          </h2>
+          <div class="balance">
+            <p>
+              <ICountUp :end-val="nfxAvailable" /> <span class="symbol">NFX</span>
+            </p>
+            <span>
+              <nuxt-link v-if="nfxClaimable" to="/stake">🎉 Claim NFX</nuxt-link>
+              <nuxt-link v-else to="/stake"> Go to staking</nuxt-link>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-else class="connect-wallet">
+      <ConnectWallet />
+    </div>
+
     <div class="treasury block-shadow">
       <h2 class="block-title">
         Staking Overview
       </h2>
-      <div class="columns">
+      <div class="columns block-columns">
         <div class="column">
           <div class="icon">
             🔐
@@ -59,17 +96,24 @@
 
 <script>
 import ICountUp from 'vue-countup-v2'
+import ConnectWallet from '../components/ConnectWallet'
 
 export default {
   components: {
-    ICountUp
+    ICountUp,
+    ConnectWallet
   },
 
   data () {
     return {
       efxPrice: 0,
       poolBalance: 0,
-      circSupply: 200000000
+      circSupply: 0,
+
+      efxAvailable: 0,
+      efxStaked: 0,
+      nfxAvailable: 0,
+      nfxClaimable: false
     }
   },
 
@@ -79,6 +123,15 @@ export default {
     },
     percentStaked () {
       return parseInt((this.poolBalance / this.circSupply) * 100)
+    },
+    wallet () {
+      return (this.$transit) ? this.$transit.wallet : null
+    }
+  },
+
+  watch: {
+    wallet () {
+      this.getAccountBalance()
     }
   },
 
@@ -88,8 +141,19 @@ export default {
 
   methods: {
     async init () {
+      await this.getCircSupply()
       await this.getPoolBalance()
       await this.getEFXPrice()
+      if (this.wallet) {
+        await this.getAccountBalance()
+      }
+    },
+
+    async getCircSupply () {
+      const res = await this.$eos.rpc.get_table_rows({ code: 'effecttokens', scope: 'EFX', table: 'stat' })
+      if (res && res.rows && res.rows.length === 1) {
+        this.circSupply = parseFloat(res.rows[0].supply.replace(' EFX', ''))
+      }
     },
     async getPoolBalance () {
       const res = await this.$eos.rpc.get_currency_balance('effecttokens', 'efxstakepool', 'EFX')
@@ -101,6 +165,19 @@ export default {
         .then((data) => {
           return data.tickers[0].converted_last.usd
         })
+    },
+    async getAccountBalance () {
+      this.efxAvailable = parseFloat((await this.$eos.rpc.get_currency_balance('effecttokens', this.wallet.auth.accountName, 'EFX'))[0].replace(' EFX', ''))
+      this.nfxAvailable = parseFloat((await this.$eos.rpc.get_currency_balance('effecttokens', this.wallet.auth.accountName, 'NFX'))[0].replace(' NFX', ''))
+      await this.$eos.rpc.get_table_rows({
+        code: 'efxstakepool',
+        scope: this.wallet.auth.accountName,
+        table: 'stake'
+      }).then((data) => {
+        const row = data.rows[0]
+        this.efxStaked = parseFloat(row.amount.replace(' EFX', '').replace('.', ','))
+        this.nfxClaimable = this.efxStaked > 0 && new Date(row.last_claim_time) < new Date()
+      })
     }
   }
 }
@@ -114,13 +191,14 @@ export default {
 
     .intro {
       padding: 40px 0;
+      margin-bottom: -30px;
       text-align: center;
       h4 {
         font-weight: 400;
       }
     }
 
-    .columns {
+    .block-columns {
       margin-top: 20px;
       padding-bottom: 15px;
       margin-left: 0;
@@ -144,6 +222,47 @@ export default {
 
     .low {
       font-weight: 300;
+    }
+
+    .balances {
+      .column {
+        padding: 0.75rem;
+      }
+      .balance {
+        text-align: center;
+        p {
+          padding-top: 8px;
+          font-size: 31px;
+          margin-bottom: 0;
+          span.symbol {
+            font-weight: 300;
+            font-size: 18px;
+          }
+        }
+      }
+      .token-icon {
+        height: 40px;
+        margin-top: -11px;
+        float: left;
+        margin-right: -40px;
+        &.nfx {
+          height: 45px;
+          margin-top: -13px;
+        }
+      }
+    }
+
+    .connect-wallet {
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      position: relative;
+      width: 149px;
+      padding-bottom: 60px;
+    }
+
+    .modal-card-title {
+      margin-bottom: 0 !important;
     }
   }
 </style>

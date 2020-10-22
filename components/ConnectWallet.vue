@@ -73,9 +73,6 @@ export default {
   },
 
   methods: {
-    initMobileProviders () {
-      this.$transit.initMobileProviders()
-    },
     async selectWallet (index) {
       this.loading = true
       await this.$transit.login(index)

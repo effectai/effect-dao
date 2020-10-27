@@ -17,17 +17,17 @@
     "countup.js": "^2.0.7",
     "eosjs": "^21.0.3",
     "nuxt": "^2.14.6",
-    "vue-countup-v2": "^4.0.0"
+    "vue-countup-v2": "^4.0.0",
+    "eos-transit": "^4.0.7",
+    "eos-transit-anchorlink-provider": "^4.0.7",
+    "eos-transit-lynx-provider": "^4.0.7",
+    "eos-transit-scatter-provider": "^4.0.7",
+    "eos-transit-tokenpocket-provider": "^4.0.7"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^3.1.0",
     "@nuxtjs/eslint-module": "^2.0.0",
     "babel-eslint": "^10.1.0",
-    "eos-transit": "^4.0.7",
-    "eos-transit-anchorlink-provider": "^4.0.7",
-    "eos-transit-lynx-provider": "^4.0.7",
-    "eos-transit-scatter-provider": "^4.0.7",
-    "eos-transit-tokenpocket-provider": "^4.0.7",
     "eslint": "^7.10.0",
     "eslint-plugin-nuxt": "^1.0.0",
     "node-sass": "^4.14.1",

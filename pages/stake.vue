@@ -1,23 +1,140 @@
 <template>
   <div class="stake">
-    efxStaked: {{ efxStaked }} <br>
-    lastClaimTime {{ lastClaimTime }} <br>
-    lastClaimAge {{ lastClaimAge }} <br>
-    claimableNfx {{ claimableNfx }} <br>
-    stake age: {{ stakeAge * 100 }}%
+    <div v-if="wallet">
+      <div class="modal" :class="{ 'is-active': stakingModal }">
+        <div class="modal-background" />
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">
+              Stake EFX
+            </p>
+            <button class="delete" aria-label="close" @click="stakingModal = false" />
+          </header>
+          <section class="modal-card-body">
+            <div class="notification is-primary">
+              <strong>Staking Balance</strong>: {{ newStake }} EFX
+            </div>
+            <input
+              v-model="newStake"
+              class="slider is-fullwidth is-medium is-success is-circle"
+              step="1"
+              min="0"
+              :max="efxStaked + efxAvailable"
+              type="range"
+            >
+            <div class="input-lower">
+              <div class="is-pulled-left">
+                0 EFX
+              </div>
+              <div class="is-pulled-right">
+                {{ efxAvailable + efxStaked }} EFX
+              </div>
+            </div>
+          </section>
+          <footer class="modal-card-foot">
+            <button v-if="newStake < efxStaked" class="button is-danger is-fullwidth" :class="{ 'is-loading': loading }" @click="unstake()">
+              Withdraw {{ efxStaked - newStake }} EFX
+            </button>
+            <button v-else-if="newStake > efxStaked" class="button is-success is-fullwidth" :class="{ 'is-loading': loading }" @click="stake()">
+              Deposit {{ newStake - efxStaked }} EFX
+            </button>
+          </footer>
+        </div>
+      </div>
 
-    <progress class="progress is-large" :value="stakeAge" max="1" />
+      <div v-if="unstakeAmount && !canClaim" class="notification is-primary unstake mb-0">
+        You have a pending unstake of <b>{{ unstakeAmount }}</b>, claimable at <b>{{ unstakeTime.toLocaleString() }}</b>.
+      </div>
+
+      <div v-else-if="unstakeAmount && canClaim" class="notification is-primary unstake mb-0">
+        You can claim <b>{{ unstakeAmount }}</b>.
+        <button class="button is-success is-pulled-right claim-efx">
+          Claim
+        </button>
+      </div>
+
+      <div v-if="wallet" class="columns stakes">
+        <div class="column">
+          <div class="treasury block-shadow mt-5">
+            <h2 class="block-title">
+              <img src="@/assets/img/efx-icon.png" class="token-icon">Staked EFX
+            </h2>
+            <div class="balance">
+              <p>
+                <ICountUp :end-val="efxStaked" />
+                <span class="symbol">EFX</span>
+              </p>
+              <div class="buttons">
+                <button class="button is-primary is-fullwidth" @click="stakingModal = true">
+                  Deposit EFX
+                </button>
+                <button class="button is-danger" :disabled="efxStaked === 0" @click="stakingModal = true">
+                  Withdraw EFX
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="treasury block-shadow mt-5">
+            <h2 class="block-title">
+              <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">Claimable NFX
+            </h2>
+            <div class="balance">
+              <p>
+                <ICountUp :end-val="claimableNfx" />
+                <span class="symbol">NFX</span>
+              </p>
+              <div class="buttons">
+                <button class="button is-primary is-fullwidth claim-btn" :disabled="claimableNfx === 0">
+                  Claim NFX
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="treasury block-shadow">
+        <h2 class="block-title">
+          Stake Age
+        </h2>
+        <div class="block-columns">
+          <progress class="progress is-large mt-5 mb-3" :value="stakeAge" max="1" />
+        </div>
+      </div>
+    </div>
+    <div v-else>
+      Connect Wallet
+    </div>
   </div>
 </template>
 
 <script>
+import ICountUp from 'vue-countup-v2'
+
 export default {
+  components: {
+    ICountUp
+  },
+
   data () {
     return {
       loading: false,
-      efxStaked: null,
+
+      efxStaked: 0,
       lastClaimTime: null,
-      lastClaimAge: null
+      lastClaimAge: null,
+      stakingModal: false,
+      newStake: 0,
+
+      efxAvailable: 0,
+      nfxAvailable: 0,
+
+      unstakeAmount: null,
+      unstakeTime: null,
+      canClaim: false
     }
   },
 
@@ -25,6 +142,7 @@ export default {
     wallet () {
       return (this.$transit) ? this.$transit.wallet : null
     },
+
     claimableNfx () {
       if (!this.efxStaked) {
         return 0
@@ -40,6 +158,7 @@ export default {
       const avgAge = ((age + newAge) / 2) * Math.min(1, 1 - ((diffSeconds - (limit - age)) / diffSeconds)) + newAge * Math.max(0, (diffSeconds - (limit - age)) / diffSeconds)
       return Math.floor(((this.efxStaked * diffSeconds * avgAge / 86400) / (1000000 * 24 * 3600)) * 10000) / 10000
     },
+
     stakeAge () {
       if (!this.efxStaked) {
         return null
@@ -51,19 +170,30 @@ export default {
 
   watch: {
     wallet () {
-      this.getStakingDetails()
+      this.init()
+    },
+
+    efxStaked (efxStaked) {
+      this.newStake = efxStaked
     }
   },
 
   created () {
-    this.getStakingDetails()
+    this.init()
+    setInterval(this.init, 3000)
   },
 
   methods: {
+    init () {
+      this.getStakingDetails()
+      this.getAccountBalance()
+      this.getUnstake()
+    },
+
     async getStakingDetails () {
       await this.$eos.rpc.get_table_rows({
         code: 'efxstakepool',
-        scope: 'efxcounselor',
+        scope: this.wallet.auth.accountName,
         table: 'stake'
       }).then((data) => {
         if (data.rows && data.rows.length > 0) {
@@ -73,6 +203,137 @@ export default {
           this.lastClaimAge = row.last_claim_age
         }
       })
+    },
+
+    async getAccountBalance () {
+      this.efxAvailable = parseFloat((await this.$eos.rpc.get_currency_balance('effecttokens', this.wallet.auth.accountName, 'EFX'))[0].replace(' EFX', ''))
+      this.nfxAvailable = parseFloat((await this.$eos.rpc.get_currency_balance('effecttokens', this.wallet.auth.accountName, 'NFX'))[0].replace(' NFX', ''))
+    },
+
+    async getUnstake () {
+      await this.$eos.rpc.get_table_rows({
+        code: 'efxstakepool',
+        scope: this.wallet.auth.accountName,
+        table: 'unstake'
+      }).then((data) => {
+        if (data.rows && data.rows.length > 0) {
+          const row = data.rows[0]
+          this.unstakeAmount = row.amount
+          this.unstakeTime = new Date(row.time)
+          this.canClaim = this.unstakeTime <= new Date()
+        }
+      })
+    },
+
+    stake () {
+      this.loading = true
+      const actions = []
+
+      if (this.efxStaked > 0) {
+        actions.push({
+          account: 'efxstakepool',
+          name: 'claim',
+          authorization: [{
+            actor: this.wallet.auth.accountName,
+            permission: this.wallet.auth.permission
+          }],
+          data: {
+            owner: this.wallet.auth.accountName
+          }
+        })
+      } else {
+        actions.push({
+          account: 'efxstakepool',
+          name: 'open',
+          authorization: [{
+            actor: this.wallet.auth.accountName,
+            permission: this.wallet.auth.permission
+          }],
+          data: {
+            owner: this.wallet.auth.accountName,
+            ram_payer: this.wallet.auth.accountName
+          }
+        })
+        actions.push({
+          account: 'effecttokens',
+          name: 'open',
+          authorization: [{
+            actor: this.wallet.auth.accountName,
+            permission: this.wallet.auth.permission
+          }],
+          data: {
+            owner: this.wallet.auth.accountName,
+            symbol: '4,NFX',
+            ram_payer: this.wallet.auth.accountName
+          }
+        })
+      }
+
+      actions.push({
+        account: 'effecttokens',
+        name: 'transfer',
+        authorization: [{
+          actor: this.wallet.auth.accountName,
+          permission: this.wallet.auth.permission
+        }],
+        data: {
+          from: this.wallet.auth.accountName,
+          to: 'efxstakepool',
+          quantity: `${Number.parseFloat(this.newStake).toFixed(4)} EFX`,
+          memo: 'stake'
+        }
+      })
+
+      this.wallet.eosApi.transact({ actions }, { blocksBehind: 3, expireSeconds: 60 })
+        .then((transaction) => {
+          console.log(transaction)
+        })
+        .catch((error) => {
+          this.error = error
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    },
+
+    unstake () {
+      this.loading = true
+      this.wallet.eosApi.transact({
+        actions: [
+          {
+            account: 'efxstakepool',
+            name: 'claim',
+            authorization: [{
+              actor: this.wallet.auth.accountName,
+              permission: this.wallet.auth.permission
+            }],
+            data: {
+              owner: this.wallet.auth.accountName
+            }
+          },
+          {
+            account: 'efxstakepool',
+            name: 'unstake',
+            authorization: [{
+              actor: this.wallet.auth.accountName,
+              permission: this.wallet.auth.permission
+            }],
+            data: {
+              owner: this.wallet.auth.accountName,
+              quantity: `${Number.parseFloat(this.efxStaked - this.newStake).toFixed(4)} EFX`
+            }
+          }
+        ]
+      }, { blocksBehind: 3, expireSeconds: 60 })
+        .then((transaction) => {
+          console.log(transaction)
+        })
+        .catch((error) => {
+          this.error = error
+        })
+        .finally(() => {
+          this.loading = false
+        })
     }
   }
 }
@@ -94,4 +355,76 @@ export default {
     }
   }
 
+  .stake {
+    max-width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+
+    .buttons {
+      margin-top: 15px;
+
+      button {
+        margin-right: 0;
+        width: 100%;
+        font-weight: bold;
+      }
+    }
+
+    .modal-card-title {
+      margin-bottom: 0 !important;
+    }
+
+    .modal-card-body {
+      border-radius: 0 !important;
+    }
+
+    .input-lower {
+      font-size: 12px;
+      margin-top: -15px;
+    }
+  }
+
+  .stakes {
+    .column {
+      padding: 0.75rem;
+    }
+
+    .balance {
+      text-align: center;
+
+      p {
+        padding-top: 8px;
+        font-size: 31px;
+        margin-bottom: 0;
+
+        span.symbol {
+          font-weight: 300;
+          font-size: 18px;
+        }
+      }
+    }
+
+    .token-icon {
+      height: 40px;
+      margin-top: -11px;
+      float: left;
+      margin-right: -40px;
+
+      &.nfx {
+        height: 45px;
+        margin-top: -13px;
+      }
+    }
+
+    .claim-btn {
+      margin-top: 20px;
+      margin-bottom: 35px;
+    }
+
+    .claim-efx {
+      margin-top: -7px;
+      margin-bottom: -7px;
+      margin-right: -15px;
+    }
+  }
 </style>

@@ -90,6 +90,44 @@
       <h2 class="block-title">
         Effect Force Overview
       </h2>
+      <div class="columns block-columns">
+        <div class="column">
+          <div class="icon">
+            ⛓️
+          </div>
+          <div class="text">
+            <span class="high">
+              <ICountUp v-if="forceTransactions > 0" :end-val="forceTransactions" />
+              <span v-else>..</span>
+            </span> <br>
+            <span class="low">total transactions</span>
+          </div>
+        </div>
+        <div class="column">
+          <div class="icon">
+            💸
+          </div>
+          <div class="text">
+            <span class="high">
+              <ICountUp v-if="forceEfxPaid > 0" :options="{ suffix: ' EFX' }" :end-val="forceEfxPaid" />
+              <span v-else>..</span>
+            </span> <br>
+            <span class="low">total payouts</span>
+          </div>
+        </div>
+        <div class="column">
+          <div class="icon">
+            👩‍💻
+          </div>
+          <div class="text">
+            <span class="high">
+              <ICountUp v-if="forceUsers > 0" :end-val="forceUsers" />
+              <span v-else>..</span>
+            </span> <br>
+            <span class="low">registered workers</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -113,7 +151,11 @@ export default {
       efxAvailable: 0,
       efxStaked: 0,
       nfxAvailable: 0,
-      nfxClaimable: false
+      nfxClaimable: false,
+
+      forceTransactions: 0,
+      forceEfxPaid: 0,
+      forceUsers: 0
     }
   },
 
@@ -140,12 +182,13 @@ export default {
   },
 
   methods: {
-    async init () {
-      await this.getCircSupply()
-      await this.getPoolBalance()
-      await this.getEFXPrice()
+    init () {
+      this.getForceStats()
+      this.getCircSupply()
+      this.getPoolBalance()
+      this.getEFXPrice()
       if (this.wallet) {
-        await this.getAccountBalance()
+        this.getAccountBalance()
       }
     },
 
@@ -155,10 +198,12 @@ export default {
         this.circSupply = parseFloat(res.rows[0].supply.replace(' EFX', ''))
       }
     },
+
     async getPoolBalance () {
       const res = await this.$eos.rpc.get_currency_balance('effecttokens', 'efxstakepool', 'EFX')
       this.poolBalance = parseFloat(res[0].replace(' EFX', ''))
     },
+
     async getEFXPrice () {
       this.efxPrice = await fetch('https://api.coingecko.com/api/v3/coins/effect-ai/tickers')
         .then(data => data.json())
@@ -166,6 +211,7 @@ export default {
           return data.tickers[0].converted_last.usd
         })
     },
+
     async getAccountBalance () {
       this.efxAvailable = parseFloat((await this.$eos.rpc.get_currency_balance('effecttokens', this.wallet.auth.accountName, 'EFX'))[0].replace(' EFX', ''))
       this.nfxAvailable = parseFloat((await this.$eos.rpc.get_currency_balance('effecttokens', this.wallet.auth.accountName, 'NFX'))[0].replace(' NFX', ''))
@@ -178,6 +224,16 @@ export default {
         this.efxStaked = parseFloat(row.amount.replace(' EFX', '').replace('.', ','))
         this.nfxClaimable = this.efxStaked > 0 && new Date(row.last_claim_time) < new Date()
       })
+    },
+
+    async getForceStats () {
+      await fetch('https://worker.effect.ai/user/statistics')
+        .then(data => data.json())
+        .then((data) => {
+          this.forceEfxPaid = data.spentEfxTotal
+          this.forceTransactions = data.totalTransactions
+          this.forceUsers = data.usersRegisteredTotal
+        })
     }
   }
 }

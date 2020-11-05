@@ -30,17 +30,17 @@
             Stake
           </nuxt-link>
 
-          <a class="navbar-item">
+          <nuxt-link class="navbar-item" to="/vote" exact-active-class="is-active">
             Vote
-          </a>
+          </nuxt-link>
 
-          <a class="navbar-item">
+          <nuxt-link class="navbar-item" to="/dao" exact-active-class="is-active">
             DAO
-          </a>
+          </nuxt-link>
 
-          <a class="navbar-item">
-            Galaxy Pool
-          </a>
+          <nuxt-link class="navbar-item" to="/swap" exact-active-class="is-active">
+            Swap
+          </nuxt-link>
         </div>
 
         <div class="navbar-end">

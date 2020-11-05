@@ -23,7 +23,8 @@
     "eos-transit-tokenpocket-provider": "^4.0.7",
     "eosjs": "^21.0.3",
     "nuxt": "^2.14.6",
-    "vue-countup-v2": "^4.0.0"
+    "vue-countup-v2": "^4.0.0",
+    "vue-showdown": "^2.4.1"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^3.1.0",

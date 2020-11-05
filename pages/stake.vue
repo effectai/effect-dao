@@ -102,21 +102,24 @@
         </h2>
         <div class="block-columns">
           <progress class="progress is-large mt-5 mb-3" :value="stakeAge" max="1" />
+          Power: {{ power }}
         </div>
       </div>
     </div>
-    <div v-else>
-      Connect Wallet
+    <div v-else class="connect-wallet connect-wallet-stake">
+      <ConnectWallet />
     </div>
   </div>
 </template>
 
 <script>
 import ICountUp from 'vue-countup-v2'
+import ConnectWallet from '~/components/ConnectWallet'
 
 export default {
   components: {
-    ICountUp
+    ICountUp,
+    ConnectWallet
   },
 
   data () {
@@ -149,8 +152,12 @@ export default {
       }
 
       const lastClaimTime = new Date(`${this.lastClaimTime}Z`)
-      const now = new Date()
-      const diffTime = Math.abs(now.getTime() - lastClaimTime.getTime())
+      const claimStopTime = new Date(1604188799 * 1000)
+      let now = new Date()
+      if (now > claimStopTime) {
+        now = claimStopTime
+      }
+      const diffTime = now.getTime() - lastClaimTime.getTime()
       const diffSeconds = diffTime / 1000
       const age = this.lastClaimAge
       const limit = 200 * 24 * 3600
@@ -161,10 +168,35 @@ export default {
 
     stakeAge () {
       if (!this.efxStaked) {
-        return null
+        return 0
       }
 
-      return this.lastClaimAge / (200 * 24 * 3600)
+      // Add 'Z' for UTC time
+      let lastClaimTime = new Date(`${this.lastClaimTime}Z`)
+      const claimStopTime = new Date(1604188799 * 1000)
+      let limit = 1000 * 24 * 3600
+      let now = new Date()
+      let age = this.lastClaimAge
+      if (lastClaimTime < claimStopTime) {
+        limit = 200 * 24 * 3600
+        if (now > claimStopTime) {
+          now = claimStopTime
+          const diffTime = Math.abs(now.getTime() - lastClaimTime.getTime())
+          const diffSeconds = diffTime / 1000
+          age = Math.min(limit, this.lastClaimAge + diffSeconds)
+          lastClaimTime = now
+          limit = 1000 * 24 * 3600
+          now = new Date()
+        }
+      }
+
+      const diffTime = Math.abs(now.getTime() - lastClaimTime.getTime())
+      const diffSeconds = diffTime / 1000
+      return Math.min(limit, age + diffSeconds)
+    },
+
+    power () {
+      return parseFloat(this.efxStaked) + parseFloat((this.stakeAge / (200 * 24 * 3600)) * this.efxStaked)
     }
   },
 
@@ -185,20 +217,22 @@ export default {
 
   methods: {
     init () {
-      this.getStakingDetails()
-      this.getAccountBalance()
-      this.getUnstake()
+      if (this.wallet) {
+        this.getStakingDetails()
+        this.getAccountBalance()
+        this.getUnstake()
+      }
     },
 
     async getStakingDetails () {
       await this.$eos.rpc.get_table_rows({
-        code: 'efxstakepool',
+        code: process.env.stakingContract,
         scope: this.wallet.auth.accountName,
         table: 'stake'
       }).then((data) => {
         if (data.rows && data.rows.length > 0) {
           const row = data.rows[0]
-          this.efxStaked = parseFloat(row.amount.replace(' EFX', '').replace('.', ','))
+          this.efxStaked = parseFloat(row.amount.replace(` ${process.env.efxToken}`, '').replace('.', ','))
           this.lastClaimTime = row.last_claim_time
           this.lastClaimAge = row.last_claim_age
         }
@@ -206,13 +240,13 @@ export default {
     },
 
     async getAccountBalance () {
-      this.efxAvailable = parseFloat((await this.$eos.rpc.get_currency_balance('effecttokens', this.wallet.auth.accountName, 'EFX'))[0].replace(' EFX', ''))
-      this.nfxAvailable = parseFloat((await this.$eos.rpc.get_currency_balance('effecttokens', this.wallet.auth.accountName, 'NFX'))[0].replace(' NFX', ''))
+      this.efxAvailable = parseFloat((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, this.wallet.auth.accountName, process.env.efxToken))[0].replace(` ${process.env.efxToken}`, ''))
+      this.nfxAvailable = parseFloat((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, this.wallet.auth.accountName, process.env.nfxToken))[0].replace(` ${process.env.nfxToken}`, ''))
     },
 
     async getUnstake () {
       await this.$eos.rpc.get_table_rows({
-        code: 'efxstakepool',
+        code: process.env.stakingContract,
         scope: this.wallet.auth.accountName,
         table: 'unstake'
       }).then((data) => {
@@ -231,7 +265,7 @@ export default {
 
       if (this.efxStaked > 0) {
         actions.push({
-          account: 'efxstakepool',
+          account: process.env.stakingContract,
           name: 'claim',
           authorization: [{
             actor: this.wallet.auth.accountName,
@@ -243,7 +277,7 @@ export default {
         })
       } else {
         actions.push({
-          account: 'efxstakepool',
+          account: process.env.stakingContract,
           name: 'open',
           authorization: [{
             actor: this.wallet.auth.accountName,
@@ -255,7 +289,7 @@ export default {
           }
         })
         actions.push({
-          account: 'effecttokens',
+          account: process.env.tokenContract,
           name: 'open',
           authorization: [{
             actor: this.wallet.auth.accountName,
@@ -263,14 +297,14 @@ export default {
           }],
           data: {
             owner: this.wallet.auth.accountName,
-            symbol: '4,NFX',
+            symbol: `4,${process.env.nfxToken}`,
             ram_payer: this.wallet.auth.accountName
           }
         })
       }
 
       actions.push({
-        account: 'effecttokens',
+        account: process.env.tokenContract,
         name: 'transfer',
         authorization: [{
           actor: this.wallet.auth.accountName,
@@ -278,8 +312,8 @@ export default {
         }],
         data: {
           from: this.wallet.auth.accountName,
-          to: 'efxstakepool',
-          quantity: `${Number.parseFloat(this.newStake).toFixed(4)} EFX`,
+          to: process.env.stakingContract,
+          quantity: `${Number.parseFloat(this.newStake).toFixed(4)} ${process.env.efxToken}`,
           memo: 'stake'
         }
       })
@@ -301,7 +335,7 @@ export default {
       this.wallet.eosApi.transact({
         actions: [
           {
-            account: 'efxstakepool',
+            account: process.env.stakingContract,
             name: 'claim',
             authorization: [{
               actor: this.wallet.auth.accountName,
@@ -312,7 +346,7 @@ export default {
             }
           },
           {
-            account: 'efxstakepool',
+            account: process.env.stakingContract,
             name: 'unstake',
             authorization: [{
               actor: this.wallet.auth.accountName,
@@ -320,7 +354,7 @@ export default {
             }],
             data: {
               owner: this.wallet.auth.accountName,
-              quantity: `${Number.parseFloat(this.efxStaked - this.newStake).toFixed(4)} EFX`
+              quantity: `${Number.parseFloat(this.efxStaked - this.newStake).toFixed(4)} ${process.env.efxToken}`
             }
           }
         ]
@@ -334,13 +368,18 @@ export default {
         .finally(() => {
           this.loading = false
         })
+    },
+
+    formatSeconds (seconds, vm) {
+      if (!seconds) { seconds = 0 }
+      return `${Math.floor(vm.$moment.duration(seconds, 'seconds').asDays())}:${vm.$moment.duration(seconds, 'seconds').hours()}:${vm.$moment.duration(seconds, 'seconds').minutes()}:${vm.$moment.duration(seconds, 'seconds').seconds()}`
     }
   }
 }
 </script>
 
 <style lang="scss">
-  .progress::-moz-progress-bar {
+  .progress::-moz-progress-bar, .progress::-webkit-progress-bar {
     background: rgba(0, 0, 0, 0) linear-gradient(45deg, rgb(255, 0, 0) 0%, rgb(255, 154, 0) 10%, rgb(208, 222, 33) 20%, rgb(79, 220, 74) 30%, rgb(63, 218, 216) 40%, rgb(47, 201, 226) 50%, rgb(28, 127, 238) 60%, rgb(95, 21, 242) 70%, rgb(186, 12, 248) 80%, rgb(251, 7, 217) 90%, rgb(255, 0, 0) 100%) repeat scroll 0% 0% / 300% 300%;
     background-size: 200%;
     animation: moveGradient 3s linear infinite;
@@ -426,5 +465,9 @@ export default {
       margin-bottom: -7px;
       margin-right: -15px;
     }
+  }
+
+  .connect-wallet-stake {
+    margin-top: 100px;
   }
 </style>

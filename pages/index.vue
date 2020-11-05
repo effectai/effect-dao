@@ -193,15 +193,15 @@ export default {
     },
 
     async getCircSupply () {
-      const res = await this.$eos.rpc.get_table_rows({ code: 'effecttokens', scope: 'EFX', table: 'stat' })
+      const res = await this.$eos.rpc.get_table_rows({ code: process.env.tokenContract, scope: process.env.efxToken, table: 'stat' })
       if (res && res.rows && res.rows.length === 1) {
-        this.circSupply = parseFloat(res.rows[0].supply.replace(' EFX', ''))
+        this.circSupply = parseFloat(res.rows[0].supply.replace(` ${process.env.efxToken}`, ''))
       }
     },
 
     async getPoolBalance () {
-      const res = await this.$eos.rpc.get_currency_balance('effecttokens', 'efxstakepool', 'EFX')
-      this.poolBalance = parseFloat(res[0].replace(' EFX', ''))
+      const res = await this.$eos.rpc.get_currency_balance(process.env.tokenContract, process.env.stakingContract, process.env.efxToken)
+      this.poolBalance = parseFloat(res[0].replace(` ${process.env.efxToken}`, ''))
     },
 
     async getEFXPrice () {
@@ -213,15 +213,15 @@ export default {
     },
 
     async getAccountBalance () {
-      this.efxAvailable = parseFloat((await this.$eos.rpc.get_currency_balance('effecttokens', this.wallet.auth.accountName, 'EFX'))[0].replace(' EFX', ''))
-      this.nfxAvailable = parseFloat((await this.$eos.rpc.get_currency_balance('effecttokens', this.wallet.auth.accountName, 'NFX'))[0].replace(' NFX', ''))
+      this.efxAvailable = parseFloat((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, this.wallet.auth.accountName, process.env.efxToken))[0].replace(` ${process.env.efxToken}`, ''))
+      this.nfxAvailable = parseFloat((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, this.wallet.auth.accountName, process.env.nfxToken))[0].replace(` ${process.env.nfxToken}`, ''))
       await this.$eos.rpc.get_table_rows({
-        code: 'efxstakepool',
+        code: process.env.stakingContract,
         scope: this.wallet.auth.accountName,
         table: 'stake'
       }).then((data) => {
         const row = data.rows[0]
-        this.efxStaked = parseFloat(row.amount.replace(' EFX', '').replace('.', ','))
+        this.efxStaked = parseFloat(row.amount.replace(` ${process.env.efxToken}`, '').replace('.', ','))
         this.nfxClaimable = this.efxStaked > 0 && new Date(row.last_claim_time) < new Date()
       })
     },
@@ -306,15 +306,6 @@ export default {
           margin-top: -13px;
         }
       }
-    }
-
-    .connect-wallet {
-      margin-left: auto;
-      margin-right: auto;
-      display: block;
-      position: relative;
-      width: 149px;
-      padding-bottom: 60px;
     }
 
     .modal-card-title {

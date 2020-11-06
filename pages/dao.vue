@@ -35,7 +35,7 @@
 
     <div
       v-else-if="!loading && !signedConstitution"
-      class="notification is-danger is-light mb-0 has-text-weight-bold notif-w-btn"
+      class="notification is-warning is-light mb-0 has-text-weight-bold notif-w-btn"
     >
       <div class="is-pulled-left">
         Sign the constitution to participate in the DAO

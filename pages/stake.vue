@@ -81,7 +81,7 @@
             <h2 class="block-title">
               <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">Claimable NFX
             </h2>
-            <div class="balance">
+            <div class="balance" v-if="claimableNfx > 0">
               <p>
                 <ICountUp :end-val="claimableNfx" />
                 <span class="symbol">NFX</span>
@@ -92,6 +92,10 @@
                 </button>
               </div>
             </div>
+            <div v-else>
+              No NFX to be claimed.
+              <a href="#" target="_blank">Get NFX</a>
+            </div>
           </div>
         </div>
       </div>
@@ -101,7 +105,8 @@
           Stake Age
         </h2>
         <div class="block-columns">
-          <progress class="progress is-large mt-5 mb-3" :value="stakeAge" max="1" />
+          <progress class="progress is-large mt-5 mb-3" :value="stakeAge/(1000*3600*24)" max="1" />
+          <div class="age-amount">{{ stakeAge | formatSeconds(this) }}</div>
           Power: {{ power }}
         </div>
       </div>
@@ -122,10 +127,20 @@ export default {
     ConnectWallet
   },
 
+  filters: {
+    formatSeconds (seconds, vm) {
+      if (!seconds) {
+        seconds = 0
+      }
+      return `${Math.floor(vm.$moment.duration(seconds, 'seconds').asDays())}:${vm.$moment.duration(seconds, 'seconds').hours()}:${vm.$moment.duration(seconds, 'seconds').minutes()}:${vm.$moment.duration(seconds, 'seconds').seconds()}`
+    }
+  },
+
   data () {
     return {
       loading: false,
-
+      timer: null,
+      refreshStakeAge: true,
       efxStaked: 0,
       lastClaimTime: null,
       lastClaimAge: null,
@@ -167,6 +182,8 @@ export default {
     },
 
     stakeAge () {
+      // eslint-disable-next-line
+      this.refreshStakeAge
       if (!this.efxStaked) {
         return 0
       }
@@ -211,8 +228,13 @@ export default {
   },
 
   created () {
+    this.timer = setInterval(() => { this.refreshStakeAge = !this.refreshStakeAge }, 1000)
     this.init()
     setInterval(this.init, 3000)
+  },
+
+  beforeDestroy () {
+    clearInterval(this.timer)
   },
 
   methods: {

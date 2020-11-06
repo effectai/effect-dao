@@ -75,8 +75,10 @@
           </figure>
 
           <h4>{{ member.account }}</h4>
-          <ICountUp :options="{ prefix: 'Staking ', suffix: ' EFX' }" :end-val="member.staked" />
-          <!--          Joined {{ member.registration_time }}-->
+          <div>
+            <ICountUp :options="{ prefix: 'Staking ', suffix: ' EFX' }" :end-val="member.staked" />
+            Joined {{ member.registration_time }}
+          </div>
         </div>
       </div>
     </div>

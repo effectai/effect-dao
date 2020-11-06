@@ -106,6 +106,7 @@
         </h2>
         <div class="block-columns">
           <progress class="progress is-large mt-5 mb-3" :value="stakeAge/(1000*3600*24)" max="1" />
+          <div>{{stakeAge/(1000*3600*24) * 100}}%</div>
           <div class="age-amount">{{ stakeAge | formatSeconds(this) }}</div>
           Power: {{ power }}
         </div>

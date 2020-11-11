@@ -5,7 +5,7 @@
       <h4>Stake, vote and swap all in one place!</h4>
     </div>
 
-    <div v-if="this.wallet" class="columns balances">
+    <div v-if="wallet" class="columns balances">
       <div class="column">
         <div class="treasury block-shadow mt-5">
           <h2 class="block-title">
@@ -26,13 +26,12 @@
             <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">NFX Balance
           </h2>
           <div class="balance">
-            <p>
-              <ICountUp :end-val="nfxAvailable" /> <span class="symbol">NFX</span>
-            </p>
-            <span>
-              <nuxt-link v-if="nfxClaimable" to="/stake">🎉 Claim NFX</nuxt-link>
-              <nuxt-link v-else to="/stake"> Go to staking</nuxt-link>
-            </span>
+            <div class="balance">
+              <p>
+                <ICountUp :end-val="nfxAvailable + nfxStaked" /> <span class="symbol">NFX</span>
+              </p>
+              <span>Staked: <ICountUp :end-val="nfxStaked" /> NFX</span>
+            </div>
           </div>
         </div>
       </div>
@@ -147,12 +146,6 @@ export default {
       efxPrice: 0,
       poolBalance: 0,
       circSupply: 0,
-
-      efxAvailable: 0,
-      efxStaked: 0,
-      nfxAvailable: 0,
-      nfxClaimable: false,
-
       forceTransactions: 0,
       forceEfxPaid: 0,
       forceUsers: 0
@@ -167,13 +160,19 @@ export default {
       return parseInt((this.poolBalance / this.circSupply) * 100)
     },
     wallet () {
-      return (this.$transit) ? this.$transit.wallet : null
-    }
-  },
-
-  watch: {
-    wallet () {
-      this.getAccountBalance()
+      return this.$wallet.wallet
+    },
+    efxAvailable () {
+      return this.$wallet.efxAvailable
+    },
+    efxStaked () {
+      return this.$wallet.efxStaked
+    },
+    nfxAvailable () {
+      return this.$wallet.nfxAvailable
+    },
+    nfxStaked () {
+      return this.$wallet.nfxStaked
     }
   },
 
@@ -187,9 +186,6 @@ export default {
       this.getCircSupply()
       this.getPoolBalance()
       this.getEFXPrice()
-      if (this.wallet) {
-        this.getAccountBalance()
-      }
     },
 
     async getCircSupply () {
@@ -210,20 +206,6 @@ export default {
         .then((data) => {
           return data.tickers[0].converted_last.usd
         })
-    },
-
-    async getAccountBalance () {
-      this.efxAvailable = parseFloat((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, this.wallet.auth.accountName, process.env.efxToken))[0].replace(` ${process.env.efxToken}`, ''))
-      this.nfxAvailable = parseFloat((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, this.wallet.auth.accountName, process.env.nfxToken))[0].replace(` ${process.env.nfxToken}`, ''))
-      await this.$eos.rpc.get_table_rows({
-        code: process.env.stakingContract,
-        scope: this.wallet.auth.accountName,
-        table: 'stake'
-      }).then((data) => {
-        const row = data.rows[0]
-        this.efxStaked = parseFloat(row.amount.replace(` ${process.env.efxToken}`, '').replace('.', ','))
-        this.nfxClaimable = this.efxStaked > 0 && new Date(row.last_claim_time) < new Date()
-      })
     },
 
     async getForceStats () {

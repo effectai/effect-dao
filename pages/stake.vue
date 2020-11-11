@@ -12,7 +12,22 @@
           </header>
           <section class="modal-card-body">
             <div class="notification is-primary">
-              <strong>Staking Balance</strong>: {{ newStake }} EFX
+              <strong>Current Stake</strong>: {{ efxStaked }} EFX
+            </div>
+            <div class="new-stake">
+              <div class="is-pulled-left text">
+                New Stake:
+              </div>
+              <div class="is-pulled-right">
+                <input
+                  v-model.number="newStake"
+                  class="input is-full"
+                  type="number"
+                  step="0.0001"
+                  min="0"
+                  @change="trimDecimals"
+                >
+              </div>
             </div>
             <input
               v-model="newStake"
@@ -40,6 +55,13 @@
             </button>
           </footer>
         </div>
+      </div>
+
+      <div v-if="claimableNfx > 0" class="notification is-primary unstake mb-0">
+        You can claim <b>{{ claimableNfx }}</b>.
+        <button class="button is-success is-pulled-right claim-nfx">
+          Claim
+        </button>
       </div>
 
       <div v-if="unstakeAmount && !canClaim" class="notification is-primary unstake mb-0">
@@ -79,22 +101,21 @@
         <div class="column">
           <div class="treasury block-shadow mt-5">
             <h2 class="block-title">
-              <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">Claimable NFX
+              <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">Staked NFX
             </h2>
-            <div class="balance" v-if="claimableNfx > 0">
+            <div class="balance">
               <p>
-                <ICountUp :end-val="claimableNfx" />
+                <ICountUp :end-val="efxStaked" />
                 <span class="symbol">NFX</span>
               </p>
               <div class="buttons">
-                <button class="button is-primary is-fullwidth claim-btn" :disabled="claimableNfx === 0">
-                  Claim NFX
+                <button class="button is-primary is-fullwidth" @click="stakingModal = true">
+                  Deposit NFX
+                </button>
+                <button class="button is-danger" :disabled="efxStaked === 0" @click="stakingModal = true">
+                  Withdraw NFX
                 </button>
               </div>
-            </div>
-            <div v-else>
-              No NFX to be claimed.
-              <a href="#" target="_blank">Get NFX</a>
             </div>
           </div>
         </div>
@@ -106,8 +127,10 @@
         </h2>
         <div class="block-columns">
           <progress class="progress is-large mt-5 mb-3" :value="stakeAge/(1000*3600*24)" max="1" />
-          <div>{{stakeAge/(1000*3600*24) * 100}}%</div>
-          <div class="age-amount">{{ stakeAge | formatSeconds(this) }}</div>
+          <div>{{ stakeAge/(1000*3600*24) * 100 }}%</div>
+          <div class="age-amount">
+            {{ stakeAge | formatSeconds(this) }}
+          </div>
           Power: {{ power }}
         </div>
       </div>
@@ -142,14 +165,11 @@ export default {
       loading: false,
       timer: null,
       refreshStakeAge: true,
-      efxStaked: 0,
+
       lastClaimTime: null,
       lastClaimAge: null,
       stakingModal: false,
       newStake: 0,
-
-      efxAvailable: 0,
-      nfxAvailable: 0,
 
       unstakeAmount: null,
       unstakeTime: null,
@@ -159,78 +179,39 @@ export default {
 
   computed: {
     wallet () {
-      return (this.$transit) ? this.$transit.wallet : null
+      return this.$wallet.wallet
     },
-
     claimableNfx () {
-      if (!this.efxStaked) {
-        return 0
-      }
-
-      const lastClaimTime = new Date(`${this.lastClaimTime}Z`)
-      const claimStopTime = new Date(1604188799 * 1000)
-      let now = new Date()
-      if (now > claimStopTime) {
-        now = claimStopTime
-      }
-      const diffTime = now.getTime() - lastClaimTime.getTime()
-      const diffSeconds = diffTime / 1000
-      const age = this.lastClaimAge
-      const limit = 200 * 24 * 3600
-      const newAge = Math.min(limit, age + diffSeconds)
-      const avgAge = ((age + newAge) / 2) * Math.min(1, 1 - ((diffSeconds - (limit - age)) / diffSeconds)) + newAge * Math.max(0, (diffSeconds - (limit - age)) / diffSeconds)
-      return Math.floor(((this.efxStaked * diffSeconds * avgAge / 86400) / (1000000 * 24 * 3600)) * 10000) / 10000
+      return this.$wallet.claimableNfx
     },
-
     stakeAge () {
-      // eslint-disable-next-line
-      this.refreshStakeAge
-      if (!this.efxStaked) {
-        return 0
-      }
-
-      // Add 'Z' for UTC time
-      let lastClaimTime = new Date(`${this.lastClaimTime}Z`)
-      const claimStopTime = new Date(1604188799 * 1000)
-      let limit = 1000 * 24 * 3600
-      let now = new Date()
-      let age = this.lastClaimAge
-      if (lastClaimTime < claimStopTime) {
-        limit = 200 * 24 * 3600
-        if (now > claimStopTime) {
-          now = claimStopTime
-          const diffTime = Math.abs(now.getTime() - lastClaimTime.getTime())
-          const diffSeconds = diffTime / 1000
-          age = Math.min(limit, this.lastClaimAge + diffSeconds)
-          lastClaimTime = now
-          limit = 1000 * 24 * 3600
-          now = new Date()
-        }
-      }
-
-      const diffTime = Math.abs(now.getTime() - lastClaimTime.getTime())
-      const diffSeconds = diffTime / 1000
-      return Math.min(limit, age + diffSeconds)
+      return this.$wallet.stakeAge
     },
-
     power () {
-      return parseFloat(this.efxStaked) + parseFloat((this.stakeAge / (200 * 24 * 3600)) * this.efxStaked)
+      return this.$wallet.power
+    },
+    efxAvailable () {
+      return this.$wallet.efxAvailable
+    },
+    efxStaked () {
+      return this.$wallet.efxStaked
+    },
+    nfxAvailable () {
+      return this.$wallet.nfxAvailable
+    },
+    nfxStaked () {
+      return this.$wallet.nfxStaked
     }
   },
 
   watch: {
     wallet () {
       this.init()
-    },
-
-    efxStaked (efxStaked) {
-      this.newStake = efxStaked
     }
   },
 
   created () {
     this.timer = setInterval(() => { this.refreshStakeAge = !this.refreshStakeAge }, 1000)
-    this.init()
     setInterval(this.init, 3000)
   },
 
@@ -239,47 +220,8 @@ export default {
   },
 
   methods: {
-    init () {
-      if (this.wallet) {
-        this.getStakingDetails()
-        this.getAccountBalance()
-        this.getUnstake()
-      }
-    },
-
-    async getStakingDetails () {
-      await this.$eos.rpc.get_table_rows({
-        code: process.env.stakingContract,
-        scope: this.wallet.auth.accountName,
-        table: 'stake'
-      }).then((data) => {
-        if (data.rows && data.rows.length > 0) {
-          const row = data.rows[0]
-          this.efxStaked = parseFloat(row.amount.replace(` ${process.env.efxToken}`, '').replace('.', ','))
-          this.lastClaimTime = row.last_claim_time
-          this.lastClaimAge = row.last_claim_age
-        }
-      })
-    },
-
-    async getAccountBalance () {
-      this.efxAvailable = parseFloat((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, this.wallet.auth.accountName, process.env.efxToken))[0].replace(` ${process.env.efxToken}`, ''))
-      this.nfxAvailable = parseFloat((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, this.wallet.auth.accountName, process.env.nfxToken))[0].replace(` ${process.env.nfxToken}`, ''))
-    },
-
-    async getUnstake () {
-      await this.$eos.rpc.get_table_rows({
-        code: process.env.stakingContract,
-        scope: this.wallet.auth.accountName,
-        table: 'unstake'
-      }).then((data) => {
-        if (data.rows && data.rows.length > 0) {
-          const row = data.rows[0]
-          this.unstakeAmount = row.amount
-          this.unstakeTime = new Date(row.time)
-          this.canClaim = this.unstakeTime <= new Date()
-        }
-      })
+    trimDecimals (event) {
+      this.newStake = Math.floor(this.newStake * 10000) / 10000
     },
 
     stake () {
@@ -443,6 +385,14 @@ export default {
     .input-lower {
       font-size: 12px;
       margin-top: -15px;
+    }
+
+    .new-stake {
+      margin-top: -10px;
+      padding-bottom: 40px;
+      .text {
+        margin-top: 10px;
+      }
     }
   }
 

@@ -26,7 +26,6 @@ export default (context, inject) => {
   const transit = new Vue({
     data () {
       return {
-        wallet: null,
         providers: {
           scatter: 'scatter',
           anchor: 'anchor-link',
@@ -43,10 +42,11 @@ export default (context, inject) => {
         await wallet.connect()
         await wallet.login()
 
-        this.wallet = wallet
+        context.$wallet.init(wallet)
       },
       async logout () {
-        this.wallet = await this.wallet.logout()
+        await this.wallet.logout()
+        context.$wallet.clear()
       }
     }
   })

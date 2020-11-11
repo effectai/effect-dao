@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <div v-if="!loading && !wallet" class="notification is-warning is-light mb-0 has-text-weight-bold notif-w-btn">
+    <div v-if="!loading && !wallet.auth" class="notification is-warning is-light mb-0 has-text-weight-bold notif-w-btn">
       <div class="is-pulled-left">
         Connect your wallet to participate in the DAO
       </div>
@@ -71,7 +71,7 @@
       <div v-for="member in constitutionMembers" :key="member.account" class="column is-half">
         <div class="block-shadow member">
           <figure class="image is-64x64 is-pulled-left">
-            <img class="is-rounded" src="https://bulma.io/images/placeholders/64x64.png">
+            <img class="is-rounded" :src="`https://avatar.pixeos.art/avatar/${member.account}`" @error="((evt) => fallbackAvatar(evt, member.account))">
           </figure>
 
           <h4>{{ member.account }}</h4>
@@ -115,13 +115,7 @@ export default {
 
   computed: {
     wallet () {
-      return (this.$transit) ? this.$transit.wallet : null
-    }
-  },
-
-  watch: {
-    wallet () {
-      this.init()
+      return this.$wallet.wallet
     }
   },
 
@@ -141,7 +135,7 @@ export default {
       })
 
       const members = await Promise.all(data.rows.map(async (row) => {
-        if (this.wallet && row.account === this.wallet.auth.accountName) {
+        if (this.wallet && this.wallet.auth && row.account === this.wallet.auth.accountName) {
           this.signedConstitution = true
         }
 
@@ -150,8 +144,12 @@ export default {
         return row
       }))
 
-      this.constitutionMembers = members.sort((a, b) => a.staked < b.staked)
+      this.constitutionMembers = members.sort((a, b) => a.staked > b.staked)
       this.loading = false
+    },
+
+    fallbackAvatar (event, accountName) {
+      event.target.src = `https://ui-avatars.com/api/?name=${accountName}&size=100`
     },
 
     async getStake (accountName) {
@@ -198,14 +196,14 @@ export default {
       })
         .then((transaction) => {
           console.log(transaction)
+          this.signedConstitution = true
+          this.constitutionModal = false
         })
         .catch((error) => {
           this.error = error
         })
         .finally(() => {
           this.loading = false
-          this.constitutionModal = false
-          this.signedConstitution = true
           this.init()
         })
     }

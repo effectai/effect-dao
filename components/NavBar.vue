@@ -46,7 +46,7 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <ConnectWallet v-if="!wallet || !wallet.connected" />
+              <ConnectWallet v-if="!wallet" />
               <a v-else class="button is-primary" @click="walletModal = true">
                 <strong>{{ wallet.auth.accountName }}</strong>
               </a>
@@ -68,6 +68,14 @@
             <button class="delete" aria-label="close" @click="walletModal = false" />
           </header>
           <section class="modal-card-body">
+            <figure class="image is-128x128 avatar mb-5">
+              <img class="is-rounded" :src="`https://avatar.pixeos.art/avatar/${wallet.auth.accountName}`" @error="fallbackAvatar">
+            </figure>
+            <a href="https://avatar.pixeos.art/" target="_blank">
+              <button class="button is-medium is-fullwidth is-primary mb-3">
+                Edit avatar
+              </button>
+            </a>
             <button class="button is-medium is-fullwidth is-danger" :class="{ 'is-loading': loading }" @click="logout()">
               Disconnect
             </button>
@@ -95,14 +103,18 @@ export default {
 
   computed: {
     wallet () {
-      return (this.$transit) ? this.$transit.wallet : null
+      return (this.$wallet) ? this.$wallet.wallet : null
     }
   },
 
   methods: {
-    async logout () {
+    fallbackAvatar (event) {
+      event.target.src = `https://ui-avatars.com/api/?name=${this.wallet.auth.accountName}&size=128`
+    },
+
+    logout () {
       this.loading = true
-      await this.$transit.logout()
+      this.$transit.logout()
       this.loading = false
       this.walletModal = false
     }
@@ -148,5 +160,11 @@ export default {
 
   .modal-card {
     max-width: 500px;
+  }
+
+  .avatar {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
   }
 </style>

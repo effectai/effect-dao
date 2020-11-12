@@ -82,8 +82,8 @@ export default {
     ],
     loaders: {
       scss: {
-        additionalData: "@import '~assets/css/variables.scss';",
-      },
+        additionalData: "@import '~assets/css/variables.scss';"
+      }
     }
   },
 

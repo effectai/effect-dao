@@ -18,7 +18,7 @@
             Sign constitution
           </button>
           <div class="small">
-            version {{ this.constitutionVersion }} | hash {{ this.constitutionHash }}
+            version {{ constitutionVersion }} | hash {{ constitutionHash }}
           </div>
         </footer>
       </div>

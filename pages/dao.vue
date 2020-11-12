@@ -14,7 +14,7 @@
           <div v-else v-html="$md.render(constitution)"></div>
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-success" @click="signConstitution">
+          <button class="button is-success" @click="signConstitution" :disabled="loading">
             Sign constitution
           </button>
           <div class="small">
@@ -34,7 +34,7 @@
     </div>
 
     <div
-      v-else-if="!loading && signedConstitution"
+      v-else-if="!loading && !signedConstitution"
       class="notification is-warning is-light mb-0 has-text-weight-bold notif-w-btn"
     >
       <div class="is-pulled-left">
@@ -51,7 +51,7 @@
       v-else-if="!loading && signedConstitution"
       class="notification is-success is-light mb-0 has-text-weight-bold notif-w-btn"
     >
-      🥳 You signed the constitution and are participating in the DAO!
+      You signed the constitution and are participating in the DAO!
     </div>
 
     <div class="intro">

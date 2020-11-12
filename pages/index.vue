@@ -45,7 +45,7 @@
       <h2 class="block-title">
         Staking Overview
       </h2>
-      <div class="columns block-columns">
+      <div class="columns block-columns is-desktop">
         <div class="column">
           <div class="icon">
             🔐
@@ -240,10 +240,6 @@ export default {
       margin-top: 20px;
       padding-bottom: 15px;
       margin-left: 0;
-    }
-
-    .text {
-      float: left;
     }
 
     .icon {

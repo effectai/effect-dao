@@ -16,7 +16,9 @@ export default (context, inject) => {
 
         efxUnstakeAmount: 0,
         efxUnstakeTime: null,
-        efxCanClaim: false
+        efxCanClaim: false,
+        timer: null,
+        refreshStakeAge: true
       }
     },
 
@@ -81,6 +83,14 @@ export default (context, inject) => {
       }
     },
 
+    created () {
+      this.timer = setInterval(() => { this.refreshStakeAge = !this.refreshStakeAge }, 1000)
+    },
+
+    beforeDestroy () {
+      clearInterval(this.timer)
+    },
+
     methods: {
       init (wallet) {
         this.wallet = wallet
@@ -94,38 +104,44 @@ export default (context, inject) => {
       },
 
       async getAccountBalance () {
-        this.efxAvailable = parseFloat((await this.eos.rpc.get_currency_balance(process.env.tokenContract, this.wallet.auth.accountName, process.env.efxToken))[0].replace(` ${process.env.efxToken}`, ''))
-        this.nfxAvailable = parseFloat((await this.eos.rpc.get_currency_balance(process.env.tokenContract, this.wallet.auth.accountName, process.env.nfxToken))[0].replace(` ${process.env.nfxToken}`, ''))
+        if (this.wallet) {
+          this.efxAvailable = parseFloat((await this.eos.rpc.get_currency_balance(process.env.tokenContract, this.wallet.auth.accountName, process.env.efxToken))[0].replace(` ${process.env.efxToken}`, ''))
+          this.nfxAvailable = parseFloat((await this.eos.rpc.get_currency_balance(process.env.tokenContract, this.wallet.auth.accountName, process.env.nfxToken))[0].replace(` ${process.env.nfxToken}`, ''))
+        }
       },
 
       async getStakes () {
-        await this.eos.rpc.get_table_rows({
-          code: process.env.stakingContract,
-          scope: this.wallet.auth.accountName,
-          table: 'stake'
-        }).then((data) => {
-          if (data.rows && data.rows.length > 0) {
-            const row = data.rows[0]
-            this.efxStaked = parseFloat(row.amount.replace(` ${process.env.efxToken}`, '').replace('.', ','))
-            this.lastClaimTime = row.last_claim_time
-            this.lastClaimAge = row.last_claim_age
-          }
-        })
+        if (this.wallet) {
+          await this.eos.rpc.get_table_rows({
+            code: process.env.stakingContract,
+            scope: this.wallet.auth.accountName,
+            table: 'stake'
+          }).then((data) => {
+            if (data.rows && data.rows.length > 0) {
+              const row = data.rows[0]
+              this.efxStaked = parseFloat(row.amount.replace(` ${process.env.efxToken}`, '').replace('.', ','))
+              this.lastClaimTime = row.last_claim_time
+              this.lastClaimAge = row.last_claim_age
+            }
+          })
+        }
       },
 
       async getUnstakes () {
-        await this.eos.rpc.get_table_rows({
-          code: process.env.stakingContract,
-          scope: this.wallet.auth.accountName,
-          table: 'unstake'
-        }).then((data) => {
-          if (data.rows && data.rows.length > 0) {
-            const row = data.rows[0]
-            this.efxUnstakeAmount = row.amount
-            this.efxUnstakeTime = new Date(row.time)
-            this.efxCanClaim = this.unstakeTime <= new Date()
-          }
-        })
+        if (this.wallet) {
+          await this.eos.rpc.get_table_rows({
+            code: process.env.stakingContract,
+            scope: this.wallet.auth.accountName,
+            table: 'unstake'
+          }).then((data) => {
+            if (data.rows && data.rows.length > 0) {
+              const row = data.rows[0]
+              this.efxUnstakeAmount = row.amount
+              this.efxUnstakeTime = new Date(row.time)
+              this.efxCanClaim = this.unstakeTime <= new Date()
+            }
+          })
+        }
       }
     }
   })

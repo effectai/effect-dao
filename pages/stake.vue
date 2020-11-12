@@ -48,10 +48,10 @@
           </section>
           <footer class="modal-card-foot">
             <button v-if="newStake < efxStaked" class="button is-danger is-fullwidth" :class="{ 'is-loading': loading }" @click="unstake()">
-              Withdraw {{ efxStaked - newStake }} EFX
+              Unstake {{ efxStaked - newStake }} EFX
             </button>
             <button v-else-if="newStake > efxStaked" class="button is-success is-fullwidth" :class="{ 'is-loading': loading }" @click="stake()">
-              Deposit {{ newStake - efxStaked }} EFX
+              Stake {{ newStake - efxStaked }} EFX
             </button>
           </footer>
         </div>
@@ -87,11 +87,11 @@
                 <span class="symbol">EFX</span>
               </p>
               <div class="buttons">
-                <button class="button is-primary is-fullwidth" @click="stakingModal = true">
-                  Deposit EFX
+                <button class="button is-success is-fullwidth" @click="stakingModal = true">
+                  Stake EFX
                 </button>
                 <button class="button is-danger" :disabled="efxStaked === 0" @click="stakingModal = true">
-                  Withdraw EFX
+                  Unstake EFX
                 </button>
               </div>
             </div>
@@ -109,11 +109,11 @@
                 <span class="symbol">NFX</span>
               </p>
               <div class="buttons">
-                <button class="button is-primary is-fullwidth" @click="stakingModal = true">
-                  Deposit NFX
+                <button class="button is-success is-fullwidth" @click="stakingModal = true">
+                  Stake NFX
                 </button>
                 <button class="button is-danger" :disabled="efxStaked === 0" @click="stakingModal = true">
-                  Withdraw NFX
+                  Unstake NFX
                 </button>
               </div>
             </div>
@@ -163,9 +163,6 @@ export default {
   data () {
     return {
       loading: false,
-      timer: null,
-      refreshStakeAge: true,
-
       lastClaimTime: null,
       lastClaimAge: null,
       stakingModal: false,
@@ -208,15 +205,6 @@ export default {
     wallet () {
       this.init()
     }
-  },
-
-  created () {
-    this.timer = setInterval(() => { this.refreshStakeAge = !this.refreshStakeAge }, 1000)
-    setInterval(this.init, 3000)
-  },
-
-  beforeDestroy () {
-    clearInterval(this.timer)
   },
 
   methods: {

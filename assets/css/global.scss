@@ -1,8 +1,11 @@
-@import './node_modules/bulma/bulma.sass';
+//@import './node_modules/bulma/bulma.sass';
+/* Import the rest of Bulma */
+@import '~bulma';
+
 @import './node_modules/bulma-slider/src/sass/index.sass';
 
 html {
-  background: rgba(0, 0, 0, 0) radial-gradient(circle at center top, rgb(243, 247, 243), rgb(216, 232, 216)) repeat fixed 0 0% / cover;
+  background: rgba(0, 0, 0, 0) radial-gradient(circle at center top, #f3f6f7, #F0F2F7) repeat fixed 0 0% / cover;
 }
 
 body {

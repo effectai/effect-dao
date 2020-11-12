@@ -5,7 +5,7 @@
         <div class="navbar-start">
           <a class="navbar-item navbar-title" href="#">
             <img src="@/assets/img/logo.png" class="logo">
-            Effect Dashboard
+            <span class="has-text-weight-normal">Effect</span>&nbsp;<b class="has-text-weight-bold">Dashboard</b>
           </a>
 
           <a
@@ -148,7 +148,7 @@ export default {
       .navbar-item {
         font-weight: 700;
         &.is-active {
-          color: #00d1b2;
+          color: $link;
         }
       }
     }

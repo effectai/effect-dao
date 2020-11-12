@@ -1,4 +1,9 @@
-// Ref: https://github.com/nuxt-community/vuetify-module#customvariables
-//
-// The variables you want to modify
-// $font-size-root: 20px;
+/* Import Bulma Utilities */
+@import '~bulma/sass/utilities/initial-variables';
+
+// Colours
+$primary: #243454;
+$secondary: #86BFD9;
+$link: $blue;
+//$background: red;
+

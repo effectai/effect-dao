@@ -79,7 +79,12 @@ export default {
       'eosjs',
       'countup.js',
       'vue-countup-v2'
-    ]
+    ],
+    loaders: {
+      scss: {
+        additionalData: "@import '~assets/css/variables.scss';",
+      },
+    }
   },
 
   bundleRenderer: {

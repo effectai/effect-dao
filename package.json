@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.12.2",
+    "@nuxtjs/markdownit": "^1.2.10",
     "bulma": "^0.9.1",
     "bulma-slider": "^2.0.4",
     "core-js": "^3.6.5",
@@ -23,8 +24,7 @@
     "eos-transit-tokenpocket-provider": "^4.0.7",
     "eosjs": "^21.0.3",
     "nuxt": "^2.14.6",
-    "vue-countup-v2": "^4.0.0",
-    "vue-showdown": "^2.4.1"
+    "vue-countup-v2": "^4.0.0"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^3.1.0",

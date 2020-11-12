@@ -11,7 +11,7 @@
         </header>
         <section class="modal-card-body">
           <span v-if="loading">Loading constitution..</span>
-          <VueShowdown v-else :markdown="constitution" flavor="github" />
+          <div v-else v-html="$md.render(constitution)"></div>
         </section>
         <footer class="modal-card-foot">
           <button class="button is-success" @click="signConstitution">
@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <div v-if="!loading && !wallet.auth" class="notification is-warning is-light mb-0 has-text-weight-bold notif-w-btn">
+    <div v-if="!loading && (!wallet || !wallet.auth)" class="notification is-warning is-light mb-0 has-text-weight-bold notif-w-btn">
       <div class="is-pulled-left">
         Connect your wallet to participate in the DAO
       </div>
@@ -34,7 +34,7 @@
     </div>
 
     <div
-      v-else-if="!loading && !signedConstitution"
+      v-else-if="!loading && signedConstitution"
       class="notification is-warning is-light mb-0 has-text-weight-bold notif-w-btn"
     >
       <div class="is-pulled-left">
@@ -87,14 +87,12 @@
 
 <script>
 import ICountUp from 'vue-countup-v2'
-import { VueShowdown } from 'vue-showdown'
 import ConnectWallet from '../components/ConnectWallet'
 
 export default {
   components: {
     ICountUp,
-    ConnectWallet,
-    VueShowdown
+    ConnectWallet
   },
 
   data () {
@@ -106,7 +104,7 @@ export default {
       constitutionContract: 'thedaonkylin',
       constitutionVersion: '1',
       constitutionHash: '1e1fe1b13e6e43d8f9cb3263817b24d7dcf8070a8fcaba3e8ced94ea263dd450',
-      constitutionUrl: 'https://raw.githubusercontent.com/effectai/effect-network-eos/dao/constitution/placeholder.md',
+      constitutionUrl: 'https://raw.githubusercontent.com/eosdac/eosdac-constitution/master/boilerplate_constitution.md',
 
       signedConstitution: false,
       constitutionMembers: []

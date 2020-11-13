@@ -87,7 +87,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .modal-card-body {
     border-radius: 0 0 6px 6px;
   }

@@ -68,7 +68,7 @@
 
     <div class="intro">
       <h1>Effect DAO</h1>
-      <h4>
+      <h4 v-if="false">
         <span v-if="!loading">
           {{ constitutionMembers.length }}
         </span>
@@ -78,18 +78,25 @@
         members
       </h4>
     </div>
-
-    <div class="columns members">
-      <div v-for="member in constitutionMembers" :key="member.account" class="column is-half">
-        <div class="block-shadow member">
-          <figure class="image is-64x64 is-pulled-left">
-            <img class="is-rounded" :src="`https://avatar.pixeos.art/avatar/${member.account}`" @error="((evt) => fallbackAvatar(evt, member.account))">
-          </figure>
-
-          <h4>{{ member.account }}</h4>
-          <div>
-            <ICountUp :options="{ prefix: 'Staking ', suffix: ' EFX' }" :end-val="member.staked" />
-            Joined {{ member.registration_time }}
+    <div class="block-shadow">
+      <h2 class="block-title">
+        DAO Members
+      </h2>
+      <div class="members columns is-multiline mt-5">
+        <div v-for="member in constitutionMembers" :key="member.account" class="column is-half">
+          <div class="member columns is-gapless is-mobile">
+            <div class="column is-one-fifth" style="min-width: 70px">
+              <figure class="image is-64x64">
+                <img :src="`https://avatar.pixeos.art/avatar/${member.account}`" @error="((evt) => fallbackAvatar(evt, member.account))">
+              </figure>
+            </div>
+            <div class="column">
+              <h4>{{ member.account }}</h4>
+              <div>
+                <ICountUp :options="{ prefix: 'Staking ', suffix: ' EFX' }" :end-val="member.staked" />
+                <small>Joined {{ $moment(member.registration_time).fromNow()  }}</small>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -269,10 +276,14 @@ export default {
   }
 
   .members {
+    .column {
+      padding: 10px 20px;
+    }
     .member {
-      padding: 0.75rem;
+      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6;
+      border-radius: 13px;
+      padding: 20px;
       h4 {
-        margin-top: 10px;
         margin-bottom: 0;
       }
       span {
@@ -280,6 +291,9 @@ export default {
         display: block;
       }
       .image {
+        img {
+          border-radius: 6px;
+        }
         margin: 0;
         margin-right: 10px;
       }

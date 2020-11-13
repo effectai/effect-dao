@@ -128,7 +128,7 @@
               <vue-circle
                 class="mt-2"
                 v-if="stakeAge"
-                :progress="(stakeAge / (200 * 24 * 3600))*100"
+                :progress="(stakeAge / (1000 * 24 * 3600))*100"
                 :size="250"
                 :fill="{ color: '#39e7bf' }"
                 empty-fill="rgba(0,0,0,.02)"
@@ -138,7 +138,7 @@
                 :start-angle="-Math.PI"
                 :show-percent="false">
                 <div class="value-circle">
-                  <h1>{{ stakeAge / (200 * 24 * 3600) | percentage(1)}}</h1>
+                  <h1>{{ stakeAge / (1000 * 24 * 3600) | percentage(1)}}<span class="has-text-weight-light">%</span></h1>
                   <div class="age-amount">{{ stakeAge | formatSeconds(this) }}</div>
                 </div>
               </vue-circle>
@@ -156,7 +156,7 @@
                 <div class="balance ">
                   <h3>
                     <ICountUp :options="{decimalPlaces: 0}" :end-val="power" />
-                    <span class="symbol">EP</span>
+                    <span class="symbol has-text-weight-light">EP</span>
                   </h3>
                 </div>
               </div>
@@ -192,7 +192,7 @@ export default {
         decimals = 0
       }
       value *= 100
-      return `${Math.round(value * Math.pow(10, decimals)) / Math.pow(10, decimals)}%`
+      return `${Math.round(value * Math.pow(10, decimals)) / Math.pow(10, decimals)}`
     },
     formatSeconds (seconds, vm) {
       if (!seconds) {
@@ -380,6 +380,9 @@ export default {
     canvas {
       box-shadow: inset -4px -4px 11px 0 #FFFFFF, inset 4px 4px 11px 0 #CDD4E6, 0px 0px 29px -22px #39e7bfd4;
       border-radius: 100%;
+    }
+    .age-amount {
+      font-size: 0.75rem;
     }
   }
   .value-circle {

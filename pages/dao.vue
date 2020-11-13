@@ -14,11 +14,23 @@
           <div v-else v-html="$md.render(constitution)"></div>
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-success" @click="signConstitution" :disabled="loading">
-            Sign constitution
-          </button>
-          <div class="small">
-            version {{ constitutionVersion }} | hash {{ constitutionHash }}
+          <template v-if="$wallet.efxStaked >= 500">
+            <button class="button is-success" @click="signConstitution" :disabled="loading">
+              Sign constitution
+            </button>
+            <div class="small">
+              version {{ constitutionVersion }} | hash {{ constitutionHash }}
+            </div>
+          </template>
+          <div v-else class="container max-width has-text-centered">
+            <div class="block is-size-5">
+              You must stake at least <b>500 EFX</b> before you can join the DAO
+            </div>
+            <button class="button is-warning has-text-centered" :disabled="loading">
+              <nuxt-link to="/stake">
+                Go to staking page
+              </nuxt-link>
+            </button>
           </div>
         </footer>
       </div>
@@ -42,7 +54,7 @@
       </div>
       <div class="is-pulled-right notif-btn">
         <button class="button is-success" @click="downloadConstitution(); constitutionModal = true">
-          Sign constitution
+          Become a member
         </button>
       </div>
     </div>

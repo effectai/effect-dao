@@ -75,12 +75,12 @@
         </button>
       </div>
 
-      <div v-if="wallet" class="columns stakes">
-        <div class="column">
+      <div v-if="wallet" class="columns stakes is-multiline">
+        <div class="column is-half">
           <div class="treasury block-shadow mt-5">
-            <h2 class="block-title">
+            <h1 class="block-title">
               <img src="@/assets/img/efx-icon.png" class="token-icon">Staked EFX
-            </h2>
+            </h1>
             <div class="balance">
               <p>
                 <ICountUp :end-val="efxStaked" />
@@ -98,11 +98,11 @@
           </div>
         </div>
 
-        <div class="column">
+        <div class="column is-half">
           <div class="treasury block-shadow mt-5">
-            <h2 class="block-title">
+            <h1 class="block-title">
               <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">Staked NFX
-            </h2>
+            </h1>
             <div class="balance">
               <p>
                 <ICountUp :end-val="efxStaked" />
@@ -119,19 +119,49 @@
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="treasury block-shadow">
-        <h2 class="block-title">
-          Stake Age
-        </h2>
-        <div class="block-columns">
-          <progress class="progress is-large mt-5 mb-3" :value="stakeAge/(1000*3600*24)" max="1" />
-          <div>{{ stakeAge/(1000*3600*24) * 100 }}%</div>
-          <div class="age-amount">
-            {{ stakeAge | formatSeconds(this) }}
+        <div class="column is-half">
+          <div class="treasury block-shadow">
+            <h1 class="block-title">
+              Stake AGE
+            </h1>
+            <div class="block-columns has-text-centered">
+              <vue-circle
+                class="mt-2"
+                v-if="stakeAge"
+                :progress="(stakeAge / (200 * 24 * 3600))*100"
+                :size="250"
+                :fill="{ color: '#39e7bf' }"
+                empty-fill="rgba(0,0,0,.02)"
+                :animation-start-value="0.0"
+                insert-mode="append"
+                :thickness="30"
+                :start-angle="-Math.PI"
+                :show-percent="false">
+                <div class="value-circle">
+                  <h1>{{ stakeAge / (200 * 24 * 3600) | percentage(1)}}</h1>
+                  <div class="age-amount">{{ stakeAge | formatSeconds(this) }}</div>
+                </div>
+              </vue-circle>
+              <h2 v-else>...</h2>
+            </div>
           </div>
-          Power: {{ power }}
+        </div>
+        <div class="column is-half">
+          <div class="treasury block-shadow" style="height:100%">
+            <h1 class="block-title">
+              EFX Power
+            </h1>
+            <div class="block-columns">
+              <div class="value-circle big mt-6 glow">
+                <div class="balance ">
+                  <h3>
+                    <ICountUp :options="{decimalPlaces: 0}" :end-val="power" />
+                    <span class="symbol">EP</span>
+                  </h3>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -143,15 +173,27 @@
 
 <script>
 import ICountUp from 'vue-countup-v2'
+import VueCircle from 'vue2-circle-progress/src/index.vue'
 import ConnectWallet from '~/components/ConnectWallet'
 
 export default {
   components: {
     ICountUp,
-    ConnectWallet
+    ConnectWallet,
+    VueCircle
   },
 
   filters: {
+    percentage (value, decimals) {
+      if (!value) {
+        value = 0
+      }
+      if (!decimals) {
+        decimals = 0
+      }
+      value *= 100
+      return `${Math.round(value * Math.pow(10, decimals)) / Math.pow(10, decimals)}%`
+    },
     formatSeconds (seconds, vm) {
       if (!seconds) {
         seconds = 0
@@ -198,12 +240,6 @@ export default {
     },
     nfxStaked () {
       return this.$wallet.nfxStaked
-    }
-  },
-
-  watch: {
-    wallet () {
-      this.init()
     }
   },
 
@@ -332,6 +368,45 @@ export default {
 </script>
 
 <style lang="scss">
+  @keyframes glow {
+    from {
+      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 29px -22px #39e7bfd4;
+    }
+    to {
+      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 29px 0px #39e7bfd4;
+    }
+  }
+  .circle {
+    canvas {
+      box-shadow: inset -4px -4px 11px 0 #FFFFFF, inset 4px 4px 11px 0 #CDD4E6, 0px 0px 29px -22px #39e7bfd4;
+      border-radius: 100%;
+    }
+  }
+  .value-circle {
+    height: 132px;
+    width: 132px;
+    &.big {
+      width: 200px;
+      height: 200px;
+    }
+
+    margin: -9px auto 0;
+
+    border-radius: 100%;
+    box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6;
+    &.glow {
+      animation: glow 2s infinite alternate ease-out;
+      //box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 29px -22px #39e7bfd4;
+    }
+    background-color: #F0F2F7;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    h1 {
+      margin-bottom: 0;
+    }
+  }
   .progress::-moz-progress-bar, .progress::-webkit-progress-bar {
     background: rgba(0, 0, 0, 0) linear-gradient(45deg, rgb(255, 0, 0) 0%, rgb(255, 154, 0) 10%, rgb(208, 222, 33) 20%, rgb(79, 220, 74) 30%, rgb(63, 218, 216) 40%, rgb(47, 201, 226) 50%, rgb(28, 127, 238) 60%, rgb(95, 21, 242) 70%, rgb(186, 12, 248) 80%, rgb(251, 7, 217) 90%, rgb(255, 0, 0) 100%) repeat scroll 0% 0% / 300% 300%;
     background-size: 200%;
@@ -348,7 +423,7 @@ export default {
   }
 
   .stake {
-    max-width: 750px;
+    max-width: 960px;
     margin-left: auto;
     margin-right: auto;
 

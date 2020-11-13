@@ -223,7 +223,7 @@ export default {
 
 <style lang="scss">
   .index {
-    max-width: 750px;
+    max-width: 960px;
     margin-left: auto;
     margin-right: auto;
 

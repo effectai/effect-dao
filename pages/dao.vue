@@ -225,7 +225,7 @@ export default {
 
 <style lang="scss" scoped>
 .dao {
-  max-width: 750px;
+  max-width: 960px;
   margin-left: auto;
   margin-right: auto;
 

@@ -1,30 +1,42 @@
 <template>
-  <div class="dao">
-    <div class="modal constitution-modal" :class="{ 'is-active': constitutionModal }">
-      <div class="modal-background" />
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">
-            Effect DAO constitution
-          </p>
-          <button class="delete" aria-label="close" @click="constitutionModal = false" />
-        </header>
-        <section class="modal-card-body">
-          <span v-if="loading">Loading constitution..</span>
-          <div v-else v-html="$md.render(constitution)"></div>
-        </section>
-        <footer class="modal-card-foot">
+<div class="dao">
+  <div class="modal constitution-modal" :class="{ 'is-active': constitutionModal }">
+    <div class="modal-background" />
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">
+          Effect DAO constitution
+        </p>
+        <button class="delete" aria-label="close" @click="constitutionModal = false" />
+      </header>
+      <section class="modal-card-body">
+        <span v-if="loading">Loading constitution..</span>
+        <div v-else v-html="$md.render(constitution)"></div>
+      </section>
+      <footer class="modal-card-foot">
+        <template v-if="this.$wallet.efxStaked >= 5000000000">
           <button class="button is-success" @click="signConstitution" :disabled="loading">
             Sign constitution
           </button>
           <div class="small">
             version {{ constitutionVersion }} | hash {{ constitutionHash }}
           </div>
-        </footer>
-      </div>
+        </template>
+        <div v-else class="container max-width has-text-centered">
+          <div class="block is-size-5">
+            You must stake at least <b>500 EFX</b> before you can join the DAO
+          </div>
+          <button class="button is-warning has-text-centered" :disabled="loading">
+            <nuxt-link to="/stake">
+              Go to staking page
+            </nuxt-link>
+          </button>
+        </div>
+      </footer>
     </div>
+  </div>
 
-    <div v-if="!loading && (!wallet || !wallet.auth)" class="notification is-warning is-light mb-0 has-text-weight-bold notif-w-btn">
+  <div v-if="!loading && (!wallet || !wallet.auth)" class="notification is-warning is-light mb-0 has-text-weight-bold notif-w-btn">
       <div class="is-pulled-left">
         Connect your wallet to participate in the DAO
       </div>

@@ -192,6 +192,35 @@
           </div>
         </div>
       </div>
+      <div class="column is-full">
+        <div class="treasury block-shadow">
+          <h1 class="block-title">
+            Level
+          </h1>
+          <div class="block-columns has-text-centered columns mt-3">
+            <div class="next-level column is-one-fifth">
+              <div class="treasury block-shadow">
+                <h1 class="block-title">
+                  Next level
+                </h1>
+                10000 NFX <br>
+                100000 EFX
+              </div>
+            </div>
+            <div class="column is-four-fifths progress-bar">
+              <p class="is-pulled-left">
+                5
+              </p>
+              <p class="is-pulled-right">
+                6
+              </p>
+              <progress class="progress is-large" value="60" max="100">
+                60%
+              </progress>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div v-else class="connect-wallet connect-wallet-stake">
       <ConnectWallet />
@@ -567,6 +596,10 @@ export default {
       .text {
         margin-top: 10px;
       }
+    }
+
+    .progress-bar {
+      margin-top: 40px;
     }
   }
 

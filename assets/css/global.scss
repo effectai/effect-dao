@@ -39,7 +39,8 @@ body {
 }
 
 .block-shadow {
-  box-shadow: rgba(20, 1, 8, 0.15) -2px 2px 4px inset, rgb(255, 255, 255) 2px -2px 4px inset;
+  //box-shadow: rgba(20, 1, 8, 0.15) -2px 2px 4px inset, rgb(255, 255, 255) 2px -2px 4px inset;
+  box-shadow: inset -4px -4px 10px 0 #FFFFFF, inset 4px 4px 10px 0 #CDD4E6;
   border-radius: 6px;
   padding: 24px;
 }

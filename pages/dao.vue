@@ -11,14 +11,26 @@
         </header>
         <section class="modal-card-body">
           <span v-if="loading">Loading constitution..</span>
-          <div v-else v-html="$md.render(constitution)"></div>
+          <div v-else v-html="$md.render(constitution)" />
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-success" @click="signConstitution" :disabled="loading">
-            Sign constitution
-          </button>
-          <div class="small">
-            version {{ constitutionVersion }} | hash {{ constitutionHash }}
+          <template v-if="$wallet.efxStaked >= 500">
+            <button class="button is-success" :disabled="loading" @click="signConstitution">
+              Sign constitution
+            </button>
+            <div class="small">
+              version {{ constitutionVersion }} | hash {{ constitutionHash }}
+            </div>
+          </template>
+          <div v-else class="container max-width has-text-centered">
+            <div class="block is-size-5">
+              You must stake at least <b>500 EFX</b> before you can join the DAO
+            </div>
+            <button class="button is-warning has-text-centered" :disabled="loading">
+              <nuxt-link to="/stake">
+                Go to staking page
+              </nuxt-link>
+            </button>
           </div>
         </footer>
       </div>
@@ -42,7 +54,7 @@
       </div>
       <div class="is-pulled-right notif-btn">
         <button class="button is-success" @click="downloadConstitution(); constitutionModal = true">
-          Sign constitution
+          Become a member
         </button>
       </div>
     </div>
@@ -86,6 +98,7 @@
 </template>
 
 <script>
+import { sha256 } from 'eosjs-ecc'
 import ICountUp from 'vue-countup-v2'
 import ConnectWallet from '../components/ConnectWallet'
 
@@ -101,9 +114,9 @@ export default {
       constitutionModal: false,
 
       constitution: '',
+      constitutionHash: '',
       constitutionContract: 'thedaonkylin',
       constitutionVersion: '1',
-      constitutionHash: '1e1fe1b13e6e43d8f9cb3263817b24d7dcf8070a8fcaba3e8ced94ea263dd450',
       constitutionUrl: 'https://raw.githubusercontent.com/eosdac/eosdac-constitution/master/boilerplate_constitution.md',
 
       signedConstitution: false,
@@ -117,6 +130,12 @@ export default {
     }
   },
 
+  watch: {
+    wallet () {
+      this.init()
+    }
+  },
+
   created () {
     this.init()
   },
@@ -124,6 +143,10 @@ export default {
   methods: {
     async init () {
       this.loading = true
+
+      if (this.wallet) {
+        this.checkIfSigned()
+      }
 
       const data = await this.$eos.rpc.get_table_rows({
         code: this.constitutionContract,
@@ -133,10 +156,6 @@ export default {
       })
 
       const members = await Promise.all(data.rows.map(async (row) => {
-        if (this.wallet && this.wallet.auth && row.account === this.wallet.auth.accountName) {
-          this.signedConstitution = true
-        }
-
         row.registration_time = new Date(row.registration_time).toLocaleDateString()
         row.staked = await this.getStake(row.account)
         return row
@@ -166,10 +185,24 @@ export default {
         .then(data => data.text())
         .then((data) => {
           this.constitution = data
+          this.constitutionHash = sha256(data)
         })
         .finally(() => {
           this.loading = false
         })
+    },
+
+    async checkIfSigned () {
+      await this.$eos.rpc.get_table_rows({
+        code: this.constitutionContract,
+        scope: this.constitutionContract,
+        lower_bound: ' ' + this.wallet.auth.accountName,
+        upper_bound: ' ' + this.wallet.auth.accountName,
+        table: 'member',
+        limit: 1
+      }).then((data) => {
+        this.signedConstitution = data.rows.length === 1
+      })
     },
 
     async signConstitution () {
@@ -193,7 +226,7 @@ export default {
         expireSeconds: 60
       })
         .then((transaction) => {
-          console.log(transaction)
+          this.init()
           this.signedConstitution = true
           this.constitutionModal = false
         })
@@ -211,7 +244,7 @@ export default {
 
 <style lang="scss" scoped>
 .dao {
-  max-width: 750px;
+  max-width: 960px;
   margin-left: auto;
   margin-right: auto;
 

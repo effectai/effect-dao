@@ -98,7 +98,7 @@ export default (context, inject) => {
 
     created () {
       this.timer = setInterval(() => { this.refreshStakeAge = !this.refreshStakeAge }, 1000)
-      // this.updater = setInterval(() => { this.updateAccount() }, 5000)
+      this.updater = setInterval(() => { this.updateAccount() }, 10000)
     },
 
     beforeDestroy () {
@@ -133,7 +133,7 @@ export default (context, inject) => {
         if (this.wallet) {
           await this.eos.rpc.get_table_rows({
             code: process.env.stakingContract,
-            scope: this.wallet.auth.accountName + ' ',
+            scope: this.wallet.auth.accountName,
             table: 'stake'
           }).then((data) => {
             data.rows.map((row) => {
@@ -153,7 +153,7 @@ export default (context, inject) => {
         if (this.wallet) {
           await this.eos.rpc.get_table_rows({
             code: process.env.stakingContract,
-            scope: this.wallet.auth.accountName + ' ',
+            scope: this.wallet.auth.accountName,
             table: 'unstake'
           }).then((data) => {
             data.rows.map((row) => {

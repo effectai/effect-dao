@@ -6,13 +6,16 @@
         <div class="modal-card">
           <header class="modal-card-head">
             <p class="modal-card-title">
-              Stake EFX
+              Stake {{ stakingModalEfx ? 'EFX' : 'NFX' }}
             </p>
             <button class="delete" aria-label="close" @click="stakingModal = false" />
           </header>
           <section class="modal-card-body">
-            <div class="notification is-primary">
+            <div v-if="stakingModalEfx" class="notification is-primary">
               <strong>Current Stake</strong>: {{ efxStaked }} EFX
+            </div>
+            <div v-else class="notification is-primary">
+              <strong>Current Stake</strong>: {{ nfxStaked }} NFX
             </div>
             <div class="new-stake">
               <div class="is-pulled-left text">
@@ -34,46 +37,73 @@
               class="slider is-fullwidth is-medium is-success is-circle"
               step="1"
               min="0"
-              :max="efxStaked + efxAvailable"
+              :max="(stakingModalEfx) ? efxStaked + efxAvailable : nfxStaked + nfxAvailable"
               type="range"
             >
             <div class="input-lower">
               <div class="is-pulled-left">
-                0 EFX
+                0 {{ stakingModalEfx ? 'EFX' : 'NFX' }}
               </div>
-              <div class="is-pulled-right">
+              <div v-if="stakingModalEfx" class="is-pulled-right">
                 {{ efxAvailable + efxStaked }} EFX
+              </div>
+              <div v-else class="is-pulled-right">
+                {{ nfxAvailable + nfxStaked }} NFX
               </div>
             </div>
           </section>
           <footer class="modal-card-foot">
-            <button v-if="newStake < efxStaked" class="button is-danger is-fullwidth" :class="{ 'is-loading': loading }" @click="unstake()">
+            <button v-if="stakingModalEfx && newStake < efxStaked" class="button is-danger is-fullwidth" :class="{ 'is-loading': loading }" @click="unstake">
               Unstake {{ efxStaked - newStake }} EFX
             </button>
-            <button v-else-if="newStake > efxStaked" class="button is-success is-fullwidth" :class="{ 'is-loading': loading }" @click="stake()">
+            <button v-else-if="!stakingModalEfx && newStake < nfxStaked" class="button is-danger is-fullwidth" :class="{ 'is-loading': loading }" @click="unstake">
+              Unstake {{ nfxStaked - newStake }} NFX
+            </button>
+            <button v-else-if="stakingModalEfx && newStake > efxStaked" class="button is-success is-fullwidth" :class="{ 'is-loading': loading }" @click="stake">
               Stake {{ newStake - efxStaked }} EFX
+            </button>
+            <button v-else-if="!stakingModalEfx && newStake > nfxStaked" class="button is-success is-fullwidth" :class="{ 'is-loading': loading }" @click="stake">
+              Stake {{ newStake - nfxStaked }} NFX
             </button>
           </footer>
         </div>
       </div>
 
-      <div v-if="claimableNfx > 0" class="notification is-primary unstake mb-0">
-        You can claim <b>{{ claimableNfx }}</b>.
-        <button class="button is-success is-pulled-right claim-nfx">
+      <div v-if="nfxStillClaimable > 0" class="notification is-primary unstake mb-0">
+        You can claim <b>{{ nfxStillClaimable }}</b> NFX.
+        <button class="button is-success is-pulled-right claim-nfx" @click="claimNfx">
           Claim
         </button>
       </div>
 
-      <div v-if="unstakeAmount && !canClaim" class="notification is-primary unstake mb-0">
-        You have a pending unstake of <b>{{ unstakeAmount }}</b>, claimable at <b>{{ unstakeTime.toLocaleString() }}</b>.
+      <div v-if="!efxCanRefund && efxUnstaking > 0" class="notification is-primary unstake mb-0">
+        You have a pending unstake of <b>{{ efxUnstaking }}</b> EFX, claimable at <b>{{ efxUnstakingTime.toLocaleString() }}</b>.
       </div>
 
-      <div v-else-if="unstakeAmount && canClaim" class="notification is-primary unstake mb-0">
-        You can claim <b>{{ unstakeAmount }}</b>.
-        <button class="button is-success is-pulled-right claim-efx">
+      <div v-else-if="efxCanRefund && efxUnstaking > 0" class="notification is-primary unstake mb-0">
+        You have an available refund of <b>{{ efxUnstaking }}</b> EFX
+        <button class="button is-success is-pulled-right claim-efx" :class="{ 'is-loading': loading }" @click="refund">
           Claim
         </button>
       </div>
+
+      <div v-if="nfxUnstaking > 0" class="notification is-primary unstake mb-0">
+        You have a pending unstake of <b>{{ nfxUnstaking }}</b> NFX, claimable at <b>{{ nfxUnstakingTime.toLocaleString() }}</b>.
+      </div>
+
+      <div v-else-if="nfxCanRefund && nfxUnstaking > 0" class="notification is-primary unstake mb-0">
+        You have an available refund of <b>{{ nfxUnstaking }}</b> NFX
+        <button class="button is-success is-pulled-right claim-efx" :class="{ 'is-loading': loading }" @click="refund">
+          Claim
+        </button>
+      </div>
+
+      <!--      <div v-if="nfxUnstaking > 0" class="notification is-primary unstake mb-0">-->
+      <!--        You can claim <b>{{ nfxUnstaking }} EFX</b>.-->
+      <!--        <button class="button is-success is-pulled-right claim-efx" @click="claim(false)">-->
+      <!--          Claim-->
+      <!--        </button>-->
+      <!--      </div>-->
 
       <div v-if="wallet" class="columns stakes">
         <div class="column">
@@ -87,10 +117,10 @@
                 <span class="symbol">EFX</span>
               </p>
               <div class="buttons">
-                <button class="button is-success is-fullwidth" @click="stakingModal = true">
+                <button class="button is-success is-fullwidth" :class="{ 'is-loading': loading }" :disabled="efxAvailable === 0" @click="stakingModal = true; stakingModalEfx = true; newStake = efxStaked + efxAvailable">
                   Stake EFX
                 </button>
-                <button class="button is-danger" :disabled="efxStaked === 0" @click="stakingModal = true">
+                <button class="button is-danger" :class="{ 'is-loading': loading }" :disabled="efxStaked === 0" @click="stakingModal = true; stakingModalEfx = true; newStake = 0">
                   Unstake EFX
                 </button>
               </div>
@@ -105,14 +135,14 @@
             </h2>
             <div class="balance">
               <p>
-                <ICountUp :end-val="efxStaked" />
+                <ICountUp :end-val="nfxStaked" />
                 <span class="symbol">NFX</span>
               </p>
               <div class="buttons">
-                <button class="button is-success is-fullwidth" @click="stakingModal = true">
+                <button class="button is-success is-fullwidth" :class="{ 'is-loading': loading }" :disabled="nfxAvailable === 0" @click="stakingModal = true; stakingModalEfx = false; newStake = nfxStaked + nfxAvailable">
                   Stake NFX
                 </button>
-                <button class="button is-danger" :disabled="efxStaked === 0" @click="stakingModal = true">
+                <button class="button is-danger" :class="{ 'is-loading': loading }" :disabled="nfxStaked === 0" @click="stakingModal = true; stakingModalEfx = false; newStake = 0">
                   Unstake NFX
                 </button>
               </div>
@@ -126,8 +156,8 @@
           Stake Age
         </h2>
         <div class="block-columns">
-          <progress class="progress is-large mt-5 mb-3" :value="stakeAge/(1000*3600*24)" max="1" />
-          <div>{{ stakeAge/(1000*3600*24) * 100 }}%</div>
+          <progress class="progress is-large mt-5 mb-3" :value="stakeAge / (1000 * 3600 * 24)" max="1" />
+          <div>{{ stakeAge / (1000 * 3600 * 24) * 100 }}%</div>
           <div class="age-amount">
             {{ stakeAge | formatSeconds(this) }}
           </div>
@@ -163,14 +193,9 @@ export default {
   data () {
     return {
       loading: false,
-      lastClaimTime: null,
-      lastClaimAge: null,
       stakingModal: false,
-      newStake: 0,
-
-      unstakeAmount: null,
-      unstakeTime: null,
-      canClaim: false
+      stakingModalEfx: false,
+      newStake: 0
     }
   },
 
@@ -178,8 +203,8 @@ export default {
     wallet () {
       return this.$wallet.wallet
     },
-    claimableNfx () {
-      return this.$wallet.claimableNfx
+    nfxStillClaimable () {
+      return this.$wallet.nfxStillClaimable
     },
     stakeAge () {
       return this.$wallet.stakeAge
@@ -198,12 +223,24 @@ export default {
     },
     nfxStaked () {
       return this.$wallet.nfxStaked
-    }
-  },
-
-  watch: {
-    wallet () {
-      this.init()
+    },
+    efxUnstaking () {
+      return this.$wallet.efxUnstaking
+    },
+    efxUnstakingTime () {
+      return this.$wallet.efxUnstakingTime
+    },
+    nfxUnstaking () {
+      return this.$wallet.nfxUnstaking
+    },
+    nfxUnstakingTime () {
+      return this.$wallet.nfxUnstakingTime
+    },
+    efxCanRefund () {
+      return this.$wallet.efxCanRefund
+    },
+    nfxCanRefund () {
+      return this.$wallet.nfxCanRefund
     }
   },
 
@@ -225,7 +262,8 @@ export default {
             permission: this.wallet.auth.permission
           }],
           data: {
-            owner: this.wallet.auth.accountName
+            owner: this.wallet.auth.accountName,
+            symbol: `4,${(this.stakingModalEfx) ? process.env.efxToken : process.env.nfxToken}`
           }
         })
       } else {
@@ -238,19 +276,7 @@ export default {
           }],
           data: {
             owner: this.wallet.auth.accountName,
-            ram_payer: this.wallet.auth.accountName
-          }
-        })
-        actions.push({
-          account: process.env.tokenContract,
-          name: 'open',
-          authorization: [{
-            actor: this.wallet.auth.accountName,
-            permission: this.wallet.auth.permission
-          }],
-          data: {
-            owner: this.wallet.auth.accountName,
-            symbol: `4,${process.env.nfxToken}`,
+            symbol: `4,${(this.stakingModalEfx) ? process.env.efxToken : process.env.nfxToken}`,
             ram_payer: this.wallet.auth.accountName
           }
         })
@@ -266,7 +292,7 @@ export default {
         data: {
           from: this.wallet.auth.accountName,
           to: process.env.stakingContract,
-          quantity: `${Number.parseFloat(this.newStake).toFixed(4)} ${process.env.efxToken}`,
+          quantity: `${Number.parseFloat(this.newStake).toFixed(4)} ${(this.stakingModalEfx) ? process.env.efxToken : process.env.nfxToken}`,
           memo: 'stake'
         }
       })
@@ -277,6 +303,7 @@ export default {
         })
         .catch((error) => {
           this.error = error
+          console.log(error)
         })
         .finally(() => {
           this.loading = false
@@ -284,6 +311,11 @@ export default {
     },
 
     unstake () {
+      let quantity = `${Number.parseFloat(this.efxStaked - this.newStake).toFixed(4)} ${process.env.efxToken}`
+      if (!this.stakingModalEfx) {
+        quantity = `${Number.parseFloat(this.nfxStaked - this.newStake).toFixed(4)} ${process.env.nfxToken}`
+      }
+
       this.loading = true
       this.wallet.eosApi.transact({
         actions: [
@@ -295,7 +327,8 @@ export default {
               permission: this.wallet.auth.permission
             }],
             data: {
-              owner: this.wallet.auth.accountName
+              owner: this.wallet.auth.accountName,
+              symbol: `4,${(this.stakingModalEfx) ? process.env.efxToken : process.env.nfxToken}`
             }
           },
           {
@@ -307,7 +340,7 @@ export default {
             }],
             data: {
               owner: this.wallet.auth.accountName,
-              quantity: `${Number.parseFloat(this.efxStaked - this.newStake).toFixed(4)} ${process.env.efxToken}`
+              quantity
             }
           }
         ]
@@ -316,6 +349,72 @@ export default {
           console.log(transaction)
         })
         .catch((error) => {
+          console.log(error)
+          this.error = error
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    },
+
+    claimNfx () {
+      this.loading = true
+      this.wallet.eosApi.transact({
+        actions: [
+          {
+            account: process.env.stakingContract,
+            name: 'claim',
+            authorization: [{
+              actor: this.wallet.auth.accountName,
+              permission: this.wallet.auth.permission
+            }],
+            data: {
+              owner: this.wallet.auth.accountName,
+              symbol: `4,${process.env.nfxToken}`
+            }
+          }
+        ]
+      }, {
+        blocksBehind: 3,
+        expireSeconds: 60
+      })
+        .then((transaction) => {
+          console.log(transaction)
+        })
+        .catch((error) => {
+          console.log(error)
+          this.error = error
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    },
+
+    refund () {
+      this.loading = true
+      this.wallet.eosApi.transact({
+        actions: [
+          {
+            account: process.env.stakingContract,
+            name: 'refund',
+            authorization: [{
+              actor: this.wallet.auth.accountName,
+              permission: this.wallet.auth.permission
+            }],
+            data: {
+              owner: this.wallet.auth.accountName
+            }
+          }
+        ]
+      }, {
+        blocksBehind: 3,
+        expireSeconds: 60
+      })
+        .then((transaction) => {
+          console.log(transaction)
+        })
+        .catch((error) => {
+          console.log(error)
           this.error = error
         })
         .finally(() => {
@@ -352,6 +451,15 @@ export default {
     margin-left: auto;
     margin-right: auto;
 
+    .notification {
+      margin-bottom: 12px !important;
+    }
+
+    .claim-efx {
+      margin-top: -7px;
+      margin-right: -12px;
+    }
+
     .buttons {
       margin-top: 15px;
 
@@ -376,7 +484,7 @@ export default {
     }
 
     .new-stake {
-      margin-top: -10px;
+      margin-top: 0px;
       padding-bottom: 40px;
       .text {
         margin-top: 10px;

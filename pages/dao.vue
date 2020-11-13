@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import sha256 from 'eosjs-ecc'
+import { sha256 } from 'eosjs-ecc'
 import ICountUp from 'vue-countup-v2'
 import ConnectWallet from '../components/ConnectWallet'
 

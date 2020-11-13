@@ -42,7 +42,7 @@
       </div>
       <div class="is-pulled-right notif-btn">
         <button class="button is-success" @click="downloadConstitution(); constitutionModal = true">
-          Sign constitution
+          Become a member
         </button>
       </div>
     </div>

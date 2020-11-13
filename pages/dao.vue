@@ -102,9 +102,9 @@ export default {
       constitutionModal: false,
 
       constitution: '',
+      constitutionHash: '',
       constitutionContract: 'thedaonkylin',
       constitutionVersion: '1',
-      constitutionHash: '1e1fe1b13e6e43d8f9cb3263817b24d7dcf8070a8fcaba3e8ced94ea263dd450',
       constitutionUrl: 'https://raw.githubusercontent.com/eosdac/eosdac-constitution/master/boilerplate_constitution.md',
 
       signedConstitution: false,

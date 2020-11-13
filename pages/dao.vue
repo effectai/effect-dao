@@ -14,7 +14,7 @@
           <div v-else v-html="$md.render(constitution)"></div>
         </section>
         <footer class="modal-card-foot">
-          <template v-if="this.$wallet.efxStaked >= 5000000000">
+          <template v-if="$wallet.efxStaked >= 500">
             <button class="button is-success" @click="signConstitution" :disabled="loading">
               Sign constitution
             </button>

@@ -86,6 +86,7 @@
 </template>
 
 <script>
+import sha256 from 'eosjs-ecc'
 import ICountUp from 'vue-countup-v2'
 import ConnectWallet from '../components/ConnectWallet'
 
@@ -166,6 +167,7 @@ export default {
         .then(data => data.text())
         .then((data) => {
           this.constitution = data
+          this.constitutionHash = sha256(data)
         })
         .finally(() => {
           this.loading = false

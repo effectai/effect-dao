@@ -212,9 +212,9 @@ export default {
       await fetch('https://worker.effect.ai/user/statistics')
         .then(data => data.json())
         .then((data) => {
-          this.forceEfxPaid = data.spentEfxTotal
-          this.forceTransactions = data.totalTransactions
-          this.forceUsers = data.usersRegisteredTotal
+          this.forceEfxPaid = data.total_efx_spent
+          this.forceTransactions = data.total_transactions
+          this.forceUsers = data.total_accounts
         })
     }
   }

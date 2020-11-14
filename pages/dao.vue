@@ -68,7 +68,7 @@
 
     <div class="intro">
       <h1>Effect DAO</h1>
-      <h4>
+      <h4 v-if="false">
         <span v-if="!loading">
           {{ constitutionMembers.length }}
         </span>
@@ -78,21 +78,32 @@
         members
       </h4>
     </div>
-
-    <div class="columns members">
-      <div v-for="member in constitutionMembers" :key="member.account" class="column is-half">
-        <div class="block-shadow member">
-          <figure class="image is-64x64 is-pulled-left">
-            <img class="is-rounded" :src="`https://avatar.pixeos.art/avatar/${member.account}`" @error="((evt) => fallbackAvatar(evt, member.account))">
-          </figure>
-
-          <h4>{{ member.account }}</h4>
-          <div>
-            <ICountUp :options="{ prefix: 'Staking ', suffix: ' EFX' }" :end-val="member.staked" />
-            Joined {{ member.registration_time }}
+    <div class="block-shadow">
+      <h2 class="block-title">
+        DAO Members
+      </h2>
+      <div class="members columns is-multiline mt-5" v-if="constitutionMembers">
+        <div v-for="member in constitutionMembers" :key="member.account" class="column is-half">
+          <div class="member columns is-gapless is-mobile">
+            <div class="tag is-primary is-light rank-name">member</div>
+            <div class="column is-one-fifth" style="min-width: 70px">
+              <figure class="image is-64x64">
+                <img :src="`https://avatar.pixeos.art/avatar/${member.account}`" @error="((evt) => fallbackAvatar(evt, member.account))">
+              </figure>
+            </div>
+            <div class="column">
+              <h4>{{ member.account }}</h4>
+              <div>
+                <ICountUp v-if="member.power >= 0" :options="{ prefix: 'EFX Power ', suffix: ' EP' }" :end-val="member.power" />
+                <div v-else>...</div>
+                <small>Joined {{ $moment(member.registration_time).fromNow()  }}</small>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      <h4 class="has-text-centered" v-else>Loading members..</h4>
+      <div class="has-text-centered" v-if="moreMembers"><button class="button" @click="loadMoreMembers">Load More</button></div>
     </div>
   </div>
 </template>
@@ -118,9 +129,9 @@ export default {
       constitutionContract: 'thedaonkylin',
       constitutionVersion: '1',
       constitutionUrl: 'https://raw.githubusercontent.com/eosdac/eosdac-constitution/master/boilerplate_constitution.md',
-
+      moreMembers: true,
       signedConstitution: false,
-      constitutionMembers: []
+      constitutionMembers: null
     }
   },
 
@@ -132,7 +143,7 @@ export default {
 
   watch: {
     wallet () {
-      this.init()
+      this.checkIfSigned()
     }
   },
 
@@ -152,17 +163,60 @@ export default {
         code: this.constitutionContract,
         scope: this.constitutionContract,
         table: 'member',
-        limit: 1000
+        limit: 20
       })
-
-      const members = await Promise.all(data.rows.map(async (row) => {
-        row.registration_time = new Date(row.registration_time).toLocaleDateString()
-        row.staked = await this.getStake(row.account)
-        return row
-      }))
-
-      this.constitutionMembers = members.sort((a, b) => a.staked > b.staked)
+      this.moreMembers = data.more
+      this.nextKey = data.next_key
+      const members = data.rows
+      this.constitutionMembers = members
+      members.forEach((member) => {
+        try {
+          this.getMemberInfo(member)
+        } catch (e) {
+          console.error(e)
+        }
+      })
       this.loading = false
+    },
+
+    async loadMoreMembers () {
+      this.loading = true
+
+      const data = await this.$eos.rpc.get_table_rows({
+        code: this.constitutionContract,
+        scope: this.constitutionContract,
+        table: 'member',
+        lower_bound: this.nextKey,
+        limit: 20
+      })
+      this.moreMembers = data.more
+      this.nextKey = data.next_key
+      const members = data.rows
+      this.constitutionMembers = this.constitutionMembers.concat(members)
+      members.forEach((member) => {
+        try {
+          this.getMemberInfo(member)
+        } catch (e) {
+          console.error(e)
+        }
+      })
+      this.loading = false
+    },
+
+    async getMemberInfo (member) {
+      member.registration_time = new Date(`${member.registration_time}Z`)
+      const stakeInfo = await this.getStake(member.account)
+
+      if (stakeInfo) {
+        const efxStaked = parseFloat(stakeInfo.amount.replace(` ${process.env.efxToken}`, '').replace('.', ','))
+        const stakeAge = this.$wallet.calculateStakeAge(efxStaked, stakeInfo.last_claim_time, stakeInfo.last_claim_age)
+        const efxPower = this.$wallet.calculateEfxPower(efxStaked, stakeAge)
+        this.$set(member, 'staked', efxStaked)
+        this.$set(member, 'stakeAge', stakeAge)
+        this.$set(member, 'power', efxPower)
+      } else {
+        this.$set(member, 'power', 0)
+      }
     },
 
     fallbackAvatar (event, accountName) {
@@ -175,7 +229,7 @@ export default {
         scope: accountName,
         table: 'stake'
       }).then((data) => {
-        return (data.rows && data.rows.length > 0) ? parseFloat(data.rows[0].amount.replace(` ${process.env.efxToken}`, '').replace('.', ',')) : 0
+        return (data.rows && data.rows.length > 0) ? data.rows[0] : null
       })
     },
 
@@ -235,7 +289,6 @@ export default {
         })
         .finally(() => {
           this.loading = false
-          this.init()
         })
     }
   }
@@ -269,10 +322,21 @@ export default {
   }
 
   .members {
+    .column {
+      padding: 10px 20px;
+    }
     .member {
-      padding: 0.75rem;
+      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6;
+      border-radius: 13px;
+      padding: 20px;
+      position: relative;
+      .rank-name {
+        font-size: 12px;
+        position: absolute;
+        top: 8px;
+        right: 10px;
+      }
       h4 {
-        margin-top: 10px;
         margin-bottom: 0;
       }
       span {
@@ -280,6 +344,9 @@ export default {
         display: block;
       }
       .image {
+        img {
+          border-radius: 6px;
+        }
         margin: 0;
         margin-right: 10px;
       }

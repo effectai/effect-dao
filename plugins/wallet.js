@@ -55,36 +55,11 @@ export default (context, inject) => {
       stakeAge () {
         // eslint-disable-next-line
         this.refreshStakeAge
-        if (!this.efxStaked) {
-          return 0
-        }
-
-        // Add 'Z' for UTC time
-        let lastClaimTime = new Date(`${this.efxLastClaimTime}Z`)
-        const claimStopTime = new Date(1604188799 * 1000)
-        let limit = 1000 * 24 * 3600
-        let now = new Date()
-        let age = this.efxLastClaimAge
-        if (lastClaimTime < claimStopTime) {
-          limit = 200 * 24 * 3600
-          if (now > claimStopTime) {
-            now = claimStopTime
-            const diffTime = Math.abs(now.getTime() - lastClaimTime.getTime())
-            const diffSeconds = diffTime / 1000
-            age = Math.min(limit, this.efxLastClaimAge + diffSeconds)
-            lastClaimTime = now
-            limit = 1000 * 24 * 3600
-            now = new Date()
-          }
-        }
-
-        const diffTime = Math.abs(now.getTime() - lastClaimTime.getTime())
-        const diffSeconds = diffTime / 1000
-        return Math.min(limit, age + diffSeconds)
+        return this.calculateStakeAge(this.efxStaked, this.efxLastClaimTime, this.efxLastClaimAge)
       },
 
       power () {
-        return parseFloat(this.efxStaked) + parseFloat((this.stakeAge / (200 * 24 * 3600)) * this.efxStaked)
+        return this.calculateEfxPower(this.efxStaked, this.stakeAge)
       },
 
       efxCanRefund () {
@@ -110,6 +85,39 @@ export default (context, inject) => {
       init (wallet) {
         this.wallet = wallet
         this.updateAccount()
+      },
+
+      calculateEfxPower (efxStaked, stakeAge) {
+        return parseFloat(efxStaked) + parseFloat((stakeAge / (200 * 24 * 3600)) * efxStaked)
+      },
+
+      calculateStakeAge (efxStaked, efxLastClaimTime, efxLastClaimAge) {
+        if (!efxStaked) {
+          return 0
+        }
+
+        // Add 'Z' for UTC time
+        let lastClaimTime = new Date(`${efxLastClaimTime}Z`)
+        const claimStopTime = new Date(1604188799 * 1000)
+        let limit = 1000 * 24 * 3600
+        let now = new Date()
+        let age = efxLastClaimAge
+        if (lastClaimTime < claimStopTime) {
+          limit = 200 * 24 * 3600
+          if (now > claimStopTime) {
+            now = claimStopTime
+            const diffTime = Math.abs(now.getTime() - lastClaimTime.getTime())
+            const diffSeconds = diffTime / 1000
+            age = Math.min(limit, efxLastClaimAge + diffSeconds)
+            lastClaimTime = now
+            limit = 1000 * 24 * 3600
+            now = new Date()
+          }
+        }
+
+        const diffTime = Math.abs(now.getTime() - lastClaimTime.getTime())
+        const diffSeconds = diffTime / 1000
+        return Math.min(limit, age + diffSeconds)
       },
 
       updateAccount () {

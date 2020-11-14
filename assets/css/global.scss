@@ -48,9 +48,14 @@ body {
 .block-title {
   font-size: 18px !important;
   text-align: center;
-  border-bottom: 1px solid #CCC;
+  border-bottom: 2px solid #CDD4E6;
   padding-bottom: 20px;
   margin-top: 10px;
+}
+
+.tag:not(body).is-accent {
+  color: black;
+  background-color: $accent;
 }
 
 .connect-wallet {

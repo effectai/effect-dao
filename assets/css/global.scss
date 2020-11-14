@@ -53,6 +53,11 @@ body {
   margin-top: 10px;
 }
 
+.tag:not(body).is-accent {
+  color: black;
+  background-color: $accent;
+}
+
 .connect-wallet {
   margin-left: auto;
   margin-right: auto;

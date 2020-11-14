@@ -195,7 +195,7 @@
       <div class="column is-full">
         <div class="treasury block-shadow">
           <h1 class="block-title">
-            Level
+            Rank {{rank.currentRank}}
           </h1>
           <div class="block-columns has-text-centered columns mt-3">
             <div class="next-level column is-one-fifth">
@@ -212,7 +212,7 @@
                 5
               </p>
               <p class="is-pulled-right">
-                6
+                {{}}
               </p>
               <progress class="progress is-large" value="60" max="100">
                 60%
@@ -277,6 +277,9 @@ export default {
     },
     stakeAge () {
       return this.$wallet.stakeAge
+    },
+    rank () {
+      return this.$wallet.rank
     },
     power () {
       return this.$wallet.power

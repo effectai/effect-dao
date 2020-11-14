@@ -85,11 +85,13 @@
       <div class="members columns is-multiline mt-5" v-if="constitutionMembers">
         <div v-for="member in constitutionMembers" :key="member.account" class="column is-half">
           <div class="member columns is-gapless is-mobile">
-            <div class="tag is-primary is-light rank-name">member</div>
+            <div v-if="member.rank == 0" class="tag is-primary is-light rank-name">member</div>
+            <div v-else-if="member.rank > 0" class="tag is-primary rank-name">guardian</div>
             <div class="column is-one-fifth" style="min-width: 70px">
               <figure class="image is-64x64">
                 <img :src="`https://avatar.pixeos.art/avatar/${member.account}`" @error="((evt) => fallbackAvatar(evt, member.account))">
               </figure>
+              <div v-if="member.rank" class="rank"><div :class="['rank-color','rank-'+member.rank.currentRank]"></div><span>Rank {{member.rank.currentRank}}</span></div>
             </div>
             <div class="column">
               <h4>{{ member.account }}</h4>
@@ -206,17 +208,20 @@ export default {
     async getMemberInfo (member) {
       member.registration_time = new Date(`${member.registration_time}Z`)
       const stakeInfo = await this.getStake(member.account)
-
-      if (stakeInfo) {
-        const efxStaked = parseFloat(stakeInfo.amount.replace(` ${process.env.efxToken}`, '').replace('.', ','))
-        const stakeAge = this.$wallet.calculateStakeAge(efxStaked, stakeInfo.last_claim_time, stakeInfo.last_claim_age)
-        const efxPower = this.$wallet.calculateEfxPower(efxStaked, stakeAge)
-        this.$set(member, 'staked', efxStaked)
-        this.$set(member, 'stakeAge', stakeAge)
-        this.$set(member, 'power', efxPower)
-      } else {
-        this.$set(member, 'power', 0)
-      }
+      stakeInfo.map((row) => {
+        if (row.amount.includes(process.env.efxToken)) {
+          const efxStaked = parseFloat(row.amount.replace(` ${process.env.efxToken}`, '').replace('.', ','))
+          const stakeAge = this.$wallet.calculateStakeAge(efxStaked, row.last_claim_time, row.last_claim_age)
+          const efxPower = this.$wallet.calculateEfxPower(efxStaked, stakeAge)
+          this.$set(member, 'efxStaked', efxStaked)
+          this.$set(member, 'stakeAge', stakeAge)
+          this.$set(member, 'power', efxPower)
+        } else if (row.amount.includes(process.env.nfxToken)) {
+          const nfxStaked = parseFloat(row.amount.replace(` ${process.env.nfxToken}`, '').replace('.', ','))
+          this.$set(member, 'nfxStaked', nfxStaked)
+        }
+      })
+      this.$set(member, 'rank', this.$wallet.calculateRankProgress(member.power, member.nfxStaked))
     },
 
     fallbackAvatar (event, accountName) {
@@ -229,7 +234,7 @@ export default {
         scope: accountName,
         table: 'stake'
       }).then((data) => {
-        return (data.rows && data.rows.length > 0) ? data.rows[0] : null
+        return data.rows
       })
     },
 
@@ -330,6 +335,23 @@ export default {
       border-radius: 13px;
       padding: 20px;
       position: relative;
+      .rank {
+        padding-top:6px;
+        font-size: 13px;
+        span {
+          padding-top:3px;
+          padding-left: 10px;
+        }
+        .rank-color {
+          width: 64px;
+          border-radius: 3px;
+          height: 6px;
+          background-color: grey;
+          &.rank-1 {
+            background-color: $accent;
+          }
+        }
+      }
       .rank-name {
         font-size: 12px;
         position: absolute;

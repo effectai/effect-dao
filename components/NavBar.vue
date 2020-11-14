@@ -5,7 +5,7 @@
         <div class="navbar-start">
           <a class="navbar-item navbar-title" href="#">
             <img src="@/assets/img/logo.png" class="logo">
-            <span class="has-text-weight-normal">Effect</span>&nbsp;<b class="has-text-weight-bold">Dashboard</b>
+            <span class="top-title"><span class="has-text-weight-normal">Effect</span>&nbsp;<b class="has-text-weight-bold">Dashboard</b></span>
           </a>
 
           <a
@@ -14,6 +14,7 @@
             aria-label="menu"
             aria-expanded="false"
             data-target="navbarBasicExample"
+            @click="mobileMenu = !mobileMenu"
           >
             <span aria-hidden="true" />
             <span aria-hidden="true" />
@@ -21,7 +22,7 @@
           </a>
         </div>
 
-        <div id="navbarBasicExample" class="navbar-menu">
+        <div id="navbarBasicExample" class="navbar-menu" :class="{'is-active': mobileMenu}">
           <nuxt-link class="navbar-item" to="/" exact-active-class="is-active">
             Home
           </nuxt-link>
@@ -41,11 +42,15 @@
           <nuxt-link class="navbar-item" to="/swap" exact-active-class="is-active">
             Swap
           </nuxt-link>
+
+          <a class="navbar-item connect-wallet mobile-connect">
+            <ConnectWallet v-if="!wallet" />
+          </a>
         </div>
 
         <div class="navbar-end">
           <div class="navbar-item">
-            <div class="buttons">
+            <div class="buttons wallet">
               <ConnectWallet v-if="!wallet" />
               <a v-else class="button is-primary" @click="walletModal = true">
                 <strong>{{ wallet.auth.accountName }}</strong>
@@ -97,7 +102,8 @@ export default {
   data () {
     return {
       walletModal: false,
-      loading: false
+      loading: false,
+      mobileMenu: false
     }
   },
 
@@ -126,6 +132,32 @@ export default {
   .navbar {
     background: transparent;
     margin-top: 8px;
+
+    .navbar-burger.burger {
+      margin-top: -48px;
+    }
+
+    .mobile-connect {
+      display: none;
+      margin-bottom: -50px;
+      margin-top: 12px;
+    }
+
+    @media all and (max-width: 1024px) {
+      .top-title {
+        display: block;
+        margin-top: -39px;
+        margin-left: 40px;
+      }
+
+      .navbar-end {
+        display: none;
+      }
+
+      .mobile-connect {
+        display: block;
+      }
+    }
 
     .navbar-title {
       min-width: 100px;

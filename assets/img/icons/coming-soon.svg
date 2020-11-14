@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="766px" height="766px" viewBox="0 0 766 766" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59 (86127) - https://sketch.com -->
+    <title>visual</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="362" cy="361" r="340"></circle>
+        <filter x="-9.5%" y="-9.5%" width="119.0%" height="119.0%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="12" dy="12" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="15.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.803921569   0 0 0 0 0.831372549   0 0 0 0 0.901960784  0 0 0 1 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feOffset dx="-12" dy="-12" in="SourceAlpha" result="shadowOffsetOuter2"></feOffset>
+            <feGaussianBlur stdDeviation="15.5" in="shadowOffsetOuter2" result="shadowBlurOuter2"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 1 0" type="matrix" in="shadowBlurOuter2" result="shadowMatrixOuter2"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="shadowMatrixOuter2"></feMergeNode>
+            </feMerge>
+        </filter>
+        <radialGradient cx="50%" cy="50%" fx="50%" fy="50%" r="50.5550334%" id="radialGradient-3">
+            <stop stop-color="#3EEEC6" stop-opacity="0.626119974" offset="0%"></stop>
+            <stop stop-color="#556EA0" stop-opacity="0" offset="100%"></stop>
+        </radialGradient>
+        <linearGradient x1="87.6958847%" y1="13.8496429%" x2="22.5595921%" y2="85.7015467%" id="linearGradient-4">
+            <stop stop-color="#9DFFE9" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#50E3C2" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="24.7561871%" y1="94.9563409%" x2="54.3810181%" y2="15.7802464%" id="linearGradient-5">
+            <stop stop-color="#556EA0" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#556EA0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="71.493002%" y1="87.193534%" x2="5.73516005%" y2="-10.6643801%" id="linearGradient-6">
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" offset="100%"></stop>
+        </linearGradient>
+        <filter x="-0.7%" y="-0.7%" width="101.4%" height="101.4%" filterUnits="objectBoundingBox" id="filter-7">
+            <feGaussianBlur stdDeviation="0.743860787 -0.311371306" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <linearGradient x1="56.1292236%" y1="94.9199326%" x2="41.9208231%" y2="12.2018023%" id="linearGradient-8">
+            <stop stop-color="#9DFFE9" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#50E3C2" offset="100%"></stop>
+        </linearGradient>
+        <filter x="-6.0%" y="-3.0%" width="112.0%" height="106.0%" filterUnits="objectBoundingBox" id="filter-9">
+            <feGaussianBlur stdDeviation="3.2256" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <linearGradient x1="22.2481778%" y1="3.56787206%" x2="57.2033467%" y2="86.4838223%" id="linearGradient-10">
+            <stop stop-color="#9DFFE9" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#50E3C2" offset="100%"></stop>
+        </linearGradient>
+        <filter x="-2.8%" y="-2.1%" width="105.6%" height="104.1%" filterUnits="objectBoundingBox" id="filter-11">
+            <feGaussianBlur stdDeviation="3.2256" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <linearGradient x1="96.9140463%" y1="97.5475693%" x2="96.9140463%" y2="61.4359756%" id="linearGradient-12">
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="7.52450286%" y1="92.411791%" x2="93.9353476%" y2="6.37685958%" id="linearGradient-13">
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="96.9140463%" y1="97.5475693%" x2="96.9140463%" y2="61.4359756%" id="linearGradient-14">
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50.0030033%" y1="92.8343001%" x2="49.9965958%" y2="12.2018023%" id="linearGradient-15">
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="58.4162275%" y1="53.0829828%" x2="117.579154%" y2="72.5456072%" id="linearGradient-16">
+            <stop stop-color="#3EEEC6" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#50E3C2" offset="100%"></stop>
+        </linearGradient>
+        <filter x="-1.3%" y="-2.2%" width="102.5%" height="104.4%" filterUnits="objectBoundingBox" id="filter-17">
+            <feGaussianBlur stdDeviation="0.8064" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <filter x="-75.0%" y="-75.0%" width="250.0%" height="250.0%" filterUnits="objectBoundingBox" id="filter-18">
+            <feGaussianBlur stdDeviation="2.4192" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <linearGradient x1="36.7167939%" y1="45.6885483%" x2="100%" y2="66.6668237%" id="linearGradient-19">
+            <stop stop-color="#3EEEC6" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#50E3C2" offset="100%"></stop>
+        </linearGradient>
+        <filter x="-1.5%" y="-2.6%" width="103.0%" height="105.3%" filterUnits="objectBoundingBox" id="filter-20">
+            <feGaussianBlur stdDeviation="0.8064" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <filter x="-75.0%" y="-75.0%" width="250.0%" height="250.0%" filterUnits="objectBoundingBox" id="filter-21">
+            <feGaussianBlur stdDeviation="1.93535989" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <linearGradient x1="50.8070429%" y1="50%" x2="100%" y2="66.6668237%" id="linearGradient-22">
+            <stop stop-color="#3EEEC6" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#50E3C2" offset="100%"></stop>
+        </linearGradient>
+        <filter x="-2.0%" y="-3.4%" width="103.9%" height="106.8%" filterUnits="objectBoundingBox" id="filter-23">
+            <feGaussianBlur stdDeviation="0.8064" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <filter x="-75.0%" y="-75.0%" width="250.0%" height="250.0%" filterUnits="objectBoundingBox" id="filter-24">
+            <feGaussianBlur stdDeviation="1.3547519" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <linearGradient x1="17.9699138%" y1="65.3523999%" x2="17.9699138%" y2="12.2018023%" id="linearGradient-25">
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="17.9699138%" y1="90.0578952%" x2="17.9699138%" y2="35.7814489%" id="linearGradient-26">
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="17.9699138%" y1="90.0578952%" x2="17.9699138%" y2="35.7814489%" id="linearGradient-27">
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="17.9699138%" y1="85.5041761%" x2="17.9699138%" y2="12.2018023%" id="linearGradient-28">
+            <stop stop-color="#9DFFE9" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#50E3C2" offset="100%"></stop>
+        </linearGradient>
+        <filter x="-2.9%" y="-1.3%" width="105.4%" height="102.7%" filterUnits="objectBoundingBox" id="filter-29">
+            <feGaussianBlur stdDeviation="0.8064" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <linearGradient x1="17.9699138%" y1="85.5041761%" x2="17.9699138%" y2="12.2018023%" id="linearGradient-30">
+            <stop stop-color="#9DFFE9" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#50E3C2" offset="100%"></stop>
+        </linearGradient>
+        <filter x="-4.5%" y="-3.1%" width="108.4%" height="105.8%" filterUnits="objectBoundingBox" id="filter-31">
+            <feGaussianBlur stdDeviation="1.6128" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <linearGradient x1="51.4159076%" y1="11.4711245%" x2="54.8971072%" y2="96.547568%" id="linearGradient-32">
+            <stop stop-color="#9DFFE9" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#50E3C2" offset="100%"></stop>
+        </linearGradient>
+        <filter x="-1.2%" y="-1.0%" width="102.5%" height="102.0%" filterUnits="objectBoundingBox" id="filter-33">
+            <feGaussianBlur stdDeviation="0.8064" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+    </defs>
+    <g id="desktop" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Vote" transform="translate(-577.000000, -213.000000)">
+            <g id="visual" transform="translate(598.000000, 235.000000)">
+                <g id="Oval">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use fill="#F0F2F7" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+                <g id="Visual">
+                    <circle id="Oval" fill="url(#radialGradient-3)" opacity="0.722888765" cx="363.6864" cy="368.5248" r="88.704"></circle>
+                    <g id="Group-2" transform="translate(153.216000, 154.022400)" opacity="0.5">
+                        <path d="M416.9088,198.3744 C416.9088,307.933556 328.274075,396.7488 218.9376,396.7488 C109.601125,396.7488 20.9664,307.933556 20.9664,198.3744 C20.9664,88.8152442 109.601125,0 218.9376,0 C328.274075,0 416.9088,88.8152442 416.9088,198.3744 Z" id="Oval-Copy-2" fill="url(#linearGradient-4)"></path>
+                        <path d="M395.9424,216.9216 C395.9424,326.480756 307.307675,415.296 197.9712,415.296 C88.6347254,415.296 0,326.480756 0,216.9216 C0,107.362444 88.6347254,18.5472 197.9712,18.5472 C307.307675,18.5472 395.9424,107.362444 395.9424,216.9216 Z" id="Oval-Copy-2" fill="url(#linearGradient-5)"></path>
+                    </g>
+                    <path d="M560.448,362.0736 C560.448,471.632756 471.813275,560.448 362.4768,560.448 C253.140325,560.448 164.5056,471.632756 164.5056,362.0736 C164.5056,252.514444 253.140325,163.6992 362.4768,163.6992 C471.813275,163.6992 560.448,252.514444 560.448,362.0736 Z" id="Oval-Copy-2" stroke="url(#linearGradient-6)" stroke-width="0.8064" opacity="0.5" stroke-dasharray="12.90240022430419" filter="url(#filter-7)"></path>
+                    <g id="Group-30" transform="translate(362.401218, 361.072549) rotate(-330.000000) translate(-362.401218, -361.072549) translate(95.901218, 98.572549)" opacity="0.8" stroke-linecap="round" stroke-width="2.4192">
+                        <path d="M25.0547715,151.6032 C9.01871286,185.379485 0.04298724,223.0709 0,262.836759 C-0.0426852731,302.998506 9.03095179,341.07902 25.2957254,375.172769 C56.0154408,439.569557 112.390249,489.746102 181.44,512.8704" id="Stroke-22" stroke="url(#linearGradient-8)" filter="url(#filter-9)"></path>
+                        <path d="M301.463779,524.9664 C392.987139,512.612173 475.434667,453.557833 512.622141,362.907603 C567.958988,228.017544 502.125418,74.2479613 365.579454,19.4525292 C289.822556,-10.9483015 208.216415,-4.49694268 141.12,30.3091605" id="Stroke-26" stroke="url(#linearGradient-10)" filter="url(#filter-11)"></path>
+                    </g>
+                    <g id="Group-30" transform="translate(362.401218, 361.072549) rotate(-330.000000) translate(-362.401218, -361.072549) translate(95.901218, 98.572549)" stroke-linecap="round" stroke-width="2.4192">
+                        <path d="M25.0547715,151.6032 C9.01871286,185.379485 0.04298724,223.0709 0,262.836759 C-0.0426852731,302.998506 9.03095179,341.07902 25.2957254,375.172769 C56.0154408,439.569557 112.390249,489.746102 181.44,512.8704" id="Stroke-22" stroke="url(#linearGradient-8)"></path>
+                        <path d="M301.463779,524.9664 C392.987139,512.612173 475.434667,453.557833 512.622141,362.907603 C567.958988,228.017544 502.125418,74.2479613 365.579454,19.4525292 C289.822556,-10.9483015 208.216415,-4.49694268 141.12,30.3091605" id="Stroke-26" stroke="url(#linearGradient-10)"></path>
+                    </g>
+                    <g id="Group-4" transform="translate(277.401600, 253.209600)">
+                        <polyline id="Path-27" stroke="#FFFFFF" stroke-width="3.58041605" points="94.8810253 200.503299 94.8810253 108.963237 148.587266 55.4964487"></polyline>
+                        <polyline id="Path-28" stroke="url(#linearGradient-12)" stroke-width="3.58041605" points="84.1397771 152.167682 84.1397771 84.3169453 0 1.59996178e-14"></polyline>
+                        <line x1="84.1397771" y1="83.2446731" x2="113.67821" y2="53.7062407" id="Path-29" stroke="#FFFFFF" stroke-width="3.58041605"></line>
+                        <line x1="121.651607" y1="93.5088603" x2="207.863987" y2="7.23847701" id="Line-4" stroke="url(#linearGradient-13)" stroke-width="1.79020802" stroke-linecap="square" stroke-dasharray="13.05561646843813"></line>
+                        <circle id="Oval" fill="#FFFFFF" cx="115.379713" cy="52.0047366" r="5.28192"></circle>
+                        <circle id="Oval-Copy" fill="#FFFFFF" cx="94.8810253" cy="199.608195" r="4.47552006"></circle>
+                        <line x1="58.6001246" y1="69.7244067" x2="16.1581438" y2="27.2246818" id="Line-5" stroke="#FFFFFF" stroke-width="1.79020802" stroke-linecap="square"></line>
+                    </g>
+                    <g id="Group-5" transform="translate(286.964000, 433.284000) scale(-1, 1) translate(-286.964000, -433.284000) translate(263.464000, 350.784000)">
+                        <circle id="Oval-Copy-19" fill="#FFFFFF" cx="26.8531204" cy="5.37062407" r="5.37062407"></circle>
+                        <polyline id="Path-83" stroke="url(#linearGradient-14)" stroke-width="3.58041605" points="6.26572808 114.573314 6.26572808 70.512986 46.5454086 30.4335364"></polyline>
+                        <line x1="15.6643202" y1="60.8670728" x2="15.6643202" y2="32.2237444" id="Path-84" stroke="#FFFFFF" stroke-width="3.58041605"></line>
+                        <line x1="26.4055683" y1="50.1258247" x2="26.4055683" y2="4.47552006" id="Path-84-Copy" stroke="#FFFFFF" stroke-width="3.58041605"></line>
+                        <line x1="0.447552006" y1="77.874049" x2="0.447552006" y2="164.251586" id="Line-11" stroke="url(#linearGradient-15)" stroke-width="1.79020802" stroke-linecap="square" stroke-dasharray="13.05561646843813"></line>
+                    </g>
+                    <g id="linia3" transform="translate(274.176000, 358.848000)">
+                        <line x1="-1.13686838e-13" y1="-1.13686838e-13" x2="271.043136" y2="156.487565" id="Stroke-5" stroke="url(#linearGradient-16)" stroke-width="2.016" stroke-linecap="round" stroke-linejoin="round" filter="url(#filter-17)"></line>
+                        <circle id="Oval" fill="#3EEEC6" filter="url(#filter-18)" cx="270.913628" cy="156.038561" r="4.8384"></circle>
+                        <circle id="Oval" fill="#3EEEC6" cx="270.913628" cy="156.038561" r="4.8384"></circle>
+                    </g>
+                    <g id="linia2" transform="translate(232.220000, 383.028000) scale(-1, 1) translate(-232.220000, -383.028000) translate(121.720000, 318.528000)">
+                        <line x1="-1.13686838e-13" y1="-1.13686838e-13" x2="216.834496" y2="125.190044" id="Stroke-5" stroke="url(#linearGradient-19)" stroke-width="1.77408" stroke-linecap="round" stroke-linejoin="round" filter="url(#filter-20)"></line>
+                        <circle id="Oval" fill="#3EEEC6" filter="url(#filter-21)" cx="216.73089" cy="124.830842" r="3.87071977"></circle>
+                        <circle id="Oval" fill="#3EEEC6" cx="216.73089" cy="124.830842" r="3.87071977"></circle>
+                    </g>
+                    <g id="linia" transform="translate(466.991200, 331.088800) scale(1, -1) translate(-466.991200, -331.088800) translate(389.491200, 285.588800)">
+                        <line x1="-1.13686838e-13" y1="-1.13686838e-13" x2="151.784145" y2="87.6330296" id="Stroke-5" stroke="url(#linearGradient-22)" stroke-width="1.12896" opacity="0.709914435" stroke-linecap="round" stroke-linejoin="round" filter="url(#filter-23)"></line>
+                        <circle id="Oval" fill="#3EEEC6" filter="url(#filter-24)" cx="151.71162" cy="87.3815877" r="2.70950379"></circle>
+                        <circle id="Oval" fill="#3EEEC6" opacity="0.652227493" cx="151.71162" cy="87.3815877" r="2.70950379"></circle>
+                    </g>
+                    <g id="Group-8" transform="translate(408.844800, 402.393600)">
+                        <line x1="6.71328009" y1="71.1927369" x2="6.71328009" y2="163.253279" id="Line-6" stroke="url(#linearGradient-25)" stroke-width="1.79020802" stroke-linecap="square" stroke-dasharray="13.05561646843813"></line>
+                        <circle id="Oval-Copy-21" fill="#FFFFFF" cx="39.3845765" cy="5.37062407" r="5.37062407"></circle>
+                        <polyline id="Path-83-Copy" stroke="url(#linearGradient-26)" stroke-width="3.58041605" points="0 132.475394 0 66.9255403 40.2796805 26.8531204"></polyline>
+                        <polyline id="Path-82" stroke="#FFFFFF" stroke-width="3.58041605" points="16.1118722 51.0209287 16.1118722 29.0596063 40.2796805 4.47552006"></polyline>
+                    </g>
+                    <g id="Group-8-Copy-2" transform="translate(412.070400, 222.566400)">
+                        <circle id="Oval-Copy-21" fill="#FFFFFF" cx="23.9178241" cy="5.37062407" r="5.37062407"></circle>
+                        <polyline id="Path-82" stroke="url(#linearGradient-27)" stroke-width="3.58041605" points="8.04787221 62.0928 8.04787221 21.8020063 25.1972438 4.5556875"></polyline>
+                        <line x1="0.8064" y1="22.5792" x2="1.2096" y2="52.0128" id="Path-2" stroke="#FFFFFF" stroke-width="1.79020802" stroke-linecap="square"></line>
+                    </g>
+                    <g id="Group-30" transform="translate(200.793600, 201.600000)" stroke-width="1.6128">
+                        <path d="M15.1442174,91.9296 C5.45131088,112.43663 0.0259833984,135.320703 0,159.464261 C-0.0258008762,183.848179 5.45870864,206.968491 15.2898607,227.668267 C33.858222,266.766317 67.9336618,297.230648 109.6704,311.2704" id="Stroke-22" stroke="url(#linearGradient-28)" filter="url(#filter-29)"></path>
+                        <path d="M137.088,13.7088 C55.1691732,27.086227 -0.237060742,103.279895 13.3347292,183.892647 C14.1169676,188.540202 15.1117002,193.101851 16.307328,197.568" id="Stroke-24" stroke="url(#linearGradient-30)" filter="url(#filter-31)"></path>
+                        <path d="M182.676484,317.7216 C238.156625,310.244541 288.135126,274.503512 310.677636,219.639932 C344.222034,138.001401 304.314674,44.9365542 221.542481,11.7731129 C175.619743,-6.62616097 126.151278,-2.72165194 85.4784,18.343793" id="Stroke-26" stroke="url(#linearGradient-32)" filter="url(#filter-33)"></path>
+                    </g>
+                    <g id="Group-8-Copy" transform="translate(296.672800, 248.970400) scale(-1, 1) translate(-296.672800, -248.970400) translate(269.172800, 210.470400)">
+                        <circle id="Oval-Copy-21" fill="#FFFFFF" cx="50.35968" cy="4.47552006" r="4.47552006"></circle>
+                        <line x1="0" y1="76.4249322" x2="40.2796805" y2="36.3525123" id="Path-83-Copy" stroke="#FFFFFF" stroke-width="3.580416"></line>
+                        <polyline id="Path-82" stroke="#FFFFFF" stroke-width="3.58041605" points="16.1118722 60.5203207 16.1118722 38.5589983 49.1904 5.6448"></polyline>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

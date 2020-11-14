@@ -62,6 +62,10 @@ export default (context, inject) => {
         return this.calculateEfxPower(this.efxStaked, this.stakeAge)
       },
 
+      rank () {
+        return this.calculateRankProgress(this.power, this.nfxStaked)
+      },
+
       efxCanRefund () {
         return this.efxUnstaking > 0 && new Date(`${this.efxUnstakingTime}Z`) < new Date()
       },
@@ -85,6 +89,42 @@ export default (context, inject) => {
       init (wallet) {
         this.wallet = wallet
         this.updateAccount()
+      },
+
+      calculateRankProgress (power, nfxStaked) {
+        if (!power) {
+          power = 0
+        }
+        if (!nfxStaked) {
+          nfxStaked = 0
+        }
+        const rankRequirements = [
+          {
+            power: 0,
+            nfx: 0
+          },
+          {
+            power: 200000,
+            nfx: 0
+          },
+          {
+            power: 15000000,
+            nfx: 0
+          }
+        ]
+        let currentRequirements
+        let currentRank
+        let nextRank
+        for (let rank = 0; rank < rankRequirements.length; rank++) {
+          if (power >= rankRequirements[rank].power && nfxStaked >= rankRequirements[rank].nfx) {
+            currentRank = rank
+            currentRequirements = rankRequirements[rank]
+            nextRank = rankRequirements[rank + 1]
+          } else {
+            break
+          }
+        }
+        return { currentRank, currentRequirements, nextRank }
       },
 
       calculateEfxPower (efxStaked, stakeAge) {

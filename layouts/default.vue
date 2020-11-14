@@ -33,7 +33,7 @@ export default {
   }
 
   .testnet {
-    background: orange;
+    background: #f4bf55;
     font-weight: bold;
     text-align: center;
   }

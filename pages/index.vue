@@ -9,7 +9,7 @@
       <div class="column">
         <div class="treasury block-shadow mt-5">
           <h2 class="block-title">
-            <img src="@/assets/img/efx-icon.png" class="token-icon">EFX Balance
+            <img src="@/assets/img/efx-icon.png" class="token-icon" />EFX Balance
           </h2>
           <div class="balance">
             <p>
@@ -23,7 +23,7 @@
       <div class="column">
         <div class="treasury block-shadow mt-5">
           <h2 class="block-title">
-            <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">NFX Balance
+            <img src="@/assets/img/nfx-icon.png" class="token-icon nfx" />NFX Balance
           </h2>
           <div class="balance">
             <div class="balance">
@@ -48,7 +48,7 @@
       <div class="columns block-columns is-desktop">
         <div class="column">
           <div class="icon">
-            🔐
+            <img src="@/assets/img/icons/staking.svg" class="" />
           </div>
           <div class="text">
             <span class="high">
@@ -60,7 +60,7 @@
         </div>
         <div class="column">
           <div class="icon">
-            💲
+            <img src="@/assets/img/icons/usd.svg" class="" />
           </div>
           <div class="text">
             <span class="high">
@@ -72,7 +72,7 @@
         </div>
         <div class="column">
           <div class="icon">
-            😲
+            <img src="@/assets/img/icons/supply.svg" class="" />
           </div>
           <div class="text">
             <span class="high">
@@ -85,14 +85,14 @@
       </div>
     </div>
 
-    <div class="treasury block-shadow mt-5">
+    <div class="treasury block-shadow mt-5 mb-6">
       <h2 class="block-title">
         Effect Force Overview
       </h2>
       <div class="columns block-columns">
         <div class="column">
           <div class="icon">
-            ⛓️
+            <img src="@/assets/img/icons/transactions.svg" class="" />
           </div>
           <div class="text">
             <span class="high">
@@ -104,7 +104,7 @@
         </div>
         <div class="column">
           <div class="icon">
-            💸
+            <img src="@/assets/img/icons/payouts.svg" class="" />
           </div>
           <div class="text">
             <span class="high">
@@ -116,7 +116,7 @@
         </div>
         <div class="column">
           <div class="icon">
-            👩‍💻
+            <img src="@/assets/img/icons/workers.svg" class="" />
           </div>
           <div class="text">
             <span class="high">
@@ -223,7 +223,7 @@ export default {
 
 <style lang="scss">
   .index {
-    max-width: 960px;
+    max-width: 750px;
     margin-left: auto;
     margin-right: auto;
 

@@ -1,7 +1,8 @@
 <template>
   <div class="vote">
-    <div class="intro">
+    <div class="has-text-centered">
       <h1>Coming Soon!</h1>
+      <img src="@/assets/img/icons/coming-soon.svg" class="coming-soon" />
     </div>
   </div>
 </template>
@@ -10,9 +11,3 @@
 export default {
 }
 </script>
-
-<style lang="scss">
-.intro {
-  text-align: center;
-}
-</style>

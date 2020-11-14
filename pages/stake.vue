@@ -110,10 +110,10 @@
                 <span class="symbol">EFX</span>
               </p>
               <div class="buttons">
-                <button class="button is-success is-fullwidth" :class="{ 'is-loading': loading }" :disabled="efxAvailable === 0" @click="stakingModal = true; stakingModalEfx = true; newStake = efxStaked + efxAvailable">
+                <button class="button is-primary is-fullwidth" :class="{ 'is-loading': loading }" :disabled="efxAvailable === 0" @click="stakingModal = true; stakingModalEfx = true; newStake = efxStaked + efxAvailable">
                   Stake EFX
                 </button>
-                <button class="button is-danger" :class="{ 'is-loading': loading }" :disabled="efxStaked === 0" @click="stakingModal = true; stakingModalEfx = true; newStake = 0">
+                <button class="button is-primary is-outlined" :class="{ 'is-loading': loading }" :disabled="efxStaked === 0" @click="stakingModal = true; stakingModalEfx = true; newStake = 0">
                   Unstake EFX
                 </button>
               </div>
@@ -132,10 +132,10 @@
                 <span class="symbol">NFX</span>
               </p>
               <div class="buttons">
-                <button class="button is-success is-fullwidth" :class="{ 'is-loading': loading }" :disabled="nfxAvailable === 0" @click="stakingModal = true; stakingModalEfx = false; newStake = nfxStaked + nfxAvailable">
+                <button class="button is-primary is-fullwidth" :class="{ 'is-loading': loading }" :disabled="nfxAvailable === 0" @click="stakingModal = true; stakingModalEfx = false; newStake = nfxStaked + nfxAvailable">
                   Stake NFX
                 </button>
-                <button class="button is-danger" :class="{ 'is-loading': loading }" :disabled="nfxStaked === 0" @click="stakingModal = true; stakingModalEfx = false; newStake = 0">
+                <button class="button is-primary is-outlined" :class="{ 'is-loading': loading }" :disabled="nfxStaked === 0" @click="stakingModal = true; stakingModalEfx = false; newStake = 0">
                   Unstake NFX
                 </button>
               </div>
@@ -184,43 +184,16 @@
                 <div class="balance ">
                   <h3>
                     <ICountUp :options="{decimalPlaces: 0}" :end-val="power" />
-                    <span class="symbol has-text-weight-light">EP</span>
+                    <small class="symbol has-text-weight-light is-size-6">EP</small>
                   </h3>
+                  <b>EFX Power</b>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="column is-full">
-        <div class="treasury block-shadow">
-          <h1 class="block-title">
-            Rank {{rank.currentRank}}
-          </h1>
-          <div class="block-columns has-text-centered columns mt-3">
-            <div class="next-level column is-one-fifth">
-              <div class="treasury block-shadow">
-                <h1 class="block-title">
-                  Next level
-                </h1>
-                10000 NFX <br>
-                100000 EFX
-              </div>
-            </div>
-            <div class="column is-four-fifths progress-bar">
-              <p class="is-pulled-left">
-                5
-              </p>
-              <p class="is-pulled-right">
-                {{}}
-              </p>
-              <progress class="progress is-large" value="60" max="100">
-                60%
-              </progress>
-            </div>
-          </div>
-        </div>
-      </div>
+      <rank class="mb-6"/>
     </div>
     <div v-else class="connect-wallet connect-wallet-stake">
       <ConnectWallet />
@@ -232,12 +205,14 @@
 import ICountUp from 'vue-countup-v2'
 import VueCircle from 'vue2-circle-progress/src/index.vue'
 import ConnectWallet from '~/components/ConnectWallet'
+import Rank from '~/components/Rank'
 
 export default {
   components: {
     ICountUp,
     ConnectWallet,
-    VueCircle
+    VueCircle,
+    Rank
   },
 
   filters: {
@@ -277,9 +252,6 @@ export default {
     },
     stakeAge () {
       return this.$wallet.stakeAge
-    },
-    rank () {
-      return this.$wallet.rank
     },
     power () {
       return this.$wallet.power
@@ -498,13 +470,13 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   @keyframes glow {
     from {
       box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 29px -22px #39e7bfd4;
     }
     to {
-      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 29px 5px #39e7bfd4;
+      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 40px 5px #39e7bfd4;
     }
   }
   .circle {
@@ -541,23 +513,9 @@ export default {
       margin-bottom: 0;
     }
   }
-  .progress::-moz-progress-bar, .progress::-webkit-progress-bar {
-    background: rgba(0, 0, 0, 0) linear-gradient(45deg, rgb(255, 0, 0) 0%, rgb(255, 154, 0) 10%, rgb(208, 222, 33) 20%, rgb(79, 220, 74) 30%, rgb(63, 218, 216) 40%, rgb(47, 201, 226) 50%, rgb(28, 127, 238) 60%, rgb(95, 21, 242) 70%, rgb(186, 12, 248) 80%, rgb(251, 7, 217) 90%, rgb(255, 0, 0) 100%) repeat scroll 0% 0% / 300% 300%;
-    background-size: 200%;
-    animation: moveGradient 3s linear infinite;
-  }
-
-  @keyframes moveGradient {
-    0% {
-      background-position: 0 0;
-    }
-    100% {
-      background-position: -200% 0%;
-    }
-  }
 
   .stake {
-    max-width: 960px;
+    max-width: 750px;
     margin-left: auto;
     margin-right: auto;
 

@@ -78,6 +78,7 @@
         members
       </h4>
     </div>
+    <rank class="mb-3" v-if="wallet && wallet.auth"/>
     <div class="block-shadow">
       <h2 class="block-title">
         DAO Members
@@ -94,11 +95,13 @@
               <div v-if="member.rank" class="rank"><div :class="['rank-color','rank-'+member.rank.currentRank]"></div><span>Rank {{member.rank.currentRank}}</span></div>
             </div>
             <div class="column">
-              <h4>{{ member.account }}</h4>
-              <div>
-                <ICountUp v-if="member.power >= 0" :options="{ prefix: 'EFX Power ', suffix: ' EP' }" :end-val="member.power" />
-                <div v-else>...</div>
-                <small>Joined {{ $moment(member.registration_time).fromNow()  }}</small>
+              <div class="pl-2">
+                <h5>{{ member.account }}</h5>
+                <div>
+                  <ICountUp class="power" v-if="member.power >= 0" :options="{ prefix: 'EFX Power ', suffix: ' EP' }" :end-val="member.power" />
+                  <div v-else>...</div>
+                  <small>Joined {{ $moment(member.registration_time).fromNow()  }}</small>
+                </div>
               </div>
             </div>
           </div>
@@ -113,12 +116,14 @@
 <script>
 import { sha256 } from 'eosjs-ecc'
 import ICountUp from 'vue-countup-v2'
-import ConnectWallet from '../components/ConnectWallet'
+import ConnectWallet from '~/components/ConnectWallet'
+import Rank from '~/components/Rank'
 
 export default {
   components: {
     ICountUp,
-    ConnectWallet
+    ConnectWallet,
+    Rank
   },
 
   data () {
@@ -130,7 +135,7 @@ export default {
       constitutionHash: '',
       constitutionContract: 'thedaonkylin',
       constitutionVersion: '1',
-      constitutionUrl: 'https://raw.githubusercontent.com/eosdac/eosdac-constitution/master/boilerplate_constitution.md',
+      constitutionUrl: 'https://raw.githubusercontent.com/effectai/effect-network-eos/constitution/constitution/constitution.md',
       moreMembers: true,
       signedConstitution: false,
       constitutionMembers: null
@@ -208,6 +213,7 @@ export default {
     async getMemberInfo (member) {
       member.registration_time = new Date(`${member.registration_time}Z`)
       const stakeInfo = await this.getStake(member.account)
+
       stakeInfo.map((row) => {
         if (row.amount.includes(process.env.efxToken)) {
           const efxStaked = parseFloat(row.amount.replace(` ${process.env.efxToken}`, '').replace('.', ','))
@@ -221,6 +227,9 @@ export default {
           this.$set(member, 'nfxStaked', nfxStaked)
         }
       })
+      if (!member.power) {
+        this.$set(member, 'power', 0)
+      }
       this.$set(member, 'rank', this.$wallet.calculateRankProgress(member.power, member.nfxStaked))
     },
 
@@ -302,7 +311,7 @@ export default {
 
 <style lang="scss" scoped>
 .dao {
-  max-width: 960px;
+  max-width: 750px;
   margin-left: auto;
   margin-right: auto;
 
@@ -358,10 +367,13 @@ export default {
         top: 8px;
         right: 10px;
       }
-      h4 {
-        margin-bottom: 0;
+      h5 {
+        margin-bottom: 4px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #CDD4E6;
       }
-      span {
+      .power {
+        font-size: 14px;
         margin-bottom: 8px;
         display: block;
       }

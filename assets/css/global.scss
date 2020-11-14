@@ -5,11 +5,18 @@
 @import './node_modules/bulma-slider/src/sass/index.sass';
 
 html {
-  background: rgba(0, 0, 0, 0) radial-gradient(circle at center top, #f3f6f7, #F0F2F7) repeat fixed 0 0% / cover;
+  //background: rgba(0, 0, 0, 0) radial-gradient(circle at center top, #f3f6f7, #F0F2F7) repeat fixed 0 0% / cover;
+  background: #F0F2F7;
 }
 
 body {
   font-family: 'Nunito', sans-serif;
+}
+
+.coming-soon {
+  width: 550px;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 .loader-wrapper {
@@ -43,6 +50,11 @@ body {
   box-shadow: inset -4px -4px 10px 0 #FFFFFF, inset 4px 4px 10px 0 #CDD4E6;
   border-radius: 6px;
   padding: 24px;
+}
+.block-shadow-outside {
+  border-radius: 13px;
+  box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6;
+  padding: 20px 16px;
 }
 
 .block-title {

@@ -193,7 +193,7 @@
           </div>
         </div>
       </div>
-      <rank class="mb-6" />
+      <rank class="mb-6" v-if="signedConstitution" />
     </div>
     <div v-else class="connect-wallet connect-wallet-stake">
       <ConnectWallet />
@@ -285,6 +285,9 @@ export default {
     },
     nfxCanRefund () {
       return this.$wallet.nfxCanRefund
+    },
+    signedConstitution () {
+      return this.$wallet.signedConstitution
     }
   },
 

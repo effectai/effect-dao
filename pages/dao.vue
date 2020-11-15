@@ -67,7 +67,6 @@
     </div>
 
     <div class="intro">
-      <h1>Effect DAO</h1>
       <h4 v-if="false">
         <span v-if="!loading">
           {{ constitutionMembers.length }}
@@ -78,16 +77,16 @@
         members
       </h4>
     </div>
-    <rank class="mb-3" v-if="wallet && wallet.auth"/>
-    <div class="block-shadow">
+    <rank class="mb-3" v-if="wallet && wallet.auth && signedConstitution"/>
+    <div class="block-shadow mb-6">
       <h2 class="block-title">
         DAO Members
       </h2>
       <div class="members columns is-multiline mt-5" v-if="constitutionMembers">
         <div v-for="member in constitutionMembers" :key="member.account" class="column is-half">
           <div class="member columns is-gapless is-mobile">
-            <div v-if="member.rank == 0" class="tag is-primary is-light rank-name">member</div>
-            <div v-else-if="member.rank > 0" class="tag is-primary rank-name">guardian</div>
+            <div v-if="member.rank && member.rank.currentRank == 0" class="tag is-primary is-light rank-name">member</div>
+            <div v-else-if="member.rank && member.rank.currentRank > 0" class="tag is-primary rank-name">guardian</div>
             <div class="column is-one-fifth" style="min-width: 70px">
               <figure class="image is-64x64">
                 <img :src="`https://avatar.pixeos.art/avatar/${member.account}`" @error="((evt) => fallbackAvatar(evt, member.account))">

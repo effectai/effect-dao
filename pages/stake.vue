@@ -469,6 +469,14 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+.circle {
+  canvas {
+    box-shadow: inset -4px -4px 11px 0 #FFFFFF, inset 4px 4px 11px 0 #CDD4E6, 0px 0px 29px -22px #39e7bfd4;
+    border-radius: 100%;
+  }
+}
+</style>
 
 <style lang="scss" scoped>
   @keyframes glow {
@@ -480,10 +488,6 @@ export default {
     }
   }
   .circle {
-    canvas {
-      box-shadow: inset -4px -4px 11px 0 #FFFFFF, inset 4px 4px 11px 0 #CDD4E6, 0px 0px 29px -22px #39e7bfd4;
-      border-radius: 100%;
-    }
     .age-amount {
       font-size: 0.75rem;
     }

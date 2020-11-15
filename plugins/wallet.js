@@ -18,9 +18,14 @@ export default (context, inject) => {
         nfxUnstaking: 0,
         nfxUnstakingTime: null,
 
+        signedConstitution: false,
+
         timer: null,
         updater: null,
-        refreshStakeAge: true
+        refreshStakeAge: true,
+
+        transaction: null,
+        transactionError: null
       }
     },
 
@@ -172,9 +177,11 @@ export default (context, inject) => {
         this.getAccountBalance()
         this.getStakes()
         this.getUnstakes()
+        this.checkIfSigned()
       },
 
       clear () {
+        this.clearTransaction()
         Object.assign(this.$data, this.$options.data.call(this))
       },
 
@@ -223,6 +230,43 @@ export default (context, inject) => {
             })
           })
         }
+      },
+
+      async checkIfSigned () {
+        if (this.wallet) {
+          await this.eos.rpc.get_table_rows({
+            code: process.env.daoContract,
+            scope: process.env.daoContract,
+            lower_bound: ' ' + this.wallet.auth.accountName,
+            upper_bound: ' ' + this.wallet.auth.accountName,
+            table: 'member',
+            limit: 1
+          }).then((data) => {
+            this.signedConstitution = data.rows.length === 1
+          })
+        }
+      },
+
+      handleTransaction (actions) {
+        this.clearTransaction()
+
+        return this.wallet.eosApi.transact({ actions }, {
+          blocksBehind: 3,
+          expireSeconds: 60
+        })
+          .then((transaction) => {
+            this.transaction = transaction
+            return Promise.resolve(transaction)
+          })
+          .catch((error) => {
+            this.transactionError = error
+            return Promise.reject(error)
+          })
+      },
+
+      clearTransaction () {
+        this.transaction = null
+        this.transactionError = null
       }
     }
   })

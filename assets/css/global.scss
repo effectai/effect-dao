@@ -98,3 +98,20 @@ body {
   }
 }
 
+@media all and (max-width: 770px) {
+  .notification {
+    height: 110px !important;
+    .is-pulled-left {
+      width: 100%;
+      text-align: center;
+    }
+    .notif-btn {
+      width: 100%;
+      text-align: center;
+      div, button {
+        margin-top: 20px;
+      }
+    }
+  }
+}
+

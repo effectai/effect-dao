@@ -193,7 +193,7 @@
           </div>
         </div>
       </div>
-      <rank class="mb-6"/>
+      <rank class="mb-6" />
     </div>
     <div v-else class="connect-wallet connect-wallet-stake">
       <ConnectWallet />
@@ -297,8 +297,7 @@ export default {
       this.loading = true
       const actions = []
 
-      if ((this.stakingModelEfx && this.efxStaked > 0) ||
-          (!this.stakingModalEfx && this.nfxStaked > 0)) {
+      if ((this.stakingModalEfx && this.efxStaked > 0) || (!this.stakingModalEfx && this.nfxStaked > 0)) {
         actions.push({
           account: process.env.stakingContract,
           name: 'claim',
@@ -342,12 +341,10 @@ export default {
         }
       })
 
-      this.wallet.eosApi.transact({ actions }, { blocksBehind: 3, expireSeconds: 60 })
+      this.$wallet.handleTransaction(actions)
         .then((transaction) => {
           this.$wallet.updateAccount()
-        })
-        .catch((error) => {
-          this.error = error
+          this.stakingModal = false
         })
         .finally(() => {
           this.loading = false
@@ -361,39 +358,37 @@ export default {
       }
 
       this.loading = true
-      this.wallet.eosApi.transact({
-        actions: [
-          {
-            account: process.env.stakingContract,
-            name: 'claim',
-            authorization: [{
-              actor: this.wallet.auth.accountName,
-              permission: this.wallet.auth.permission
-            }],
-            data: {
-              owner: this.wallet.auth.accountName,
-              symbol: `4,${(this.stakingModalEfx) ? process.env.efxToken : process.env.nfxToken}`
-            }
-          },
-          {
-            account: process.env.stakingContract,
-            name: 'unstake',
-            authorization: [{
-              actor: this.wallet.auth.accountName,
-              permission: this.wallet.auth.permission
-            }],
-            data: {
-              owner: this.wallet.auth.accountName,
-              quantity
-            }
+      const actions = [
+        {
+          account: process.env.stakingContract,
+          name: 'claim',
+          authorization: [{
+            actor: this.wallet.auth.accountName,
+            permission: this.wallet.auth.permission
+          }],
+          data: {
+            owner: this.wallet.auth.accountName,
+            symbol: `4,${(this.stakingModalEfx) ? process.env.efxToken : process.env.nfxToken}`
           }
-        ]
-      }, { blocksBehind: 3, expireSeconds: 60 })
+        },
+        {
+          account: process.env.stakingContract,
+          name: 'unstake',
+          authorization: [{
+            actor: this.wallet.auth.accountName,
+            permission: this.wallet.auth.permission
+          }],
+          data: {
+            owner: this.wallet.auth.accountName,
+            quantity
+          }
+        }
+      ]
+
+      this.$wallet.handleTransaction(actions)
         .then((transaction) => {
           this.$wallet.updateAccount()
-        })
-        .catch((error) => {
-          this.error = error
+          this.stakingModal = false
         })
         .finally(() => {
           this.loading = false
@@ -402,30 +397,24 @@ export default {
 
     claimNfx () {
       this.loading = true
-      this.wallet.eosApi.transact({
-        actions: [
-          {
-            account: process.env.stakingContract,
-            name: 'claim',
-            authorization: [{
-              actor: this.wallet.auth.accountName,
-              permission: this.wallet.auth.permission
-            }],
-            data: {
-              owner: this.wallet.auth.accountName,
-              symbol: `4,${process.env.nfxToken}`
-            }
+      const actions = [
+        {
+          account: process.env.stakingContract,
+          name: 'claim',
+          authorization: [{
+            actor: this.wallet.auth.accountName,
+            permission: this.wallet.auth.permission
+          }],
+          data: {
+            owner: this.wallet.auth.accountName,
+            symbol: `4,${process.env.nfxToken}`
           }
-        ]
-      }, {
-        blocksBehind: 3,
-        expireSeconds: 60
-      })
+        }
+      ]
+
+      this.$wallet.handleTransaction(actions)
         .then((transaction) => {
           this.$wallet.updateAccount()
-        })
-        .catch((error) => {
-          this.error = error
         })
         .finally(() => {
           this.loading = false
@@ -434,29 +423,23 @@ export default {
 
     refund () {
       this.loading = true
-      this.wallet.eosApi.transact({
-        actions: [
-          {
-            account: process.env.stakingContract,
-            name: 'refund',
-            authorization: [{
-              actor: this.wallet.auth.accountName,
-              permission: this.wallet.auth.permission
-            }],
-            data: {
-              owner: this.wallet.auth.accountName
-            }
+      const actions = [
+        {
+          account: process.env.stakingContract,
+          name: 'refund',
+          authorization: [{
+            actor: this.wallet.auth.accountName,
+            permission: this.wallet.auth.permission
+          }],
+          data: {
+            owner: this.wallet.auth.accountName
           }
-        ]
-      }, {
-        blocksBehind: 3,
-        expireSeconds: 60
-      })
+        }
+      ]
+
+      this.$wallet.handleTransaction(actions)
         .then((transaction) => {
           this.$wallet.updateAccount()
-        })
-        .catch((error) => {
-          this.error = error
         })
         .finally(() => {
           this.loading = false

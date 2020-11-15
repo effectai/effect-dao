@@ -44,8 +44,9 @@ export default (context, inject) => {
 
         context.$wallet.init(wallet)
       },
+
       async logout () {
-        await this.wallet.logout()
+        await context.$wallet.wallet.logout()
         context.$wallet.clear()
       }
     }

@@ -77,37 +77,49 @@
         members
       </h4>
     </div>
-    <rank class="mb-3" v-if="wallet && wallet.auth && signedConstitution"/>
+    <rank v-if="wallet && wallet.auth && signedConstitution" class="mb-3" />
     <div class="block-shadow mb-6">
       <h2 class="block-title">
         DAO Members
       </h2>
-      <div class="members columns is-multiline mt-5" v-if="constitutionMembers">
+      <div v-if="constitutionMembers" class="members columns is-multiline mt-5">
         <div v-for="member in constitutionMembers" :key="member.account" class="column is-half">
           <div class="member columns is-gapless is-mobile">
-<!--            <div v-if="member.rank && member.rank.currentRank == 0" class="tag is-primary is-light rank-name"></div>-->
-            <div v-if="member.rank && member.rank.currentRank > 0" class="rank-name"><img width="25px" :src="'/img/guardian-icons/guardian-'+member.rank.currentRank+'.png'" /></div>
+            <!--            <div v-if="member.rank && member.rank.currentRank == 0" class="tag is-primary is-light rank-name"></div>-->
+            <div v-if="member.rank && member.rank.currentRank > 0" class="rank-name">
+              <img width="25px" :src="'/img/guardian-icons/guardian-'+member.rank.currentRank+'.png'">
+            </div>
             <div class="column is-one-fifth" style="min-width: 70px">
               <figure class="image is-64x64">
                 <img :src="`https://avatar.pixeos.art/avatar/${member.account}`" @error="((evt) => fallbackAvatar(evt, member.account))">
               </figure>
-              <div v-if="member.rank" class="rank"><div :class="['rank-color','rank-'+member.rank.currentRank]"></div><span>Rank {{member.rank.currentRank}}</span></div>
+              <div v-if="member.rank" class="rank">
+                <div :class="['rank-color','rank-'+member.rank.currentRank]" /><span>Rank {{ member.rank.currentRank }}</span>
+              </div>
             </div>
             <div class="column">
               <div class="pl-2">
                 <h5>{{ member.account }}</h5>
                 <div>
-                  <ICountUp class="power" v-if="member.power >= 0" :options="{ prefix: 'EFX Power ', suffix: ' EP' }" :end-val="member.power" />
-                  <div v-else>...</div>
-                  <small>Joined {{ $moment(member.registration_time).fromNow()  }}</small>
+                  <ICountUp v-if="member.power >= 0" class="power" :options="{ prefix: 'EFX Power ', suffix: ' EP' }" :end-val="member.power" />
+                  <div v-else>
+                    ...
+                  </div>
+                  <small>Joined {{ $moment(member.registration_time).fromNow() }}</small>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <h4 class="has-text-centered" v-else>Loading members..</h4>
-      <div class="has-text-centered" v-if="moreMembers"><button class="button" @click="loadMoreMembers">Load More</button></div>
+      <h4 v-else class="has-text-centered">
+        Loading members..
+      </h4>
+      <div v-if="moreMembers" class="has-text-centered">
+        <button class="button" @click="loadMoreMembers">
+          Load More
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -132,11 +144,9 @@ export default {
 
       constitution: '',
       constitutionHash: '',
-      constitutionContract: 'thedaonkylin',
       constitutionVersion: '1',
       constitutionUrl: 'https://raw.githubusercontent.com/effectai/effect-network-eos/constitution/constitution/constitution.md',
       moreMembers: true,
-      signedConstitution: false,
       constitutionMembers: null
     }
   },
@@ -144,12 +154,9 @@ export default {
   computed: {
     wallet () {
       return this.$wallet.wallet
-    }
-  },
-
-  watch: {
-    wallet () {
-      this.checkIfSigned()
+    },
+    signedConstitution () {
+      return this.$wallet.signedConstitution
     }
   },
 
@@ -161,13 +168,9 @@ export default {
     async init () {
       this.loading = true
 
-      if (this.wallet) {
-        this.checkIfSigned()
-      }
-
       const data = await this.$eos.rpc.get_table_rows({
-        code: this.constitutionContract,
-        scope: this.constitutionContract,
+        code: process.env.daoContract,
+        scope: process.env.daoContract,
         table: 'member',
         limit: 20
       })
@@ -189,8 +192,8 @@ export default {
       this.loading = true
 
       const data = await this.$eos.rpc.get_table_rows({
-        code: this.constitutionContract,
-        scope: this.constitutionContract,
+        code: process.env.daoContract,
+        scope: process.env.daoContract,
         table: 'member',
         lower_bound: this.nextKey,
         limit: 20
@@ -259,46 +262,27 @@ export default {
         })
     },
 
-    async checkIfSigned () {
-      await this.$eos.rpc.get_table_rows({
-        code: this.constitutionContract,
-        scope: this.constitutionContract,
-        lower_bound: ' ' + this.wallet.auth.accountName,
-        upper_bound: ' ' + this.wallet.auth.accountName,
-        table: 'member',
-        limit: 1
-      }).then((data) => {
-        this.signedConstitution = data.rows.length === 1
-      })
-    },
-
-    async signConstitution () {
-      await this.wallet.eosApi.transact({
-        actions: [
-          {
-            account: this.constitutionContract,
-            name: 'memberreg',
-            authorization: [{
-              actor: this.wallet.auth.accountName,
-              permission: this.wallet.auth.permission
-            }],
-            data: {
-              account: this.wallet.auth.accountName,
-              agreedterms: this.constitutionHash
-            }
+    signConstitution () {
+      const actions = [
+        {
+          account: process.env.daoContract,
+          name: 'memberreg',
+          authorization: [{
+            actor: this.wallet.auth.accountName,
+            permission: this.wallet.auth.permission
+          }],
+          data: {
+            account: this.wallet.auth.accountName,
+            agreedterms: this.constitutionHash
           }
-        ]
-      }, {
-        blocksBehind: 3,
-        expireSeconds: 60
-      })
-        .then((transaction) => {
+        }
+      ]
+
+      this.$wallet.handleTransaction(actions)
+        .then(() => {
           this.init()
           this.signedConstitution = true
           this.constitutionModal = false
-        })
-        .catch((error) => {
-          this.error = error
         })
         .finally(() => {
           this.loading = false

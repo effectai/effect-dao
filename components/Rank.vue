@@ -31,10 +31,10 @@
           {{progress.toFixed(2)}}%
         </progress>
         <div :class="['progress-pointer', 'rank-'+rank.currentRank]" :style="{width: progress + '%'}">
-          <small class="is-size-7">(<ICountUp :end-val="power" /> / {{rank.nextRank.power}} EP)</small>&nbsp;&nbsp;<b>{{progress.toFixed(2)}}%</b>
+          <small class="is-size-7">(<ICountUp :end-val="power" /> / <ICountUp :end-val="rank.nextRank.power" :options="{startVal: rank.nextRank.power}" /> EP)</small>&nbsp;&nbsp;<b>{{progress.toFixed(2)}}%</b>
         </div>
         <div class="is-size-7 has-text-left mt-4">
-          Required NFX: <b>{{nfxStaked}} / {{rank.nextRank.nfx}} NFX</b>
+          Required NFX: <b>{{nfxStaked}} / <ICountUp :end-val="rank.nextRank.nfx" :options="{startVal: rank.nextRank.nfx}" /> NFX</b>
         </div>
 
       </div>

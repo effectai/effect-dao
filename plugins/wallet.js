@@ -104,11 +104,19 @@ export default (context, inject) => {
             nfx: 0
           },
           {
-            power: 200000,
+            power: 20000,
             nfx: 0
           },
           {
-            power: 15000000,
+            power: 1000000,
+            nfx: 0
+          },
+          {
+            power: 10000000,
+            nfx: 0
+          },
+          {
+            power: 14000000,
             nfx: 0
           }
         ]

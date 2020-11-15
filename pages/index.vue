@@ -1,144 +1,149 @@
 <template>
-  <div class="index">
-    <div class="intro">
-      <h1>Welcome to the Effect Dashboard.</h1>
-      <h4>Stake, vote and swap all in one place!</h4>
-    </div>
+  <div>
+    <div class="index">
+      <div class="intro">
+        <h1>Welcome to the Effect Dashboard.</h1>
+        <h4>Stake, vote and swap all in one place!</h4>
+      </div>
 
-    <div v-if="wallet" class="columns balances">
-      <div class="column">
-        <div class="treasury block-shadow mt-5">
-          <h2 class="block-title">
-            <img src="@/assets/img/efx-icon.png" class="token-icon" />EFX Balance
-          </h2>
-          <div class="balance">
-            <p>
-              <ICountUp :end-val="efxAvailable + efxStaked" /> <span class="symbol">EFX</span>
-            </p>
-            <span>Staked: <ICountUp :end-val="efxStaked" /> EFX</span>
+      <div v-if="wallet" class="columns balances">
+        <div class="column">
+          <div class="treasury block-shadow mt-5">
+            <h2 class="block-title">
+              <img src="@/assets/img/efx-icon.png" class="token-icon" />EFX Balance
+            </h2>
+            <div class="balance">
+              <p>
+                <ICountUp :end-val="efxAvailable + efxStaked" /> <span class="symbol">EFX</span>
+              </p>
+              <span>Staked: <ICountUp :end-val="efxStaked" /> EFX</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="treasury block-shadow mt-5">
+            <h2 class="block-title">
+              <img src="@/assets/img/nfx-icon.png" class="token-icon nfx" />NFX Balance
+            </h2>
+            <div class="balance">
+              <div class="balance">
+                <p>
+                  <ICountUp :end-val="nfxAvailable + nfxStaked" /> <span class="symbol">NFX</span>
+                </p>
+                <span>Staked: <ICountUp :end-val="nfxStaked" /> NFX</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="column">
-        <div class="treasury block-shadow mt-5">
-          <h2 class="block-title">
-            <img src="@/assets/img/nfx-icon.png" class="token-icon nfx" />NFX Balance
-          </h2>
-          <div class="balance">
-            <div class="balance">
-              <p>
-                <ICountUp :end-val="nfxAvailable + nfxStaked" /> <span class="symbol">NFX</span>
-              </p>
-              <span>Staked: <ICountUp :end-val="nfxStaked" /> NFX</span>
+      <div v-else class="connect-wallet">
+        <ConnectWallet />
+      </div>
+
+      <div class="treasury block-shadow">
+        <h2 class="block-title">
+          Staking Overview
+        </h2>
+        <div class="columns block-columns is-desktop">
+          <div class="column">
+            <div class="icon">
+              <img src="@/assets/img/icons/staking.svg" class="" />
+            </div>
+            <div class="text">
+              <span class="high">
+                <ICountUp v-if="poolBalance > 0" :end-val="poolBalance" />
+                <span v-else>..</span>
+              </span> <br>
+              <span class="low">EFX in staking pool</span>
+            </div>
+          </div>
+          <div class="column">
+            <div class="icon">
+              <img src="@/assets/img/icons/usd.svg" class="" />
+            </div>
+            <div class="text">
+              <span class="high">
+                <ICountUp v-if="poolValue > 0" :options="{ prefix: '$' }" :end-val="poolValue" />
+                <span v-else>..</span>
+              </span> <br>
+              <span class="low">staking pool value</span>
+            </div>
+          </div>
+          <div class="column">
+            <div class="icon">
+              <img src="@/assets/img/icons/supply.svg" class="" />
+            </div>
+            <div class="text">
+              <span class="high">
+                <ICountUp v-if="percentStaked > 0" :options="{ suffix: '%' }" :end-val="percentStaked" />
+                <span v-else>..</span>
+              </span> <br>
+              <span class="low">of circ. supply staked</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="treasury block-shadow mt-5 mb-6">
+        <h2 class="block-title">
+          Effect Force Overview
+        </h2>
+        <div class="columns block-columns">
+          <div class="column">
+            <div class="icon">
+              <img src="@/assets/img/icons/transactions.svg" class="" />
+            </div>
+            <div class="text">
+              <span class="high">
+                <ICountUp v-if="forceTransactions > 0" :end-val="forceTransactions" />
+                <span v-else>..</span>
+              </span> <br>
+              <span class="low">total transactions</span>
+            </div>
+          </div>
+          <div class="column">
+            <div class="icon">
+              <img src="@/assets/img/icons/payouts.svg" class="" />
+            </div>
+            <div class="text">
+              <span class="high">
+                <ICountUp v-if="forceEfxPaid > 0" :options="{ suffix: ' EFX' }" :end-val="forceEfxPaid" />
+                <span v-else>..</span>
+              </span> <br>
+              <span class="low">total payouts</span>
+            </div>
+          </div>
+          <div class="column">
+            <div class="icon">
+              <img src="@/assets/img/icons/workers.svg" class="" />
+            </div>
+            <div class="text">
+              <span class="high">
+                <ICountUp v-if="forceUsers > 0" :end-val="forceUsers" />
+                <span v-else>..</span>
+              </span> <br>
+              <span class="low">registered workers</span>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <div v-else class="connect-wallet">
-      <ConnectWallet />
-    </div>
-
-    <div class="treasury block-shadow">
-      <h2 class="block-title">
-        Staking Overview
-      </h2>
-      <div class="columns block-columns is-desktop">
-        <div class="column">
-          <div class="icon">
-            <img src="@/assets/img/icons/staking.svg" class="" />
-          </div>
-          <div class="text">
-            <span class="high">
-              <ICountUp v-if="poolBalance > 0" :end-val="poolBalance" />
-              <span v-else>..</span>
-            </span> <br>
-            <span class="low">EFX in staking pool</span>
-          </div>
-        </div>
-        <div class="column">
-          <div class="icon">
-            <img src="@/assets/img/icons/usd.svg" class="" />
-          </div>
-          <div class="text">
-            <span class="high">
-              <ICountUp v-if="poolValue > 0" :options="{ prefix: '$' }" :end-val="poolValue" />
-              <span v-else>..</span>
-            </span> <br>
-            <span class="low">staking pool value</span>
-          </div>
-        </div>
-        <div class="column">
-          <div class="icon">
-            <img src="@/assets/img/icons/supply.svg" class="" />
-          </div>
-          <div class="text">
-            <span class="high">
-              <ICountUp v-if="percentStaked > 0" :options="{ suffix: '%' }" :end-val="percentStaked" />
-              <span v-else>..</span>
-            </span> <br>
-            <span class="low">of circ. supply staked</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="treasury block-shadow mt-5 mb-6">
-      <h2 class="block-title">
-        Effect Force Overview
-      </h2>
-      <div class="columns block-columns">
-        <div class="column">
-          <div class="icon">
-            <img src="@/assets/img/icons/transactions.svg" class="" />
-          </div>
-          <div class="text">
-            <span class="high">
-              <ICountUp v-if="forceTransactions > 0" :end-val="forceTransactions" />
-              <span v-else>..</span>
-            </span> <br>
-            <span class="low">total transactions</span>
-          </div>
-        </div>
-        <div class="column">
-          <div class="icon">
-            <img src="@/assets/img/icons/payouts.svg" class="" />
-          </div>
-          <div class="text">
-            <span class="high">
-              <ICountUp v-if="forceEfxPaid > 0" :options="{ suffix: ' EFX' }" :end-val="forceEfxPaid" />
-              <span v-else>..</span>
-            </span> <br>
-            <span class="low">total payouts</span>
-          </div>
-        </div>
-        <div class="column">
-          <div class="icon">
-            <img src="@/assets/img/icons/workers.svg" class="" />
-          </div>
-          <div class="text">
-            <span class="high">
-              <ICountUp v-if="forceUsers > 0" :end-val="forceUsers" />
-              <span v-else>..</span>
-            </span> <br>
-            <span class="low">registered workers</span>
-          </div>
-        </div>
-      </div>
-    </div>
+    <sun />
   </div>
 </template>
 
 <script>
 import ICountUp from 'vue-countup-v2'
 import ConnectWallet from '../components/ConnectWallet'
+import Sun from '../components/Sun'
 
 export default {
   components: {
     ICountUp,
-    ConnectWallet
+    ConnectWallet,
+    Sun
   },
 
   data () {

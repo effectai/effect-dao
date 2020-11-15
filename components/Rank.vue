@@ -93,11 +93,14 @@ export default {
 
 <style lang="scss" scoped>
 .progress-pointer {
+  height:20px;
+  margin-bottom: 30px;
   border-right: 2px solid $accent;
+  white-space: nowrap;
   text-align: right;
   font-size: 18px;
   margin-top:-25px;
-  padding: 15px 5px 0;
+  padding: 15px 0 0;
   &.rank-1 {
     border-color: #71E3C0;
   }

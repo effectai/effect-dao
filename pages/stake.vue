@@ -69,29 +69,29 @@
         </div>
       </div>
 
-      <div v-if="nfxStillClaimable > 0" class="notification is-primary unstake mb-0">
+      <div v-if="nfxStillClaimable > 0" class="notification is-primary unstake mb-0 is-outlined">
         You can claim <b>{{ nfxStillClaimable }}</b> NFX.
         <button class="button is-success is-pulled-right claim-nfx" @click="claimNfx">
           Claim
         </button>
       </div>
 
-      <div v-if="!efxCanRefund && efxUnstaking > 0" class="notification is-primary unstake mb-0">
+      <div v-if="!efxCanRefund && efxUnstaking > 0" class="notification is-primary unstake mb-0 is-outlined">
         You have a pending unstake of <b>{{ efxUnstaking }}</b> EFX, claimable at <b>{{ efxUnstakingTime.toLocaleString() }}</b>.
       </div>
 
-      <div v-else-if="efxCanRefund && efxUnstaking > 0" class="notification is-primary unstake mb-0">
+      <div v-else-if="efxCanRefund && efxUnstaking > 0" class="notification is-primary unstake mb-0 is-outlined">
         You have an available refund of <b>{{ efxUnstaking }}</b> EFX
         <button class="button is-success is-pulled-right claim-efx" :class="{ 'is-loading': loading }" @click="refund">
-          Claim
+          Refund
         </button>
       </div>
 
-      <div v-if="nfxUnstaking > 0" class="notification is-primary unstake mb-0">
+      <div v-if="nfxUnstaking > 0" class="notification is-primary unstake mb-0 is-outlined">
         You have a pending unstake of <b>{{ nfxUnstaking }}</b> NFX, claimable at <b>{{ nfxUnstakingTime.toLocaleString() }}</b>.
       </div>
 
-      <div v-else-if="nfxCanRefund && nfxUnstaking > 0" class="notification is-primary unstake mb-0">
+      <div v-else-if="nfxCanRefund && nfxUnstaking > 0" class="notification is-primary unstake mb-0 is-outlined">
         You have an available refund of <b>{{ nfxUnstaking }}</b> NFX
         <button class="button is-success is-pulled-right claim-efx" :class="{ 'is-loading': loading }" @click="refund">
           Claim

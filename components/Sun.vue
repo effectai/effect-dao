@@ -22,13 +22,13 @@ export default {
 <style lang="scss" scoped>
 .sun {
   position: fixed;
-  animation: rise 60s forwards ease-out;
-  width: 800px;
-  height: 800px;
+  animation: rise 30s forwards ease-out;
+  width: 600px;
+  height: 600px;
   opacity: 0.1;
   position: fixed;
-  bottom: -800px;
-  left: -500px;
+  bottom: -600px;
+  left: -300px;
   z-index: -1;
 
   &:before {
@@ -42,7 +42,7 @@ export default {
     left:50%;
     border-radius: 100%;
     box-shadow: 0px 0px 500px 400px #fcff30;
-    animation: glow 45s infinite alternate ease-out;
+    animation: glow 15s infinite alternate ease-out;
   }
 }
 @keyframes glow {
@@ -55,12 +55,12 @@ export default {
 }
 @keyframes rise {
   from {
-    bottom:-800px;
-    left: -500px;
+    bottom:-600px;
+    left: -300px;
   }
   to {
     bottom:-300px;
-    left: -200px;
+    left: -150px;
   }
 }
 </style>

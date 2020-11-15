@@ -13,6 +13,16 @@ body {
   font-family: 'Nunito', sans-serif;
 }
 
+.notification {
+  &.is-primary {
+    &.is-outlined {
+      border: 1px solid $primary;
+      color: $primary;
+      background: none;
+    }
+  }
+}
+
 .coming-soon {
   width: 550px;
   max-width: 100%;

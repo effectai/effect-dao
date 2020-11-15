@@ -42,7 +42,7 @@ export default {
     left:50%;
     border-radius: 100%;
     box-shadow: 0px 0px 500px 400px #fcff30;
-    animation: glow 15s infinite alternate ease-out;
+    animation: glow 45s infinite alternate ease-out;
   }
 }
 @keyframes glow {

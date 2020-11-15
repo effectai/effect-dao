@@ -50,11 +50,12 @@ body {
   box-shadow: inset -4px -4px 10px 0 #FFFFFF, inset 4px 4px 10px 0 #CDD4E6;
   border-radius: 6px;
   padding: 24px;
+  position: relative;
 }
 .block-shadow-outside {
   border-radius: 13px;
   box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6;
-  padding: 20px 16px;
+  padding: 16px 16px;
 }
 
 .block-title {

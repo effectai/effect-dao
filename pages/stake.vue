@@ -484,7 +484,7 @@ export default {
       box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 29px -22px #39e7bfd4;
     }
     to {
-      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 40px 5px #39e7bfd4;
+      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 40px 15px #39e7bfd4;
     }
   }
   .circle {
@@ -493,8 +493,8 @@ export default {
     }
   }
   .value-circle {
-    height: 132px;
-    width: 132px;
+    height: 125px;
+    width: 125px;
     &.big {
       width: 200px;
       height: 200px;

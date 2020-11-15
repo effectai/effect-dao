@@ -3,10 +3,10 @@
     <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
       <div class="container is-max-widescreen">
         <div class="navbar-start">
-          <a class="navbar-item navbar-title" href="#">
+          <nuxt-link class="navbar-item navbar-item navbar-title" to="/">
             <img src="@/assets/img/logo.png" class="logo">
             <span class="top-title"><span class="has-text-weight-normal">Effect</span>&nbsp;<b class="has-text-weight-bold">Dashboard</b></span>
-          </a>
+          </nuxt-link>
 
           <a
             role="button"

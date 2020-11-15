@@ -30,7 +30,13 @@
         <progress :class="['progress', 'is-large', 'rank-'+rank.currentRank]" :value="progress" max="100">
           {{progress.toFixed(2)}}%
         </progress>
-        <h3>{{progress.toFixed(2)}}%</h3>
+        <div :class="['progress-pointer', 'rank-'+rank.currentRank]" :style="{width: progress + '%'}">
+          <small class="is-size-7">(<ICountUp :end-val="power" /> / {{rank.nextRank.power}} EP)</small>&nbsp;&nbsp;<b>{{progress.toFixed(2)}}%</b>
+        </div>
+        <div class="is-size-7 has-text-left mt-4">
+          Required NFX: <b>{{nfxStaked}} / {{rank.nextRank.nfx}} NFX</b>
+        </div>
+
       </div>
     </div>
   </div>
@@ -86,13 +92,46 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.progress-pointer {
+  border-right: 2px solid $accent;
+  text-align: right;
+  font-size: 18px;
+  margin-top:-25px;
+  padding: 15px 5px 0;
+  &.rank-1 {
+    border-color: #71E3C0;
+  }
+  &.rank-2 {
+    border-color: #F8D247;
+  }
+  &.rank-3 {
+    border-color: #57C0F9;
+  }
+  &.rank-4 {
+    border-color: #8026F5;
+  }
+  &.rank-5 {
+    border-color: #EA36AC;
+  }
+  &.rank-6 {
+    border-color: #FB2B11;
+  }
+  &.rank-7 {
+    border-color: #000000;
+  }
+  &.rank-8 {
+    border-color: #F8D247;
+  }
+  &.rank-9 {
+    border-color: #F8D247;
+  }
+  &.rank-10 {
+    border-color: #F8D247;
+  }
+}
 progress {
   box-shadow: inset -4px -4px 11px 0 #FFFFFF, inset 4px 4px 11px 0 #CDD4E6, 0px 0px 29px -22px rgba(57,231,191,0.83137), -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 15px 0px #71E3C0;
   animation: glow-progress 1s infinite alternate ease-out;
-  &:after {
-    content: "test";
-    display:block;
-  }
   &.rank-1 {
     animation: glow-progress-1 1s infinite alternate ease-out;
   }

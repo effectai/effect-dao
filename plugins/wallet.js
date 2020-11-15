@@ -187,8 +187,14 @@ export default (context, inject) => {
 
       async getAccountBalance () {
         if (this.wallet) {
-          this.efxAvailable = parseFloat((await this.eos.rpc.get_currency_balance(process.env.tokenContract, this.wallet.auth.accountName, process.env.efxToken))[0].replace(` ${process.env.efxToken}`, ''))
-          this.nfxAvailable = parseFloat((await this.eos.rpc.get_currency_balance(process.env.tokenContract, this.wallet.auth.accountName, process.env.nfxToken))[0].replace(` ${process.env.nfxToken}`, ''))
+          const efxRow = (await this.eos.rpc.get_currency_balance(process.env.tokenContract, this.wallet.auth.accountName, process.env.efxToken))[0]
+          if (efxRow) {
+            this.efxAvailable = parseFloat(efxRow.replace(` ${process.env.efxToken}`, ''))
+          }
+          const nfxRow = (await this.eos.rpc.get_currency_balance(process.env.tokenContract, this.wallet.auth.accountName, process.env.nfxToken))[0]
+          if (nfxRow) {
+            this.nfxAvailable = parseFloat(nfxRow.replace(` ${process.env.nfxToken}`, ''))
+          }
         }
       },
 

@@ -25,7 +25,7 @@ export default {
   animation: rise 60s forwards ease-out;
   width: 800px;
   height: 800px;
-  opacity: 0.04;
+  opacity: 0.1;
   position: fixed;
   bottom: -800px;
   left: -500px;

@@ -297,7 +297,8 @@ export default {
       this.loading = true
       const actions = []
 
-      if (this.efxStaked > 0) {
+      if ((this.stakingModelEfx && this.efxStaked > 0) ||
+          (!this.stakingModalEfx && this.nfxStaked > 0)) {
         actions.push({
           account: process.env.stakingContract,
           name: 'claim',

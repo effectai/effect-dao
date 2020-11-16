@@ -59,13 +59,6 @@
       </div>
     </div>
 
-    <div
-      v-else-if="!loading && signedConstitution"
-      class="notification is-success is-light mb-0 has-text-weight-bold notif-w-btn"
-    >
-      You signed the constitution and are participating in the DAO!
-    </div>
-
     <div class="intro">
       <h4 v-if="false">
         <span v-if="!loading">

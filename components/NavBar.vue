@@ -179,8 +179,20 @@ export default {
       justify-content: center;
       .navbar-item {
         font-weight: 700;
+        &:after {
+          display:block;
+          width:0;
+          height:2px;
+          position: absolute;
+          bottom: 20px;
+          background: $accent;
+          content: "";
+        }
         &.is-active {
-          color: $link;
+          color: $primary;
+          &:after {
+            width: calc(100% - 1.5rem);
+          }
         }
       }
     }

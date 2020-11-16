@@ -143,22 +143,6 @@ export default {
       margin-top: 12px;
     }
 
-    @media all and (max-width: 1024px) {
-      .top-title {
-        display: block;
-        margin-top: -39px;
-        margin-left: 40px;
-      }
-
-      .navbar-end {
-        display: none;
-      }
-
-      .mobile-connect {
-        display: block;
-      }
-    }
-
     .navbar-title {
       min-width: 100px;
       font-weight: 700;
@@ -184,6 +168,7 @@ export default {
           width:0;
           height:2px;
           position: absolute;
+          transition: width 0.5s;
           bottom: 20px;
           background: $accent;
           content: "";
@@ -199,6 +184,29 @@ export default {
 
     .navbar-end {
       margin-top: 2px;
+    }
+    @media all and (max-width: 1024px) {
+      .top-title {
+        display: block;
+        margin-top: -39px;
+        margin-left: 40px;
+      }
+
+      .navbar-end {
+        display: none;
+      }
+
+      .mobile-connect {
+        display: block;
+      }
+
+      .navbar-menu {
+        .navbar-item {
+          &:after {
+            display:none;
+          }
+        }
+      }
     }
   }
 

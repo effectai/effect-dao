@@ -135,6 +135,7 @@ export default {
 progress {
   box-shadow: inset -4px -4px 11px 0 #FFFFFF, inset 4px 4px 11px 0 #CDD4E6, 0px 0px 29px -22px rgba(57,231,191,0.83137), -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 15px 0px #71E3C0;
   animation: glow-progress 1s infinite alternate ease-out;
+  border-radius: 6px;
   &.rank-1 {
     animation: glow-progress-1 1s infinite alternate ease-out;
   }
@@ -170,6 +171,7 @@ progress {
 progress::-webkit-progress-bar  {
   box-shadow: inset -4px -4px 11px 0 #FFFFFF, inset 4px 4px 11px 0 #CDD4E6, 0px 0px 29px -22px rgba(57,231,191,0.83137), -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 20px 4px #71E3C0;
   animation: glow-progress 1s infinite alternate ease-out;
+  border-radius: 6px;
   &.rank-1 {
     animation: glow-progress-1 1s infinite alternate ease-out;
   }

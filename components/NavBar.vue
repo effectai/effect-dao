@@ -39,8 +39,8 @@
             DAO
           </nuxt-link>
 
-          <nuxt-link class="navbar-item" to="/swap" exact-active-class="is-active">
-            Swap
+          <nuxt-link class="navbar-item" to="/token" exact-active-class="is-active">
+            Token Map
           </nuxt-link>
 
           <a class="navbar-item connect-wallet mobile-connect">

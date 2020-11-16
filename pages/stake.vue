@@ -12,18 +12,20 @@
           </header>
           <section class="modal-card-body">
             <div v-if="stakingModalEfx" class="notification is-primary">
-              <strong>Current Stake</strong>: {{ efxStaked }} EFX
+              <div><strong>Current Stake</strong>: {{ efxStaked }} EFX</div>
+              <div v-if="addStake > 0"><strong>New Stake</strong>: {{ parseFloat(efxStaked) + parseFloat(addStake) }} EFX</div>
             </div>
             <div v-else class="notification is-primary">
-              <strong>Current Stake</strong>: {{ nfxStaked }} NFX
+              <div><strong>Current Stake</strong>: {{ nfxStaked }} NFX</div>
+              <div v-if="addStake > 0"><strong>New Stake</strong>: {{ parseFloat(nfxStaked) + parseFloat(addStake) }} NFX</div>
             </div>
             <div class="new-stake">
               <div class="is-pulled-left text">
-                New Stake:
+                Add Stake:
               </div>
               <div class="is-pulled-right">
                 <input
-                  v-model.number="newStake"
+                  v-model.number="addStake"
                   class="input is-full"
                   type="number"
                   step="0.0001"
@@ -33,11 +35,11 @@
               </div>
             </div>
             <input
-              v-model="newStake"
+              v-model="addStake"
               class="slider is-fullwidth is-medium is-success is-circle"
               step="1"
               min="0"
-              :max="(stakingModalEfx) ? efxStaked + efxAvailable : nfxStaked + nfxAvailable"
+              :max="(stakingModalEfx) ? efxAvailable : nfxAvailable"
               type="range"
             >
             <div class="input-lower">
@@ -45,25 +47,83 @@
                 0 {{ stakingModalEfx ? 'EFX' : 'NFX' }}
               </div>
               <div v-if="stakingModalEfx" class="is-pulled-right">
-                {{ efxAvailable + efxStaked }} EFX
+                {{ efxAvailable }} EFX
               </div>
               <div v-else class="is-pulled-right">
-                {{ nfxAvailable + nfxStaked }} NFX
+                {{ nfxAvailable }} NFX
               </div>
             </div>
           </section>
           <footer class="modal-card-foot">
-            <button v-if="stakingModalEfx && newStake < efxStaked" class="button is-danger is-fullwidth" :class="{ 'is-loading': loading }" @click="unstake">
-              Unstake {{ efxStaked - newStake }} EFX
+            <button v-if="stakingModalEfx" class="button is-success is-fullwidth" :class="{ 'is-loading': loading }" @click="stake">
+              Stake {{ addStake }} EFX
             </button>
-            <button v-else-if="!stakingModalEfx && newStake < nfxStaked" class="button is-danger is-fullwidth" :class="{ 'is-loading': loading }" @click="unstake">
-              Unstake {{ nfxStaked - newStake }} NFX
+            <button v-else-if="!stakingModalEfx" class="button is-success is-fullwidth" :class="{ 'is-loading': loading }" @click="stake">
+              Stake {{ addStake }} NFX
             </button>
-            <button v-else-if="stakingModalEfx && newStake > efxStaked" class="button is-success is-fullwidth" :class="{ 'is-loading': loading }" @click="stake">
-              Stake {{ newStake - efxStaked }} EFX
+          </footer>
+        </div>
+      </div>
+
+      <div class="modal" :class="{ 'is-active': unstakingModal }">
+        <div class="modal-background" />
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">
+              Unstake {{ stakingModalEfx ? 'EFX' : 'NFX' }}
+            </p>
+            <button class="delete" aria-label="close" @click="unstakingModal = false" />
+          </header>
+          <section class="modal-card-body">
+            <div v-if="stakingModalEfx" class="notification is-primary">
+              <div><strong>Current Stake</strong>: {{ efxStaked }} EFX</div>
+              <div v-if="removeStake > 0"><strong>New Stake</strong>: {{ Math.max(0, parseFloat(efxStaked) - parseFloat(removeStake)) }} EFX</div>
+            </div>
+            <div v-else class="notification is-primary">
+              <div><strong>Current Stake</strong>: {{ nfxStaked }} NFX</div>
+              <div><strong>New Stake</strong>: {{ Math.max(0, parseFloat(nfxStaked) - parseFloat(removeStake)) }} NFX</div>
+            </div>
+            <div class="new-stake">
+              <div class="is-pulled-left text">
+                Remove Stake:
+              </div>
+              <div class="is-pulled-right">
+                <input
+                  v-model.number="removeStake"
+                  class="input is-full"
+                  type="number"
+                  step="0.0001"
+                  min="0"
+                  @change="trimDecimals"
+                >
+              </div>
+            </div>
+            <input
+              v-model="removeStake"
+              class="slider is-fullwidth is-medium is-primary is-circle"
+              step="1"
+              min="0"
+              :max="(stakingModalEfx) ? efxStaked : nfxStaked"
+              type="range"
+            >
+            <div class="input-lower">
+              <div class="is-pulled-left">
+                0 {{ stakingModalEfx ? 'EFX' : 'NFX' }}
+              </div>
+              <div v-if="stakingModalEfx" class="is-pulled-right">
+                {{ efxStaked }} EFX
+              </div>
+              <div v-else class="is-pulled-right">
+                {{ nfxStaked }} NFX
+              </div>
+            </div>
+          </section>
+          <footer class="modal-card-foot">
+            <button v-if="stakingModalEfx" class="button is-danger is-fullwidth" :class="{ 'is-loading': loading }" @click="unstake">
+              Unstake {{ removeStake }} EFX
             </button>
-            <button v-else-if="!stakingModalEfx && newStake > nfxStaked" class="button is-success is-fullwidth" :class="{ 'is-loading': loading }" @click="stake">
-              Stake {{ newStake - nfxStaked }} NFX
+            <button v-else-if="!stakingModalEfx" class="button is-danger is-fullwidth" :class="{ 'is-loading': loading }" @click="unstake">
+              Unstake {{ removeStake }} NFX
             </button>
           </footer>
         </div>
@@ -110,10 +170,10 @@
                 <span class="symbol">EFX</span>
               </p>
               <div class="buttons">
-                <button class="button is-primary is-fullwidth" :class="{ 'is-loading': loading }" :disabled="efxAvailable === 0" @click="stakingModal = true; stakingModalEfx = true; newStake = efxStaked + efxAvailable">
+                <button class="button is-primary is-fullwidth" :class="{ 'is-loading': loading }" :disabled="efxAvailable === 0" @click="stakingModal = true; stakingModalEfx = true; addStake = efxAvailable">
                   Stake EFX
                 </button>
-                <button class="button is-primary is-outlined" :class="{ 'is-loading': loading }" :disabled="efxStaked === 0" @click="stakingModal = true; stakingModalEfx = true; newStake = 0">
+                <button class="button is-primary is-outlined" :class="{ 'is-loading': loading }" :disabled="efxStaked === 0" @click="unstakingModal = true; stakingModalEfx = true; removeStake = 0">
                   Unstake EFX
                 </button>
               </div>
@@ -132,10 +192,10 @@
                 <span class="symbol">NFX</span>
               </p>
               <div class="buttons">
-                <button class="button is-primary is-fullwidth" :class="{ 'is-loading': loading }" :disabled="nfxAvailable === 0" @click="stakingModal = true; stakingModalEfx = false; newStake = nfxStaked + nfxAvailable">
+                <button class="button is-primary is-fullwidth" :class="{ 'is-loading': loading }" :disabled="nfxAvailable === 0" @click="stakingModal = true; stakingModalEfx = false; addStake = nfxAvailable">
                   Stake NFX
                 </button>
-                <button class="button is-primary is-outlined" :class="{ 'is-loading': loading }" :disabled="nfxStaked === 0" @click="stakingModal = true; stakingModalEfx = false; newStake = 0">
+                <button class="button is-primary is-outlined" :class="{ 'is-loading': loading }" :disabled="nfxStaked === 0" @click="unstakingModal = true; stakingModalEfx = false; removeStake = 0">
                   Unstake NFX
                 </button>
               </div>
@@ -237,9 +297,11 @@ export default {
   data () {
     return {
       loading: false,
+      unstakingModal: false,
       stakingModal: false,
       stakingModalEfx: false,
-      newStake: 0
+      removeStake: 0,
+      addStake: 0
     }
   },
 
@@ -293,7 +355,8 @@ export default {
 
   methods: {
     trimDecimals (event) {
-      this.newStake = Math.floor(this.newStake * 10000) / 10000
+      this.removeStake = Math.floor(this.removeStake * 10000) / 10000
+      this.addStake = Math.floor(this.addStake * 10000) / 10000
     },
 
     stake () {
@@ -339,7 +402,7 @@ export default {
         data: {
           from: this.wallet.auth.accountName,
           to: process.env.stakingContract,
-          quantity: `${Number.parseFloat(this.newStake).toFixed(4)} ${(this.stakingModalEfx) ? process.env.efxToken : process.env.nfxToken}`,
+          quantity: `${Number.parseFloat(this.addStake).toFixed(4)} ${(this.stakingModalEfx) ? process.env.efxToken : process.env.nfxToken}`,
           memo: 'stake'
         }
       })
@@ -355,9 +418,9 @@ export default {
     },
 
     unstake () {
-      let quantity = `${Number.parseFloat(this.efxStaked - this.newStake).toFixed(4)} ${process.env.efxToken}`
+      let quantity = `${Number.parseFloat(this.removeStake).toFixed(4)} ${process.env.efxToken}`
       if (!this.stakingModalEfx) {
-        quantity = `${Number.parseFloat(this.nfxStaked - this.newStake).toFixed(4)} ${process.env.nfxToken}`
+        quantity = `${Number.parseFloat(this.removeStake).toFixed(4)} ${process.env.nfxToken}`
       }
 
       this.loading = true

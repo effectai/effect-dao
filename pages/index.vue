@@ -130,20 +130,18 @@
         </div>
       </div>
     </div>
-    <sun />
   </div>
 </template>
 
 <script>
 import ICountUp from 'vue-countup-v2'
 import ConnectWallet from '../components/ConnectWallet'
-import Sun from '../components/Sun'
+// import Sun from '../components/Sun'
 
 export default {
   components: {
     ICountUp,
-    ConnectWallet,
-    Sun
+    ConnectWallet
   },
 
   data () {

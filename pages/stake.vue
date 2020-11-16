@@ -129,7 +129,7 @@
         </div>
       </div>
 
-      <div v-if="nfxStillClaimable > 0 || true" class="notification is-primary unstake mb-0 is-outlined notif-w-btn">
+      <div v-if="nfxStillClaimable > 0" class="notification is-primary unstake mb-0 is-outlined notif-w-btn">
         You can claim <b>{{ nfxStillClaimable }}</b> NFX.
         <div class="is-pulled-right notif-btn">
           <button class="button is-success claim-nfx" @click="claimNfx">

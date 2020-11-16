@@ -475,7 +475,7 @@ export default {
           }],
           data: {
             owner: this.wallet.auth.accountName,
-            symbol: `4,${process.env.nfxToken}`
+            symbol: `4,${process.env.efxToken}`
           }
         }
       ]

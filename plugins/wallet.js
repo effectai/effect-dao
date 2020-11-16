@@ -48,7 +48,7 @@ export default (context, inject) => {
         }
         const diffTime = now.getTime() - lastClaimTime.getTime()
         const diffSeconds = diffTime / 1000
-        const age = this.lastClaimAge
+        const age = this.efxLastClaimAge
         const limit = 200 * 24 * 3600
         const newAge = Math.min(limit, age + diffSeconds)
         const avgAge = ((age + newAge) / 2) * Math.min(1, 1 - ((diffSeconds - (limit - age)) / diffSeconds)) + newAge * Math.max(0, (diffSeconds - (limit - age)) / diffSeconds)

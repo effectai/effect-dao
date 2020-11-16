@@ -22,7 +22,7 @@
       </div>
       <div class="column progress-bar" v-if="rank.nextRank">
         <p class="is-pulled-left">
-          {{rank.currentRank}}
+          current: <b>{{rank.currentRank}}</b>
         </p>
         <p class="is-pulled-right" v-if="rank.currentRank < 10">
           next: <b>{{rank.currentRank + 1}}</b>
@@ -33,9 +33,15 @@
         <div :class="['progress-pointer', 'rank-'+rank.currentRank]" :style="{width: progress + '%'}">
           <small class="is-size-7">(<ICountUp :end-val="power" /> / <ICountUp :end-val="rank.nextRank.power" :options="{startVal: rank.nextRank.power}" /> EP)</small>&nbsp;&nbsp;<b>{{progress.toFixed(2)}}%</b>
         </div>
-        <div class="is-size-7 has-text-left mt-4">
-          Required NFX: <b>{{nfxStaked}} / <ICountUp :end-val="rank.nextRank.nfx" :options="{startVal: rank.nextRank.nfx}" /> NFX</b>
+        <progress :class="['progress', 'mt-4', 'rank-'+rank.currentRank]" :value="progressNfx" max="100">
+          {{progress.toFixed(2)}}%
+        </progress>
+        <div :class="['progress-pointer', 'rank-'+rank.currentRank]" :style="{width: progressNfx + '%'}">
+          <small class="is-size-7">(<ICountUp :end-val="nfxStaked" /> / <ICountUp :end-val="rank.nextRank.nfx" :options="{startVal: rank.nextRank.nfx}" /> NFX)</small>&nbsp;&nbsp;<b>{{progressNfx.toFixed(2)}}%</b>
         </div>
+        <!--<div class="is-size-7 has-text-left mt-4">
+          Required NFX: <b>{{nfxStaked}} / <ICountUp :end-val="rank.nextRank.nfx" :options="{startVal: rank.nextRank.nfx}" /> NFX</b>
+        </div>-->
 
       </div>
     </div>
@@ -81,7 +87,16 @@ export default {
       if (this.rank && this.rank.currentRank === 10) {
         return 100
       }
-      return ((this.power - this.rank.currentRequirements.power) / (this.rank.nextRank.power - this.rank.currentRequirements.power)) * 100
+      return Math.min(100, ((this.power - this.rank.currentRequirements.power) / (this.rank.nextRank.power - this.rank.currentRequirements.power)) * 100)
+    },
+    progressNfx () {
+      if (!this.mounted) {
+        return 0
+      }
+      if (this.rank && this.rank.currentRank === 10) {
+        return 100
+      }
+      return Math.min(100, ((this.nfxStaked - this.rank.currentRequirements.nfx) / (this.rank.nextRank.nfx - this.rank.currentRequirements.nfx)) * 100)
     }
   },
 

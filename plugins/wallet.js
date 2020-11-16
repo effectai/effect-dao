@@ -109,20 +109,44 @@ export default (context, inject) => {
             nfx: 0
           },
           {
-            power: 20000,
-            nfx: 0
+            power: 200000,
+            nfx: 10000
           },
           {
-            power: 1000000,
-            nfx: 0
+            power: 348326,
+            nfx: 15505
           },
           {
-            power: 10000000,
-            nfx: 0
+            power: 606655,
+            nfx: 24041
           },
           {
-            power: 14000000,
-            nfx: 0
+            power: 1056569,
+            nfx: 37276
+          },
+          {
+            power: 1840152,
+            nfx: 57797
+          },
+          {
+            power: 3204864,
+            nfx: 89615
+          },
+          {
+            power: 5581687,
+            nfx: 138950
+          },
+          {
+            power: 9721233,
+            nfx: 215443
+          },
+          {
+            power: 16930792,
+            nfx: 334048
+          },
+          {
+            power: 29487176,
+            nfx: 517947
           }
         ]
         let currentRequirements

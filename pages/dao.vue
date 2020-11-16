@@ -16,7 +16,7 @@
         <footer class="modal-card-foot">
           <template v-if="$wallet.efxStaked >= 500">
             <button class="button is-success" :disabled="loading" @click="signConstitution">
-              Sign constitution
+              Sign Constitution
             </button>
             <div class="small">
               version {{ constitutionVersion }} | hash {{ constitutionHash }}

@@ -4,39 +4,39 @@
     <h1 :class="['rank-title', 'rank-'+rank.currentRank]">
       Rank {{rank.currentRank}}
     </h1>
-    <div class="block-columns has-text-centered columns mt-3">
+    <div class="block-columns has-text-centered columns mt-2">
       <div class="next-level column is-one-third" v-if="rank.nextRank">
-        <div class="treasury block-shadow-outside">
+        <div class="treasury block-shadow-outside mt-1">
           <h1 :class="['rank-title', 'rank-'+(rank.currentRank+1), 'small']">
             Next Rank <b>{{rank.currentRank+1}}</b>
           </h1>
-          <div>
+          <div class="mt-4">
             <ICountUp :options="{decimalPlaces: 0, startVal: rank.nextRank.power}" :end-val="Math.max(0,rank.nextRank.power - power)" />
             <b class="symbol is-size-7">EP Needed</b>
           </div>
-          <div>
+          <div class="mt-2 mb-4">
             <ICountUp :options="{decimalPlaces: 0, startVal: rank.nextRank.nfx}" :end-val="Math.max(0, rank.nextRank.nfx - nfxStaked)" />
             <b class="symbol is-size-7">NFX Needed</b>
           </div>
         </div>
       </div>
       <div class="column progress-bar" v-if="rank.nextRank">
-        <p class="is-pulled-left">
+        <div class="is-pulled-left">
           <b>EFX Power</b>
-        </p>
-        <p class="is-pulled-right" v-if="rank.currentRank < 10">
+        </div>
+        <div class="is-pulled-right" v-if="rank.currentRank < 10">
           next: <b>{{rank.currentRank + 1}}</b>
-        </p>
+        </div>
         <progress :class="['progress', 'is-large', 'rank-'+rank.currentRank]" :value="progress" max="100">
           {{progress.toFixed(2)}}%
         </progress>
         <div :class="['progress-pointer', 'rank-'+rank.currentRank]" :style="{width: progress + '%'}">
           <small class="is-size-7">(<ICountUp :end-val="power" /> / <ICountUp :end-val="rank.nextRank.power" :options="{startVal: rank.nextRank.power}" /> EP)</small>&nbsp;&nbsp;<b>{{progress.toFixed(2)}}%</b>
         </div>
-        <p class="is-pulled-left">
+        <div class="is-pulled-left">
           <b>NFX</b>
-        </p>
-        <progress :class="['progress', 'rank-'+rank.currentRank]" :value="progressNfx" max="100">
+        </div>
+        <progress :class="['progress', 'is-small', 'rank-'+rank.currentRank]" :value="progressNfx" max="100">
           {{progress.toFixed(2)}}%
         </progress>
         <div :class="['progress-pointer', 'rank-'+rank.currentRank]" :style="{width: progressNfx + '%'}">
@@ -111,7 +111,7 @@ export default {
 
 <style lang="scss" scoped>
 .progress-pointer {
-  height:20px;
+  height:15px;
   margin-bottom: 30px;
   border-right: 2px solid $accent;
   white-space: nowrap;

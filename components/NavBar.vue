@@ -23,28 +23,37 @@
         </div>
 
         <div id="navbarBasicExample" class="navbar-menu" :class="{'is-active': mobileMenu}">
-          <nuxt-link class="navbar-item" to="/" exact-active-class="is-active">
-            Home
-          </nuxt-link>
+          <div @click="mobileMenu = false">
+            <nuxt-link class="navbar-item" to="/" exact-active-class="is-active">
+              Home
+            </nuxt-link>
+          </div>
+          <div @click="mobileMenu = false">
+            <nuxt-link class="navbar-item" to="/stake" exact-active-class="is-active">
+              Stake
+            </nuxt-link>
+          </div>
+          <div @click="mobileMenu = false">
+            <nuxt-link class="navbar-item" to="/vote" exact-active-class="is-active">
+              Vote
+            </nuxt-link>
+          </div>
+          <div @click="mobileMenu = false">
+            <nuxt-link class="navbar-item" to="/dao" exact-active-class="is-active">
+              DAO
+            </nuxt-link>
+          </div>
+          <div @click="mobileMenu = false">
+            <nuxt-link class="navbar-item" to="/token" exact-active-class="is-active">
+              Token Map
+            </nuxt-link>
+          </div>
 
-          <nuxt-link class="navbar-item" to="/stake" exact-active-class="is-active">
-            Stake
-          </nuxt-link>
-
-          <nuxt-link class="navbar-item" to="/vote" exact-active-class="is-active">
-            Vote
-          </nuxt-link>
-
-          <nuxt-link class="navbar-item" to="/dao" exact-active-class="is-active">
-            DAO
-          </nuxt-link>
-
-          <nuxt-link class="navbar-item" to="/token" exact-active-class="is-active">
-            Token Map
-          </nuxt-link>
-
-          <a class="navbar-item connect-wallet mobile-connect">
+          <a class="navbar-item connect-wallet mobile-connect" @click="mobileMenu = false">
             <ConnectWallet v-if="!wallet" />
+            <a v-else class="button is-primary" @click="walletModal = true">
+              <strong>{{ wallet.auth.accountName }}</strong>
+            </a>
           </a>
         </div>
 

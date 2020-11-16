@@ -48,6 +48,9 @@ export default (context, inject) => {
         }
         const diffTime = now.getTime() - lastClaimTime.getTime()
         const diffSeconds = diffTime / 1000
+        if (diffSeconds < 0) {
+          return 0
+        }
         const age = this.efxLastClaimAge
         const limit = 200 * 24 * 3600
         const newAge = Math.min(limit, age + diffSeconds)

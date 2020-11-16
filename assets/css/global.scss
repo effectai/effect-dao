@@ -13,6 +13,10 @@ body {
   font-family: 'Nunito', sans-serif;
 }
 
+a {
+  outline: 0;
+}
+
 .notification {
   &.is-primary {
     &.is-outlined {

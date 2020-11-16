@@ -47,13 +47,13 @@
 
     <div
       v-else-if="!loading && !signedConstitution"
-      class="notification is-warning is-light mb-0 has-text-weight-bold notif-w-btn"
+      class="notification is-primary is-outlined is-light mb-0 has-text-weight-bold notif-w-btn"
     >
       <div class="is-pulled-left">
         Sign the constitution to participate in the DAO
       </div>
       <div class="is-pulled-right notif-btn">
-        <button class="button is-primary is-outlined" @click="downloadConstitution(); constitutionModal = true">
+        <button class="button is-primary" @click="downloadConstitution(); constitutionModal = true">
           Become a member
         </button>
       </div>

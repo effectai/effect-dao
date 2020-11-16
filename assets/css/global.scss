@@ -20,7 +20,7 @@ a {
 .notification {
   &.is-primary {
     &.is-outlined {
-      border: 1px solid $primary;
+      border: 2px solid $primary;
       color: $text;
       background: none;
     }

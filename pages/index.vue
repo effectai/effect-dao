@@ -1,7 +1,14 @@
 <template>
   <div>
     <div class="index">
-      <div class="intro">
+      <div class="intro" v-if="wallet && wallet.auth">
+        <div class="image is-64x64 avatar has-text-centered">
+          <img class="is-rounded" style="margin: 0 auto" :src="`https://avatar.pixeos.art/avatar/${wallet.auth.accountName}`" @error="fallbackAvatar">
+        </div>
+        <h1>Hi, {{wallet.auth.accountName}}!</h1>
+        <h4>Welcome to the Effect Dashboard.</h4>
+      </div>
+      <div class="intro" v-else>
         <h1>Welcome to the Effect Dashboard.</h1>
         <h4>Stake, vote and swap all in one place!</h4>
       </div>
@@ -184,6 +191,10 @@ export default {
   },
 
   methods: {
+    fallbackAvatar (event) {
+      event.target.src = `https://ui-avatars.com/api/?name=${this.wallet.auth.accountName}&size=128`
+    },
+
     init () {
       this.getForceStats()
       this.getCircSupply()
@@ -224,7 +235,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .index {
     max-width: 750px;
     margin-left: auto;
@@ -292,5 +303,10 @@ export default {
     .modal-card-title {
       margin-bottom: 0 !important;
     }
+  }
+  .avatar {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
   }
 </style>

@@ -77,7 +77,7 @@
       </div>
 
       <div v-if="!efxCanRefund && efxUnstaking > 0" class="notification is-primary unstake mb-0 is-outlined">
-        You have a pending unstake of <b>{{ efxUnstaking }}</b> EFX, claimable at <b>{{ efxUnstakingTime.toLocaleString() }}</b>.
+        You have a pending unstake of <b>{{ efxUnstaking }}</b> EFX, claimable <b>{{ $moment(efxUnstakingTime+"Z").fromNow() }}</b>.
       </div>
 
       <div v-else-if="efxCanRefund && efxUnstaking > 0" class="notification is-primary unstake mb-0 is-outlined">
@@ -88,7 +88,7 @@
       </div>
 
       <div v-if="nfxUnstaking > 0" class="notification is-primary unstake mb-0 is-outlined">
-        You have a pending unstake of <b>{{ nfxUnstaking }}</b> NFX, claimable at <b>{{ nfxUnstakingTime.toLocaleString() }}</b>.
+        You have a pending unstake of <b>{{ nfxUnstaking }}</b> NFX, claimable at <b>{{ $moment(efxUnstakingTime+"Z").fromNow() }}</b>.
       </div>
 
       <div v-else-if="nfxCanRefund && nfxUnstaking > 0" class="notification is-primary unstake mb-0 is-outlined">

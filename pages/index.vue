@@ -54,7 +54,7 @@
           Staking Overview
         </h2>
         <div class="columns block-columns is-desktop">
-          <div class="column">
+          <div class="column has-text-centered">
             <div class="icon">
               <img src="@/assets/img/icons/staking.svg" class="" />
             </div>
@@ -66,7 +66,8 @@
               <span class="low">EFX in staking pool</span>
             </div>
           </div>
-          <div class="column">
+          <div class="splitter"></div>
+          <div class="column  has-text-centered">
             <div class="icon">
               <img src="@/assets/img/icons/usd.svg" class="" />
             </div>
@@ -75,10 +76,11 @@
                 <ICountUp v-if="poolValue > 0" :options="{ prefix: '$' }" :end-val="poolValue" />
                 <span v-else>..</span>
               </span> <br>
-              <span class="low">staking pool value</span>
+              <span class="low">Staking pool value</span>
             </div>
           </div>
-          <div class="column">
+          <div class="splitter"></div>
+          <div class="column has-text-centered">
             <div class="icon">
               <img src="@/assets/img/icons/supply.svg" class="" />
             </div>
@@ -87,7 +89,7 @@
                 <ICountUp v-if="percentStaked > 0" :options="{ suffix: '%' }" :end-val="percentStaked" />
                 <span v-else>..</span>
               </span> <br>
-              <span class="low">of circ. supply staked</span>
+              <span class="low">Of circ. supply staked</span>
             </div>
           </div>
         </div>
@@ -98,7 +100,7 @@
           Effect Force Overview
         </h2>
         <div class="columns block-columns">
-          <div class="column">
+          <div class="column has-text-centered">
             <div class="icon">
               <img src="@/assets/img/icons/transactions.svg" class="" />
             </div>
@@ -107,10 +109,11 @@
                 <ICountUp v-if="forceTransactions > 0" :end-val="forceTransactions" />
                 <span v-else>..</span>
               </span> <br>
-              <span class="low">total transactions</span>
+              <span class="low">Total transactions</span>
             </div>
           </div>
-          <div class="column">
+          <div class="splitter"></div>
+          <div class="column has-text-centered">
             <div class="icon">
               <img src="@/assets/img/icons/payouts.svg" class="" />
             </div>
@@ -119,10 +122,11 @@
                 <ICountUp v-if="forceEfxPaid > 0" :options="{ suffix: ' EFX' }" :end-val="forceEfxPaid" />
                 <span v-else>..</span>
               </span> <br>
-              <span class="low">total payouts</span>
+              <span class="low">Total payouts</span>
             </div>
           </div>
-          <div class="column">
+          <div class="splitter"></div>
+          <div class="column has-text-centered">
             <div class="icon">
               <img src="@/assets/img/icons/workers.svg" class="" />
             </div>
@@ -131,7 +135,7 @@
                 <ICountUp v-if="forceUsers > 0" :end-val="forceUsers" />
                 <span v-else>..</span>
               </span> <br>
-              <span class="low">registered workers</span>
+              <span class="low">Registered workers</span>
             </div>
           </div>
         </div>
@@ -251,16 +255,16 @@ export default {
     }
 
     .block-columns {
-      margin-top: 20px;
+      margin-top: 25px;
       padding-bottom: 15px;
       margin-left: 0;
     }
 
     .icon {
-      float: left;
       font-size: 32px;
-      margin-top: 18px;
-      margin-right: 20px;
+      img {
+        max-height: 100%;
+      }
     }
 
     .high {
@@ -270,6 +274,7 @@ export default {
 
     .low {
       font-weight: 300;
+      font-size: small;
     }
 
     .balances {
@@ -308,5 +313,9 @@ export default {
     margin-left: auto;
     margin-right: auto;
     display: block;
+  }
+  .splitter {
+    border-left: 1px solid #CDD4E6;
+    margin: 0.75em 0 0.75em 0;
   }
 </style>

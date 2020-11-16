@@ -129,11 +129,13 @@
         </div>
       </div>
 
-      <div v-if="nfxStillClaimable > 0" class="notification is-primary unstake mb-0 is-outlined">
+      <div v-if="nfxStillClaimable > 0 || true" class="notification is-primary unstake mb-0 is-outlined notif-w-btn">
         You can claim <b>{{ nfxStillClaimable }}</b> NFX.
-        <button class="button is-success is-pulled-right claim-nfx" @click="claimNfx">
-          Claim
-        </button>
+        <div class="is-pulled-right notif-btn">
+          <button class="button is-success claim-nfx" @click="claimNfx">
+            Claim
+          </button>
+        </div>
       </div>
 
       <div v-if="!efxCanRefund && efxUnstaking > 0" class="notification is-primary has-text-centered unstake mb-0 is-outlined">
@@ -542,6 +544,14 @@ export default {
   .circle {
     .age-amount {
       font-size: 0.75rem;
+    }
+  }
+  .notif-w-btn {
+    height: 66px;
+
+    .notif-btn {
+      margin-top: -8px;
+      margin-right: -12px;
     }
   }
   .value-circle {

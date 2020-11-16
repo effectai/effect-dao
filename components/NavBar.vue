@@ -178,7 +178,7 @@ export default {
           height:2px;
           position: absolute;
           transition: width 0.5s;
-          bottom: 20px;
+          bottom: 10px;
           background: $accent;
           content: "";
         }

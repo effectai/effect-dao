@@ -46,7 +46,7 @@
     </div>
 
     <div
-      v-else-if="!loading && !signedConstitution"
+      v-else-if="!loading && signedConstitution"
       class="notification is-primary is-outlined is-light mb-0 has-text-weight-bold notif-w-btn"
     >
       <div class="is-pulled-left">

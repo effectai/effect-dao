@@ -22,7 +22,7 @@
       </div>
       <div class="column progress-bar" v-if="rank.nextRank">
         <p class="is-pulled-left">
-          current: <b>{{rank.currentRank}}</b>
+          <b>EFX Power</b>
         </p>
         <p class="is-pulled-right" v-if="rank.currentRank < 10">
           next: <b>{{rank.currentRank + 1}}</b>
@@ -33,7 +33,10 @@
         <div :class="['progress-pointer', 'rank-'+rank.currentRank]" :style="{width: progress + '%'}">
           <small class="is-size-7">(<ICountUp :end-val="power" /> / <ICountUp :end-val="rank.nextRank.power" :options="{startVal: rank.nextRank.power}" /> EP)</small>&nbsp;&nbsp;<b>{{progress.toFixed(2)}}%</b>
         </div>
-        <progress :class="['progress', 'mt-4', 'rank-'+rank.currentRank]" :value="progressNfx" max="100">
+        <p class="is-pulled-left">
+          <b>NFX</b>
+        </p>
+        <progress :class="['progress', 'rank-'+rank.currentRank]" :value="progressNfx" max="100">
           {{progress.toFixed(2)}}%
         </progress>
         <div :class="['progress-pointer', 'rank-'+rank.currentRank]" :style="{width: progressNfx + '%'}">

@@ -21,43 +21,6 @@
             <span aria-hidden="true" />
           </a>
         </div>
-
-        <div id="navbarBasicExample" class="navbar-menu" :class="{'is-active': mobileMenu}">
-          <nuxt-link class="navbar-item" to="/" exact-active-class="is-active">
-            Home
-          </nuxt-link>
-
-          <nuxt-link class="navbar-item" to="/stake" exact-active-class="is-active">
-            Stake
-          </nuxt-link>
-
-          <nuxt-link class="navbar-item" to="/vote" exact-active-class="is-active">
-            Vote
-          </nuxt-link>
-
-          <nuxt-link class="navbar-item" to="/dao" exact-active-class="is-active">
-            DAO
-          </nuxt-link>
-
-          <nuxt-link class="navbar-item" to="/token" exact-active-class="is-active">
-            Token Map
-          </nuxt-link>
-
-          <a class="navbar-item connect-wallet mobile-connect">
-            <ConnectWallet v-if="!wallet" />
-          </a>
-        </div>
-
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="buttons wallet">
-              <ConnectWallet v-if="!wallet" />
-              <a v-else class="button is-primary" @click="walletModal = true">
-                <strong>{{ wallet.auth.accountName }}</strong>
-              </a>
-            </div>
-          </div>
-        </div>
       </div>
     </nav>
 
@@ -92,11 +55,9 @@
 </template>
 
 <script>
-import ConnectWallet from '@/components/ConnectWallet'
 
 export default {
   components: {
-    ConnectWallet
   },
 
   data () {

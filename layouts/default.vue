@@ -1,9 +1,5 @@
 <template>
   <div>
-    <div v-if="isTestnet" class="testnet">
-      Connected to Kylin testnet ({{ node }})
-    </div>
-
     <div v-if="transaction" class="notification is-primary global-notification">
       <button class="delete" @click="clearTransaction" />
       <b>Transaction successful!</b><br>

@@ -177,6 +177,7 @@
                   Unstake EFX
                 </button>
               </div>
+              <div class="has-text-centered is-italic"><small>Unstaking takes 5 days</small></div>
             </div>
           </div>
         </div>
@@ -199,6 +200,7 @@
                   Unstake NFX
                 </button>
               </div>
+              <div class="has-text-centered is-italic"><small>Unstaking takes 15 days</small></div>
             </div>
           </div>
         </div>

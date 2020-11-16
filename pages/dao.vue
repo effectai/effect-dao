@@ -145,7 +145,7 @@ export default {
       constitution: '',
       constitutionHash: '',
       constitutionVersion: '1',
-      constitutionUrl: 'https://raw.githubusercontent.com/effectai/effect-network-eos/constit/constitution/constitution.md',
+      constitutionUrl: 'https://raw.githubusercontent.com/effectai/effect-network-eos/master/constitution/constitution.md',
       moreMembers: true,
       constitutionMembers: null
     }

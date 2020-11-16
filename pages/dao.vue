@@ -53,7 +53,7 @@
         Sign the constitution to participate in the DAO
       </div>
       <div class="is-pulled-right notif-btn">
-        <button class="button is-success" @click="downloadConstitution(); constitutionModal = true">
+        <button class="button is-primary is-outlined" @click="downloadConstitution(); constitutionModal = true">
           Become a member
         </button>
       </div>
@@ -145,7 +145,7 @@ export default {
       constitution: '',
       constitutionHash: '',
       constitutionVersion: '1',
-      constitutionUrl: 'https://raw.githubusercontent.com/effectai/effect-network-eos/constitution/constitution/constitution.md',
+      constitutionUrl: 'https://raw.githubusercontent.com/effectai/effect-network-eos/constit/constitution/constitution.md',
       moreMembers: true,
       constitutionMembers: null
     }

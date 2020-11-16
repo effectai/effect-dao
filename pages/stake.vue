@@ -144,7 +144,7 @@
 
       <div v-else-if="efxCanRefund && efxUnstaking > 0" class="notification is-primary unstake mb-0 is-outlined">
         You have an available refund of <b>{{ efxUnstaking }}</b> EFX
-        <button class="button is-success is-pulled-right claim-efx" :class="{ 'is-loading': loading }" @click="refund">
+        <button class="button is-success is-pulled-right claim-efx" :class="{ 'is-loading': loading }" @click="refund('4,EFX')">
           Refund
         </button>
       </div>
@@ -153,10 +153,10 @@
         You have a pending unstake of <b>{{ nfxUnstaking }} NFX</b> refundable at <b>{{ $moment(efxUnstakingTime+"Z").fromNow() }}</b>.
       </div>
 
-      <div v-else-if="nfxCanRefund && nfxUnstaking > 0" class="notification is-primary unstake mb-0 is-outlined">
+      <div v-else-if="nfxUnstaking > 0" class="notification is-primary unstake mb-0 is-outlined">
         You have an available refund of <b>{{ nfxUnstaking }}</b> NFX
-        <button class="button is-success is-pulled-right claim-efx" :class="{ 'is-loading': loading }" @click="refund">
-          Claim
+        <button class="button is-success is-pulled-right claim-efx" :class="{ 'is-loading': loading }" @click="refund('4,NFX')">
+          Refund
         </button>
       </div>
 
@@ -491,7 +491,7 @@ export default {
         })
     },
 
-    refund () {
+    refund (sym) {
       this.loading = true
       const actions = [
         {
@@ -502,7 +502,8 @@ export default {
             permission: this.wallet.auth.permission
           }],
           data: {
-            owner: this.wallet.auth.accountName
+            owner: this.wallet.auth.accountName,
+            symbol: sym
           }
         }
       ]

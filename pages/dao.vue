@@ -36,9 +36,9 @@
       </div>
     </div>
 
-    <div v-if="!loading && (!wallet || !wallet.auth)" class="notification is-warning is-light mb-0 has-text-weight-bold notif-w-btn">
+    <div v-if="!loading && (!wallet || !wallet.auth)" class="notification is-outlined is-primary has-text-weight-bold mb-0 notif-w-btn">
       <div class="is-pulled-left">
-        Connect your wallet to participate in the DAO
+        Connect your wallet to participate in the DAO.
       </div>
       <div class="is-pulled-right notif-btn">
         <ConnectWallet />

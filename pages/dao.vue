@@ -36,6 +36,26 @@
       </div>
     </div>
 
+    <div class="modal constitution-leave-modal" :class="{ 'is-active': constitutionLeaveModal }">
+      <div class="modal-background" />
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">
+            Unsign constitution
+          </p>
+          <button class="delete" aria-label="close" @click="constitutionLeaveModal = false" />
+        </header>
+        <div class="modal-card-body">
+          Are you sure you want to leave the Effect DAO?
+        </div>
+        <footer class="modal-card-foot">
+          <button class="button is-warning has-text-centered is-fullwidth" :disabled="loading" @click="unsignConstitution">
+            Confirm
+          </button>
+        </footer>
+      </div>
+    </div>
+
     <div v-if="!loading && (!wallet || !wallet.auth)" class="notification is-outlined is-primary has-text-weight-bold mb-0 notif-w-btn">
       <div class="is-pulled-left">
         Connect your wallet to participate in the DAO.
@@ -114,6 +134,9 @@
         </button>
       </div>
     </div>
+    <div v-if="signedConstitution" class="leave-dao">
+      <a href="#" @click="constitutionLeaveModal = true">Leave DAO</a>
+    </div>
   </div>
 </template>
 
@@ -134,6 +157,7 @@ export default {
     return {
       loading: false,
       constitutionModal: false,
+      constitutionLeaveModal: false,
 
       constitution: '',
       constitutionHash: '',
@@ -280,6 +304,32 @@ export default {
         .finally(() => {
           this.loading = false
         })
+    },
+
+    unsignConstitution () {
+      const actions = [
+        {
+          account: process.env.daoContract,
+          name: 'memberunreg',
+          authorization: [{
+            actor: this.wallet.auth.accountName,
+            permission: this.wallet.auth.permission
+          }],
+          data: {
+            account: this.wallet.auth.accountName
+          }
+        }
+      ]
+
+      this.$wallet.handleTransaction(actions)
+        .then(() => {
+          this.init()
+          this.signedConstitution = false
+          this.constitutionLeaveModal = false
+        })
+        .finally(() => {
+          this.loading = false
+        })
     }
   }
 }
@@ -402,6 +452,12 @@ export default {
         margin-right: 10px;
       }
     }
+  }
+  .leave-dao {
+    text-align: center;
+    margin-top: -20px;
+    margin-bottom: 20px;
+    font-size: 13px;
   }
 }
 </style>

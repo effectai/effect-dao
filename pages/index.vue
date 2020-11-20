@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="index">
-      <div class="intro" v-if="wallet && wallet.auth">
+      <div v-if="wallet && wallet.auth" class="intro">
         <div class="image is-64x64 avatar has-text-centered">
           <img class="is-rounded" style="margin: 0 auto" :src="`https://avatar.pixeos.art/avatar/${wallet.auth.accountName}`" @error="fallbackAvatar">
         </div>
-        <h1>Hi, {{wallet.auth.accountName}}!</h1>
+        <h1>Hi, {{ wallet.auth.accountName }}!</h1>
         <h4>Welcome to the Effect Dashboard.</h4>
       </div>
-      <div class="intro" v-else>
+      <div v-else class="intro">
         <h1>Welcome to the Effect Dashboard.</h1>
         <h4>Stake, vote and swap all in one place!</h4>
       </div>
@@ -17,13 +17,27 @@
         <div class="column">
           <div class="treasury block-shadow mt-5">
             <h2 class="block-title">
-              <img src="@/assets/img/efx-icon.png" class="token-icon" />EFX Balance
+              <img src="@/assets/img/efx-icon.png" class="token-icon">EFX Balance
             </h2>
             <div class="balance">
-              <p>
-                <ICountUp :end-val="efxAvailable + efxStaked" /> <span class="symbol">EFX</span>
-              </p>
-              <span>Staked: <ICountUp :end-val="efxStaked" /> EFX</span>
+              <div class="balance">
+                <span class="balance-text">Available</span>
+                <p>
+                  <ICountUp :end-val="efxAvailable" /> <span class="symbol">EFX</span>
+                </p>
+              </div>
+              <div class="balance smaller">
+                <span class="balance-text">Staked</span>
+                <p>
+                  <ICountUp :end-val="efxStaked" /> <span class="symbol">EFX</span>
+                </p>
+              </div>
+              <div class="balance smaller">
+                <span class="balance-text">Total</span>
+                <p>
+                  <ICountUp :end-val="efxAvailable + efxStaked" /> <span class="symbol">EFX</span>
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -31,14 +45,26 @@
         <div class="column">
           <div class="treasury block-shadow mt-5">
             <h2 class="block-title">
-              <img src="@/assets/img/nfx-icon.png" class="token-icon nfx" />NFX Balance
+              <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">NFX Balance
             </h2>
             <div class="balance">
               <div class="balance">
+                <span class="balance-text">Available</span>
+                <p>
+                  <ICountUp :end-val="nfxAvailable" /> <span class="symbol">NFX</span>
+                </p>
+              </div>
+              <div class="balance smaller">
+                <span class="balance-text">Staked</span>
+                <p>
+                  <ICountUp :end-val="nfxStaked" /> <span class="symbol">NFX</span>
+                </p>
+              </div>
+              <div class="balance smaller">
+                <span class="balance-text">Total</span>
                 <p>
                   <ICountUp :end-val="nfxAvailable + nfxStaked" /> <span class="symbol">NFX</span>
                 </p>
-                <span>Staked: <ICountUp :end-val="nfxStaked" /> NFX</span>
               </div>
             </div>
           </div>
@@ -56,7 +82,7 @@
         <div class="columns block-columns is-desktop">
           <div class="column has-text-centered">
             <div class="icon">
-              <img src="@/assets/img/icons/staking.svg" class="" />
+              <img src="@/assets/img/icons/staking.svg" class="">
             </div>
             <div class="text">
               <span class="high">
@@ -66,10 +92,10 @@
               <span class="low">EFX in staking pool</span>
             </div>
           </div>
-          <div class="splitter"></div>
+          <div class="splitter" />
           <div class="column  has-text-centered">
             <div class="icon">
-              <img src="@/assets/img/icons/usd.svg" class="" />
+              <img src="@/assets/img/icons/usd.svg" class="">
             </div>
             <div class="text">
               <span class="high">
@@ -79,10 +105,10 @@
               <span class="low">Staking pool value</span>
             </div>
           </div>
-          <div class="splitter"></div>
+          <div class="splitter" />
           <div class="column has-text-centered">
             <div class="icon">
-              <img src="@/assets/img/icons/supply.svg" class="" />
+              <img src="@/assets/img/icons/supply.svg" class="">
             </div>
             <div class="text">
               <span class="high">
@@ -102,7 +128,7 @@
         <div class="columns block-columns">
           <div class="column has-text-centered">
             <div class="icon">
-              <img src="@/assets/img/icons/transactions.svg" class="" />
+              <img src="@/assets/img/icons/transactions.svg" class="">
             </div>
             <div class="text">
               <span class="high">
@@ -112,10 +138,10 @@
               <span class="low">Total transactions</span>
             </div>
           </div>
-          <div class="splitter"></div>
+          <div class="splitter" />
           <div class="column has-text-centered">
             <div class="icon">
-              <img src="@/assets/img/icons/payouts.svg" class="" />
+              <img src="@/assets/img/icons/payouts.svg" class="">
             </div>
             <div class="text">
               <span class="high">
@@ -125,10 +151,10 @@
               <span class="low">Total payouts</span>
             </div>
           </div>
-          <div class="splitter"></div>
+          <div class="splitter" />
           <div class="column has-text-centered">
             <div class="icon">
-              <img src="@/assets/img/icons/workers.svg" class="" />
+              <img src="@/assets/img/icons/workers.svg" class="">
             </div>
             <div class="text">
               <span class="high">
@@ -292,6 +318,14 @@ export default {
             font-size: 18px;
           }
         }
+
+        .balance-text {
+          margin-top: 8px;
+          display: block;
+          margin-bottom: -12px;
+          font-weight: lighter;
+          font-size: 15px;
+        }
       }
       .token-icon {
         height: 40px;
@@ -317,5 +351,11 @@ export default {
   .splitter {
     border-left: 1px solid #CDD4E6;
     margin: 0.75em 0 0.75em 0;
+  }
+
+  .smaller {
+    p {
+      font-size: 21px !important;
+    }
   }
 </style>

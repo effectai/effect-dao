@@ -93,7 +93,7 @@
     <rank v-if="wallet && wallet.auth && signedConstitution" class="mb-3" />
     <div class="block-shadow mb-6">
       <h2 class="block-title">
-        DAO Members
+        EffectDAO Members
       </h2>
       <div v-if="constitutionMembers" class="members columns is-multiline mt-5">
         <div v-for="member in constitutionMembers" :key="member.account" class="column is-half">

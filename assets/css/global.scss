@@ -27,6 +27,17 @@ a {
   }
 }
 
+.icon {
+  img {
+    max-height: 100%;
+  }
+}
+
+.symbol {
+  font-size: 0.7em;
+  font-weight: 400 !important;
+}
+
 .coming-soon {
   width: 550px;
   max-width: 100%;

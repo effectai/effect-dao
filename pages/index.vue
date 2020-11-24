@@ -23,24 +23,24 @@
           <h5 class="box-title">
             <img src="@/assets/img/efx-icon.png" class="token-icon">EFX Balance
           </h5>
-          <div class="balance">
-            <div class="balance">
-              <span class="balance-text">Available</span>
-              <p>
+          <div class="has-text-centered">
+            <div class="mb-3">
+              <div class="is-size-6">Available</div>
+              <div class="title is-3">
                 <ICountUp :end-val="efxAvailable" /> <span class="symbol">EFX</span>
-              </p>
+              </div>
             </div>
-            <div class="balance smaller">
-              <span class="balance-text">Staked</span>
-              <p>
+            <div class="mb-3">
+              <div class="is-size-6">Staked</div>
+              <div class="title is-5">
                 <ICountUp :end-val="efxStaked" /> <span class="symbol">EFX</span>
-              </p>
+              </div>
             </div>
-            <div class="balance smaller">
-              <span class="balance-text">Total</span>
-              <p>
+            <div class="mb-3">
+              <div class="is-size-6">Total</div>
+              <div class="title is-5">
                 <ICountUp :end-val="efxAvailable + efxStaked" /> <span class="symbol">EFX</span>
-              </p>
+              </div>
             </div>
           </div>
         </div>
@@ -49,26 +49,27 @@
       <div class="column">
         <div class="box">
           <h5 class="box-title">
+
             <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">NFX Balance
           </h5>
-          <div class="balance">
-            <div class="balance">
-              <span class="balance-text">Available</span>
-              <p>
+          <div class="has-text-centered">
+            <div class="mb-3">
+              <div class="is-size-6">Available</div>
+              <div class="title is-3">
                 <ICountUp :end-val="nfxAvailable" /> <span class="symbol">NFX</span>
-              </p>
+              </div>
             </div>
-            <div class="balance smaller">
-              <span class="balance-text">Staked</span>
-              <p>
+            <div class="mb-3">
+              <div class="is-size-6">Staked</div>
+              <div class="title is-5">
                 <ICountUp :end-val="nfxStaked" /> <span class="symbol">NFX</span>
-              </p>
+              </div>
             </div>
-            <div class="balance smaller">
-              <span class="balance-text">Total</span>
-              <p>
+            <div class="mb-3">
+              <div class="is-size-6">Total</div>
+              <div class="title is-5">
                 <ICountUp :end-val="nfxAvailable + nfxStaked" /> <span class="symbol">NFX</span>
-              </p>
+              </div>
             </div>
           </div>
         </div>
@@ -79,8 +80,8 @@
       <h5 class="box-title">
         Staking Overview
       </h5>
-      <div class="columns block-columns is-desktop">
-        <div class="column has-text-centered">
+      <div class="columns has-text-centered py-4">
+        <div class="column">
           <div class="icon">
             <img src="@/assets/img/icons/staking.svg" class="">
           </div>
@@ -93,7 +94,7 @@
           </div>
         </div>
         <div class="splitter"></div>
-        <div class="column  has-text-centered">
+        <div class="column">
           <div class="icon">
             <img src="@/assets/img/icons/usd.svg" class="">
           </div>
@@ -106,7 +107,7 @@
           </div>
         </div>
         <div class="splitter"></div>
-        <div class="column has-text-centered">
+        <div class="column">
           <div class="icon">
             <img src="@/assets/img/icons/supply.svg" class="">
           </div>
@@ -125,8 +126,8 @@
       <h5 class="box-title">
         Effect Force Overview
       </h5>
-      <div class="columns block-columns">
-        <div class="column has-text-centered">
+      <div class="columns has-text-centered py-4">
+        <div class="column">
           <div class="icon">
             <img src="@/assets/img/icons/transactions.svg" class="">
           </div>
@@ -139,20 +140,21 @@
           </div>
         </div>
         <div class="splitter"></div>
-        <div class="column has-text-centered">
+        <div class="column">
           <div class="icon">
             <img src="@/assets/img/icons/payouts.svg" class="">
           </div>
           <div class="text">
             <span class="high">
-              <ICountUp v-if="forceEfxPaid > 0" :options="{ suffix: ' EFX' }" :end-val="forceEfxPaid" />
+              <ICountUp v-if="forceEfxPaid > 0"  :end-val="forceEfxPaid" />
               <span v-else>..</span>
+              <span class="symbol">EFX</span>
             </span> <br>
             <span class="low">Total payouts</span>
           </div>
         </div>
         <div class="splitter"></div>
-        <div class="column has-text-centered">
+        <div class="column">
           <div class="icon">
             <img src="@/assets/img/icons/workers.svg" class="">
           </div>
@@ -265,79 +267,34 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .block-columns {
-      margin-top: 25px;
-      padding-bottom: 15px;
-      margin-left: 0;
-    }
+.high {
+  font-size: 22px;
+  font-weight: 700;
+}
 
-    .icon {
-      font-size: 32px;
-      img {
-        max-height: 100%;
-      }
-    }
+.low {
+  font-weight: 300;
+  font-size: small;
+}
 
-    .high {
-      font-size: 22px;
-      font-weight: 700;
-    }
-
-    .low {
-      font-weight: 300;
-      font-size: small;
-    }
-
-    .balances {
-      .balance {
-        text-align: center;
-        p {
-          padding-top: 8px;
-          font-size: 31px;
-          margin-bottom: 0;
-          span.symbol {
-            font-weight: 300;
-            font-size: 18px;
-          }
-        }
-
-        .balance-text {
-          margin-top: 8px;
-          display: block;
-          margin-bottom: -12px;
-          font-weight: lighter;
-          font-size: 15px;
-        }
-      }
-      .token-icon {
-        height: 40px;
-        margin-top: -11px;
-        float: left;
-        margin-right: -40px;
-        &.nfx {
-          height: 45px;
-          margin-top: -13px;
-        }
-      }
-    }
-
-    .modal-card-title {
-      margin-bottom: 0 !important;
-    }
-
-  .avatar {
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
+.token-icon {
+  height: 40px;
+  margin-top: -11px;
+  float: left;
+  margin-right: -40px;
+  &.nfx {
+    height: 45px;
+    margin-top: -13px;
   }
-  .splitter {
-    border-left: 1px solid #CDD4E6;
-    margin: 0.75em 0 0.75em 0;
-  }
+}
 
-  .smaller {
-    p {
-      font-size: 21px !important;
-    }
-  }
+.avatar {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+.splitter {
+  border-left: 1px solid #CDD4E6;
+  margin: 0.75em 0 0.75em 0;
+}
 </style>

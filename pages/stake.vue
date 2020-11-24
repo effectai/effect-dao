@@ -166,11 +166,11 @@
             <h5 class="box-title">
               <img src="@/assets/img/efx-icon.png" class="token-icon">Staked EFX
             </h5>
-            <div class="balance">
-              <p>
+            <div class="has-text-centered">
+              <h2>
                 <ICountUp :end-val="efxStaked" />
                 <span class="symbol">EFX</span>
-              </p>
+              </h2>
               <div class="buttons">
                 <button class="button is-primary is-fullwidth" :class="{ 'is-loading': loading }" :disabled="efxAvailable === 0" @click="stakingModal = true; stakingModalEfx = true; addStake = efxAvailable">
                   Stake EFX
@@ -189,11 +189,11 @@
             <h5 class="box-title">
               <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">Staked NFX
             </h5>
-            <div class="balance">
-              <p>
+            <div class="has-text-centered">
+              <h2>
                 <ICountUp :end-val="nfxStaked" />
                 <span class="symbol">NFX</span>
-              </p>
+              </h2>
               <div class="buttons">
                 <button class="button is-primary is-fullwidth" :class="{ 'is-loading': loading }" :disabled="nfxAvailable === 0" @click="stakingModal = true; stakingModalEfx = false; addStake = nfxAvailable">
                   Stake NFX
@@ -211,7 +211,7 @@
             <h5 class="box-title">
               Stake AGE
             </h5>
-            <div class="block-columns has-text-centered">
+            <div class="has-text-centered">
               <vue-circle
                 v-if="stakeAge"
                 class="mt-2"
@@ -243,15 +243,13 @@
             <h5 class="box-title">
               EFX Power
             </h5>
-            <div class="block-columns">
-              <div class="value-circle big mt-6 glow">
-                <div class="balance ">
-                  <h3>
-                    <ICountUp :options="{decimalPlaces: 0}" :end-val="power" />
-                    <small class="symbol has-text-weight-light is-size-6">EP</small>
-                  </h3>
-                  <b>EFX Power</b>
-                </div>
+            <div class="value-circle big mt-6 glow">
+              <div class="balance ">
+                <h3>
+                  <ICountUp :options="{decimalPlaces: 0}" :end-val="power" />
+                  <small class="symbol has-text-weight-light is-size-6">EP</small>
+                </h3>
+                <b>EFX Power</b>
               </div>
             </div>
           </div>
@@ -620,21 +618,6 @@ export default {
   .stakes {
     .column {
       padding: 0.75rem;
-    }
-
-    .balance {
-      text-align: center;
-
-      p {
-        padding-top: 8px;
-        font-size: 31px;
-        margin-bottom: 0;
-
-        span.symbol {
-          font-weight: 300;
-          font-size: 18px;
-        }
-      }
     }
 
     .token-icon {

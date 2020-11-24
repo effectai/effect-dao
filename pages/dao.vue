@@ -1,5 +1,5 @@
 <template>
-  <div class="dao">
+  <div>
     <div class="modal constitution-modal" :class="{ 'is-active': constitutionModal }">
       <div class="modal-background" />
       <div class="modal-card">
@@ -79,22 +79,11 @@
       </div>
     </div>
 
-    <div class="intro">
-      <h4 v-if="false">
-        <span v-if="!loading">
-          {{ constitutionMembers.length }}
-        </span>
-        <span v-else>
-          ..
-        </span>
-        members
-      </h4>
-    </div>
-    <rank v-if="wallet && wallet.auth && signedConstitution" class="mb-3" />
-    <div class="block-shadow mb-6">
-      <h2 class="block-title">
+    <rank v-if="wallet && wallet.auth && signedConstitution" class="mt-5" />
+    <div class="box mt-5">
+      <h5 class="box-title">
         EffectDAO Members
-      </h2>
+      </h5>
       <div v-if="constitutionMembers" class="members columns is-multiline mt-5">
         <div v-for="member in constitutionMembers" :key="member.account" class="column is-half">
           <div class="member columns is-gapless is-mobile">
@@ -134,8 +123,8 @@
         </button>
       </div>
     </div>
-    <div v-if="signedConstitution" class="leave-dao">
-      <a href="#" @click="constitutionLeaveModal = true">Leave DAO</a>
+    <div v-if="signedConstitution" class="has-text-centered">
+      <small><a href="#" @click="constitutionLeaveModal = true">Leave DAO</a></small>
     </div>
   </div>
 </template>
@@ -336,128 +325,104 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dao {
-  max-width: 750px;
-  margin-left: auto;
-  margin-right: auto;
-
-  .notif-w-btn {
-    height: 66px;
-
-    .notif-btn {
-      margin-top: -8px;
-      margin-right: -12px;
-    }
-  }
-
-  .intro {
-    margin-top: 22px;
-  }
-
-  .constitution-modal {
-    .modal-card {
-      max-width: 800px;
-      width: 90%;
-    }
-  }
-  @keyframes moveGradient {
-    0% {
-      background-position: 0 0;
-    }
-    100% {
-      background-position: -200% 0%;
-    }
-  }
-  .members {
-    .column {
-      padding: 10px 20px;
-    }
-    .member {
-      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6;
-      border-radius: 13px;
-      padding: 20px;
-      position: relative;
-      .rank {
-        padding-top:6px;
-        font-size: 13px;
-        span {
-          padding-top:3px;
-          padding-left: 10px;
-        }
-        .rank-color {
-          width: 64px;
-          border-radius: 3px;
-          height: 6px;
-          background: #CDD4E6;
-          &.rank-1 {
-            background: #71E3C0;
-          }
-          &.rank-2 {
-            background: #F8D247;
-          }
-          &.rank-3 {
-            background: #57C0F9;
-          }
-          &.rank-4 {
-            background: #8026F5;
-          }
-          &.rank-5 {
-            background: #EA36AC;
-          }
-          &.rank-6 {
-            background: #FB2B11;
-          }
-          &.rank-7 {
-            background: #000000;
-          }
-          &.rank-8 {
-            background: rgba(0, 0, 0, 0) linear-gradient(45deg, rgb(255, 0, 0) 0%, rgb(255, 154, 0) 10%, rgb(208, 222, 33) 20%, rgb(79, 220, 74) 30%, rgb(63, 218, 216) 40%, rgb(47, 201, 226) 50%, rgb(28, 127, 238) 60%, rgb(95, 21, 242) 70%, rgb(186, 12, 248) 80%, rgb(251, 7, 217) 90%, rgb(255, 0, 0) 100%) repeat scroll 0% 0% / 300% 300%;
-            background-size: 200%;
-            animation: moveGradient 3s linear infinite;
-          }
-          &.rank-9 {
-            background: rgba(0, 0, 0, 0) linear-gradient(45deg, rgb(255, 0, 0) 0%, rgb(255, 154, 0) 10%, rgb(208, 222, 33) 20%, rgb(79, 220, 74) 30%, rgb(63, 218, 216) 40%, rgb(47, 201, 226) 50%, rgb(28, 127, 238) 60%, rgb(95, 21, 242) 70%, rgb(186, 12, 248) 80%, rgb(251, 7, 217) 90%, rgb(255, 0, 0) 100%) repeat scroll 0% 0% / 300% 300%;
-            background-size: 200%;
-            animation: moveGradient 3s linear infinite;
-          }
-          &.rank-10 {
-            background: rgba(0, 0, 0, 0) linear-gradient(45deg, rgb(255, 0, 0) 0%, rgb(255, 154, 0) 10%, rgb(208, 222, 33) 20%, rgb(79, 220, 74) 30%, rgb(63, 218, 216) 40%, rgb(47, 201, 226) 50%, rgb(28, 127, 238) 60%, rgb(95, 21, 242) 70%, rgb(186, 12, 248) 80%, rgb(251, 7, 217) 90%, rgb(255, 0, 0) 100%) repeat scroll 0% 0% / 300% 300%;
-            background-size: 200%;
-            animation: moveGradient 3s linear infinite;
-          }
-
-        }
-      }
-      .rank-name {
-        font-size: 12px;
-        position: absolute;
-        top: 8px;
-        right: 10px;
-      }
-      h5 {
-        margin-bottom: 4px;
-        padding-bottom: 8px;
-        border-bottom: 2px solid #CDD4E6;
-      }
-      .power {
-        font-size: 14px;
-        margin-bottom: 8px;
-        display: block;
-      }
-      .image {
-        img {
-          border-radius: 6px;
-        }
-        margin: 0;
-        margin-right: 10px;
-      }
-    }
-  }
-  .leave-dao {
-    text-align: center;
-    margin-top: -20px;
-    margin-bottom: 20px;
-    font-size: 13px;
+.constitution-modal {
+  .modal-card {
+    max-width: 800px;
+    width: 90%;
   }
 }
+@keyframes moveGradient {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -200% 0%;
+  }
+}
+.members {
+  .column {
+    padding: 10px 20px;
+  }
+  .member {
+    box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6;
+    border-radius: 13px;
+    padding: 20px;
+    position: relative;
+    .rank {
+      padding-top:6px;
+      font-size: 13px;
+      span {
+        padding-top:3px;
+        padding-left: 10px;
+      }
+      .rank-color {
+        width: 64px;
+        border-radius: 3px;
+        height: 6px;
+        background: #CDD4E6;
+        &.rank-1 {
+          background: #71E3C0;
+        }
+        &.rank-2 {
+          background: #F8D247;
+        }
+        &.rank-3 {
+          background: #57C0F9;
+        }
+        &.rank-4 {
+          background: #8026F5;
+        }
+        &.rank-5 {
+          background: #EA36AC;
+        }
+        &.rank-6 {
+          background: #FB2B11;
+        }
+        &.rank-7 {
+          background: #000000;
+        }
+        &.rank-8 {
+          background: rgba(0, 0, 0, 0) linear-gradient(45deg, rgb(255, 0, 0) 0%, rgb(255, 154, 0) 10%, rgb(208, 222, 33) 20%, rgb(79, 220, 74) 30%, rgb(63, 218, 216) 40%, rgb(47, 201, 226) 50%, rgb(28, 127, 238) 60%, rgb(95, 21, 242) 70%, rgb(186, 12, 248) 80%, rgb(251, 7, 217) 90%, rgb(255, 0, 0) 100%) repeat scroll 0% 0% / 300% 300%;
+          background-size: 200%;
+          animation: moveGradient 3s linear infinite;
+        }
+        &.rank-9 {
+          background: rgba(0, 0, 0, 0) linear-gradient(45deg, rgb(255, 0, 0) 0%, rgb(255, 154, 0) 10%, rgb(208, 222, 33) 20%, rgb(79, 220, 74) 30%, rgb(63, 218, 216) 40%, rgb(47, 201, 226) 50%, rgb(28, 127, 238) 60%, rgb(95, 21, 242) 70%, rgb(186, 12, 248) 80%, rgb(251, 7, 217) 90%, rgb(255, 0, 0) 100%) repeat scroll 0% 0% / 300% 300%;
+          background-size: 200%;
+          animation: moveGradient 3s linear infinite;
+        }
+        &.rank-10 {
+          background: rgba(0, 0, 0, 0) linear-gradient(45deg, rgb(255, 0, 0) 0%, rgb(255, 154, 0) 10%, rgb(208, 222, 33) 20%, rgb(79, 220, 74) 30%, rgb(63, 218, 216) 40%, rgb(47, 201, 226) 50%, rgb(28, 127, 238) 60%, rgb(95, 21, 242) 70%, rgb(186, 12, 248) 80%, rgb(251, 7, 217) 90%, rgb(255, 0, 0) 100%) repeat scroll 0% 0% / 300% 300%;
+          background-size: 200%;
+          animation: moveGradient 3s linear infinite;
+        }
+
+      }
+    }
+    .rank-name {
+      font-size: 12px;
+      position: absolute;
+      top: 8px;
+      right: 10px;
+    }
+    h5 {
+      margin-bottom: 4px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #CDD4E6;
+    }
+    .power {
+      font-size: 14px;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .image {
+      img {
+        border-radius: 6px;
+      }
+      margin: 0;
+      margin-right: 10px;
+    }
+  }
+}
+
 </style>

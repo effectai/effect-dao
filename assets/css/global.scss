@@ -59,39 +59,44 @@ a {
   }
 }
 
-.block-shadow {
-  //box-shadow: rgba(20, 1, 8, 0.15) -2px 2px 4px inset, rgb(255, 255, 255) 2px -2px 4px inset;
-  box-shadow: inset -4px -4px 10px 0 #FFFFFF, inset 4px 4px 10px 0 #CDD4E6;
-  border-radius: 6px;
-  padding: 24px;
+.box {
   position: relative;
-}
-.block-shadow-outside {
-  border-radius: 13px;
-  box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6;
-  padding: 16px 16px;
+  &.has-shadow-outside {
+     box-shadow: $box-shadow-outside;
+  }
 }
 
-.block-title {
-  font-size: 18px !important;
+.box-title {
   text-align: center;
   border-bottom: 2px solid #CDD4E6;
   padding-bottom: 20px;
   margin-top: 10px;
 }
 
+.block-shadow-outside {
+  border-radius: 13px;
+  box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6;
+  padding: 16px 16px;
+}
+
+.button {
+  &.is-wide {
+    min-width: 200px;
+  }
+}
+
+.notif-w-btn {
+  height: 66px;
+
+  .notif-btn {
+    margin-top: -8px;
+    margin-right: -12px;
+  }
+}
+
 .tag:not(body).is-accent {
   color: black;
   background-color: $accent;
-}
-
-.connect-wallet {
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-  position: relative;
-  width: 149px;
-  padding-bottom: 60px;
 }
 
 .modal-card-title {

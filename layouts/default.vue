@@ -16,19 +16,22 @@
       {{ transactionError }}
     </div>
 
-    <NavBar />
-    <div class="container is-max-widescreen content">
+    <nav-bar />
+    <div class="container is-max-desktop content">
       <nuxt />
     </div>
+    <foot />
   </div>
 </template>
 
 <script>
 import NavBar from '@/components/NavBar'
+import Foot from '@/components/Footer'
 
 export default {
   components: {
-    NavBar
+    NavBar,
+    Foot
   },
 
   data () {

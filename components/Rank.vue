@@ -1,10 +1,10 @@
 <template>
-  <div class="treasury block-shadow" v-if="rank">
+  <div class="box" v-if="rank">
     <div v-if="rank.currentRank > 0" :class="['rank-icon', 'rank-'+rank.currentRank]"><img width="64px" :src="'/img/guardian-icons/guardian-'+rank.currentRank+'.png'" /></div>
     <h1 :class="['rank-title', 'rank-'+rank.currentRank]">
       Rank {{rank.currentRank}}
     </h1>
-    <div class="block-columns has-text-centered columns mt-2">
+    <div class="has-text-centered columns mt-2">
       <div class="next-level column is-one-third" v-if="rank.nextRank">
         <div class="treasury block-shadow-outside mt-1">
           <h1 :class="['rank-title', 'rank-'+(rank.currentRank+1), 'small']">

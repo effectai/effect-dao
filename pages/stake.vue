@@ -1,5 +1,5 @@
 <template>
-  <div class="stake">
+  <div>
     <div v-if="wallet">
       <div class="modal" :class="{ 'is-active': stakingModal }">
         <div class="modal-background" />
@@ -160,12 +160,12 @@
         </button>
       </div>
 
-      <div v-if="wallet" class="columns stakes is-multiline">
+      <div v-if="wallet" class="columns stakes is-multiline mt-5">
         <div class="column is-half">
-          <div class="treasury block-shadow mt-5">
-            <h1 class="block-title">
+          <div class="box">
+            <h5 class="box-title">
               <img src="@/assets/img/efx-icon.png" class="token-icon">Staked EFX
-            </h1>
+            </h5>
             <div class="balance">
               <p>
                 <ICountUp :end-val="efxStaked" />
@@ -185,10 +185,10 @@
         </div>
 
         <div class="column is-half">
-          <div class="treasury block-shadow mt-5">
-            <h1 class="block-title">
+          <div class="box">
+            <h5 class="box-title">
               <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">Staked NFX
-            </h1>
+            </h5>
             <div class="balance">
               <p>
                 <ICountUp :end-val="nfxStaked" />
@@ -207,10 +207,10 @@
           </div>
         </div>
         <div class="column is-half">
-          <div class="treasury block-shadow">
-            <h1 class="block-title">
+          <div class="box">
+            <h5 class="box-title">
               Stake AGE
-            </h1>
+            </h5>
             <div class="block-columns has-text-centered">
               <vue-circle
                 v-if="stakeAge"
@@ -239,10 +239,10 @@
           </div>
         </div>
         <div class="column is-half">
-          <div class="treasury block-shadow" style="height:100%">
-            <h1 class="block-title">
+          <div class="box" style="height:100%">
+            <h5 class="box-title">
               EFX Power
-            </h1>
+            </h5>
             <div class="block-columns">
               <div class="value-circle big mt-6 glow">
                 <div class="balance ">
@@ -259,7 +259,7 @@
       </div>
       <rank class="mb-6" v-if="signedConstitution" />
     </div>
-    <div v-else class="connect-wallet connect-wallet-stake">
+    <div v-else class="has-text-centered">
       <ConnectWallet />
     </div>
   </div>
@@ -547,14 +547,6 @@ export default {
       font-size: 0.75rem;
     }
   }
-  .notif-w-btn {
-    height: 66px;
-
-    .notif-btn {
-      margin-top: -8px;
-      margin-right: -12px;
-    }
-  }
   .value-circle {
     height: 125px;
     width: 125px;
@@ -581,54 +573,48 @@ export default {
     }
   }
 
-  .stake {
-    max-width: 750px;
-    margin-left: auto;
-    margin-right: auto;
+  .notification {
+    margin-bottom: 12px !important;
+  }
 
-    .notification {
-      margin-bottom: 12px !important;
+  .claim-efx {
+    margin-top: -7px;
+    margin-right: -12px;
+  }
+
+  .buttons {
+    margin-top: 15px;
+
+    button {
+      margin-right: 0;
+      width: 100%;
+      font-weight: bold;
     }
+  }
 
-    .claim-efx {
-      margin-top: -7px;
-      margin-right: -12px;
+  .modal-card-title {
+    margin-bottom: 0 !important;
+  }
+
+  .modal-card-body {
+    border-radius: 0 !important;
+  }
+
+  .input-lower {
+    font-size: 12px;
+    margin-top: -15px;
+  }
+
+  .new-stake {
+    margin-top: 0px;
+    padding-bottom: 40px;
+    .text {
+      margin-top: 10px;
     }
+  }
 
-    .buttons {
-      margin-top: 15px;
-
-      button {
-        margin-right: 0;
-        width: 100%;
-        font-weight: bold;
-      }
-    }
-
-    .modal-card-title {
-      margin-bottom: 0 !important;
-    }
-
-    .modal-card-body {
-      border-radius: 0 !important;
-    }
-
-    .input-lower {
-      font-size: 12px;
-      margin-top: -15px;
-    }
-
-    .new-stake {
-      margin-top: 0px;
-      padding-bottom: 40px;
-      .text {
-        margin-top: 10px;
-      }
-    }
-
-    .progress-bar {
-      margin-top: 40px;
-    }
+  .progress-bar {
+    margin-top: 40px;
   }
 
   .stakes {
@@ -673,9 +659,5 @@ export default {
       margin-bottom: -7px;
       margin-right: -15px;
     }
-  }
-
-  .connect-wallet-stake {
-    margin-top: 100px;
   }
 </style>

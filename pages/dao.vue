@@ -86,7 +86,7 @@
       </h5>
       <div v-if="constitutionMembers" class="members columns is-multiline mt-5">
         <div v-for="member in constitutionMembers" :key="member.account" class="column is-half">
-          <div class="box has-shadow-outside member columns is-gapless is-mobile">
+          <div class="box has-shadow-outside is-narrow member columns is-gapless is-mobile">
             <!--            <div v-if="member.rank && member.rank.currentRank == 0" class="tag is-primary is-light rank-name"></div>-->
             <div v-if="member.rank && member.rank.currentRank > 0" class="rank-name">
               <img width="25px" :src="'/img/guardian-icons/guardian-'+member.rank.currentRank+'.png'">
@@ -345,7 +345,6 @@ export default {
   }
   .member {
     border-radius: 13px;
-    padding: 20px;
     .rank {
       padding-top:6px;
       font-size: 13px;

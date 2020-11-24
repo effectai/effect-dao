@@ -75,6 +75,12 @@ a {
   &.has-shadow-outside {
      box-shadow: $box-shadow-outside;
   }
+  &.is-narrow {
+    padding: 16px;
+    &:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+  }
 }
 
 .box-title {
@@ -94,6 +100,11 @@ a {
   &.is-wide {
     min-width: 200px;
   }
+}
+
+.tabs ul {
+  margin-top: 0;
+  margin-left: 0;
 }
 
 .notif-w-btn {

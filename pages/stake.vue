@@ -167,10 +167,10 @@
               <img src="@/assets/img/efx-icon.png" class="token-icon">Staked EFX
             </h5>
             <div class="has-text-centered">
-              <h2>
+              <h3>
                 <ICountUp :end-val="efxStaked" />
                 <span class="symbol">EFX</span>
-              </h2>
+              </h3>
               <div class="buttons">
                 <button class="button is-primary is-fullwidth" :class="{ 'is-loading': loading }" :disabled="efxAvailable === 0" @click="stakingModal = true; stakingModalEfx = true; addStake = efxAvailable">
                   Stake EFX
@@ -190,10 +190,10 @@
               <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">Staked NFX
             </h5>
             <div class="has-text-centered">
-              <h2>
+              <h3>
                 <ICountUp :end-val="nfxStaked" />
                 <span class="symbol">NFX</span>
-              </h2>
+              </h3>
               <div class="buttons">
                 <button class="button is-primary is-fullwidth" :class="{ 'is-loading': loading }" :disabled="nfxAvailable === 0" @click="stakingModal = true; stakingModalEfx = false; addStake = nfxAvailable">
                   Stake NFX

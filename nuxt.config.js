@@ -4,6 +4,10 @@ export default {
   // Target (https://go.nuxtjs.dev/config-target)
   target: 'static',
 
+  generate: {
+    fallback: true
+  },
+
   env: {
     eosNodeUrl: 'eos.greymass.com',
     eosChainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',

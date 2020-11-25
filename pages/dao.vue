@@ -118,7 +118,7 @@
         Loading members..
       </h4>
       <div v-if="moreMembers" class="has-text-centered">
-        <button class="button" @click="loadMoreMembers">
+        <button class="button" @click="loadMoreMembers" :class="{'is-loading': loadingMembers}">
           Load More
         </button>
       </div>
@@ -147,6 +147,7 @@ export default {
   data () {
     return {
       loading: false,
+      loadingMembers: false,
       constitutionModal: false,
       constitutionLeaveModal: false,
 
@@ -175,6 +176,7 @@ export default {
   methods: {
     async init () {
       this.loading = true
+      this.loadingMembers = true
 
       const data = await this.$eos.rpc.get_table_rows({
         code: process.env.daoContract,
@@ -194,10 +196,11 @@ export default {
         }
       })
       this.loading = false
+      this.loadingMembers = false
     },
 
     async loadMoreMembers () {
-      this.loading = true
+      this.loadingMembers = true
 
       const data = await this.$eos.rpc.get_table_rows({
         code: process.env.daoContract,
@@ -217,7 +220,7 @@ export default {
           console.error(e)
         }
       })
-      this.loading = false
+      this.loadingMembers = false
     },
 
     async getMemberInfo (member) {

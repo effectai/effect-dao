@@ -56,6 +56,10 @@
       <div v-else>
         Could not retrieve proposals
       </div>
+      <div class="has-text-centered mt-4">
+        <nuxt-link v-if="myAccount" class="button is-primary is-wide m-2" to="/proposals/new">New Proposal</nuxt-link>
+        <nuxt-link class="button is-primary is-outlined is-wide m-2" to="/proposals">All Proposals</nuxt-link>
+      </div>
     </div>
     <div class="box">
       <h4 v-if="myAccount" class="box-title">Your Votes</h4>

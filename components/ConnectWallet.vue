@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <span>
     <div class="modal" :class="{ 'is-active': modal }">
       <div class="modal-background" />
       <div class="modal-card">
@@ -53,7 +53,7 @@
       <strong v-if="title">{{title}}</strong>
       <strong v-else>Connect Wallet</strong>
     </a>
-  </div>
+  </span>
 </template>
 
 <script>

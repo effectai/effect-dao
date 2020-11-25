@@ -1,6 +1,6 @@
 <template>
   <div v-if="proposals && proposals.length > 0" class="proposals">
-    <nuxt-link :to="'/proposal/'+proposal.id" class="box has-shadow-outside is-narrow" v-for="proposal in proposals" :key="proposal.id">
+    <nuxt-link :to="'/proposals/'+proposal.id" class="box has-shadow-outside is-narrow" v-for="proposal in proposals" :key="proposal.id">
       <div class="media">
         <div class="media-left">
           <span class="tag" :class="{'is-success': proposal.status == 'ACTIVE', 'is-warning': proposal.status == 'DRAFT', 'is-link': proposal.status == 'PENDING', 'is-dark': proposal.status == 'CLOSED'}">{{ proposal.status }}</span>

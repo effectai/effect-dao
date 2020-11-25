@@ -20,8 +20,11 @@
                 <small>Joined <span v-if="account.registration_time">{{ $moment(account.registration_time).fromNow() }}</span><span v-else>..</span></small>
               </div>
             </div>
-            <div v-else>
+            <div v-else-if="account.signedConstitution === false">
               <h5>Not a DAO Member</h5>
+            </div>
+            <div v-else>
+              <h5>Loading..</h5>
             </div>
           </div>
           <div class="media-right">
@@ -33,7 +36,7 @@
           <a href="https://avatar.pixeos.art/" target="_blank" class="button is-primary">
               Edit avatar
           </a>
-          <button class="button is-danger" :class="{ 'is-loading': loadingAccount }" @click="logout()">
+          <button class="button is-danger" :class="{ 'is-loading': loadingLogout }" @click="logout()">
             Disconnect
           </button>
         </div>
@@ -89,7 +92,7 @@ export default {
 
   data () {
     return {
-      loadingAccount: false,
+      loadingLogout: false,
       loadingProposals: false,
       loadingVotes: false,
       account: {
@@ -233,9 +236,9 @@ export default {
     },
 
     async logout () {
-      this.loadingAccount = true
+      this.loadingLogout = true
       await this.$transit.logout()
-      this.loadingAccount = false
+      this.loadingLogout = false
     }
   }
 }

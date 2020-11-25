@@ -86,7 +86,7 @@
       </h5>
       <div v-if="constitutionMembers" class="members columns is-multiline mt-5">
         <div v-for="member in constitutionMembers" :key="member.account" class="column is-half">
-          <div class="box has-shadow-outside is-narrow member columns is-gapless is-mobile">
+          <nuxt-link :to="'/account/'+member.account" class="box has-shadow-outside is-narrow member columns is-gapless is-mobile">
             <!--            <div v-if="member.rank && member.rank.currentRank == 0" class="tag is-primary is-light rank-name"></div>-->
             <div v-if="member.rank && member.rank.currentRank > 0" class="rank-name">
               <img width="25px" :src="'/img/guardian-icons/guardian-'+member.rank.currentRank+'.png'">
@@ -111,7 +111,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </nuxt-link>
         </div>
       </div>
       <h4 v-else class="has-text-centered">

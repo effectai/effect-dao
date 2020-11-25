@@ -8,35 +8,10 @@
       <h4 class="box-title mb-0">Proposals</h4>
       <div class="tabs">
         <ul>
-          <li class="is-active"><a>Active</a></li>
-          <li><a>Pending</a></li>
-          <li><a>Draft</a></li>
-          <li><a>Closed</a></li>
+          <li v-for="status in statuses" :key="status.id" :class="{'is-active': filter === status.id}"><a @click.prevent="filter = status.id">{{status.name}}</a></li>
         </ul>
       </div>
-      <div v-if="proposals && proposals.length > 0" class="proposals">
-        <nuxt-link :to="'/proposal?id='+proposal.id" class="box has-shadow-outside is-narrow" v-for="proposal in proposals" :key="proposal.id">
-          <div class="media">
-            <div class="media-left">
-              <span class="tag" :class="{'is-success': proposal.status == 'ACTIVE', 'is-warning': proposal.status == 'DRAFT', 'is-link': proposal.status == 'PENDING'}">{{ proposal.status }}</span>
-            </div>
-            <div class="media-content">
-              <b>{{proposal.title}}</b>
-              <div class="has-text-weight-light"><small class="mr-3">by <b>{{proposal.account}}</b></small><small>Start 11/11/2020</small></div>
-            </div>
-            <div class="media-right">
-              <div class="has-text-right">
-                <b v-if="proposal.score > 0" class="has-text-success">+{{proposal.score}}</b>
-                <b v-else-if="proposal.score < 0"  class="has-text-danger">{{proposal.score}}</b>
-                <b v-else>{{proposal.score}}</b>
-              </div>
-              <div class="is-size-7">
-                # votes: {{proposal.votes}}
-              </div>
-            </div>
-          </div>
-        </nuxt-link>
-      </div>
+      <proposals v-if="proposals && proposals.length > 0" :proposals="proposalsFiltered" />
       <div v-else-if="proposals && proposals.length == 0">
         No proposals
       </div>
@@ -48,18 +23,51 @@
 </template>
 
 <script>
+import Proposals from '~/components/Proposals'
 export default {
   components: {
+    Proposals
   },
 
   data () {
     return {
+      filter: 'ACTIVE',
+      statuses: [
+        {
+          id: 'ACTIVE',
+          name: 'Active'
+        },
+        {
+          id: 'PENDING',
+          name: 'Pending'
+        },
+        {
+          id: 'DRAFT',
+          name: 'Draft'
+        },
+        {
+          id: 'CLOSED',
+          name: 'Closed'
+        },
+        {
+          id: 'ALL',
+          name: 'All'
+        }
+      ],
       loading: false,
       proposals: null
     }
   },
 
   computed: {
+    proposalsFiltered () {
+      return this.proposals.filter((proposal) => {
+        if (!this.filter || this.filter === 'ALL') {
+          return true
+        }
+        return proposal.status === this.filter
+      })
+    }
   },
 
   created () {
@@ -75,16 +83,35 @@ export default {
           {
             id: 1,
             title: 'Project Management Proposal',
-            account: 'myeosaccount',
+            account: 'extemporized',
+            created: '11-11-2020',
             score: 10,
             votes: 23,
             status: 'ACTIVE'
           },
-
+          {
+            id: 1,
+            title: 'Project Management Proposal',
+            account: 'laurenseosio',
+            created: '11-24-2020',
+            score: 10,
+            votes: 23,
+            status: 'ACTIVE'
+          },
+          {
+            id: 1,
+            title: 'Project Management Proposal',
+            account: 'hazdkmbxgene',
+            created: '11-25-2020',
+            score: 10,
+            votes: 23,
+            status: 'ACTIVE'
+          },
           {
             id: 2,
             title: 'Change to Rebase Sell percentage',
-            account: 'myeosaccount',
+            account: 'extemporized',
+            created: '11-11-2020',
             score: -20,
             votes: 30,
             status: 'PENDING'
@@ -92,7 +119,8 @@ export default {
           {
             id: 3,
             title: 'Change to Rebase Sell percentage',
-            account: 'myeosaccount',
+            account: 'laurens.x',
+            created: '11-11-2020',
             votes: 0,
             score: 0,
             status: 'PENDING'
@@ -100,8 +128,16 @@ export default {
           {
             id: 4,
             title: 'Change to Rebase Sell percentage',
-            account: 'myeosaccount',
+            account: 'extemporized',
+            created: '11-11-2020',
             status: 'DRAFT'
+          },
+          {
+            id: 4,
+            title: 'Change to Rebase Sell percentage',
+            account: 'extemporized',
+            created: '11-11-2020',
+            status: 'CLOSED'
           }
         ]
       } catch (e) {
@@ -112,11 +148,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.proposals {
-  .media-left {
-    min-width: 72px;
-  }
-}
-</style>

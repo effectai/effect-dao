@@ -244,7 +244,7 @@
               EFX Power
             </h5>
             <div class="value-circle big mt-6 glow">
-              <div class="balance ">
+              <div class="has-text-centered">
                 <h3>
                   <ICountUp :options="{decimalPlaces: 0}" :end-val="power" />
                   <small class="symbol has-text-weight-light is-size-6">EP</small>

@@ -201,10 +201,12 @@ export default (context, inject) => {
       },
 
       updateAccount () {
-        this.getAccountBalance()
-        this.getStakes()
-        this.getUnstakes()
-        this.checkIfSigned()
+        if (this.wallet) {
+          this.getAccountBalance()
+          this.getMyStakes()
+          this.getMyUnstakes()
+          this.checkIfSigned()
+        }
       },
 
       clear () {
@@ -225,27 +227,31 @@ export default (context, inject) => {
         }
       },
 
-      async getStakes () {
+      async getMyStakes () {
         if (this.wallet) {
-          await this.eos.rpc.get_table_rows({
-            code: process.env.stakingContract,
-            scope: this.wallet.auth.accountName,
-            table: 'stake'
-          }).then((data) => {
-            data.rows.map((row) => {
-              if (row.amount.includes(process.env.efxToken)) {
-                this.efxStaked = parseFloat(row.amount.replace(` ${process.env.efxToken}`, '').replace('.', ','))
-                this.efxLastClaimTime = row.last_claim_time
-                this.efxLastClaimAge = row.last_claim_age
-              } else if (row.amount.includes(process.env.nfxToken)) {
-                this.nfxStaked = parseFloat(row.amount.replace(` ${process.env.nfxToken}`, '').replace('.', ','))
-              }
-            })
+          const stakes = await this.getStake(this.wallet.auth.accountName)
+          stakes.map((row) => {
+            if (row.amount.includes(process.env.efxToken)) {
+              this.efxStaked = parseFloat(row.amount.replace(` ${process.env.efxToken}`, '').replace('.', ','))
+              this.efxLastClaimTime = row.last_claim_time
+              this.efxLastClaimAge = row.last_claim_age
+            } else if (row.amount.includes(process.env.nfxToken)) {
+              this.nfxStaked = parseFloat(row.amount.replace(` ${process.env.nfxToken}`, '').replace('.', ','))
+            }
           })
         }
       },
 
-      async getUnstakes () {
+      async getStake (accountName) {
+        const data = await this.eos.rpc.get_table_rows({
+          code: process.env.stakingContract,
+          scope: accountName,
+          table: 'stake'
+        })
+        return data.rows
+      },
+
+      async getMyUnstakes () {
         if (this.wallet) {
           await this.eos.rpc.get_table_rows({
             code: process.env.stakingContract,
@@ -267,17 +273,22 @@ export default (context, inject) => {
 
       async checkIfSigned () {
         if (this.wallet) {
-          await this.eos.rpc.get_table_rows({
-            code: process.env.daoContract,
-            scope: process.env.daoContract,
-            lower_bound: ' ' + this.wallet.auth.accountName,
-            upper_bound: ' ' + this.wallet.auth.accountName,
-            table: 'member',
-            limit: 1
-          }).then((data) => {
-            this.signedConstitution = data.rows.length === 1
-          })
+          const member = await this.getDaoMember(this.wallet.auth.accountName)
+          this.signedConstitution = !!member
         }
+      },
+
+      async getDaoMember (accountName) {
+        const response = await this.eos.rpc.get_table_rows({
+          code: process.env.daoContract,
+          scope: process.env.daoContract,
+          lower_bound: ' ' + accountName,
+          upper_bound: ' ' + accountName,
+          table: 'member',
+          limit: 1
+        })
+
+        return response.rows ? response.rows[0] : null
       },
 
       handleTransaction (actions) {

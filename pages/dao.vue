@@ -93,7 +93,7 @@
             </div>
             <div class="column is-one-fifth" style="min-width: 70px">
               <figure class="image is-64x64">
-                <img :src="`https://avatar.pixeos.art/avatar/${member.account}`" @error="((evt) => fallbackAvatar(evt, member.account))">
+                <avatar :account-name="member.account" />
               </figure>
               <div v-if="member.rank" class="rank">
                 <div :class="['rank-color','rank-'+member.rank.currentRank]" /><span>Rank {{ member.rank.currentRank }}</span>
@@ -134,12 +134,14 @@ import { sha256 } from 'eosjs-ecc'
 import ICountUp from 'vue-countup-v2'
 import ConnectWallet from '~/components/ConnectWallet'
 import Rank from '~/components/Rank'
+import Avatar from '~/components/Avatar'
 
 export default {
   components: {
     ICountUp,
     ConnectWallet,
-    Rank
+    Rank,
+    Avatar
   },
 
   data () {
@@ -220,7 +222,7 @@ export default {
 
     async getMemberInfo (member) {
       member.registration_time = new Date(`${member.registration_time}Z`)
-      const stakeInfo = await this.getStake(member.account)
+      const stakeInfo = await this.$wallet.getStake(member.account)
 
       stakeInfo.map((row) => {
         if (row.amount.includes(process.env.efxToken)) {
@@ -239,20 +241,6 @@ export default {
         this.$set(member, 'power', 0)
       }
       this.$set(member, 'rank', this.$wallet.calculateRankProgress(member.power, member.nfxStaked))
-    },
-
-    fallbackAvatar (event, accountName) {
-      event.target.src = `https://ui-avatars.com/api/?name=${accountName}&size=100`
-    },
-
-    async getStake (accountName) {
-      return await this.$eos.rpc.get_table_rows({
-        code: process.env.stakingContract,
-        scope: accountName,
-        table: 'stake'
-      }).then((data) => {
-        return data.rows
-      })
     },
 
     async downloadConstitution () {

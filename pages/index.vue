@@ -3,7 +3,7 @@
     <div class="has-text-centered my-6">
       <div v-if="wallet && wallet.auth">
         <div class="image is-64x64 avatar">
-          <img class="is-rounded" style="margin: 0 auto" :src="`https://avatar.pixeos.art/avatar/${wallet.auth.accountName}`" @error="fallbackAvatar">
+          <avatar class="is-rounded" style="margin: 0 auto" :account-name="wallet.auth.accountName" />
         </div>
         <h1>Hi, {{ wallet.auth.accountName }}!</h1>
         <div class="subtitle">Welcome to the Effect Dashboard.</div>
@@ -173,13 +173,14 @@
 
 <script>
 import ICountUp from 'vue-countup-v2'
-import ConnectWallet from '../components/ConnectWallet'
-// import Sun from '../components/Sun'
+import ConnectWallet from '~/components/ConnectWallet'
+import Avatar from '~/components/Avatar'
 
 export default {
   components: {
     ICountUp,
-    ConnectWallet
+    ConnectWallet,
+    Avatar
   },
 
   data () {
@@ -222,10 +223,6 @@ export default {
   },
 
   methods: {
-    fallbackAvatar (event) {
-      event.target.src = `https://ui-avatars.com/api/?name=${this.wallet.auth.accountName}&size=128`
-    },
-
     init () {
       this.getForceStats()
       this.getCircSupply()

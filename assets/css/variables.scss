@@ -1,12 +1,18 @@
 /* Import Bulma Utilities */
 @import '~bulma/sass/utilities/initial-variables';
+@import '~bulma/sass/utilities/functions';
 
 // Colors
 $primary: #243454;
 $secondary: #86BFD9;
+$secondary-invert: findColorInvert($secondary) !default;
 $accent: #39e7bf;
-$info: $accent;
-$link: $blue;
+$accent-invert: findColorInvert($accent) !default;;
+
+$custom-colors: (
+  "secondary":($secondary, $secondary-invert),
+  "accent":($accent, $accent-invert),
+);
 
 $desktop: 828px;
 

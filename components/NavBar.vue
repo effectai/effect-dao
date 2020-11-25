@@ -83,7 +83,7 @@
           </header>
           <section class="modal-card-body">
             <figure class="image is-128x128 avatar mb-5">
-              <img class="is-rounded" :src="`https://avatar.pixeos.art/avatar/${wallet.auth.accountName}`" @error="fallbackAvatar">
+              <avatar class="is-rounded" :account-name="wallet.auth.accountName" />
             </figure>
             <a href="https://avatar.pixeos.art/" target="_blank">
               <button class="button is-medium is-fullwidth is-primary mb-3">
@@ -102,10 +102,12 @@
 
 <script>
 import ConnectWallet from '@/components/ConnectWallet'
+import Avatar from '@/components/Avatar'
 
 export default {
   components: {
-    ConnectWallet
+    ConnectWallet,
+    Avatar
   },
 
   data () {
@@ -123,10 +125,6 @@ export default {
   },
 
   methods: {
-    fallbackAvatar (event) {
-      event.target.src = `https://ui-avatars.com/api/?name=${this.wallet.auth.accountName}&size=128`
-    },
-
     logout () {
       this.loading = true
       this.$transit.logout()

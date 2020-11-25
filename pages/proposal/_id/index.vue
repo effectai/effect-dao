@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nuxt-link to="/proposals" class="is-size-7">&lt; All Proposals</nuxt-link>
+    <div class="mb-2"><nuxt-link to="/proposals" class="is-size-7">&lt; All Proposals</nuxt-link></div>
     <div v-if="loading">Loading Proposal..</div>
     <div v-else-if="proposal" class="columns">
       <div class="column is-two-thirds">
@@ -23,6 +23,8 @@
       <div class="column">
         <div class="box">
           <h5 class="box-title">Information</h5>
+          <div>by <nuxt-link :to="'/account/'+proposal.account"><b>{{proposal.account}}</b></nuxt-link></div>
+          <div>created {{ $moment(proposal.created+"Z").fromNow() }}</div>
         </div>
         <div class="box">
           <h5 class="box-title">Results</h5>
@@ -39,7 +41,7 @@ export default {
     return {
       loading: false,
       proposal: null,
-      id: this.$route.query.id
+      id: this.$route.params.id
     }
   },
 
@@ -55,7 +57,8 @@ export default {
         this.proposal = {
           id: 4,
           title: 'Change to Rebase Sell percentage',
-          account: 'myeosaccount',
+          account: 'extemporized',
+          created: '11-11-2020',
           status: 'DRAFT'
         }
       } catch (e) {

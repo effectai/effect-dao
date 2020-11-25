@@ -4,78 +4,49 @@
       <h4 class="box-title">New Proposal</h4>
       <form @submit.prevent="createProposal">
         <div class="field">
-          <label class="label">Name</label>
+          <label class="label">Title</label>
           <div class="control">
-            <input v-model="proposal.title" class="input" type="text" placeholder="Text input">
+            <input v-model="proposal.title" required class="input" type="text" placeholder="My Proposal Title">
           </div>
         </div>
 
         <div class="field">
-          <label class="label">Username</label>
-          <div class="control has-icons-left has-icons-right">
-            <input class="input is-success" type="text" placeholder="Text input" value="bulma">
-            <span class="icon is-small is-left">
-      <i class="fas fa-user"></i>
-    </span>
-            <span class="icon is-small is-right">
-      <i class="fas fa-check"></i>
-    </span>
-          </div>
-          <p class="help is-success">This username is available</p>
-        </div>
-
-        <div class="field">
-          <label class="label">Email</label>
-          <div class="control has-icons-left has-icons-right">
-            <input class="input is-danger" type="email" placeholder="Email input" value="hello@">
-            <span class="icon is-small is-left">
-      <i class="fas fa-envelope"></i>
-    </span>
-            <span class="icon is-small is-right">
-      <i class="fas fa-exclamation-triangle"></i>
-    </span>
-          </div>
-          <p class="help is-danger">This email is invalid</p>
-        </div>
-
-        <div class="field">
-          <label class="label">Subject</label>
+          <label class="label">Description</label>
           <div class="control">
-            <div class="select">
-              <select>
-                <option>Select dropdown</option>
-                <option>With options</option>
-              </select>
+            <textarea rows="10" required v-model="proposal.description" class="textarea" placeholder="Your Proposal Content"></textarea>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">URL</label>
+          <div class="control">
+            <input v-model="proposal.url" class="input" type="url" placeholder="https://..">
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">Reward</label>
+              <div class="control has-icons-right">
+                <input v-model="proposal.reward" class="input" type="number" placeholder="100">
+                <span class="icon is-small is-right">
+                  EFX
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div class="field">
-          <label class="label">Message</label>
-          <div class="control">
-            <textarea class="textarea" placeholder="Textarea"></textarea>
-          </div>
-        </div>
-
-        <div class="field">
-          <div class="control">
-            <label class="checkbox">
-              <input type="checkbox">
-              I agree to the <a href="#">terms and conditions</a>
-            </label>
-          </div>
-        </div>
-
-        <div class="field">
-          <div class="control">
-            <label class="radio">
-              <input type="radio" name="question">
-              Yes
-            </label>
-            <label class="radio">
-              <input type="radio" name="question">
-              No
-            </label>
+          <div class="column is-one-third">
+            <div class="field">
+              <label class="label">Type</label>
+              <div class="control">
+                <div class="select" style="width: 100%">
+                  <select v-model="proposal.type" required style="width: 100%">
+                    <option value="worker">Worker Proposal</option>
+                    <option value="governance" disabled>Governance Proposal</option>
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -98,7 +69,11 @@ export default {
     return {
       loading: false,
       proposal: {
-        title: ''
+        title: '',
+        description: '',
+        type: 'worker',
+        url: '',
+        reward: 0
       },
       cachedFormData: null
     }

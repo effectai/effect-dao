@@ -1,7 +1,7 @@
 <template>
   <div class="box" v-if="rank">
     <div v-if="rank.currentRank > 0" :class="['rank-icon', 'rank-'+rank.currentRank]"><img width="64px" :src="'/img/guardian-icons/guardian-'+rank.currentRank+'.png'" /></div>
-    <h1 :class="['rank-title', 'rank-'+rank.currentRank]">
+    <h1 :class="['rank-title', 'rank-'+rank.currentRank]" v-if="!hideCurrentRank">
       Rank {{rank.currentRank}}
     </h1>
     <div class="has-text-centered columns mt-2">
@@ -57,6 +57,13 @@ import ICountUp from 'vue-countup-v2'
 export default {
   components: {
     ICountUp
+  },
+
+  props: {
+    hideCurrentRank: {
+      type: Boolean,
+      default: false
+    }
   },
 
   data () {

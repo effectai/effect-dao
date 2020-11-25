@@ -1,7 +1,6 @@
 <template>
   <div>
-    <div v-if="loadingAccount">loading account info..</div>
-    <div v-else-if="account">
+    <div>
       <div class="box">
         <div class="media">
           <div class="media-left">
@@ -30,35 +29,47 @@
           </div>
         </div>
         <div class="rank-title" :class="[account.rank ? 'rank-'+account.rank.currentRank : '']"></div>
-      </div>
-      <div class="box">
-        <h4 class="box-title">Proposals by {{account.name}}</h4>
-        <div v-if="loadingProposals">Loading Proposals..</div>
-        <proposals v-else-if="proposals && proposals.length > 0" :proposals="proposals" />
-        <div v-else-if="proposals">
-          No Proposals
-        </div>
-        <div v-else>
-          Could not retrieve proposals
-        </div>
-      </div>
-      <div class="box">
-        <h4 class="box-title">Votes from {{account.name}}</h4>
-        <div v-if="loadingVotes">Loading Votes..</div>
-        <div v-else-if="votes && votes.length > 0">
-          <div v-for="vote in votes" :key="vote.id">
-            {{vote}}
-          </div>
-        </div>
-        <div v-else-if="votes">
-          No Votes
-        </div>
-        <div v-else>
-          Could not retrieve votes
+        <div v-if="myAccount" class="has-text-centered mt-4">
+          <a href="https://avatar.pixeos.art/" target="_blank" class="button is-primary">
+              Edit avatar
+          </a>
+          <button class="button is-danger" :class="{ 'is-loading': loadingAccount }" @click="logout()">
+            Disconnect
+          </button>
         </div>
       </div>
     </div>
-    <h4 v-else class="has-text-centered">Could not retrieve account</h4>
+    <div v-if="myAccount" class="mt-5">
+      <rank :hide-current-rank="true" />
+    </div>
+    <div class="box mt-5">
+      <h4 v-if="myAccount" class="box-title">Your Proposals</h4>
+      <h4 v-else class="box-title">Proposals by {{account.name}}</h4>
+      <div v-if="loadingProposals">Loading Proposals..</div>
+      <proposals v-else-if="proposals && proposals.length > 0" :proposals="proposals" />
+      <div v-else-if="proposals">
+        No Proposals
+      </div>
+      <div v-else>
+        Could not retrieve proposals
+      </div>
+    </div>
+    <div class="box">
+      <h4 v-if="myAccount" class="box-title">Your Votes</h4>
+      <h4 v-else class="box-title">Votes from {{account.name}}</h4>
+      <div v-if="loadingVotes">Loading Votes..</div>
+      <div v-else-if="votes && votes.length > 0">
+        <div v-for="vote in votes" :key="vote.id">
+          {{vote}}
+        </div>
+      </div>
+      <div v-else-if="votes">
+        No Votes
+      </div>
+      <div v-else>
+        Could not retrieve votes
+      </div>
+    </div>
   </div>
 </template>
 
@@ -66,12 +77,14 @@
 import ICountUp from 'vue-countup-v2'
 import Avatar from '~/components/Avatar'
 import Proposals from '~/components/Proposals'
+import Rank from '~/components/Rank'
 
 export default {
   components: {
     Avatar,
     ICountUp,
-    Proposals
+    Proposals,
+    Rank
   },
 
   data () {
@@ -88,14 +101,24 @@ export default {
   },
 
   created () {
-    this.getAccountInfo()
+    if (!this.wallet || this.wallet.accountName !== this.account.name) {
+      this.getAccountInfo()
+    }
     this.getProposals()
     this.getVotes()
   },
 
+  computed: {
+    wallet () {
+      return (this.$wallet) ? this.$wallet.wallet : null
+    },
+    myAccount () {
+      return this.wallet && this.wallet.auth && this.wallet.auth.accountName === this.account.name
+    }
+  },
+
   methods: {
     async getAccountInfo () {
-      this.loadingAccount = true
       try {
         const member = await this.$wallet.getDaoMember(this.account.name)
         console.log(member)
@@ -124,7 +147,6 @@ export default {
       } catch (e) {
         console.log(e)
       }
-      this.loadingAccount = false
     },
 
     async getProposals () {
@@ -208,6 +230,12 @@ export default {
         console.log(e)
       }
       this.loadingVotes = false
+    },
+
+    async logout () {
+      this.loadingAccount = true
+      await this.$transit.logout()
+      this.loadingAccount = false
     }
   }
 }

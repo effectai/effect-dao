@@ -1,8 +1,11 @@
 <template>
   <div>
     <div class="has-text-centered">
-      <button class="button is-primary is-wide m-2">New Proposal</button>
-      <button class="button is-primary is-wide m-2 is-outlined">Your Proposals</button>
+      <template v-if="wallet && wallet.auth">
+        <button class="button is-primary is-wide m-2">New Proposal</button>
+        <nuxt-link :to="'/account/' + wallet.auth.accountName" class="button is-primary is-wide m-2 is-outlined">Your Proposals</nuxt-link>
+      </template>
+      <ConnectWallet v-else title="New Proposal" button-class="is-wide"/>
     </div>
     <div class="box mt-5">
       <h4 class="box-title mb-0">Proposals</h4>
@@ -24,9 +27,12 @@
 
 <script>
 import Proposals from '~/components/Proposals'
+import ConnectWallet from '~/components/ConnectWallet'
+
 export default {
   components: {
-    Proposals
+    Proposals,
+    ConnectWallet
   },
 
   data () {
@@ -60,6 +66,9 @@ export default {
   },
 
   computed: {
+    wallet () {
+      return (this.$wallet) ? this.$wallet.wallet : null
+    },
     proposalsFiltered () {
       return this.proposals.filter((proposal) => {
         if (!this.filter || this.filter === 'ALL') {

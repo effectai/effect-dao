@@ -49,8 +49,9 @@
       </div>
     </div>
 
-    <a class="button is-primary" @click="modal = true">
-      <strong>Connect Wallet</strong>
+    <a class="button is-primary" :class="buttonClass" @click="modal = true">
+      <strong v-if="title">{{title}}</strong>
+      <strong v-else>Connect Wallet</strong>
     </a>
   </div>
 </template>
@@ -58,6 +59,7 @@
 <script>
 
 export default {
+  props: ['title', 'button-class'],
   data () {
     return {
       modal: false,

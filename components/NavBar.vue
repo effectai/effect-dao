@@ -51,9 +51,9 @@
 
           <a class="navbar-item connect-wallet mobile-connect" @click="mobileMenu = false">
             <ConnectWallet v-if="!wallet" />
-            <a v-else class="button is-primary" @click="walletModal = true">
+            <nuxt-link v-else class="button is-primary" :to="'/account/'+wallet.auth.accountName">
               <strong>{{ wallet.auth.accountName }}</strong>
-            </a>
+            </nuxt-link>
           </a>
         </div>
 
@@ -61,58 +61,27 @@
           <div class="navbar-item">
             <div class="buttons wallet">
               <ConnectWallet v-if="!wallet" />
-              <a v-else class="button is-primary" @click="walletModal = true">
+              <nuxt-link v-else class="button is-primary" :to="'/account/'+wallet.auth.accountName">
                 <strong>{{ wallet.auth.accountName }}</strong>
-              </a>
+              </nuxt-link>
             </div>
           </div>
         </div>
       </div>
     </nav>
-
-    <div v-if="wallet && wallet.connected && walletModal">
-      <div class="modal is-active">
-        <div class="modal-background" />
-
-        <div class="modal-card">
-          <header class="modal-card-head">
-            <p class="modal-card-title">
-              {{ wallet.auth.accountName }}
-            </p>
-            <button class="delete" aria-label="close" @click="walletModal = false" />
-          </header>
-          <section class="modal-card-body">
-            <figure class="image is-128x128 avatar mb-5">
-              <avatar class="is-rounded" :account-name="wallet.auth.accountName" />
-            </figure>
-            <a href="https://avatar.pixeos.art/" target="_blank">
-              <button class="button is-medium is-fullwidth is-primary mb-3">
-                Edit avatar
-              </button>
-            </a>
-            <button class="button is-medium is-fullwidth is-danger" :class="{ 'is-loading': loading }" @click="logout()">
-              Disconnect
-            </button>
-          </section>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
 import ConnectWallet from '@/components/ConnectWallet'
-import Avatar from '@/components/Avatar'
 
 export default {
   components: {
-    ConnectWallet,
-    Avatar
+    ConnectWallet
   },
 
   data () {
     return {
-      walletModal: false,
       loading: false,
       mobileMenu: false
     }
@@ -121,15 +90,6 @@ export default {
   computed: {
     wallet () {
       return (this.$wallet) ? this.$wallet.wallet : null
-    }
-  },
-
-  methods: {
-    logout () {
-      this.loading = true
-      this.$transit.logout()
-      this.loading = false
-      this.walletModal = false
     }
   }
 }

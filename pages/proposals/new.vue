@@ -98,7 +98,7 @@ export default {
     return {
       loading: false,
       proposal: {
-        title: null
+        title: ''
       },
       cachedFormData: null
     }

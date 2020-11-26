@@ -25,6 +25,7 @@
           <h5 class="box-title">Information</h5>
           <div>by <nuxt-link :to="'/account/'+proposal.account"><b>{{proposal.account}}</b></nuxt-link></div>
           <div>created {{ $moment(proposal.created+"Z").fromNow() }}</div>
+          <div v-if="myProposal" class="mt-2"><nuxt-link class="button is-warning is-fullwidth" :to="`/proposals/${id}/edit`"><b>Edit</b></nuxt-link> </div>
         </div>
         <div class="box">
           <h5 class="box-title">Results</h5>
@@ -45,6 +46,15 @@ export default {
     }
   },
 
+  computed: {
+    wallet () {
+      return (this.$wallet) ? this.$wallet.wallet : null
+    },
+    myProposal () {
+      return this.proposal && this.wallet && this.wallet.auth && this.wallet.auth.accountName === this.proposal.account
+    }
+  },
+
   created () {
     this.getProposal(this.id)
   },
@@ -57,7 +67,7 @@ export default {
         this.proposal = {
           id: 4,
           title: 'Change to Rebase Sell percentage',
-          account: 'extemporized',
+          account: 'laurenseosio',
           created: '11-11-2020',
           status: 'DRAFT'
         }

@@ -19,7 +19,7 @@
         </div>
 
         <div class="field">
-          <label class="label">Files</label>
+          <label class="label">Attachments</label>
           <div class="control">
             <div class="file has-name is-fullwidth">
               <label class="file-label">

@@ -82,6 +82,13 @@ export default {
   },
 
   methods: {
+    async getIpfsProposal (hash) {
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      return {
+        title: 'Example Proposal Title',
+        description: 'test description'
+      }
+    },
     async getProposals () {
       this.loading = true
       try {
@@ -89,7 +96,8 @@ export default {
         this.proposals = [
           {
             id: 1,
-            title: 'Project Management Proposal',
+            hash: 'ipfshashhere',
+            title: null,
             account: 'extemporized',
             created: '11-11-2020',
             score: 10,
@@ -98,7 +106,8 @@ export default {
           },
           {
             id: 1,
-            title: 'Project Management Proposal',
+            hash: 'ipfshashhere',
+            title: null,
             account: 'laurenseosio',
             created: '11-24-2020',
             score: 10,
@@ -107,7 +116,8 @@ export default {
           },
           {
             id: 1,
-            title: 'Project Management Proposal',
+            hash: 'ipfshashhere',
+            title: null,
             account: 'hazdkmbxgene',
             created: '11-25-2020',
             score: 10,
@@ -116,7 +126,8 @@ export default {
           },
           {
             id: 2,
-            title: 'Change to Rebase Sell percentage',
+            hash: 'ipfshashhere',
+            title: null,
             account: 'extemporized',
             created: '11-11-2020',
             score: -20,
@@ -125,7 +136,8 @@ export default {
           },
           {
             id: 3,
-            title: 'Change to Rebase Sell percentage',
+            hash: 'ipfshashhere',
+            title: null,
             account: 'laurens.x',
             created: '11-11-2020',
             votes: 0,
@@ -134,19 +146,29 @@ export default {
           },
           {
             id: 4,
-            title: 'Change to Rebase Sell percentage',
+            hash: 'ipfshashhere',
+            title: null,
             account: 'extemporized',
             created: '11-11-2020',
             status: 'DRAFT'
           },
           {
             id: 4,
-            title: 'Change to Rebase Sell percentage',
+            hash: 'ipfshashhere',
+            title: null,
             account: 'extemporized',
             created: '11-11-2020',
             status: 'CLOSED'
           }
         ]
+        this.proposals.forEach(async (proposal) => {
+          try {
+            const ipfsProposal = await this.getIpfsProposal(proposal.hash)
+            proposal.title = ipfsProposal.title
+          } catch (e) {
+            console.error(e)
+          }
+        })
       } catch (e) {
         console.log(e)
       }

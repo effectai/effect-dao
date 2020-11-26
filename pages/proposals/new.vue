@@ -12,13 +12,23 @@
 
         <div class="field">
           <label class="label">Description</label>
-          <div class="control">
+          <div class="tabs" style="margin-bottom: 0">
+            <ul>
+              <li :class="{'is-active': !preview}"><a @click.prevent="preview = false">Edit</a></li>
+              <li :class="{'is-active': preview}"><a @click.prevent="preview = true">Preview</a></li>
+            </ul>
+          </div>
+          <div v-if="preview" class="p-2">
+            <div v-html="$md.render(proposal.description)" />
+          </div>
+          <div class="control" v-else>
             <textarea rows="10" required v-model="proposal.description" class="textarea" placeholder="Your Proposal Content"></textarea>
           </div>
+
         </div>
 
         <div class="field">
-          <label class="label">Files</label>
+          <label class="label">Attachments</label>
           <div class="control">
             <div class="file has-name is-fullwidth">
               <label class="file-label">
@@ -43,7 +53,7 @@
           <table class="table">
             <tbody v-if="proposal.files.length > 0">
               <tr v-for="file in proposal.files" :key="file.name">
-                <td>{{ file.name }}</td>
+                <td><a>{{ file.name }}</a></td>
                 <td>{{ file.size | formatBytes }}</td>
                 <td class="has-text-right"><button @click.prevent="removeFile(file)" class="button is-danger is-small">Remove</button></td>
               </tr>
@@ -103,6 +113,7 @@ export default {
       uploadingFile: false,
       selectedFile: null,
       removedFiles: [],
+      preview: false,
       proposal: {
         title: '',
         description: '',

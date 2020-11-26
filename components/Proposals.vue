@@ -6,7 +6,8 @@
           <span class="tag" :class="{'is-success': proposal.status == 'ACTIVE', 'is-warning': proposal.status == 'DRAFT', 'is-link': proposal.status == 'PENDING', 'is-dark': proposal.status == 'CLOSED'}">{{ proposal.status }}</span>
         </div>
         <div class="media-content">
-          <b>{{proposal.title}}</b>
+          <b v-if="proposal.title">{{proposal.title}}</b>
+          <b v-else>...</b>
           <div class="has-text-weight-light"><small class="mr-3">by <nuxt-link :to="'/account/'+proposal.account">{{proposal.account}}</nuxt-link></small><small>created {{ $moment(proposal.created+"Z").fromNow() }}</small></div>
         </div>
         <div class="media-right">

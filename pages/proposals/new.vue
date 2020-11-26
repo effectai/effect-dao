@@ -18,17 +18,49 @@
         </div>
 
         <div class="field">
-          <label class="label">URL</label>
+          <label class="label">Files</label>
           <div class="control">
-            <input v-model="proposal.url" class="input" type="url" placeholder="https://..">
+            <div class="file has-name is-fullwidth">
+              <label class="file-label">
+                <input class="file-input" type="file" id="file" ref="file" @change="getSelectedFile">
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                  </span>
+                  <span class="file-label">
+                    Choose a file…
+                  </span>
+                </span>
+                <span class="file-name">
+                  <span v-if="selectedFile">{{selectedFile.name}}</span>
+                </span>
+                <span>
+                  <button :class="{'is-loading': uploadingFile}" :disabled="!selectedFile" @click.prevent="uploadFile" class="button is-primary">Upload File</button>
+                </span>
+              </label>
+            </div>
           </div>
+          <table class="table">
+            <tbody v-if="proposal.files.length > 0">
+              <tr v-for="file in proposal.files" :key="file.name">
+                <td>{{ file.name }}</td>
+                <td>{{ file.size | formatBytes }}</td>
+                <td class="has-text-right"><button @click.prevent="removeFile(file)" class="button is-danger is-small">Remove</button></td>
+              </tr>
+            </tbody>
+            <tbody v-else>
+              <tr>
+                <td colspan="3">No files uploaded</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div class="columns">
           <div class="column">
             <div class="field">
               <label class="label">Reward</label>
               <div class="control has-icons-right">
-                <input v-model="proposal.reward" class="input" type="number" placeholder="100">
+                <input v-model="proposal.reward" class="input" type="number" min="0" placeholder="100">
                 <span class="icon is-small is-right">
                   EFX
                 </span>
@@ -68,14 +100,30 @@ export default {
   data () {
     return {
       loading: false,
+      uploadingFile: false,
+      selectedFile: null,
+      removedFiles: [],
       proposal: {
         title: '',
         description: '',
         type: 'worker',
-        url: '',
+        files: [],
         reward: 0
       },
       cachedFormData: null
+    }
+  },
+
+  filters: {
+    formatBytes (bytes, decimals = 2) {
+      if (bytes === 0) {
+        return '0 Bytes'
+      }
+      const k = 1024
+      const dm = decimals < 0 ? 0 : decimals
+      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+      const i = Math.floor(Math.log(bytes) / Math.log(k))
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
     }
   },
 
@@ -109,9 +157,42 @@ export default {
   },
 
   methods: {
+    getSelectedFile () {
+      this.selectedFile = this.$refs.file.files[0]
+    },
+    async uploadFile () {
+      if (this.selectedFile) {
+        this.uploadingFile = true
+        const formData = new FormData()
+        formData.append('file', this.selectedFile)
+        try {
+          await new Promise(resolve => setTimeout(resolve, 1500))
+          // axios.post( '/single-file',
+          //   formData,
+          //   {
+          //     headers: {
+          //       'Content-Type': 'multipart/form-data'
+          //     }
+          //   }
+          // )
+          console.log(this.selectedFile)
+          this.proposal.files.push(this.selectedFile)
+          this.selectedFile = null
+          this.$refs.file.value = ''
+        } catch (e) {
+          console.log(e)
+        }
+        this.uploadingFile = false
+      }
+    },
+    removeFile (file) {
+      this.proposal.files.splice(this.proposal.files.indexOf(file), 1)
+      this.removedFiles.push(file)
+    },
     async createProposal () {
       this.loading = true
       await new Promise(resolve => setTimeout(resolve, 1000))
+      // Remove files in removedFiles
       this.loading = false
     },
     // Helper method that generates JSON for string comparison

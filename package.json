@@ -27,6 +27,7 @@
     "eosjs-ecc": "^4.0.7",
     "nuxt": "^2.14.6",
     "vue-countup-v2": "^4.0.0",
+    "vue-simplemde": "^1.1.2",
     "vue2-circle-progress": "^1.2.3"
   },
   "devDependencies": {

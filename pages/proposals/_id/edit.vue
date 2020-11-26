@@ -13,8 +13,17 @@
 
         <div class="field">
           <label class="label">Description</label>
-          <div class="control">
-            <textarea rows="10" required v-model="proposal.description" class="textarea" placeholder="Your Proposal Content"></textarea>
+          <div class="tabs" style="margin-bottom: 0">
+            <ul>
+              <li :class="{'is-active': !preview}"><a @click.prevent="preview = false">Edit</a></li>
+              <li :class="{'is-active': preview}"><a @click.prevent="preview = true">Preview</a></li>
+            </ul>
+          </div>
+          <div v-if="preview" class="p-2">
+            <div v-html="$md.render(proposal.description)" />
+          </div>
+          <div class="control" v-else>
+            <vue-simplemde required v-model="proposal.description" ref="markdownEditor" :configs="{promptURLs: true, spellChecker: false}" />
           </div>
         </div>
 
@@ -98,10 +107,16 @@
 </template>
 
 <script>
+import VueSimplemde from 'vue-simplemde'
+
 export default {
+  components: {
+    VueSimplemde
+  },
   data () {
     return {
       id: this.$route.params.id,
+      preview: false,
       loading: false,
       loadingProposal: false,
       uploadingFile: false,
@@ -232,3 +247,14 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  /*@import '~simplemde/dist/simplemde.min.css';*/
+  .CodeMirror {
+    pre {
+      margin-bottom: 0 !important;
+    }
+  }
+  .editor-toolbar.fullscreen, .CodeMirror-fullscreen, .editor-preview-side {
+    z-index: 50
+  }
+</style>

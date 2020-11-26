@@ -48,7 +48,8 @@ export default {
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [
     // 'bulma/css/bulma.css',
-    '@/assets/css/global.scss'
+    '@/assets/css/global.scss',
+    'simplemde/dist/simplemde.min.css'
   ],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
@@ -78,10 +79,10 @@ export default {
   // [optional] markdownit options
   // See https://github.com/markdown-it/markdown-it
   markdownit: {
-    injected: true
+    injected: true,
     // preset: 'default',
-    // linkify: true,
-    // breaks: true,
+    linkify: true,
+    breaks: true
     // use: [
     //   'markdown-it-div',
     //   'markdown-it-attrs'

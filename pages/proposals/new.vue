@@ -19,10 +19,10 @@
             </ul>
           </div>
           <div v-if="preview" class="p-2">
-            <div v-html="$md.render(proposal.description)" />
+            <div v-html="$md.render(proposal.body)" />
           </div>
           <div class="control" v-else>
-            <vue-simplemde required v-model="proposal.description" ref="markdownEditor" :configs="{promptURLs: true, spellChecker: false}" />
+            <vue-simplemde required v-model="proposal.body" ref="markdownEditor" :configs="{promptURLs: true, spellChecker: false}" />
           </div>
 
         </div>
@@ -121,7 +121,7 @@ export default {
       preview: false,
       proposal: {
         title: '',
-        description: '',
+        body: '',
         type: 'worker',
         files: [],
         reward: 0

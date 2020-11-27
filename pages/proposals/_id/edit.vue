@@ -20,10 +20,10 @@
             </ul>
           </div>
           <div v-if="preview" class="p-2">
-            <div v-html="$md.render(proposal.description)" />
+            <div v-html="$md.render(proposal.body)" />
           </div>
           <div class="control" v-else>
-            <vue-simplemde required v-model="proposal.description" ref="markdownEditor" :configs="{promptURLs: true, spellChecker: false}" />
+            <vue-simplemde required v-model="proposal.body" ref="markdownEditor" :configs="{promptURLs: true, spellChecker: false}" />
           </div>
         </div>
 
@@ -178,7 +178,7 @@ export default {
         await new Promise(resolve => setTimeout(resolve, 1000))
         proposal = {
           title: 'My Proposal',
-          description: 'This is my proposal',
+          body: 'This is my proposal',
           type: 'worker',
           files: [],
           reward: 3000

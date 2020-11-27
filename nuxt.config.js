@@ -58,6 +58,7 @@ export default {
   plugins: [
     { src: '@/plugins/transit.js', mode: 'client' },
     { src: '@/plugins/wallet.js', mode: 'client' },
+    { src: '@/plugins/dao.js', mode: 'client' },
     '@/plugins/eos.js'
   ],
 

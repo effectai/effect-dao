@@ -6,27 +6,27 @@
       <div class="column is-two-thirds">
         <div v-if="proposal.title" class="title is-4">{{proposal.title}}</div>
         <div v-else class="title is-4">...</div>
-        <div class="subtitle"><span class="tag" :class="{'is-success': proposal.status == 'ACTIVE', 'is-warning': proposal.status == 'DRAFT', 'is-link': proposal.status == 'PENDING'}">{{ proposal.status }}</span></div>
+        <div class="subtitle"><span class="tag" :class="{'is-success': proposal.status == 'ACTIVE', 'is-warning': proposal.status == 'DRAFT', 'is-link': proposal.status == 'PENDING', 'is-dark': proposal.status == 'CLOSED'}">{{ proposal.status }}</span></div>
         <small>
-          <div v-if="proposal.description" v-html="$md.render(proposal.description)" />
+          <div v-if="proposal.body" v-html="$md.render(proposal.body)" />
           <div v-else>Loading content..</div>
         </small>
         <div class="box mt-5">
           <h4 class="box-title">Attachments</h4>
-          <table class="table">
-            <tbody v-if="proposal.files && proposal.files.length > 0">
+          <table class="table" v-if="proposal.files">
+            <tbody v-if="proposal.files.length > 0">
             <tr v-for="file in proposal.files" :key="file.name">
               <td>{{ file.name }}</td>
               <td>{{ file.size | formatBytes }}</td>
-              <td class="has-text-right"><button @click.prevent="removeFile(file)" class="button is-danger is-small">Remove</button></td>
             </tr>
             </tbody>
             <tbody v-else>
             <tr>
-              <td colspan="3">No files attached</td>
+              <td colspan="2">No files attached</td>
             </tr>
             </tbody>
           </table>
+          <div v-else>Loading attachments..</div>
         </div>
         <div class="box mt-5">
           <h5 class="box-title">Cast your vote</h5>
@@ -38,11 +38,21 @@
           <h5 class="box-title">Votes</h5>
         </div>
       </div>
-      <div class="column">
+      <div class="column is-one-third">
         <div class="box">
           <h5 class="box-title">Information</h5>
-          <div>by <nuxt-link :to="'/account/'+proposal.account"><b>{{proposal.account}}</b></nuxt-link></div>
-          <div>created {{ $moment(proposal.created+"Z").fromNow() }}</div>
+          <div class="block">
+              <i>author</i><br>
+              <nuxt-link :to="'/account/'+proposal.author"><b>{{proposal.author}}</b></nuxt-link>
+          </div>
+          <div class="block">
+            <i>requesting</i><br>
+            <b>{{ proposal.pay[0].quantity }}</b>
+          </div>
+          <div class="block">
+            IPFS
+            <div class="hash">{{ proposal.content_hash }}</div>
+          </div>
           <div v-if="myProposal" class="mt-2"><nuxt-link class="button is-warning is-fullwidth" :to="`/proposals/${id}/edit`"><b>Edit</b></nuxt-link> </div>
         </div>
         <div class="box">
@@ -70,6 +80,15 @@ export default {
     },
     myProposal () {
       return this.proposal && this.wallet && this.wallet.auth && this.wallet.auth.accountName === this.proposal.account
+    },
+    currentCycle () {
+      return this.$dao.proposalConfig ? this.$dao.proposalConfig.currentCycle : null
+    }
+  },
+
+  watch: {
+    currentCycle () {
+      this.getProposal(this.id)
     }
   },
 
@@ -78,47 +97,52 @@ export default {
   },
 
   methods: {
-    async getIpfsProposal (hash) {
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      return {
-        title: 'Example Proposal Title',
-        description: '## Introduction\n' +
-          'The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.\n' +
-          '\n' +
-          '## Specifications\n' +
-          'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.\n' +
-          '\n' +
-          '## Timeline\n' +
-          'The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.\n' +
-          '\n' +
-          '## Deliverables\n' +
-          'The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.\n'
-      }
-    },
     async getProposal (id) {
       this.loading = true
-      try {
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        this.proposal = {
-          id: 4,
-          hash: 'ipfshashhere',
-          title: null,
-          account: 'laurenseosio',
-          created: '11-11-2020',
-          status: 'DRAFT'
+      if (this.$dao.proposalConfig) {
+        try {
+          const data = await this.$eos.rpc.get_table_rows({
+            code: process.env.proposalContract,
+            scope: process.env.proposalContract,
+            table: 'proposal',
+            lower_bound: id,
+            limit: 1
+          })
+          this.proposal = data.rows[0]
+          this.loading = false
+          let status = 'CLOSED'
+          if (this.proposal.state === 0) {
+            if (!this.proposal.cycle) {
+              status = 'DRAFT'
+            } else if (this.proposal.cycle === this.currentCycle) {
+              status = 'ACTIVE'
+            } else {
+              status = 'PENDING'
+            }
+          }
+          this.$set(this.proposal, 'status', status)
+          this.proposal.pay = [this.proposal.pay]
+          const ipfsProposal = await this.$dao.getIpfsProposal(this.proposal.content_hash)
+          console.log(ipfsProposal.body)
+          this.$set(this.proposal, 'title', ipfsProposal.title)
+          this.$set(this.proposal, 'body', ipfsProposal.body)
+          this.$set(this.proposal, 'files', ipfsProposal.files ? ipfsProposal.files : [])
+        } catch (e) {
+          console.log(e)
         }
         this.loading = false
-        const ipfsProposal = await this.getIpfsProposal(this.proposal.hash)
-        this.proposal.title = ipfsProposal.title
-        this.proposal.description = ipfsProposal.description
-      } catch (e) {
-        console.log(e)
       }
-      this.loading = false
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+  .hash {
+    white-space: nowrap;
+    overflow: hidden;
+    font-family: monospace;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
 </style>

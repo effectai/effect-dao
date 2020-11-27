@@ -158,74 +158,46 @@ export default {
 
     async getProposals () {
       this.loadingProposals = true
-      try {
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        const proposals = [
-          {
-            id: 1,
-            title: 'Project Management Proposal',
-            account: 'extemporized',
-            created: '11-11-2020',
-            score: 10,
-            votes: 23,
-            status: 'ACTIVE'
-          },
-          {
-            id: 1,
-            title: 'Project Management Proposal',
-            account: 'laurenseosio',
-            created: '11-24-2020',
-            score: 10,
-            votes: 23,
-            status: 'ACTIVE'
-          },
-          {
-            id: 1,
-            title: 'Project Management Proposal',
-            account: 'hazdkmbxgene',
-            created: '11-25-2020',
-            score: 10,
-            votes: 23,
-            status: 'ACTIVE'
-          },
-          {
-            id: 2,
-            title: 'Change to Rebase Sell percentage',
-            account: 'extemporized',
-            created: '11-11-2020',
-            score: -20,
-            votes: 30,
-            status: 'PENDING'
-          },
-          {
-            id: 3,
-            title: 'Change to Rebase Sell percentage',
-            account: 'laurens.x',
-            created: '11-11-2020',
-            votes: 0,
-            score: 0,
-            status: 'PENDING'
-          },
-          {
-            id: 4,
-            title: 'Change to Rebase Sell percentage',
-            account: 'extemporized',
-            created: '11-11-2020',
-            status: 'DRAFT'
-          },
-          {
-            id: 4,
-            title: 'Change to Rebase Sell percentage',
-            account: 'extemporized',
-            created: '11-11-2020',
-            status: 'CLOSED'
-          }
-        ]
-        this.proposals = proposals.filter(p => p.account === this.account.name)
-      } catch (e) {
-        console.log(e)
+      if (this.$dao.proposalConfig) {
+        try {
+          const data = await this.$eos.rpc.get_table_rows({
+            code: process.env.proposalContract,
+            scope: process.env.proposalContract,
+            table: 'proposal',
+            key_type: 'name',
+            index_position: 2,
+            lower_bound: this.account.name,
+            limit: 100
+          })
+          this.moreProposals = data.more
+          this.nextKey = data.next_key
+          this.proposals = data.rows.filter(proposal => proposal.author === this.account.name)
+          console.log(data.rows)
+          this.proposals.forEach(async (proposal) => {
+            let status = 'CLOSED'
+            if (proposal.state === 0) {
+              if (!proposal.cycle) {
+                status = 'DRAFT'
+              } else if (proposal.cycle === this.currentCycle) {
+                status = 'ACTIVE'
+              } else {
+                status = 'PENDING'
+              }
+            }
+            this.$set(proposal, 'status', status)
+            proposal.pay = [proposal.pay]
+            try {
+              const ipfsProposal = await this.$dao.getIpfsProposal(proposal.content_hash)
+              this.$set(proposal, 'title', ipfsProposal.title)
+            } catch (e) {
+              console.error(e)
+            }
+          })
+        } catch (e) {
+          console.log(e)
+        }
+        this.loadingProposals = false
       }
-      this.loadingProposals = false
     },
 
     async getVotes () {

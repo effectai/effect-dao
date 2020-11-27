@@ -6,7 +6,7 @@
         <ConnectWallet v-else title="Your Proposals" button-class="is-wide is-outlined m-2"/>
     </div>
     <div class="box mt-5">
-      <h4 class="box-title mb-0">Proposals</h4>
+      <h4 class="box-title mb-0">Proposals <small v-if="currentCycle">Cycle {{currentCycle}}</small></h4>
       <div class="tabs">
         <ul>
           <li v-for="status in statuses" :key="status.id" :class="{'is-active': filter === status.id}"><a @click.prevent="filter = status.id">{{status.name}}</a></li>
@@ -35,7 +35,7 @@ export default {
 
   data () {
     return {
-      filter: 'ACTIVE',
+      filter: 'PENDING',
       statuses: [
         {
           id: 'ACTIVE',
@@ -61,8 +61,7 @@ export default {
       loading: false,
       proposals: null,
       moreProposals: true,
-      nextKey: null,
-      currentCycle: 1
+      nextKey: null
     }
   },
 
@@ -77,6 +76,9 @@ export default {
         }
         return proposal.status === this.filter
       })
+    },
+    currentCycle () {
+      return this.$dao.proposalConfig ? this.$dao.proposalConfig.currentCycle : null
     }
   },
 
@@ -84,51 +86,52 @@ export default {
     this.getProposals()
   },
 
+  watch: {
+    currentCycle () {
+      this.getProposals()
+    }
+  },
+
   methods: {
-    async getIpfsProposal (hash) {
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      return {
-        title: 'Example Proposal Title',
-        description: 'test description'
-      }
-    },
     async getProposals () {
       this.loading = true
-      try {
-        const data = await this.$eos.rpc.get_table_rows({
-          code: process.env.proposalContract,
-          scope: process.env.proposalContract,
-          table: 'proposal',
-          limit: 100
-        })
-        this.moreProposals = data.more
-        this.nextKey = data.next_key
-        this.proposals = data.rows
-        console.log(data.rows)
-        this.proposals.forEach(async (proposal) => {
-          let status = 'CLOSED'
-          if (proposal.state === 0) {
-            if (!proposal.cycle) {
-              status = 'DRAFT'
-            } else if (proposal.cycle === this.currentCycle) {
-              status = 'ACTIVE'
-            } else {
-              status = 'PENDING'
+      if (this.$dao.proposalConfig) {
+        try {
+          const data = await this.$eos.rpc.get_table_rows({
+            code: process.env.proposalContract,
+            scope: process.env.proposalContract,
+            table: 'proposal',
+            limit: 100
+          })
+          this.moreProposals = data.more
+          this.nextKey = data.next_key
+          this.proposals = data.rows
+          console.log(data.rows)
+          this.proposals.forEach(async (proposal) => {
+            let status = 'CLOSED'
+            if (proposal.state === 0) {
+              if (!proposal.cycle) {
+                status = 'DRAFT'
+              } else if (proposal.cycle === this.currentCycle) {
+                status = 'ACTIVE'
+              } else {
+                status = 'PENDING'
+              }
             }
-          }
-          this.$set(proposal, 'status', status)
-          proposal.pay = [proposal.pay]
-          try {
-            const ipfsProposal = await this.getIpfsProposal(proposal.hash)
-            this.$set(proposal, 'title', ipfsProposal.title)
-          } catch (e) {
-            console.error(e)
-          }
-        })
-      } catch (e) {
-        console.log(e)
+            this.$set(proposal, 'status', status)
+            proposal.pay = [proposal.pay]
+            try {
+              const ipfsProposal = await this.$dao.getIpfsProposal(proposal.content_hash)
+              this.$set(proposal, 'title', ipfsProposal.title)
+            } catch (e) {
+              console.error(e)
+            }
+          })
+        } catch (e) {
+          console.log(e)
+        }
+        this.loading = false
       }
-      this.loading = false
     }
   }
 }

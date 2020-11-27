@@ -84,6 +84,7 @@ export default (context, inject) => {
     },
 
     created () {
+      console.log('created wallet')
       this.timer = setInterval(() => { this.refreshStakeAge = !this.refreshStakeAge }, 1000)
       this.updater = setInterval(() => { this.updateAccount() }, 10000)
     },

@@ -59,7 +59,10 @@ export default {
         }
       ],
       loading: false,
-      proposals: null
+      proposals: null,
+      moreProposals: true,
+      nextKey: null,
+      currentCycle: 1
     }
   },
 
@@ -92,79 +95,32 @@ export default {
     async getProposals () {
       this.loading = true
       try {
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        this.proposals = [
-          {
-            id: 1,
-            hash: 'ipfshashhere',
-            title: null,
-            account: 'extemporized',
-            created: '11-11-2020',
-            score: 10,
-            votes: 23,
-            status: 'ACTIVE'
-          },
-          {
-            id: 1,
-            hash: 'ipfshashhere',
-            title: null,
-            account: 'laurenseosio',
-            created: '11-24-2020',
-            score: 10,
-            votes: 23,
-            status: 'ACTIVE'
-          },
-          {
-            id: 1,
-            hash: 'ipfshashhere',
-            title: null,
-            account: 'hazdkmbxgene',
-            created: '11-25-2020',
-            score: 10,
-            votes: 23,
-            status: 'ACTIVE'
-          },
-          {
-            id: 2,
-            hash: 'ipfshashhere',
-            title: null,
-            account: 'extemporized',
-            created: '11-11-2020',
-            score: -20,
-            votes: 30,
-            status: 'PENDING'
-          },
-          {
-            id: 3,
-            hash: 'ipfshashhere',
-            title: null,
-            account: 'laurens.x',
-            created: '11-11-2020',
-            votes: 0,
-            score: 0,
-            status: 'PENDING'
-          },
-          {
-            id: 4,
-            hash: 'ipfshashhere',
-            title: null,
-            account: 'extemporized',
-            created: '11-11-2020',
-            status: 'DRAFT'
-          },
-          {
-            id: 4,
-            hash: 'ipfshashhere',
-            title: null,
-            account: 'extemporized',
-            created: '11-11-2020',
-            status: 'CLOSED'
-          }
-        ]
+        const data = await this.$eos.rpc.get_table_rows({
+          code: process.env.proposalContract,
+          scope: process.env.proposalContract,
+          table: 'proposal',
+          limit: 100
+        })
+        this.moreProposals = data.more
+        this.nextKey = data.next_key
+        this.proposals = data.rows
+        console.log(data.rows)
         this.proposals.forEach(async (proposal) => {
+          let status = 'CLOSED'
+          if (proposal.state === 0) {
+            if (!proposal.cycle) {
+              status = 'DRAFT'
+            } else if (proposal.cycle === this.currentCycle) {
+              status = 'ACTIVE'
+            } else {
+              status = 'PENDING'
+            }
+          }
+          this.$set(proposal, 'status', status)
+          proposal.pay = [proposal.pay]
           try {
             const ipfsProposal = await this.getIpfsProposal(proposal.hash)
-            proposal.title = ipfsProposal.title
+            this.$set(proposal, 'title', ipfsProposal.title)
           } catch (e) {
             console.error(e)
           }

@@ -8,7 +8,10 @@
         <div class="media-content">
           <b v-if="proposal.title">{{proposal.title}}</b>
           <b v-else>...</b>
-          <div class="has-text-weight-light"><small class="mr-3">by <nuxt-link :to="'/account/'+proposal.account">{{proposal.account}}</nuxt-link></small><small>created {{ $moment(proposal.created+"Z").fromNow() }}</small></div>
+          <div class="has-text-weight-light">
+            <small class="mr-3">by <nuxt-link :to="'/account/'+proposal.author">{{proposal.author}}</nuxt-link></small>
+            <small>requesting {{ proposal.pay[0].quantity }}</small>
+          </div>
         </div>
         <div class="media-right">
           <div class="has-text-right">

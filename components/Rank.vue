@@ -6,7 +6,7 @@
     </h1>
     <div class="has-text-centered columns mt-2">
       <div class="next-level column is-one-third" v-if="rank.nextRank">
-        <div class="treasury block-shadow-outside mt-1">
+        <div class="box has-shadow-outside mt-1">
           <h1 :class="['rank-title', 'rank-'+(rank.currentRank+1), 'small']">
             Next Rank <b>{{rank.currentRank+1}}</b>
           </h1>

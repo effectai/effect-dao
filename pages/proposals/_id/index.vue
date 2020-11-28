@@ -121,7 +121,6 @@ export default {
             }
           }
           this.$set(this.proposal, 'status', status)
-          this.proposal.pay = [this.proposal.pay]
           const ipfsProposal = await this.$dao.getIpfsProposal(this.proposal.content_hash)
           console.log(ipfsProposal.body)
           this.$set(this.proposal, 'title', ipfsProposal.title)

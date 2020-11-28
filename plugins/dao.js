@@ -4,7 +4,8 @@ export default (context, inject) => {
   const dao = new Vue({
     data () {
       return {
-        proposalConfig: null
+        proposalConfig: null,
+        cycleConfig: null
       }
     },
 
@@ -27,14 +28,23 @@ export default (context, inject) => {
           scope: process.env.proposalContract,
           table: 'config'
         })
-        console.log(data.rows)
         if (data.rows.length > 0) {
+          console.log(data.rows[0])
           this.proposalConfig = data.rows[0]
-        } else {
-          // TEMP fake config
-          this.proposalConfig = {
-            currentCycle: 1
-          }
+          this.getCycleConfig(data.rows[0].currentCycle)
+        }
+      },
+      async getCycleConfig (cycle) {
+        const data = await this.eos.rpc.get_table_rows({
+          code: process.env.proposalContract,
+          scope: process.env.proposalContract,
+          table: 'cycle',
+          lower_bound: cycle,
+          limit: 1
+        })
+        if (data.rows.length > 0) {
+          console.log(data.rows[0])
+          this.cycleConfig = data.rows[0]
         }
       },
       async getIpfsProposal (hash) {

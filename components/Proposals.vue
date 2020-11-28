@@ -20,8 +20,10 @@
               <b v-else-if="proposal.score < 0"  class="has-text-danger">{{proposal.score}}</b>
               <b v-else>{{proposal.score}}</b>
             </div>
-            <div class="is-size-7">
+            <div class="is-size-7" v-if="proposal.cycle">
               Cycle {{proposal.cycle}}
+            </div>
+            <div v-else-if="$dao.cycleConfig">
             </div>
           </div>
         </div>

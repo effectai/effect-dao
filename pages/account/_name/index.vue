@@ -185,7 +185,6 @@ export default {
               }
             }
             this.$set(proposal, 'status', status)
-            proposal.pay = [proposal.pay]
             try {
               const ipfsProposal = await this.$dao.getIpfsProposal(proposal.content_hash)
               this.$set(proposal, 'title', ipfsProposal.title)

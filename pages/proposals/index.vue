@@ -6,12 +6,48 @@
         <ConnectWallet v-else title="Your Proposals" button-class="is-wide is-outlined m-2"/>
     </div>
     <div class="box mt-5">
-      <h4 class="box-title mb-0">Proposals <small v-if="currentCycle">Cycle {{currentCycle}}</small></h4>
+      <h4 class="box-title mb-0">Proposals
+        <div class="is-size-6">
+          <small>
+            <span v-if="currentCycle">Cycle {{currentCycle}}</span>
+            <span v-else-if="$dao.cycleConfig">
+              <!-- Genesis cycle!-->
+              Waiting for <i>Genesis Cycle</i>
+            </span>
+            <span v-if="$dao.cycleConfig">start<template v-if="currentCycle">ed</template> {{ $moment($dao.cycleConfig.start_time + "Z").fromNow() }}</span>
+          </small>
+        </div>
+      </h4>
       <div class="tabs">
         <ul>
           <li v-for="status in statuses" :key="status.id" :class="{'is-active': filter === status.id}"><a @click.prevent="filter = status.id">{{status.name}}</a></li>
         </ul>
       </div>
+      <template v-if="$dao.cycleConfig">
+        <template v-if="currentCycle">
+          <h5 v-if="filter === 'ACTIVE'">
+            Cycle {{currentCycle}} ends {{ $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow() }}
+          </h5>
+          <h5 v-else-if="filter === 'PENDING'">
+            Proposals for cycle {{currentCycle + 1}} starting {{ $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow() }}
+          </h5>
+        </template>
+        <template v-else>
+          <!-- Genesis cycle! -->
+          <h5 v-if="filter === 'ACTIVE'">
+            Waiting for <i>Genesis Cycle</i> {{currentCycle + 1}} start {{ $moment($dao.cycleConfig.start_time + "Z").fromNow() }}
+          </h5>
+          <h5 v-if="filter === 'PENDING'">
+            Proposals for <i>Genesis Cycle</i> {{currentCycle + 1}} starting {{ $moment($dao.cycleConfig.start_time + "Z").fromNow() }}
+          </h5>
+        </template>
+      </template>
+      <h5 v-if="filter === 'DRAFT'">
+        Not yet assigned to a cycle
+      </h5>
+      <h5 v-else-if="filter === 'CLOSED'">
+        Accepted or rejected proposals
+      </h5>
       <proposals v-if="proposals && proposals.length > 0" :proposals="proposalsFiltered" />
       <div v-else-if="proposals && proposals.length == 0">
         No proposals
@@ -78,7 +114,7 @@ export default {
       })
     },
     currentCycle () {
-      return this.$dao.proposalConfig ? this.$dao.proposalConfig.currentCycle : null
+      return this.$dao.proposalConfig ? this.$dao.proposalConfig.current_cycle : null
     }
   },
 
@@ -119,7 +155,6 @@ export default {
               }
             }
             this.$set(proposal, 'status', status)
-            proposal.pay = [proposal.pay]
             try {
               const ipfsProposal = await this.$dao.getIpfsProposal(proposal.content_hash)
               this.$set(proposal, 'title', ipfsProposal.title)

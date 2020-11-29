@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="box">
-      <h4 class="box-title">Edit Proposal</h4>
+      <h4 class="box-title">Edit Proposal [WIP]</h4>
       <h5 v-if="loadingProposal" class="has-text-centered">Loading proposal..</h5>
       <form @submit.prevent="saveProposal" v-else-if="proposal">
         <div class="field">
@@ -97,7 +97,7 @@
             <nuxt-link class="button is-light" to="/proposals">Cancel</nuxt-link>
           </div>
           <div class="control">
-            <button type="submit" class="button is-primary is-wide" :class="{'is-loading': loading}" :disabled="!loggedIn">Save Proposal</button>
+            <button type="submit" class="button is-primary is-wide" :class="{'is-loading': loading}" :disabled="!loggedIn || true">Save Proposal</button>
           </div>
         </div>
       </form>

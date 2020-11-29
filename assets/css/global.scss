@@ -90,6 +90,30 @@ a {
   margin-top: 10px;
 }
 
+.collapsible {
+  overflow: hidden;
+  height: 28px;
+  border-top: 1px solid black;
+  padding: 10px;
+  overflow: hidden;
+  legend {
+    cursor: pointer;
+    padding: 0 3px;
+    &:before {
+      content: "+ "
+    }
+  }
+  &.is-expanded {
+    height: auto;
+    border: 1px solid black;
+    legend {
+      &:before {
+        content: "-"
+      }
+    }
+  }
+}
+
 .file-name {
   background: white;
 }

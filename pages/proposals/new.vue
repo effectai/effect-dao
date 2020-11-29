@@ -85,18 +85,36 @@
           </div>
           <div class="column is-one-third">
             <div class="field">
-              <label class="label">Type</label>
+              <label class="label">Payout date</label>
               <div class="control">
-                <div class="select" style="width: 100%">
-                  <select v-model="proposal.type" required style="width: 100%">
-                    <option value="worker">Worker Proposal</option>
-                    <option value="governance" disabled>Governance Proposal</option>
-                  </select>
-                </div>
+                <b>now</b> <i>(changable later)</i>
               </div>
             </div>
           </div>
         </div>
+
+        <fieldset class="collapsible" :class="{'is-expanded': advanced}">
+          <legend class="has-text-weight-bold" @click="advanced = !advanced">Advanced</legend>
+          <div class="field">
+            <label class="label">Cycle</label>
+            <div class="control">
+              <input required class="input" v-model="proposal.cycle" type="number" min="0">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Type</label>
+            <div class="control">
+              <div class="select" style="width: 100%">
+                <select v-model="proposal.type" required style="width: 100%">
+                  <option value="worker">Worker Proposal</option>
+                  <option value="governance" disabled>Governance Proposal</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+        </fieldset>
 
         <div class="field is-grouped is-grouped-right">
           <div class="control">
@@ -120,6 +138,7 @@ export default {
   },
   data () {
     return {
+      advanced: false,
       ipfsExplorer: process.env.ipfsExplorer,
       loading: false,
       uploadingFile: false,
@@ -134,7 +153,8 @@ export default {
       proposal: {
         hash: null,
         type: 'worker',
-        reward: 0
+        reward: 0,
+        cycle: 0
       },
       cachedFormData: null
     }
@@ -266,7 +286,7 @@ export default {
               }],
             content_hash: this.proposal.hash,
             category: 0,
-            cycle: 0,
+            cycle: this.proposal.cycle,
             transaction_hash: null
           }
         }]

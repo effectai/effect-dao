@@ -57,6 +57,7 @@
             <div class="hash">{{ proposal.content_hash }}</div>
           </div>
           <div v-if="myProposal" class="mt-2"><nuxt-link class="button is-warning is-fullwidth" :to="`/proposals/${id}/edit`"><b>Edit</b></nuxt-link> </div>
+          <div v-if="myProposal && $dao.proposalConfig && proposal.cycle === 0" class="mt-2"><button class="button is-accent is-fullwidth" @click.prevent="assignToNextCycle()"><b>Assign to next cycle</b></button> </div>
         </div>
         <div class="box">
           <h5 class="box-title">Results</h5>
@@ -83,7 +84,7 @@ export default {
       return (this.$wallet) ? this.$wallet.wallet : null
     },
     myProposal () {
-      return this.proposal && this.wallet && this.wallet.auth && this.wallet.auth.accountName === this.proposal.account
+      return this.proposal && this.wallet && this.wallet.auth && this.wallet.auth.accountName === this.proposal.author
     },
     currentCycle () {
       return this.$dao.proposalConfig ? this.$dao.proposalConfig.currentCycle : null
@@ -114,6 +115,31 @@ export default {
   },
 
   methods: {
+    async assignToNextCycle () {
+      if (this.$dao.proposalConfig && this.proposal) {
+        const actions = [{
+          account: process.env.proposalContract,
+          name: 'updateprop',
+          authorization: [{
+            actor: this.wallet.auth.accountName,
+            permission: this.wallet.auth.permission
+          }],
+          data: {
+            id: this.proposal.id,
+            pay: this.proposal.pay,
+            content_hash: this.proposal.content_hash,
+            category: this.proposal.category,
+            cycle: this.$dao.proposalConfig.current_cycle + 1,
+            transaction_hash: this.proposal.transaction_hash
+          }
+        }]
+        try {
+          await this.$wallet.handleTransaction(actions)
+        } catch (e) {
+          console.log(e)
+        }
+      }
+    },
     async getProposal (id) {
       this.loading = true
       if (this.$dao.proposalConfig) {

@@ -85,16 +85,20 @@
           </div>
           <div class="column is-one-third">
             <div class="field">
-              <label class="label">Payout date</label>
+              <label class="label">Requestable from</label>
               <div class="control">
-                <b>now</b> <i>(changable later)</i>
+                <b>now</b><br><small class="is-size-7"><i>(other options coming soon)</i></small>
               </div>
             </div>
           </div>
         </div>
+        <div class="has-text-centered">
+          <button class="button is-outlined is-small" disabled @click.prevent="">+ Add another reward</button>
+          <div><small class="is-size-7"><i>coming soon</i></small></div>
+        </div>
 
         <fieldset class="collapsible" :class="{'is-expanded': advanced}">
-          <legend class="has-text-weight-bold" @click="advanced = !advanced">Advanced</legend>
+          <legend class="has-text-weight-bold"><a @click.prevent="advanced = !advanced">Advanced</a></legend>
           <div class="field">
             <label class="label">Cycle</label>
             <div class="control">
@@ -113,10 +117,9 @@
               </div>
             </div>
           </div>
-
         </fieldset>
 
-        <div class="field is-grouped is-grouped-right">
+        <div class="field is-grouped is-grouped-right mt-4">
           <div class="control">
             <nuxt-link class="button is-light" to="/proposals">Cancel</nuxt-link>
           </div>
@@ -151,7 +154,7 @@ export default {
         files: []
       },
       proposal: {
-        hash: null,
+        content_hash: null,
         type: 'worker',
         reward: 0,
         cycle: 0
@@ -207,26 +210,28 @@ export default {
       this.selectedFile = this.$refs.file.files[0]
     },
     async uploadProposal () {
-      const blob = new Blob([JSON.stringify(this.proposalIpfs)], { type: 'text/json' })
-      const formData = new FormData()
-      formData.append('file', blob)
-      if (blob.size > 10000000) {
-        // TODO: replace with error notification
-        alert('Max file size allowed is 10 MB')
-        this.proposal.hash = null
-      } else {
-        try {
-          const response = await fetch(`${process.env.ipfsNode}/api/v0/add?pin=true`,
-            {
-              method: 'POST',
-              body: formData
-            })
-          const proposal = await response.json()
-          console.log(proposal)
-          this.proposal.hash = proposal.Hash
-        } catch (e) {
-          this.proposal.hash = null
-          console.log(e)
+      if (this.proposalIpfs.body && this.proposalIpfs.title) {
+        const blob = new Blob([JSON.stringify(this.proposalIpfs)], { type: 'text/json' })
+        const formData = new FormData()
+        formData.append('file', blob)
+        if (blob.size > 10000000) {
+          // TODO: replace with error notification
+          alert('Max file size allowed is 10 MB')
+          this.proposal.content_hash = null
+        } else {
+          try {
+            const response = await fetch(`${process.env.ipfsNode}/api/v0/add?pin=true`,
+              {
+                method: 'POST',
+                body: formData
+              })
+            const proposal = await response.json()
+            console.log(proposal)
+            this.proposal.content_hash = proposal.Hash
+          } catch (e) {
+            this.proposal.content_hash = null
+            console.log(e)
+          }
         }
       }
     },
@@ -264,7 +269,7 @@ export default {
     async createProposal () {
       this.loading = true
       await this.uploadProposal()
-      if (this.proposal.hash) {
+      if (this.proposal.content_hash) {
         const payoutTime = new Date()
         // payoutTime.setDate(payoutTime.getDate() + 14)
         const actions = [{
@@ -284,7 +289,7 @@ export default {
                 },
                 field_1: payoutTime.toISOString().slice(0, -1)
               }],
-            content_hash: this.proposal.hash,
+            content_hash: this.proposal.content_hash,
             category: 0,
             cycle: this.proposal.cycle,
             transaction_hash: null

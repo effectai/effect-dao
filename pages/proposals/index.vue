@@ -71,7 +71,7 @@ export default {
 
   data () {
     return {
-      filter: 'PENDING',
+      filter: 'ALL',
       statuses: [
         {
           id: 'ACTIVE',

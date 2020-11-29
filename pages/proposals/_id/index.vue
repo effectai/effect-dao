@@ -56,8 +56,8 @@
             IPFS
             <div class="hash">{{ proposal.content_hash }}</div>
           </div>
-          <div v-if="myProposal" class="mt-2"><nuxt-link class="button is-warning is-fullwidth" :to="`/proposals/${id}/edit`"><b>Edit</b></nuxt-link> </div>
-          <div v-if="myProposal && $dao.proposalConfig && proposal.cycle === 0" class="mt-2"><button class="button is-accent is-fullwidth" @click.prevent="assignToNextCycle()"><b>Assign to next cycle</b></button> </div>
+          <div v-if="myProposal" class="mt-2"><nuxt-link class="button is-primary is-fullwidth" :to="`/proposals/${id}/edit`"><b>Edit</b></nuxt-link> </div>
+          <div v-if="myProposal && $dao.proposalConfig && proposal.cycle === 0" class="mt-2"><button class="button is-primary is-outlined is-fullwidth" @click.prevent="assignToNextCycle()"><b>Assign to next cycle</b></button> </div>
         </div>
         <div class="box">
           <h5 class="box-title">Results</h5>
@@ -165,7 +165,6 @@ export default {
           }
           this.$set(this.proposal, 'status', status)
           const ipfsProposal = await this.$dao.getIpfsProposal(this.proposal.content_hash)
-          console.log(ipfsProposal.body)
           this.$set(this.proposal, 'title', ipfsProposal.title)
           this.$set(this.proposal, 'body', ipfsProposal.body)
           this.$set(this.proposal, 'files', ipfsProposal.files ? ipfsProposal.files : [])

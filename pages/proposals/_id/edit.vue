@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="box">
-      <h4 class="box-title">Edit Proposal [WIP]</h4>
+      <h4 class="box-title">Edit Proposal {{id}}</h4>
       <h5 v-if="loadingProposal" class="has-text-centered">Loading proposal..</h5>
-      <form @submit.prevent="saveProposal" v-else-if="proposal">
+      <form @submit.prevent="updateProposal" v-else-if="proposal && proposalIpfs">
         <div class="field">
           <label class="label">Title</label>
           <div class="control">
-            <input v-model="proposal.title" required class="input" type="text" placeholder="My Proposal Title">
+            <input v-model="proposalIpfs.title" required class="input" type="text" placeholder="My Proposal Title">
           </div>
         </div>
 
@@ -20,11 +20,12 @@
             </ul>
           </div>
           <div v-if="preview" class="p-2">
-            <div v-html="$md.render(proposal.body)" />
+            <div v-html="$md.render(proposalIpfs.body)" />
           </div>
           <div class="control" v-else>
-            <vue-simplemde required v-model="proposal.body" ref="markdownEditor" :configs="{promptURLs: true, spellChecker: false}" />
+            <vue-simplemde required v-model="proposalIpfs.body" ref="markdownEditor" :configs="{promptURLs: true, spellChecker: false}" />
           </div>
+
         </div>
 
         <div class="field">
@@ -35,7 +36,7 @@
                 <input class="file-input" type="file" id="file" ref="file" @change="getSelectedFile">
                 <span class="file-cta">
                   <span class="file-icon">
-                    <i class="fas fa-upload"></i>
+                    <i class="fa fa-upload"></i>
                   </span>
                   <span class="file-label">
                     Choose a file…
@@ -51,10 +52,10 @@
             </div>
           </div>
           <table class="table">
-            <tbody v-if="proposal.files.length > 0">
-            <tr v-for="file in proposal.files" :key="file.name">
-              <td>{{ file.name }}</td>
-              <td>{{ file.size | formatBytes }}</td>
+            <tbody v-if="proposalIpfs.files.length > 0">
+            <tr v-for="file in proposalIpfs.files" :key="file.Hash">
+              <td><a :href="ipfsExplorer + '/ipfs/' + file.Hash" target="_blank">{{ file.Name }}</a></td>
+              <td>{{ file.Size | formatBytes }}</td>
               <td class="has-text-right"><button @click.prevent="removeFile(file)" class="button is-danger is-small">Remove</button></td>
             </tr>
             </tbody>
@@ -70,7 +71,13 @@
             <div class="field">
               <label class="label">Reward</label>
               <div class="control has-icons-right">
-                <input v-model="proposal.reward" class="input" type="number" min="0" placeholder="100">
+                <input
+                  v-model="proposal.reward"
+                  class="input"
+                  step="0.0001"
+                  type="number"
+                  min="0"
+                  placeholder="100">
                 <span class="icon is-small is-right">
                   EFX
                 </span>
@@ -79,25 +86,46 @@
           </div>
           <div class="column is-one-third">
             <div class="field">
-              <label class="label">Type</label>
+              <label class="label">Requestable from</label>
               <div class="control">
-                <div class="select" style="width: 100%">
-                  <select v-model="proposal.type" required style="width: 100%">
-                    <option value="worker">Worker Proposal</option>
-                    <option value="governance" disabled>Governance Proposal</option>
-                  </select>
-                </div>
+                <b>now</b><br><small class="is-size-7"><i>(other options coming soon)</i></small>
               </div>
             </div>
           </div>
         </div>
+        <div class="has-text-centered">
+          <button class="button is-outlined is-small" disabled @click.prevent="">+ Add another reward</button>
+          <div><small class="is-size-7"><i>coming soon</i></small></div>
+        </div>
 
-        <div class="field is-grouped is-grouped-right">
+        <fieldset class="collapsible" :class="{'is-expanded': advanced}">
+          <legend class="has-text-weight-bold"><a @click.prevent="advanced = !advanced">Advanced</a></legend>
+          <div class="field">
+            <label class="label">Cycle</label>
+            <div class="control">
+              <input required class="input" v-model="proposal.cycle" type="number" min="0">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Type</label>
+            <div class="control">
+              <div class="select" style="width: 100%">
+                <select v-model="proposal.type" required style="width: 100%">
+                  <option value="worker">Worker Proposal</option>
+                  <option value="governance" disabled>Governance Proposal</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="field is-grouped is-grouped-right mt-4">
           <div class="control">
             <nuxt-link class="button is-light" to="/proposals">Cancel</nuxt-link>
           </div>
           <div class="control">
-            <button type="submit" class="button is-primary is-wide" :class="{'is-loading': loading}" :disabled="!loggedIn || true">Save Proposal</button>
+            <button type="submit" class="button is-primary is-wide" :class="{'is-loading': loading}" :disabled="!loggedIn">Save Proposal</button>
           </div>
         </div>
       </form>
@@ -116,12 +144,14 @@ export default {
   data () {
     return {
       id: this.$route.params.id,
-      preview: false,
+      advanced: false,
+      ipfsExplorer: process.env.ipfsExplorer,
       loading: false,
       loadingProposal: false,
       uploadingFile: false,
       selectedFile: null,
-      removedFiles: [],
+      preview: false,
+      proposalIpfs: null,
       proposal: null,
       cachedFormData: null
     }
@@ -154,7 +184,7 @@ export default {
   },
 
   async created () {
-    this.proposal = await this.getProposal(this.id)
+    await this.getProposal(this.id)
     // eslint-disable-next-line
     window.addEventListener('beforeunload', this.checkClose)
     this.cachedFormData = this.formDataForComparison()
@@ -173,59 +203,126 @@ export default {
   methods: {
     async getProposal (id) {
       this.loadingProposal = true
-      let proposal
       try {
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        proposal = {
-          title: 'My Proposal',
-          body: 'This is my proposal',
-          type: 'worker',
-          files: [],
-          reward: 3000
+        const data = await this.$eos.rpc.get_table_rows({
+          code: process.env.proposalContract,
+          scope: process.env.proposalContract,
+          table: 'proposal',
+          lower_bound: id,
+          limit: 1
+        })
+        this.proposal = data.rows[0]
+        this.$set(this.proposal, 'reward', parseFloat(this.proposal.pay[0].field_0.quantity))
+        this.$set(this.proposal, 'type', 'worker')
+
+        const ipfsProposal = await this.$dao.getIpfsProposal(this.proposal.content_hash)
+        this.proposalIpfs = ipfsProposal
+        if (!this.proposalIpfs.files) {
+          this.$set(this.proposalIpfs, 'files', [])
         }
       } catch (e) {
         console.log(e)
       }
       this.loadingProposal = false
-      return proposal
     },
     getSelectedFile () {
       this.selectedFile = this.$refs.file.files[0]
+    },
+    async uploadProposal () {
+      if (this.proposalIpfs.body && this.proposalIpfs.title) {
+        const blob = new Blob([JSON.stringify(this.proposalIpfs)], { type: 'text/json' })
+        const formData = new FormData()
+        formData.append('file', blob)
+        if (blob.size > 10000000) {
+          // TODO: replace with error notification
+          alert('Max file size allowed is 10 MB')
+          this.proposal.content_hash = null
+        } else {
+          try {
+            const response = await fetch(`${process.env.ipfsNode}/api/v0/add?pin=true`,
+              {
+                method: 'POST',
+                body: formData
+              })
+            const proposal = await response.json()
+            console.log(proposal)
+            this.proposal.content_hash = proposal.Hash
+          } catch (e) {
+            this.proposal.content_hash = null
+            console.log(e)
+          }
+        }
+      }
     },
     async uploadFile () {
       if (this.selectedFile) {
         this.uploadingFile = true
         const formData = new FormData()
         formData.append('file', this.selectedFile)
-        try {
-          await new Promise(resolve => setTimeout(resolve, 1500))
-          // axios.post( '/single-file',
-          //   formData,
-          //   {
-          //     headers: {
-          //       'Content-Type': 'multipart/form-data'
-          //     }
-          //   }
-          // )
-          console.log(this.selectedFile)
-          this.proposal.files.push(this.selectedFile)
+        if (this.selectedFile.size > 10000000) {
+          // TODO: replace with error notification
+          alert('Max file size allowed is 10 MB')
           this.selectedFile = null
           this.$refs.file.value = ''
-        } catch (e) {
-          console.log(e)
+        } else {
+          try {
+            const response = await fetch(`${process.env.ipfsNode}/api/v0/add?pin=true`,
+              {
+                method: 'POST',
+                body: formData
+              })
+            const file = await response.json()
+            this.proposalIpfs.files.push(file)
+            this.selectedFile = null
+            this.$refs.file.value = ''
+          } catch (e) {
+            console.log(e)
+          }
         }
         this.uploadingFile = false
       }
     },
     removeFile (file) {
-      this.proposal.files.splice(this.proposal.files.indexOf(file), 1)
-      this.removedFiles.push(file)
+      this.proposalIpfs.files.splice(this.proposalIpfs.files.indexOf(file), 1)
     },
-    async saveProposalsaveProposal () {
+    async updateProposal () {
       this.loading = true
-      // this.id
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      // Remove files in removedFiles
+      await this.uploadProposal()
+      if (this.proposal.content_hash) {
+        const payoutTime = new Date()
+        // payoutTime.setDate(payoutTime.getDate() + 14)
+        const actions = [{
+          account: process.env.proposalContract,
+          name: 'updateprop',
+          authorization: [{
+            actor: this.wallet.auth.accountName,
+            permission: this.wallet.auth.permission
+          }],
+          data: {
+            id: this.proposal.id,
+            pay: [
+              {
+                field_0: {
+                  quantity: Number.parseFloat(this.proposal.reward).toFixed(4) + ' ' + process.env.efxToken,
+                  contract: process.env.tokenContract
+                },
+                field_1: payoutTime.toISOString().slice(0, -1)
+              }],
+            content_hash: this.proposal.content_hash,
+            category: this.proposal.category,
+            cycle: this.proposal.cycle,
+            transaction_hash: this.proposal.transaction_hash
+          }
+        }]
+        try {
+          await this.$wallet.handleTransaction(actions)
+          this.$router.push({
+            path: '/proposals'
+          })
+        } catch (e) {
+          console.log(e)
+        }
+      }
       this.loading = false
     },
     // Helper method that generates JSON for string comparison
@@ -233,7 +330,7 @@ export default {
       return JSON.stringify(this.proposal)
     },
     checkClose (event) {
-      if (this.hasChanged) {
+      if (this.hasChanged && !this.loading) {
         const warningMessage = 'You have unsaved changes. Are you sure you wish to leave?'
         if (!confirm(warningMessage)) {
           event.preventDefault()
@@ -247,14 +344,15 @@ export default {
   }
 }
 </script>
+
 <style lang="scss">
-  /*@import '~simplemde/dist/simplemde.min.css';*/
-  .CodeMirror {
-    pre {
-      margin-bottom: 0 !important;
-    }
+/*@import '~simplemde/dist/simplemde.min.css';*/
+.CodeMirror {
+  pre {
+    margin-bottom: 0 !important;
   }
-  .editor-toolbar.fullscreen, .CodeMirror-fullscreen, .editor-preview-side {
-    z-index: 50
-  }
+}
+.editor-toolbar.fullscreen, .CodeMirror-fullscreen, .editor-preview-side {
+  z-index: 50
+}
 </style>

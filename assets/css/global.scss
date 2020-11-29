@@ -99,7 +99,7 @@ a {
   legend {
     cursor: pointer;
     padding: 0 3px;
-    &:before {
+    a:before {
       content: "+ "
     }
   }
@@ -107,7 +107,7 @@ a {
     height: auto;
     border: 1px solid black;
     legend {
-      &:before {
+      a:before {
         content: "-"
       }
     }

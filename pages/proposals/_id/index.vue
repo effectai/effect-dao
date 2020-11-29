@@ -15,9 +15,9 @@
           <h4 class="box-title">Attachments</h4>
           <table class="table" v-if="proposal.files">
             <tbody v-if="proposal.files.length > 0">
-            <tr v-for="file in proposal.files" :key="file.name">
-              <td>{{ file.name }}</td>
-              <td>{{ file.size | formatBytes }}</td>
+            <tr v-for="file in proposal.files" :key="file.Hash">
+              <td><a :href="ipfsExplorer + '/ipfs/' + file.Hash" target="_blank">{{ file.Name }}</a></td>
+              <td>{{ file.Size | formatBytes }}</td>
             </tr>
             </tbody>
             <tbody v-else>
@@ -71,6 +71,7 @@
 export default {
   data () {
     return {
+      ipfsExplorer: process.env.ipfsExplorer,
       loading: false,
       proposal: null,
       id: this.$route.params.id
@@ -86,6 +87,19 @@ export default {
     },
     currentCycle () {
       return this.$dao.proposalConfig ? this.$dao.proposalConfig.currentCycle : null
+    }
+  },
+
+  filters: {
+    formatBytes (bytes, decimals = 2) {
+      if (bytes === 0) {
+        return '0 Bytes'
+      }
+      const k = 1024
+      const dm = decimals < 0 ? 0 : decimals
+      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+      const i = Math.floor(Math.log(bytes) / Math.log(k))
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
     }
   },
 

@@ -181,7 +181,6 @@ export default {
       this.selectedFile = this.$refs.file.files[0]
     },
     async uploadProposal () {
-      this.loading = true
       const blob = new Blob([JSON.stringify(this.proposalIpfs)], { type: 'text/json' })
       const formData = new FormData()
       formData.append('file', blob)
@@ -197,7 +196,6 @@ export default {
       } catch (e) {
         console.log(e)
       }
-      this.loading = false
     },
     async uploadFile () {
       if (this.selectedFile) {
@@ -227,9 +225,34 @@ export default {
       this.loading = true
       await this.uploadProposal()
       if (this.proposal.hash) {
-        // TODO: upload to blockchain
-        console.log('TODO: upload to blockchain')
-      }
+        const actions = [{
+          account: process.env.proposalContract,
+          name: 'createprop',
+          authorization: [{
+            actor: this.wallet.auth.accountName,
+            permission: this.wallet.auth.permission
+          }],
+          data: {
+            author: this.wallet.auth.accountName,
+            pay: [
+              {
+                field_0: {
+                  quantity: Number.parseFloat(this.proposal.reward).toFixed(4) + ' ' + process.env.efxToken,
+                  contract: process.env.tokenContract
+                },
+                field_1: '2020-11-31T10:00:00'
+              }],
+            content_hash: this.proposal.hash,
+            category: 0,
+            cycle: 0,
+            transaction_hash: null
+          }
+        }]
+
+        const transaction = await this.$wallet.handleTransaction(actions)
+        this.$router.push({
+          path: '/proposals'
+        })      }
       this.loading = false
     },
     // Helper method that generates JSON for string comparison

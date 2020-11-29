@@ -249,10 +249,11 @@ export default {
           }
         }]
 
-        const transaction = await this.$wallet.handleTransaction(actions)
+        await this.$wallet.handleTransaction(actions)
         this.$router.push({
           path: '/proposals'
-        })      }
+        })
+      }
       this.loading = false
     },
     // Helper method that generates JSON for string comparison

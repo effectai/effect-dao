@@ -6,7 +6,7 @@
         <div class="field">
           <label class="label">Title</label>
           <div class="control">
-            <input v-model="proposal.title" required class="input" type="text" placeholder="My Proposal Title">
+            <input v-model="proposalIpfs.title" required class="input" type="text" placeholder="My Proposal Title">
           </div>
         </div>
 
@@ -19,10 +19,10 @@
             </ul>
           </div>
           <div v-if="preview" class="p-2">
-            <div v-html="$md.render(proposal.body)" />
+            <div v-html="$md.render(proposalIpfs.body)" />
           </div>
           <div class="control" v-else>
-            <vue-simplemde required v-model="proposal.body" ref="markdownEditor" :configs="{promptURLs: true, spellChecker: false}" />
+            <vue-simplemde required v-model="proposalIpfs.body" ref="markdownEditor" :configs="{promptURLs: true, spellChecker: false}" />
           </div>
 
         </div>
@@ -51,10 +51,10 @@
             </div>
           </div>
           <table class="table">
-            <tbody v-if="proposal.files.length > 0">
-              <tr v-for="file in proposal.files" :key="file.name">
-                <td><a>{{ file.name }}</a></td>
-                <td>{{ file.size | formatBytes }}</td>
+            <tbody v-if="proposalIpfs.files.length > 0">
+              <tr v-for="file in proposalIpfs.files" :key="file.Hash">
+                <td><a :href="ipfsExplorer + '/ipfs/' + file.Hash" target="_blank">{{ file.Name }}</a></td>
+                <td>{{ file.Size | formatBytes }}</td>
                 <td class="has-text-right"><button @click.prevent="removeFile(file)" class="button is-danger is-small">Remove</button></td>
               </tr>
             </tbody>
@@ -97,7 +97,7 @@
             <nuxt-link class="button is-light" to="/proposals">Cancel</nuxt-link>
           </div>
           <div class="control">
-            <button type="submit" class="button is-primary is-wide" :class="{'is-loading': loading}" :disabled="!loggedIn">Save Proposal</button>
+            <button type="submit" class="button is-primary is-wide" :class="{'is-loading': loading}" :disabledtodo="!loggedIn">Save Proposal</button>
           </div>
         </div>
       </form>
@@ -114,16 +114,20 @@ export default {
   },
   data () {
     return {
+      ipfsExplorer: process.env.ipfsExplorer,
       loading: false,
       uploadingFile: false,
       selectedFile: null,
-      removedFiles: [],
       preview: false,
-      proposal: {
+      proposalIpfs: {
+        version: 1,
         title: '',
         body: '',
+        files: []
+      },
+      proposal: {
+        hash: null,
         type: 'worker',
-        files: [],
         reward: 0
       },
       cachedFormData: null
@@ -176,23 +180,38 @@ export default {
     getSelectedFile () {
       this.selectedFile = this.$refs.file.files[0]
     },
+    async uploadProposal () {
+      this.loading = true
+      const blob = new Blob([JSON.stringify(this.proposalIpfs)], { type: 'text/json' })
+      const formData = new FormData()
+      formData.append('file', blob)
+      try {
+        const response = await fetch(`${process.env.ipfsNode}/api/v0/add?pin=true`,
+          {
+            method: 'POST',
+            body: formData
+          })
+        const proposal = await response.json()
+        console.log(proposal)
+        this.proposal.hash = proposal.Hash
+      } catch (e) {
+        console.log(e)
+      }
+      this.loading = false
+    },
     async uploadFile () {
       if (this.selectedFile) {
         this.uploadingFile = true
         const formData = new FormData()
         formData.append('file', this.selectedFile)
         try {
-          await new Promise(resolve => setTimeout(resolve, 1500))
-          // axios.post( '/single-file',
-          //   formData,
-          //   {
-          //     headers: {
-          //       'Content-Type': 'multipart/form-data'
-          //     }
-          //   }
-          // )
-          console.log(this.selectedFile)
-          this.proposal.files.push(this.selectedFile)
+          const response = await fetch(`${process.env.ipfsNode}/api/v0/add?pin=true`,
+            {
+              method: 'POST',
+              body: formData
+            })
+          const file = await response.json()
+          this.proposalIpfs.files.push(file)
           this.selectedFile = null
           this.$refs.file.value = ''
         } catch (e) {
@@ -202,13 +221,15 @@ export default {
       }
     },
     removeFile (file) {
-      this.proposal.files.splice(this.proposal.files.indexOf(file), 1)
-      this.removedFiles.push(file)
+      this.proposalIpfs.files.splice(this.proposalIpfs.files.indexOf(file), 1)
     },
     async createProposal () {
       this.loading = true
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      // Remove files in removedFiles
+      await this.uploadProposal()
+      if (this.proposal.hash) {
+        // TODO: upload to blockchain
+        console.log('TODO: upload to blockchain')
+      }
       this.loading = false
     },
     // Helper method that generates JSON for string comparison

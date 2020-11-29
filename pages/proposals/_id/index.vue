@@ -31,11 +31,12 @@
         <div class="box mt-5">
           <h5 class="box-title">Cast your vote</h5>
           <div>
-            <button class="button is-primary is-fullwidth">Vote</button>
+            <button class="button is-primary is-fullwidth" disabled="disabled">Vote</button>
           </div>
         </div>
         <div class="box mt-5">
           <h5 class="box-title">Votes</h5>
+          <div class="has-text-centered">No votes yet</div>
         </div>
       </div>
       <div class="column is-one-third">
@@ -45,9 +46,11 @@
               <i>author</i><br>
               <nuxt-link :to="'/account/'+proposal.author"><b>{{proposal.author}}</b></nuxt-link>
           </div>
-          <div class="block">
+          <div class="block" v-for="(pay, index) in proposal.pay" :key="index">
             <i>requesting</i><br>
-            <b>{{ proposal.pay[0].quantity }}</b>
+            <b>{{ pay.field_0.quantity }}</b><br>
+            <i>requestable</i>
+            <b>{{ $moment(pay.field_1 + "Z").fromNow()}}</b>
           </div>
           <div class="block">
             IPFS

@@ -70,7 +70,13 @@
             <div class="field">
               <label class="label">Reward</label>
               <div class="control has-icons-right">
-                <input v-model="proposal.reward" class="input" type="number" min="0" placeholder="100">
+                <input
+                  v-model="proposal.reward"
+                  class="input"
+                  step="0.0001"
+                  type="number"
+                  min="0"
+                  placeholder="100">
                 <span class="icon is-small is-right">
                   EFX
                 </span>
@@ -97,7 +103,7 @@
             <nuxt-link class="button is-light" to="/proposals">Cancel</nuxt-link>
           </div>
           <div class="control">
-            <button type="submit" class="button is-primary is-wide" :class="{'is-loading': loading}" :disabledtodo="!loggedIn">Save Proposal</button>
+            <button type="submit" class="button is-primary is-wide" :class="{'is-loading': loading}" :disabled="!loggedIn">Save Proposal</button>
           </div>
         </div>
       </form>
@@ -184,17 +190,24 @@ export default {
       const blob = new Blob([JSON.stringify(this.proposalIpfs)], { type: 'text/json' })
       const formData = new FormData()
       formData.append('file', blob)
-      try {
-        const response = await fetch(`${process.env.ipfsNode}/api/v0/add?pin=true`,
-          {
-            method: 'POST',
-            body: formData
-          })
-        const proposal = await response.json()
-        console.log(proposal)
-        this.proposal.hash = proposal.Hash
-      } catch (e) {
-        console.log(e)
+      if (blob.size > 10000000) {
+        // TODO: replace with error notification
+        alert('Max file size allowed is 10 MB')
+        this.proposal.hash = null
+      } else {
+        try {
+          const response = await fetch(`${process.env.ipfsNode}/api/v0/add?pin=true`,
+            {
+              method: 'POST',
+              body: formData
+            })
+          const proposal = await response.json()
+          console.log(proposal)
+          this.proposal.hash = proposal.Hash
+        } catch (e) {
+          this.proposal.hash = null
+          console.log(e)
+        }
       }
     },
     async uploadFile () {
@@ -202,18 +215,25 @@ export default {
         this.uploadingFile = true
         const formData = new FormData()
         formData.append('file', this.selectedFile)
-        try {
-          const response = await fetch(`${process.env.ipfsNode}/api/v0/add?pin=true`,
-            {
-              method: 'POST',
-              body: formData
-            })
-          const file = await response.json()
-          this.proposalIpfs.files.push(file)
+        if (this.selectedFile.size > 10000000) {
+          // TODO: replace with error notification
+          alert('Max file size allowed is 10 MB')
           this.selectedFile = null
           this.$refs.file.value = ''
-        } catch (e) {
-          console.log(e)
+        } else {
+          try {
+            const response = await fetch(`${process.env.ipfsNode}/api/v0/add?pin=true`,
+              {
+                method: 'POST',
+                body: formData
+              })
+            const file = await response.json()
+            this.proposalIpfs.files.push(file)
+            this.selectedFile = null
+            this.$refs.file.value = ''
+          } catch (e) {
+            console.log(e)
+          }
         }
         this.uploadingFile = false
       }
@@ -225,6 +245,8 @@ export default {
       this.loading = true
       await this.uploadProposal()
       if (this.proposal.hash) {
+        const payoutTime = new Date()
+        // payoutTime.setDate(payoutTime.getDate() + 14)
         const actions = [{
           account: process.env.proposalContract,
           name: 'createprop',
@@ -240,7 +262,7 @@ export default {
                   quantity: Number.parseFloat(this.proposal.reward).toFixed(4) + ' ' + process.env.efxToken,
                   contract: process.env.tokenContract
                 },
-                field_1: '2020-11-31T10:00:00'
+                field_1: payoutTime.toISOString().slice(0, -1)
               }],
             content_hash: this.proposal.hash,
             category: 0,
@@ -248,11 +270,14 @@ export default {
             transaction_hash: null
           }
         }]
-
-        await this.$wallet.handleTransaction(actions)
-        this.$router.push({
-          path: '/proposals'
-        })
+        try {
+          await this.$wallet.handleTransaction(actions)
+          this.$router.push({
+            path: '/proposals'
+          })
+        } catch (e) {
+          console.log(e)
+        }
       }
       this.loading = false
     },
@@ -261,7 +286,7 @@ export default {
       return JSON.stringify(this.proposal)
     },
     checkClose (event) {
-      if (this.hasChanged) {
+      if (this.hasChanged && !this.loading) {
         const warningMessage = 'You have unsaved changes. Are you sure you wish to leave?'
         if (!confirm(warningMessage)) {
           event.preventDefault()

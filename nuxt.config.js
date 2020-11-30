@@ -12,10 +12,12 @@ export default {
   //   eosNodeUrl: 'eos.greymass.com',
   //   eosChainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
   //   explorerUrl: 'https://bloks.io',
+  //   ipfsNode: 'https://ipfs.effect.ai',
+  //   ipfsExplorer: 'https://ipfs.effect.ai',
   //   tokenContract: 'effecttokens',
   //   stakingContract: 'efxstakepool',
   //   daoContract: 'theeffectdao',
-  //   proposalContract: '',
+  //   proposalContract: 'daoproposals',
   //   efxToken: 'EFX',
   //   nfxToken: 'NFX'
   // },

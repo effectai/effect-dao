@@ -156,7 +156,29 @@ export default {
       proposalIpfs = {
         version: 1,
         title: '',
-        body: '',
+        body: '> You can use this template as a starting point. Make sure to include as much information about your proposal in this description\n' +
+          '\n' +
+          '### Summary\n' +
+          'insert a short summary including the goal of your proposal\n' +
+          '\n' +
+          '### Proposal Details\n' +
+          'insert a detailed description of your proposal and what it entails\n' +
+          '\n' +
+          '### Scope\n' +
+          'Describe the scope of your proposal. Make sure to scope your proposal. If it is too big, consider multiple proposals with smaller scopes\n' +
+          '\n' +
+          '### Budget Overview\n' +
+          'Insert a detailed overview of your budget here:\n' +
+          '| Service | Description | Costs |\n' +
+          '| -------- | -------- | -------- |\n' +
+          '| Example Service 1 | Description of your example service 1 | ... EFX   |\n' +
+          '| Example Service 2 | Description of your example service 2 | ... EFX   |\n' +
+          '\n' +
+          '### Deliverables\n' +
+          'Specify a detailed and scoped list of deliverables for this proposal\n' +
+          '\n' +
+          '### Timeline\n' +
+          'Specify your timeline of the different deliverables here',
         files: []
       }
     }

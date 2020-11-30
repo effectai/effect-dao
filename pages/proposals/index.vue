@@ -99,7 +99,7 @@ export default {
       ],
       loading: false,
       proposals: null,
-      moreProposals: true,
+      moreProposals: null,
       nextKey: null
     }
   },
@@ -136,37 +136,51 @@ export default {
       this.loading = true
       if (this.$dao.proposalConfig) {
         try {
-          const data = await this.$eos.rpc.get_table_rows({
+          const config = {
             code: process.env.proposalContract,
             scope: process.env.proposalContract,
             table: 'proposal',
-            limit: 100
-          })
+            limit: 20
+          }
+          if (this.nextKey) {
+            config.lower_bound = this.nextKey
+          }
+          const data = await this.$eos.rpc.get_table_rows(config)
           this.moreProposals = data.more
           this.nextKey = data.next_key
-          this.proposals = data.rows
-          console.log(data.rows)
+          if (!this.proposals) {
+            this.proposals = data.rows
+          } else {
+            this.proposals = this.proposals.concat(data.rows)
+          }
           this.proposals.forEach(async (proposal) => {
-            let status = 'CLOSED'
-            if (proposal.state === 0) {
-              if (!proposal.cycle) {
-                status = 'DRAFT'
-              } else if (proposal.cycle === this.currentCycle) {
-                status = 'ACTIVE'
-              } else {
-                status = 'PENDING'
+            if (!proposal.status) {
+              let status = 'CLOSED'
+              if (proposal.state === 0) {
+                if (!proposal.cycle) {
+                  status = 'DRAFT'
+                } else if (proposal.cycle === this.currentCycle) {
+                  status = 'ACTIVE'
+                } else {
+                  status = 'PENDING'
+                }
               }
+              this.$set(proposal, 'status', status)
             }
-            this.$set(proposal, 'status', status)
-            try {
-              const ipfsProposal = await this.$dao.getIpfsProposal(proposal.content_hash)
-              this.$set(proposal, 'title', ipfsProposal.title)
-            } catch (e) {
-              console.error(e)
+            if (!proposal.title) {
+              try {
+                const ipfsProposal = await this.$dao.getIpfsProposal(proposal.content_hash)
+                this.$set(proposal, 'title', ipfsProposal.title)
+              } catch (e) {
+                console.error(e)
+              }
             }
           })
         } catch (e) {
           console.log(e)
+        }
+        if (this.moreProposals) {
+          this.getProposals()
         }
         this.loading = false
       }

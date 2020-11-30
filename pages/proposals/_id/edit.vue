@@ -121,7 +121,7 @@
             <nuxt-link class="button is-light" to="/proposals">Cancel</nuxt-link>
           </div>
           <div class="control">
-            <button type="submit" class="button is-primary is-wide" :class="{'is-loading': loading}" :disabled="!loggedIn">Save Proposal</button>
+            <button type="submit" class="button is-primary is-wide" :class="{'is-loading': loading}" :disabled="!loggedIn || !myProposal">Save Proposal</button>
           </div>
         </div>
       </form>
@@ -137,6 +137,7 @@ export default {
   components: {
     VueSimplemde
   },
+  middleware: ['authenticated'],
   data () {
     return {
       id: this.$route.params.id,
@@ -177,6 +178,9 @@ export default {
     // Compares cached user data to live data
     hasChanged () {
       return this.cachedFormData !== this.formDataForComparison()
+    },
+    myProposal () {
+      return this.proposal && this.wallet && this.wallet.auth && this.wallet.auth.accountName === this.proposal.author
     }
   },
 

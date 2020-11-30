@@ -258,7 +258,9 @@
       <rank class="mb-6" v-if="signedConstitution" />
     </div>
     <div v-else class="has-text-centered">
-      <ConnectWallet />
+      <a class="button is-primary" @click="$wallet.loginModal = true">
+        <strong>Connect Wallet</strong>
+      </a>
     </div>
   </div>
 </template>
@@ -266,17 +268,15 @@
 <script>
 import ICountUp from 'vue-countup-v2'
 import VueCircle from 'vue2-circle-progress/src/index.vue'
-import ConnectWallet from '~/components/ConnectWallet'
 import Rank from '~/components/Rank'
 
 export default {
   components: {
     ICountUp,
-    ConnectWallet,
     VueCircle,
     Rank
   },
-
+  middleware: ['authenticated'],
   filters: {
     percentage (value, decimals) {
       if (!value) {

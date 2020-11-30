@@ -5,7 +5,7 @@ export default (context, inject) => {
     data () {
       return {
         wallet: null,
-
+        loginModal: false,
         efxAvailable: 0,
         efxStaked: 0,
         efxLastClaimTime: null,

@@ -50,7 +50,9 @@
           </div>
 
           <a class="navbar-item connect-wallet mobile-connect" @click="mobileMenu = false">
-            <ConnectWallet v-if="!wallet" />
+            <a v-if="!wallet" class="button is-primary" @click="$wallet.loginModal = true">
+              <strong>Connect Wallet</strong>
+            </a>
             <nuxt-link v-else class="button is-primary" :to="'/account/'+wallet.auth.accountName">
               <strong>{{ wallet.auth.accountName }}</strong>
             </nuxt-link>
@@ -60,7 +62,9 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons wallet">
-              <ConnectWallet v-if="!wallet" />
+              <a v-if="!wallet" class="button is-primary" @click="$wallet.loginModal = true">
+                <strong>Connect Wallet</strong>
+              </a>
               <nuxt-link v-else class="button is-primary" :to="'/account/'+wallet.auth.accountName">
                 <strong>{{ wallet.auth.accountName }}</strong>
               </nuxt-link>
@@ -73,13 +77,7 @@
 </template>
 
 <script>
-import ConnectWallet from '@/components/ConnectWallet'
-
 export default {
-  components: {
-    ConnectWallet
-  },
-
   data () {
     return {
       loading: false,

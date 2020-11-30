@@ -12,7 +12,9 @@
         <h1>Welcome to the Effect Dashboard.</h1>
         <div class="subtitle">Stake, vote and swap all in one place!</div>
         <div class="has-text-centered my-4">
-          <ConnectWallet />
+          <a class="button is-primary" @click="$wallet.loginModal = true">
+            <strong>Connect Wallet</strong>
+          </a>
         </div>
       </div>
     </div>
@@ -173,13 +175,11 @@
 
 <script>
 import ICountUp from 'vue-countup-v2'
-import ConnectWallet from '~/components/ConnectWallet'
 import Avatar from '~/components/Avatar'
 
 export default {
   components: {
     ICountUp,
-    ConnectWallet,
     Avatar
   },
 

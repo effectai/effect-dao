@@ -1,7 +1,7 @@
 <template>
   <span>
-    <div class="modal" :class="{ 'is-active': modal }">
-      <div class="modal-background" @click="modal = false"></div>
+    <div class="modal" :class="{ 'is-active': $wallet.loginModal }">
+      <div class="modal-background" @click="$wallet.loginModal = false"></div>
       <div class="modal-card">
         <div v-if="error" class="notification is-danger">
           <button class="delete" @click="error = null" />
@@ -11,7 +11,7 @@
           <p class="modal-card-title">
             Select your EOS wallet
           </p>
-          <button class="delete" aria-label="close" @click="modal = false" />
+          <button class="delete" aria-label="close" @click="$wallet.loginModal = false" />
         </header>
         <section class="modal-card-body">
           <div v-if="loading" class="loader-wrapper is-active">
@@ -48,21 +48,14 @@
         </section>
       </div>
     </div>
-
-    <a class="button is-primary" :class="buttonClass" @click="modal = true">
-      <strong v-if="title">{{title}}</strong>
-      <strong v-else>Connect Wallet</strong>
-    </a>
   </span>
 </template>
 
 <script>
 
 export default {
-  props: ['title', 'button-class'],
   data () {
     return {
-      modal: false,
       loading: false,
       error: null
     }

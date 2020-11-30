@@ -4,6 +4,7 @@
       Connected to Kylin testnet ({{ node }})
     </div>
     <modal />
+    <connect-wallet />
 
     <div v-if="transaction" class="notification is-success global-notification">
       <button class="delete" @click="clearTransaction" />
@@ -28,11 +29,13 @@
 <script>
 import NavBar from '@/components/NavBar'
 import Foot from '@/components/Footer'
+import ConnectWallet from '@/components/ConnectWallet'
 
 export default {
   components: {
     NavBar,
-    Foot
+    Foot,
+    ConnectWallet
   },
 
   data () {

@@ -61,7 +61,9 @@
         Connect your wallet to participate in the DAO.
       </div>
       <div class="is-pulled-right notif-btn">
-        <ConnectWallet />
+        <a class="button is-primary" @click="$wallet.loginModal = true">
+          <strong>Connect Wallet</strong>
+        </a>
       </div>
     </div>
 
@@ -132,14 +134,12 @@
 <script>
 import { sha256 } from 'eosjs-ecc'
 import ICountUp from 'vue-countup-v2'
-import ConnectWallet from '~/components/ConnectWallet'
 import Rank from '~/components/Rank'
 import Avatar from '~/components/Avatar'
 
 export default {
   components: {
     ICountUp,
-    ConnectWallet,
     Rank,
     Avatar
   },

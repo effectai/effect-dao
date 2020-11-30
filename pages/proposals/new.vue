@@ -135,11 +135,10 @@ export default {
   components: {
     VueSimplemde
   },
+  middleware: ['authenticated'],
   data () {
     let proposal = window.sessionStorage.getItem('cached_proposal')
     let proposalIpfs = window.sessionStorage.getItem('cached_proposalIpfs')
-    console.log(proposalIpfs)
-    console.log(proposal)
     if (proposal) {
       proposal = JSON.parse(proposal)
     } else {

@@ -85,36 +85,29 @@
           </div>
           <div class="column is-one-third">
             <div class="field">
-              <label class="label">Requestable from</label>
+              <label class="label">Category</label>
               <div class="control">
-                <b>now</b><br><small class="is-size-7"><i>(other options coming soon)</i></small>
+                <div class="select" style="width: 100%">
+                  <select v-model="proposal.category" required style="width: 100%">
+                    <option :value="0" disabled>Governance Proposal</option>
+                    <option :value="1">Funding Proposal</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="has-text-centered">
+        <div class="has-text-centered" v-show="false" >
           <button class="button is-outlined is-small" disabled @click.prevent="">+ Add another reward</button>
           <div><small class="is-size-7"><i>coming soon</i></small></div>
         </div>
 
-        <fieldset class="collapsible" :class="{'is-expanded': advanced}">
+        <fieldset v-show="false" class="collapsible" :class="{'is-expanded': advanced}">
           <legend class="has-text-weight-bold"><a @click.prevent="advanced = !advanced">Advanced</a></legend>
           <div class="field">
             <label class="label">Cycle</label>
             <div class="control">
               <input required class="input" v-model="proposal.cycle" type="number" min="0">
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">Type</label>
-            <div class="control">
-              <div class="select" style="width: 100%">
-                <select v-model="proposal.type" required style="width: 100%">
-                  <option value="worker">Worker Proposal</option>
-                  <option value="governance" disabled>Governance Proposal</option>
-                </select>
-              </div>
             </div>
           </div>
         </fieldset>
@@ -142,6 +135,7 @@ export default {
   data () {
     return {
       advanced: false,
+      success: false,
       ipfsExplorer: process.env.ipfsExplorer,
       loading: false,
       uploadingFile: false,
@@ -155,7 +149,7 @@ export default {
       },
       proposal: {
         content_hash: null,
-        type: 'worker',
+        category: 1,
         reward: 0,
         cycle: 0
       },
@@ -290,18 +284,25 @@ export default {
                 field_1: payoutTime.toISOString().slice(0, -1)
               }],
             content_hash: this.proposal.content_hash,
-            category: 0,
-            cycle: this.proposal.cycle,
+            category: parseInt(this.proposal.category),
+            cycle: parseInt(this.proposal.cycle),
             transaction_hash: null
           }
         }]
         try {
           await this.$wallet.handleTransaction(actions)
+          this.success = true
           this.$modal.show({
             color: 'success',
             title: 'Transaction Sent',
             persistent: true,
-            text: 'Your Proposal Creation Transaction was sent! <a href="/proposals" target="_blank">See All Proposals</a>'
+            text: 'Your Proposal Creation Transaction was sent!',
+            cancel: false,
+            onConfirm: () => {
+              this.$router.push({
+                path: '/proposals'
+              })
+            }
           })
         } catch (e) {
           this.$modal.show({
@@ -319,7 +320,7 @@ export default {
       return JSON.stringify(this.proposal)
     },
     checkClose (event) {
-      if (this.hasChanged && !this.loading) {
+      if (this.hasChanged && !this.loading && !this.success) {
         const warningMessage = 'You have unsaved changes. Are you sure you wish to leave?'
         if (!confirm(warningMessage)) {
           event.preventDefault()

@@ -15,15 +15,9 @@
             </div>
           </div>
           <div class="media-right">
-            <div class="has-text-right">
-              <b v-if="proposal.score > 0" class="has-text-success">+{{proposal.score}}</b>
-              <b v-else-if="proposal.score < 0"  class="has-text-danger">{{proposal.score}}</b>
-              <b v-else>{{proposal.score}}</b>
-            </div>
-            <div class="is-size-7" v-if="proposal.cycle">
+            <b class="is-size-7 has-text-right">{{categories[proposal.category]}}</b>
+            <div class="is-size-7 has-text-right" v-if="proposal.cycle">
               Cycle {{proposal.cycle}}
-            </div>
-            <div v-else-if="$dao.cycleConfig">
             </div>
           </div>
         </div>
@@ -36,7 +30,15 @@
 </template>
 <script>
 export default {
-  props: ['proposals']
+  props: ['proposals'],
+  data () {
+    return {
+      categories: {
+        0: 'Governance Proposal',
+        1: 'Funding Proposal'
+      }
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

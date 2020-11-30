@@ -4,9 +4,10 @@
     <div v-if="loading">Loading Proposal..</div>
     <div v-else-if="proposal" class="columns">
       <div class="column is-two-thirds">
+        <div class="is-pulled-right"><span class="tag" :class="{'is-success': proposal.status == 'ACTIVE', 'is-warning': proposal.status == 'DRAFT', 'is-link': proposal.status == 'PENDING', 'is-dark': proposal.status == 'CLOSED'}">{{ proposal.status }}</span></div>
         <div v-if="proposal.title" class="title is-4">{{proposal.title}}</div>
         <div v-else class="title is-4">...</div>
-        <div class="subtitle"><span class="tag" :class="{'is-success': proposal.status == 'ACTIVE', 'is-warning': proposal.status == 'DRAFT', 'is-link': proposal.status == 'PENDING', 'is-dark': proposal.status == 'CLOSED'}">{{ proposal.status }}</span></div>
+        <div class="subtitle is-6"><b>{{ categories[proposal.category] }}</b></div>
         <small>
           <div v-if="proposal.body" v-html="$md.render(proposal.body)" />
           <div v-else>Loading content..</div>
@@ -53,8 +54,8 @@
             <b>{{ $moment(pay.field_1 + "Z").fromNow()}}</b>
           </div>
           <div class="block">
-            IPFS
-            <div class="hash">{{ proposal.content_hash }}</div>
+            IPFS Hash
+            <div class="hash"><a target="_blank" :href="`${ipfsExplorer}/ipfs/${proposal.content_hash}`">{{ proposal.content_hash }}</a></div>
           </div>
           <div v-if="myProposal" class="mt-2"><nuxt-link class="button is-primary is-fullwidth" :to="`/proposals/${id}/edit`"><b>Edit</b></nuxt-link> </div>
           <div v-if="myProposal && $dao.proposalConfig && proposal.cycle === 0" class="mt-2"><button class="button is-primary is-outlined is-fullwidth" @click.prevent="assignToNextCycle()"><b>Assign to next cycle</b></button> </div>
@@ -75,7 +76,11 @@ export default {
       ipfsExplorer: process.env.ipfsExplorer,
       loading: false,
       proposal: null,
-      id: this.$route.params.id
+      id: this.$route.params.id,
+      categories: {
+        0: 'Governance Proposal',
+        1: 'Funding Proposal'
+      }
     }
   },
 
@@ -142,7 +147,7 @@ export default {
             text: 'Your transaction to assign proposal to next cycle is sent!',
             cancel: false,
             onConfirm: () => {
-              location.reload()
+              this.getProposal(this.id)
               return false
             }
           })

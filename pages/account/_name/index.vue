@@ -121,6 +121,15 @@ export default {
     },
     myAccount () {
       return this.wallet && this.wallet.auth && this.wallet.auth.accountName === this.account.name
+    },
+    currentCycle () {
+      return this.$dao.proposalConfig ? this.$dao.proposalConfig.current_cycle : null
+    }
+  },
+
+  watch: {
+    currentCycle () {
+      this.getProposals()
     }
   },
 

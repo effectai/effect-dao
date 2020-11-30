@@ -9,12 +9,15 @@
       <h4 class="box-title mb-0">Proposals
         <div class="is-size-6">
           <small>
-            <span v-if="currentCycle">Cycle {{currentCycle}}</span>
+            <span v-if="currentCycle">Cycle {{currentCycle}}
+              <span v-if="$dao.cycleConfig">started {{ $moment($dao.cycleConfig.start_time + "Z").fromNow() }}</span>
+            </span>
             <span v-else-if="$dao.cycleConfig">
               <!-- Genesis cycle!-->
               Waiting for <i>Genesis Cycle</i>
+              <span v-if="$dao.cycleConfig">start {{ $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow() }}</span>
             </span>
-            <span v-if="$dao.cycleConfig">start<template v-if="currentCycle">ed</template> {{ $moment($dao.cycleConfig.start_time + "Z").fromNow() }}</span>
+
           </small>
         </div>
       </h4>
@@ -35,10 +38,10 @@
         <template v-else>
           <!-- Genesis cycle! -->
           <h5 v-if="filter === 'ACTIVE'">
-            Waiting for <i>Genesis Cycle</i> {{currentCycle + 1}} start {{ $moment($dao.cycleConfig.start_time + "Z").fromNow() }}
+            Waiting for <i>Genesis Cycle</i> {{currentCycle + 1}} start {{ $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow() }}
           </h5>
           <h5 v-if="filter === 'PENDING'">
-            Proposals for <i>Genesis Cycle</i> {{currentCycle + 1}} starting {{ $moment($dao.cycleConfig.start_time + "Z").fromNow() }}
+            Proposals for <i>Genesis Cycle</i> {{currentCycle + 1}} starting {{ $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow() }}
           </h5>
         </template>
       </template>

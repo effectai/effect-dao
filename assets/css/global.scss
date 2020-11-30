@@ -81,6 +81,9 @@ a {
       margin-bottom: 1rem;
     }
   }
+  &.has-no-shadow {
+    box-shadow: none;
+  }
 }
 
 .box-title {

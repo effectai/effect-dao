@@ -61,6 +61,7 @@ export default {
     { src: '@/plugins/transit.js', mode: 'client' },
     { src: '@/plugins/wallet.js', mode: 'client' },
     { src: '@/plugins/dao.js', mode: 'client' },
+    '@/plugins/modal.js',
     '@/plugins/eos.js'
   ],
 

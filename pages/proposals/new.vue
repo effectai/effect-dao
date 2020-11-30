@@ -297,11 +297,19 @@ export default {
         }]
         try {
           await this.$wallet.handleTransaction(actions)
-          this.$router.push({
-            path: '/proposals'
+          this.$modal.show({
+            color: 'success',
+            title: 'Transaction Sent',
+            persistent: true,
+            text: 'Your Proposal Creation Transaction was sent! <a href="/proposals" target="_blank">See All Proposals</a>'
           })
         } catch (e) {
-          console.log(e)
+          this.$modal.show({
+            color: 'danger',
+            title: 'Error',
+            persistent: true,
+            text: e
+          })
         }
       }
       this.loading = false

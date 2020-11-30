@@ -147,6 +147,7 @@ export default {
       advanced: false,
       ipfsExplorer: process.env.ipfsExplorer,
       loading: false,
+      success: false,
       loadingProposal: false,
       uploadingFile: false,
       selectedFile: null,
@@ -316,11 +317,26 @@ export default {
         }]
         try {
           await this.$wallet.handleTransaction(actions)
-          this.$router.push({
-            path: '/proposals'
+          this.success = true
+          this.$modal.show({
+            color: 'success',
+            title: 'Transaction Sent',
+            persistent: true,
+            text: 'Your transaction to edit proposal is sent!',
+            cancel: true,
+            onConfirm: () => {
+              this.$router.push({
+                path: '/proposals'
+              })
+            }
           })
         } catch (e) {
-          console.log(e)
+          this.$modal.show({
+            color: 'danger',
+            title: 'Error',
+            persistent: true,
+            text: e
+          })
         }
       }
       this.loading = false
@@ -330,7 +346,7 @@ export default {
       return JSON.stringify(this.proposal)
     },
     checkClose (event) {
-      if (this.hasChanged && !this.loading) {
+      if (this.hasChanged && !this.loading && !this.success) {
         const warningMessage = 'You have unsaved changes. Are you sure you wish to leave?'
         if (!confirm(warningMessage)) {
           event.preventDefault()

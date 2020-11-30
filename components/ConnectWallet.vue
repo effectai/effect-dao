@@ -1,7 +1,7 @@
 <template>
   <span>
     <div class="modal" :class="{ 'is-active': modal }">
-      <div class="modal-background" />
+      <div class="modal-background" @click="modal = false"></div>
       <div class="modal-card">
         <div v-if="error" class="notification is-danger">
           <button class="delete" @click="error = null" />

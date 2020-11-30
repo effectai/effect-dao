@@ -135,8 +135,24 @@ export default {
         }]
         try {
           await this.$wallet.handleTransaction(actions)
+          this.$modal.show({
+            color: 'success',
+            title: 'Transaction Sent',
+            persistent: true,
+            text: 'Your transaction to assign proposal to next cycle is sent!',
+            cancel: false,
+            onConfirm: () => {
+              location.reload()
+              return false
+            }
+          })
         } catch (e) {
-          console.log(e)
+          this.$modal.show({
+            color: 'danger',
+            title: 'Error',
+            persistent: true,
+            text: e
+          })
         }
       }
     },

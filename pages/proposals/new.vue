@@ -121,6 +121,7 @@
           </div>
           <div class="control">
             <button type="submit" class="button is-primary is-wide" :class="{'is-loading': loading}" :disabled="!loggedIn">Save Proposal</button>
+            <div><small><i>Proposal Cost: <span v-if="$dao.proposalConfig">{{$dao.proposalConfig.proposal_cost.quantity}}</span><span v-else>...</span></i></small></div>
           </div>
         </div>
       </form>

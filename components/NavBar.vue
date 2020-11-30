@@ -146,5 +146,28 @@ export default {
         }
       }
     }
+    @media all and (max-width: 828px) {
+      .top-title {
+        display: block;
+        margin-top: -39px;
+        margin-left: 40px;
+      }
+
+      .navbar-end {
+        display: none;
+      }
+
+      .mobile-connect {
+        display: block;
+      }
+
+      .navbar-menu {
+        .navbar-item {
+          &:after {
+            display: none;
+          }
+        }
+      }
+    }
   }
 </style>

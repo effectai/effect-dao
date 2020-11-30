@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="wallet">
+    <div>
       <div class="modal" :class="{ 'is-active': stakingModal }">
         <div class="modal-background" />
         <div class="modal-card">
@@ -160,7 +160,7 @@
         </button>
       </div>
 
-      <div v-if="wallet" class="columns stakes is-multiline mt-5">
+      <div class="columns stakes is-multiline mt-5">
         <div class="column is-half">
           <div class="box">
             <h5 class="box-title">
@@ -257,11 +257,11 @@
       </div>
       <rank class="mb-6" v-if="signedConstitution" />
     </div>
-    <div v-else class="has-text-centered">
-      <a class="button is-primary" @click="$wallet.loginModal = true">
-        <strong>Connect Wallet</strong>
-      </a>
-    </div>
+<!--    <div v-else class="has-text-centered">-->
+<!--      <a class="button is-primary" @click="$wallet.loginModal = true">-->
+<!--        <strong>Connect Wallet</strong>-->
+<!--      </a>-->
+<!--    </div>-->
   </div>
 </template>
 

@@ -75,6 +75,7 @@ export default {
           this.error = error
         })
         .finally(() => {
+          this.$wallet.loginModal = false
           this.loading = false
         })
     }

@@ -136,6 +136,30 @@ export default {
     VueSimplemde
   },
   data () {
+    let proposal = window.sessionStorage.getItem('cached_proposal')
+    let proposalIpfs = window.sessionStorage.getItem('cached_proposalIpfs')
+    console.log(proposalIpfs)
+    console.log(proposal)
+    if (proposal) {
+      proposal = JSON.parse(proposal)
+    } else {
+      proposal = {
+        content_hash: null,
+        category: 1,
+        reward: 0,
+        cycle: 0
+      }
+    }
+    if (proposalIpfs) {
+      proposalIpfs = JSON.parse(proposalIpfs)
+    } else {
+      proposalIpfs = {
+        version: 1,
+        title: '',
+        body: '',
+        files: []
+      }
+    }
     return {
       advanced: false,
       success: false,
@@ -144,18 +168,8 @@ export default {
       uploadingFile: false,
       selectedFile: null,
       preview: false,
-      proposalIpfs: {
-        version: 1,
-        title: '',
-        body: '',
-        files: []
-      },
-      proposal: {
-        content_hash: null,
-        category: 1,
-        reward: 0,
-        cycle: 0
-      },
+      proposalIpfs,
+      proposal,
       cachedFormData: null
     }
   },
@@ -183,6 +197,23 @@ export default {
     // Compares cached user data to live data
     hasChanged () {
       return this.cachedFormData !== this.formDataForComparison()
+    }
+  },
+
+  watch: {
+    proposal: {
+      deep: true,
+      handler: (proposal) => {
+        console.log('caching proposal..')
+        window.sessionStorage.setItem('cached_proposal', JSON.stringify(proposal))
+      }
+    },
+    proposalIpfs: {
+      deep: true,
+      handler: (proposalIpfs) => {
+        console.log('caching proposalIpfs..')
+        window.sessionStorage.setItem('cached_proposalIpfs', JSON.stringify(proposalIpfs))
+      }
     }
   },
 
@@ -320,7 +351,7 @@ export default {
     },
     // Helper method that generates JSON for string comparison
     formDataForComparison () {
-      return JSON.stringify(this.proposal)
+      return JSON.stringify({ proposal: this.proposal, proposalIpfs: this.proposalIpfs })
     },
     checkClose (event) {
       if (this.hasChanged && !this.loading && !this.success) {

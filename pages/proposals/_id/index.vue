@@ -79,7 +79,10 @@ export default {
       id: this.$route.params.id,
       categories: {
         0: 'Governance Proposal',
-        1: 'Funding Proposal'
+        1: 'Marketing',
+        2: 'Design',
+        3: 'Technical',
+        4: 'Other'
       }
     }
   },

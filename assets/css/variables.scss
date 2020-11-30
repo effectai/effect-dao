@@ -1,11 +1,25 @@
 /* Import Bulma Utilities */
 @import '~bulma/sass/utilities/initial-variables';
+@import '~bulma/sass/utilities/functions';
 
-// Colours
+// Colors
 $primary: #243454;
 $secondary: #86BFD9;
+$secondary-invert: findColorInvert($secondary) !default;
 $accent: #39e7bf;
-$info: $accent;
-$link: $blue;
-//$background: red;
+$accent-invert: findColorInvert($accent) !default;;
+
+$custom-colors: (
+  "secondary":($secondary, $secondary-invert),
+  "accent":($accent, $accent-invert),
+);
+
+$desktop: 828px;
+
+$footer-background-color: initial;
+
+$box-background-color: initial;
+$box-padding: 1.4rem;
+$box-shadow: inset -4px -4px 10px 0 #FFFFFF, inset 4px 4px 10px 0 #CDD4E6;
+$box-shadow-outside: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6;
 

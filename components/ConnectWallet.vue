@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <div class="modal" :class="{ 'is-active': modal }">
-      <div class="modal-background" />
+  <span>
+    <div class="modal" :class="{ 'is-active': $wallet.loginModal }">
+      <div class="modal-background" @click="$wallet.loginModal = false"></div>
       <div class="modal-card">
         <div v-if="error" class="notification is-danger">
           <button class="delete" @click="error = null" />
@@ -11,7 +11,7 @@
           <p class="modal-card-title">
             Select your EOS wallet
           </p>
-          <button class="delete" aria-label="close" @click="modal = false" />
+          <button class="delete" aria-label="close" @click="$wallet.loginModal = false" />
         </header>
         <section class="modal-card-body">
           <div v-if="loading" class="loader-wrapper is-active">
@@ -48,11 +48,7 @@
         </section>
       </div>
     </div>
-
-    <a class="button is-primary" @click="modal = true">
-      <strong>Connect Wallet</strong>
-    </a>
-  </div>
+  </span>
 </template>
 
 <script>
@@ -60,7 +56,6 @@
 export default {
   data () {
     return {
-      modal: false,
       loading: false,
       error: null
     }
@@ -80,6 +75,7 @@ export default {
           this.error = error
         })
         .finally(() => {
+          this.$wallet.loginModal = false
           this.loading = false
         })
     }
@@ -90,6 +86,10 @@ export default {
 <style lang="scss" scoped>
   .modal-card-body {
     border-radius: 0 0 6px 6px;
+  }
+
+  .modal-card {
+    max-width: 500px;
   }
 
   .column {

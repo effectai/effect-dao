@@ -1,5 +1,5 @@
 <template>
-  <div class="dao">
+  <div>
     <div class="modal constitution-modal" :class="{ 'is-active': constitutionModal }">
       <div class="modal-background" />
       <div class="modal-card">
@@ -61,7 +61,9 @@
         Connect your wallet to participate in the DAO.
       </div>
       <div class="is-pulled-right notif-btn">
-        <ConnectWallet />
+        <a class="button is-primary" @click="$wallet.loginModal = true">
+          <strong>Connect Wallet</strong>
+        </a>
       </div>
     </div>
 
@@ -79,32 +81,21 @@
       </div>
     </div>
 
-    <div class="intro">
-      <h4 v-if="false">
-        <span v-if="!loading">
-          {{ constitutionMembers.length }}
-        </span>
-        <span v-else>
-          ..
-        </span>
-        members
-      </h4>
-    </div>
-    <rank v-if="wallet && wallet.auth && signedConstitution" class="mb-3" />
-    <div class="block-shadow mb-6">
-      <h2 class="block-title">
+    <rank v-if="wallet && wallet.auth && signedConstitution" class="mt-5" />
+    <div class="box mt-5">
+      <h5 class="box-title">
         EffectDAO Members
-      </h2>
+      </h5>
       <div v-if="constitutionMembers" class="members columns is-multiline mt-5">
         <div v-for="member in constitutionMembers" :key="member.account" class="column is-half">
-          <div class="member columns is-gapless is-mobile">
+          <nuxt-link :to="'/account/'+member.account" class="box has-shadow-outside is-narrow member columns is-gapless is-mobile">
             <!--            <div v-if="member.rank && member.rank.currentRank == 0" class="tag is-primary is-light rank-name"></div>-->
             <div v-if="member.rank && member.rank.currentRank > 0" class="rank-name">
               <img width="25px" :src="'/img/guardian-icons/guardian-'+member.rank.currentRank+'.png'">
             </div>
             <div class="column is-one-fifth" style="min-width: 70px">
               <figure class="image is-64x64">
-                <img :src="`https://avatar.pixeos.art/avatar/${member.account}`" @error="((evt) => fallbackAvatar(evt, member.account))">
+                <avatar :account-name="member.account" />
               </figure>
               <div v-if="member.rank" class="rank">
                 <div :class="['rank-color','rank-'+member.rank.currentRank]" /><span>Rank {{ member.rank.currentRank }}</span>
@@ -122,20 +113,20 @@
                 </div>
               </div>
             </div>
-          </div>
+          </nuxt-link>
         </div>
       </div>
       <h4 v-else class="has-text-centered">
         Loading members..
       </h4>
       <div v-if="moreMembers" class="has-text-centered">
-        <button class="button" @click="loadMoreMembers">
+        <button class="button" @click="loadMoreMembers" :class="{'is-loading': loadingMembers}">
           Load More
         </button>
       </div>
     </div>
-    <div v-if="signedConstitution" class="leave-dao">
-      <a href="#" @click="constitutionLeaveModal = true">Leave DAO</a>
+    <div v-if="signedConstitution" class="has-text-centered">
+      <small><a href="#" @click="constitutionLeaveModal = true">Leave DAO</a></small>
     </div>
   </div>
 </template>
@@ -143,19 +134,20 @@
 <script>
 import { sha256 } from 'eosjs-ecc'
 import ICountUp from 'vue-countup-v2'
-import ConnectWallet from '~/components/ConnectWallet'
 import Rank from '~/components/Rank'
+import Avatar from '~/components/Avatar'
 
 export default {
   components: {
     ICountUp,
-    ConnectWallet,
-    Rank
+    Rank,
+    Avatar
   },
 
   data () {
     return {
       loading: false,
+      loadingMembers: false,
       constitutionModal: false,
       constitutionLeaveModal: false,
 
@@ -164,6 +156,7 @@ export default {
       constitutionVersion: '1',
       constitutionUrl: 'https://raw.githubusercontent.com/effectai/effect-network-eos/156f0f78cbce9f8f36fb8707285056cc800e25d3/constitution/constitution.md',
       moreMembers: true,
+      nextKey: null,
       constitutionMembers: null
     }
   },
@@ -184,6 +177,7 @@ export default {
   methods: {
     async init () {
       this.loading = true
+      this.loadingMembers = true
 
       const data = await this.$eos.rpc.get_table_rows({
         code: process.env.daoContract,
@@ -203,10 +197,11 @@ export default {
         }
       })
       this.loading = false
+      this.loadingMembers = false
     },
 
     async loadMoreMembers () {
-      this.loading = true
+      this.loadingMembers = true
 
       const data = await this.$eos.rpc.get_table_rows({
         code: process.env.daoContract,
@@ -226,12 +221,12 @@ export default {
           console.error(e)
         }
       })
-      this.loading = false
+      this.loadingMembers = false
     },
 
     async getMemberInfo (member) {
       member.registration_time = new Date(`${member.registration_time}Z`)
-      const stakeInfo = await this.getStake(member.account)
+      const stakeInfo = await this.$wallet.getStake(member.account)
 
       stakeInfo.map((row) => {
         if (row.amount.includes(process.env.efxToken)) {
@@ -250,20 +245,6 @@ export default {
         this.$set(member, 'power', 0)
       }
       this.$set(member, 'rank', this.$wallet.calculateRankProgress(member.power, member.nfxStaked))
-    },
-
-    fallbackAvatar (event, accountName) {
-      event.target.src = `https://ui-avatars.com/api/?name=${accountName}&size=100`
-    },
-
-    async getStake (accountName) {
-      return await this.$eos.rpc.get_table_rows({
-        code: process.env.stakingContract,
-        scope: accountName,
-        table: 'stake'
-      }).then((data) => {
-        return data.rows
-      })
     },
 
     async downloadConstitution () {
@@ -336,128 +317,101 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dao {
-  max-width: 750px;
-  margin-left: auto;
-  margin-right: auto;
-
-  .notif-w-btn {
-    height: 66px;
-
-    .notif-btn {
-      margin-top: -8px;
-      margin-right: -12px;
-    }
-  }
-
-  .intro {
-    margin-top: 22px;
-  }
-
-  .constitution-modal {
-    .modal-card {
-      max-width: 800px;
-      width: 90%;
-    }
-  }
-  @keyframes moveGradient {
-    0% {
-      background-position: 0 0;
-    }
-    100% {
-      background-position: -200% 0%;
-    }
-  }
-  .members {
-    .column {
-      padding: 10px 20px;
-    }
-    .member {
-      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6;
-      border-radius: 13px;
-      padding: 20px;
-      position: relative;
-      .rank {
-        padding-top:6px;
-        font-size: 13px;
-        span {
-          padding-top:3px;
-          padding-left: 10px;
-        }
-        .rank-color {
-          width: 64px;
-          border-radius: 3px;
-          height: 6px;
-          background: #CDD4E6;
-          &.rank-1 {
-            background: #71E3C0;
-          }
-          &.rank-2 {
-            background: #F8D247;
-          }
-          &.rank-3 {
-            background: #57C0F9;
-          }
-          &.rank-4 {
-            background: #8026F5;
-          }
-          &.rank-5 {
-            background: #EA36AC;
-          }
-          &.rank-6 {
-            background: #FB2B11;
-          }
-          &.rank-7 {
-            background: #000000;
-          }
-          &.rank-8 {
-            background: rgba(0, 0, 0, 0) linear-gradient(45deg, rgb(255, 0, 0) 0%, rgb(255, 154, 0) 10%, rgb(208, 222, 33) 20%, rgb(79, 220, 74) 30%, rgb(63, 218, 216) 40%, rgb(47, 201, 226) 50%, rgb(28, 127, 238) 60%, rgb(95, 21, 242) 70%, rgb(186, 12, 248) 80%, rgb(251, 7, 217) 90%, rgb(255, 0, 0) 100%) repeat scroll 0% 0% / 300% 300%;
-            background-size: 200%;
-            animation: moveGradient 3s linear infinite;
-          }
-          &.rank-9 {
-            background: rgba(0, 0, 0, 0) linear-gradient(45deg, rgb(255, 0, 0) 0%, rgb(255, 154, 0) 10%, rgb(208, 222, 33) 20%, rgb(79, 220, 74) 30%, rgb(63, 218, 216) 40%, rgb(47, 201, 226) 50%, rgb(28, 127, 238) 60%, rgb(95, 21, 242) 70%, rgb(186, 12, 248) 80%, rgb(251, 7, 217) 90%, rgb(255, 0, 0) 100%) repeat scroll 0% 0% / 300% 300%;
-            background-size: 200%;
-            animation: moveGradient 3s linear infinite;
-          }
-          &.rank-10 {
-            background: rgba(0, 0, 0, 0) linear-gradient(45deg, rgb(255, 0, 0) 0%, rgb(255, 154, 0) 10%, rgb(208, 222, 33) 20%, rgb(79, 220, 74) 30%, rgb(63, 218, 216) 40%, rgb(47, 201, 226) 50%, rgb(28, 127, 238) 60%, rgb(95, 21, 242) 70%, rgb(186, 12, 248) 80%, rgb(251, 7, 217) 90%, rgb(255, 0, 0) 100%) repeat scroll 0% 0% / 300% 300%;
-            background-size: 200%;
-            animation: moveGradient 3s linear infinite;
-          }
-
-        }
-      }
-      .rank-name {
-        font-size: 12px;
-        position: absolute;
-        top: 8px;
-        right: 10px;
-      }
-      h5 {
-        margin-bottom: 4px;
-        padding-bottom: 8px;
-        border-bottom: 2px solid #CDD4E6;
-      }
-      .power {
-        font-size: 14px;
-        margin-bottom: 8px;
-        display: block;
-      }
-      .image {
-        img {
-          border-radius: 6px;
-        }
-        margin: 0;
-        margin-right: 10px;
-      }
-    }
-  }
-  .leave-dao {
-    text-align: center;
-    margin-top: -20px;
-    margin-bottom: 20px;
-    font-size: 13px;
+.constitution-modal {
+  .modal-card {
+    max-width: 800px;
+    width: 90%;
   }
 }
+@keyframes moveGradient {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -200% 0%;
+  }
+}
+.members {
+  .column {
+    padding: 10px 20px;
+  }
+  .member {
+    border-radius: 13px;
+    .rank {
+      padding-top:6px;
+      font-size: 13px;
+      span {
+        padding-top:3px;
+        padding-left: 10px;
+      }
+      .rank-color {
+        width: 64px;
+        border-radius: 3px;
+        height: 6px;
+        background: #CDD4E6;
+        &.rank-1 {
+          background: #71E3C0;
+        }
+        &.rank-2 {
+          background: #F8D247;
+        }
+        &.rank-3 {
+          background: #57C0F9;
+        }
+        &.rank-4 {
+          background: #8026F5;
+        }
+        &.rank-5 {
+          background: #EA36AC;
+        }
+        &.rank-6 {
+          background: #FB2B11;
+        }
+        &.rank-7 {
+          background: #000000;
+        }
+        &.rank-8 {
+          background: rgba(0, 0, 0, 0) linear-gradient(45deg, rgb(255, 0, 0) 0%, rgb(255, 154, 0) 10%, rgb(208, 222, 33) 20%, rgb(79, 220, 74) 30%, rgb(63, 218, 216) 40%, rgb(47, 201, 226) 50%, rgb(28, 127, 238) 60%, rgb(95, 21, 242) 70%, rgb(186, 12, 248) 80%, rgb(251, 7, 217) 90%, rgb(255, 0, 0) 100%) repeat scroll 0% 0% / 300% 300%;
+          background-size: 200%;
+          animation: moveGradient 3s linear infinite;
+        }
+        &.rank-9 {
+          background: rgba(0, 0, 0, 0) linear-gradient(45deg, rgb(255, 0, 0) 0%, rgb(255, 154, 0) 10%, rgb(208, 222, 33) 20%, rgb(79, 220, 74) 30%, rgb(63, 218, 216) 40%, rgb(47, 201, 226) 50%, rgb(28, 127, 238) 60%, rgb(95, 21, 242) 70%, rgb(186, 12, 248) 80%, rgb(251, 7, 217) 90%, rgb(255, 0, 0) 100%) repeat scroll 0% 0% / 300% 300%;
+          background-size: 200%;
+          animation: moveGradient 3s linear infinite;
+        }
+        &.rank-10 {
+          background: rgba(0, 0, 0, 0) linear-gradient(45deg, rgb(255, 0, 0) 0%, rgb(255, 154, 0) 10%, rgb(208, 222, 33) 20%, rgb(79, 220, 74) 30%, rgb(63, 218, 216) 40%, rgb(47, 201, 226) 50%, rgb(28, 127, 238) 60%, rgb(95, 21, 242) 70%, rgb(186, 12, 248) 80%, rgb(251, 7, 217) 90%, rgb(255, 0, 0) 100%) repeat scroll 0% 0% / 300% 300%;
+          background-size: 200%;
+          animation: moveGradient 3s linear infinite;
+        }
+
+      }
+    }
+    .rank-name {
+      font-size: 12px;
+      position: absolute;
+      top: 8px;
+      right: 10px;
+    }
+    h5 {
+      margin-bottom: 4px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #CDD4E6;
+    }
+    .power {
+      font-size: 14px;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .image {
+      img {
+        border-radius: 6px;
+      }
+      margin: 0;
+      margin-right: 10px;
+    }
+  }
+}
+
 </style>

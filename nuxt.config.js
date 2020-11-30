@@ -4,13 +4,20 @@ export default {
   // Target (https://go.nuxtjs.dev/config-target)
   target: 'static',
 
+  generate: {
+    fallback: true
+  },
+
   env: {
     eosNodeUrl: 'eos.greymass.com',
     eosChainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
     explorerUrl: 'https://bloks.io',
+    ipfsNode: 'https://ipfs.effect.ai',
+    ipfsExplorer: 'https://ipfs.effect.ai',
     tokenContract: 'effecttokens',
     stakingContract: 'efxstakepool',
     daoContract: 'theeffectdao',
+    proposalContract: 'daoproposals',
     efxToken: 'EFX',
     nfxToken: 'NFX'
   },
@@ -19,9 +26,12 @@ export default {
   //   eosNodeUrl: 'kylin.eosn.io',
   //   eosChainId: '5fff1dae8dc8e2fc4d5b23b2c7665c97f9e9d8edf2b6485a86ba311c25639191',
   //   explorerUrl: 'https://kylin.bloks.io',
+  //   ipfsNode: 'https://ipfs.effect.ai',
+  //   ipfsExplorer: 'https://ipfs.effect.ai',
   //   tokenContract: 'tokenonkylin',
   //   stakingContract: 'stak3onkylin',
   //   daoContract: 'thedaonkylin',
+  //   proposalContract: 'propsonkylin',
   //   efxToken: 'UTL',
   //   nfxToken: 'GRN'
   // },
@@ -44,13 +54,16 @@ export default {
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [
     // 'bulma/css/bulma.css',
-    '@/assets/css/global.scss'
+    '@/assets/css/global.scss',
+    'simplemde/dist/simplemde.min.css'
   ],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
     { src: '@/plugins/transit.js', mode: 'client' },
     { src: '@/plugins/wallet.js', mode: 'client' },
+    { src: '@/plugins/dao.js', mode: 'client' },
+    '@/plugins/modal.js',
     '@/plugins/eos.js'
   ],
 
@@ -74,10 +87,10 @@ export default {
   // [optional] markdownit options
   // See https://github.com/markdown-it/markdown-it
   markdownit: {
-    injected: true
+    injected: true,
     // preset: 'default',
-    // linkify: true,
-    // breaks: true,
+    linkify: true,
+    breaks: true
     // use: [
     //   'markdown-it-div',
     //   'markdown-it-attrs'

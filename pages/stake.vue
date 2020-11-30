@@ -1,6 +1,6 @@
 <template>
-  <div class="stake">
-    <div v-if="wallet">
+  <div>
+    <div>
       <div class="modal" :class="{ 'is-active': stakingModal }">
         <div class="modal-background" />
         <div class="modal-card">
@@ -160,17 +160,17 @@
         </button>
       </div>
 
-      <div v-if="wallet" class="columns stakes is-multiline">
+      <div class="columns stakes is-multiline mt-5">
         <div class="column is-half">
-          <div class="treasury block-shadow mt-5">
-            <h1 class="block-title">
+          <div class="box">
+            <h5 class="box-title">
               <img src="@/assets/img/efx-icon.png" class="token-icon">Staked EFX
-            </h1>
-            <div class="balance">
-              <p>
+            </h5>
+            <div class="has-text-centered">
+              <h3>
                 <ICountUp :end-val="efxStaked" />
                 <span class="symbol">EFX</span>
-              </p>
+              </h3>
               <div class="buttons">
                 <button class="button is-primary is-fullwidth" :class="{ 'is-loading': loading }" :disabled="efxAvailable === 0" @click="stakingModal = true; stakingModalEfx = true; addStake = efxAvailable">
                   Stake EFX
@@ -185,15 +185,15 @@
         </div>
 
         <div class="column is-half">
-          <div class="treasury block-shadow mt-5">
-            <h1 class="block-title">
+          <div class="box">
+            <h5 class="box-title">
               <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">Staked NFX
-            </h1>
-            <div class="balance">
-              <p>
+            </h5>
+            <div class="has-text-centered">
+              <h3>
                 <ICountUp :end-val="nfxStaked" />
                 <span class="symbol">NFX</span>
-              </p>
+              </h3>
               <div class="buttons">
                 <button class="button is-primary is-fullwidth" :class="{ 'is-loading': loading }" :disabled="nfxAvailable === 0" @click="stakingModal = true; stakingModalEfx = false; addStake = nfxAvailable">
                   Stake NFX
@@ -207,11 +207,11 @@
           </div>
         </div>
         <div class="column is-half">
-          <div class="treasury block-shadow">
-            <h1 class="block-title">
+          <div class="box">
+            <h5 class="box-title">
               Stake AGE
-            </h1>
-            <div class="block-columns has-text-centered">
+            </h5>
+            <div class="has-text-centered">
               <vue-circle
                 v-if="stakeAge"
                 class="mt-2"
@@ -239,19 +239,17 @@
           </div>
         </div>
         <div class="column is-half">
-          <div class="treasury block-shadow" style="height:100%">
-            <h1 class="block-title">
+          <div class="box" style="height:100%">
+            <h5 class="box-title">
               EFX Power
-            </h1>
-            <div class="block-columns">
-              <div class="value-circle big mt-6 glow">
-                <div class="balance ">
-                  <h3>
-                    <ICountUp :options="{decimalPlaces: 0}" :end-val="power" />
-                    <small class="symbol has-text-weight-light is-size-6">EP</small>
-                  </h3>
-                  <b>EFX Power</b>
-                </div>
+            </h5>
+            <div class="value-circle big mt-6 glow">
+              <div class="has-text-centered">
+                <h3>
+                  <ICountUp :options="{decimalPlaces: 0}" :end-val="power" />
+                  <small class="symbol has-text-weight-light is-size-6">EP</small>
+                </h3>
+                <b>EFX Power</b>
               </div>
             </div>
           </div>
@@ -259,26 +257,26 @@
       </div>
       <rank class="mb-6" v-if="signedConstitution" />
     </div>
-    <div v-else class="connect-wallet connect-wallet-stake">
-      <ConnectWallet />
-    </div>
+<!--    <div v-else class="has-text-centered">-->
+<!--      <a class="button is-primary" @click="$wallet.loginModal = true">-->
+<!--        <strong>Connect Wallet</strong>-->
+<!--      </a>-->
+<!--    </div>-->
   </div>
 </template>
 
 <script>
 import ICountUp from 'vue-countup-v2'
 import VueCircle from 'vue2-circle-progress/src/index.vue'
-import ConnectWallet from '~/components/ConnectWallet'
 import Rank from '~/components/Rank'
 
 export default {
   components: {
     ICountUp,
-    ConnectWallet,
     VueCircle,
     Rank
   },
-
+  middleware: ['authenticated'],
   filters: {
     percentage (value, decimals) {
       if (!value) {
@@ -547,14 +545,6 @@ export default {
       font-size: 0.75rem;
     }
   }
-  .notif-w-btn {
-    height: 66px;
-
-    .notif-btn {
-      margin-top: -8px;
-      margin-right: -12px;
-    }
-  }
   .value-circle {
     height: 125px;
     width: 125px;
@@ -581,74 +571,53 @@ export default {
     }
   }
 
-  .stake {
-    max-width: 750px;
-    margin-left: auto;
-    margin-right: auto;
+  .notification {
+    margin-bottom: 12px !important;
+  }
 
-    .notification {
-      margin-bottom: 12px !important;
+  .claim-efx {
+    margin-top: -7px;
+    margin-right: -12px;
+  }
+
+  .buttons {
+    margin-top: 15px;
+
+    button {
+      margin-right: 0;
+      width: 100%;
+      font-weight: bold;
     }
+  }
 
-    .claim-efx {
-      margin-top: -7px;
-      margin-right: -12px;
+  .modal-card-title {
+    margin-bottom: 0 !important;
+  }
+
+  .modal-card-body {
+    border-radius: 0 !important;
+  }
+
+  .input-lower {
+    font-size: 12px;
+    margin-top: -15px;
+  }
+
+  .new-stake {
+    margin-top: 0px;
+    padding-bottom: 40px;
+    .text {
+      margin-top: 10px;
     }
+  }
 
-    .buttons {
-      margin-top: 15px;
-
-      button {
-        margin-right: 0;
-        width: 100%;
-        font-weight: bold;
-      }
-    }
-
-    .modal-card-title {
-      margin-bottom: 0 !important;
-    }
-
-    .modal-card-body {
-      border-radius: 0 !important;
-    }
-
-    .input-lower {
-      font-size: 12px;
-      margin-top: -15px;
-    }
-
-    .new-stake {
-      margin-top: 0px;
-      padding-bottom: 40px;
-      .text {
-        margin-top: 10px;
-      }
-    }
-
-    .progress-bar {
-      margin-top: 40px;
-    }
+  .progress-bar {
+    margin-top: 40px;
   }
 
   .stakes {
     .column {
       padding: 0.75rem;
-    }
-
-    .balance {
-      text-align: center;
-
-      p {
-        padding-top: 8px;
-        font-size: 31px;
-        margin-bottom: 0;
-
-        span.symbol {
-          font-weight: 300;
-          font-size: 18px;
-        }
-      }
     }
 
     .token-icon {
@@ -673,9 +642,5 @@ export default {
       margin-bottom: -7px;
       margin-right: -15px;
     }
-  }
-
-  .connect-wallet-stake {
-    margin-top: 100px;
   }
 </style>

@@ -3,8 +3,10 @@
     <div v-if="isTestnet" class="testnet">
       Connected to Kylin testnet ({{ node }})
     </div>
+    <modal />
+    <connect-wallet />
 
-    <div v-if="transaction" class="notification is-primary global-notification">
+    <div v-if="transaction" class="notification is-success global-notification">
       <button class="delete" @click="clearTransaction" />
       <b>Transaction successful!</b><br>
       <a :href="`${explorerUrl}/transaction/${transaction.transaction_id}`" target="_blank">View on bloks.io</a>
@@ -16,19 +18,24 @@
       {{ transactionError }}
     </div>
 
-    <NavBar />
-    <div class="container is-max-widescreen content">
+    <nav-bar />
+    <div class="container is-max-desktop content">
       <nuxt />
     </div>
+    <foot />
   </div>
 </template>
 
 <script>
 import NavBar from '@/components/NavBar'
+import Foot from '@/components/Footer'
+import ConnectWallet from '@/components/ConnectWallet'
 
 export default {
   components: {
-    NavBar
+    NavBar,
+    Foot,
+    ConnectWallet
   },
 
   data () {

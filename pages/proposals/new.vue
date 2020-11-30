@@ -299,8 +299,10 @@ export default {
       if (this.proposal.content_hash) {
         const payoutTime = new Date()
         // payoutTime.setDate(payoutTime.getDate() + 14)
-        const actions = [
-          {
+        const actions = []
+        const addPayment = true
+        if (addPayment) {
+          actions.push({
             account: this.$dao.proposalConfig.proposal_cost.contract,
             name: 'transfer',
             authorization: [{
@@ -313,7 +315,9 @@ export default {
               quantity: this.$dao.proposalConfig.proposal_cost.quantity,
               memo: 'proposal'
             }
-          },
+          })
+        }
+        actions.push(
           {
             account: process.env.proposalContract,
             name: 'createprop',
@@ -337,7 +341,7 @@ export default {
               transaction_hash: null
             }
           }
-        ]
+        )
         try {
           await this.$wallet.handleTransaction(actions)
           this.success = true

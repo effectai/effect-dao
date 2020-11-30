@@ -299,29 +299,45 @@ export default {
       if (this.proposal.content_hash) {
         const payoutTime = new Date()
         // payoutTime.setDate(payoutTime.getDate() + 14)
-        const actions = [{
-          account: process.env.proposalContract,
-          name: 'createprop',
-          authorization: [{
-            actor: this.wallet.auth.accountName,
-            permission: this.wallet.auth.permission
-          }],
-          data: {
-            author: this.wallet.auth.accountName,
-            pay: [
-              {
-                field_0: {
-                  quantity: Number.parseFloat(this.proposal.reward).toFixed(4) + ' ' + process.env.efxToken,
-                  contract: process.env.tokenContract
-                },
-                field_1: payoutTime.toISOString().slice(0, -1)
-              }],
-            content_hash: this.proposal.content_hash,
-            category: parseInt(this.proposal.category),
-            cycle: parseInt(this.proposal.cycle),
-            transaction_hash: null
+        const actions = [
+          {
+            account: this.$dao.proposalConfig.proposal_cost.contract,
+            name: 'transfer',
+            authorization: [{
+              actor: this.wallet.auth.accountName,
+              permission: this.wallet.auth.permission
+            }],
+            data: {
+              from: this.wallet.auth.accountName,
+              to: process.env.proposalContract,
+              quantity: this.$dao.proposalConfig.proposal_cost.quantity,
+              memo: 'proposal'
+            }
+          },
+          {
+            account: process.env.proposalContract,
+            name: 'createprop',
+            authorization: [{
+              actor: this.wallet.auth.accountName,
+              permission: this.wallet.auth.permission
+            }],
+            data: {
+              author: this.wallet.auth.accountName,
+              pay: [
+                {
+                  field_0: {
+                    quantity: Number.parseFloat(this.proposal.reward).toFixed(4) + ' ' + process.env.efxToken,
+                    contract: process.env.tokenContract
+                  },
+                  field_1: payoutTime.toISOString().slice(0, -1)
+                }],
+              content_hash: this.proposal.content_hash,
+              category: parseInt(this.proposal.category),
+              cycle: parseInt(this.proposal.cycle),
+              transaction_hash: null
+            }
           }
-        }]
+        ]
         try {
           await this.$wallet.handleTransaction(actions)
           this.success = true

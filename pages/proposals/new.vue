@@ -372,7 +372,7 @@ export default {
             color: 'success',
             title: 'Transaction Sent',
             persistent: true,
-            text: 'Your Proposal Creation Transaction was sent!',
+            text: 'Your Proposal Creation Transaction was sent! It might take a couple of minutes before your proposals shows up.',
             cancel: false,
             onConfirm: () => {
               this.$router.push({

@@ -137,8 +137,8 @@ export default {
   },
   middleware: ['authenticated'],
   data () {
-    let proposal = window.sessionStorage.getItem('cached_proposal')
-    let proposalIpfs = window.sessionStorage.getItem('cached_proposalIpfs')
+    let proposal = window.localStorage.getItem('cached_proposal')
+    let proposalIpfs = window.localStorage.getItem('cached_proposalIpfs')
     if (proposal) {
       proposal = JSON.parse(proposal)
     } else {
@@ -204,14 +204,14 @@ export default {
       deep: true,
       handler: (proposal) => {
         console.log('caching proposal..')
-        window.sessionStorage.setItem('cached_proposal', JSON.stringify(proposal))
+        window.localStorage.setItem('cached_proposal', JSON.stringify(proposal))
       }
     },
     proposalIpfs: {
       deep: true,
       handler: (proposalIpfs) => {
         console.log('caching proposalIpfs..')
-        window.sessionStorage.setItem('cached_proposalIpfs', JSON.stringify(proposalIpfs))
+        window.localStorage.setItem('cached_proposalIpfs', JSON.stringify(proposalIpfs))
       }
     }
   },

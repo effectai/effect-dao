@@ -146,42 +146,5 @@ export default {
         }
       }
     }
-
-    .navbar-end {
-      margin-top: 2px;
-    }
-    @media all and (max-width: 1024px) {
-      .top-title {
-        display: block;
-        margin-top: -39px;
-        margin-left: 40px;
-      }
-
-      .navbar-end {
-        display: none;
-      }
-
-      .mobile-connect {
-        display: block;
-      }
-
-      .navbar-menu {
-        .navbar-item {
-          &:after {
-            display:none;
-          }
-        }
-      }
-    }
-  }
-
-  .modal-card {
-    max-width: 500px;
-  }
-
-  .avatar {
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
   }
 </style>

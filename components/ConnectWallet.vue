@@ -88,6 +88,10 @@ export default {
     border-radius: 0 0 6px 6px;
   }
 
+  .modal-card {
+    max-width: 500px;
+  }
+
   .column {
     padding: 0.5rem;
 

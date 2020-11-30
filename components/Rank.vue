@@ -1,6 +1,6 @@
 <template>
   <div class="box" v-if="rank">
-    <div v-if="rank.currentRank > 0" :class="['rank-icon', 'rank-'+rank.currentRank]"><img width="64px" :src="'/img/guardian-icons/guardian-'+rank.currentRank+'.png'" /></div>
+    <div v-if="rank.currentRank > 0 && !hideCurrentRank" :class="['rank-icon', 'rank-'+rank.currentRank]"><img width="64px" :src="'/img/guardian-icons/guardian-'+rank.currentRank+'.png'" /></div>
     <h1 :class="['rank-title', 'rank-'+rank.currentRank]" v-if="!hideCurrentRank">
       Rank {{rank.currentRank}}
     </h1>

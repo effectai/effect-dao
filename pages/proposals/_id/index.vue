@@ -50,8 +50,8 @@
           <div class="block" v-for="(pay, index) in proposal.pay" :key="index">
             <i>requesting</i><br>
             <b>{{ pay.field_0.quantity }}</b><br>
-            <i>requestable</i>
-            <b>{{ $moment(pay.field_1 + "Z").fromNow()}}</b>
+            <i v-if="false">requestable</i>
+            <b v-if="false">{{ $moment(pay.field_1 + "Z").fromNow()}}</b>
           </div>
           <div class="block">
             IPFS Hash

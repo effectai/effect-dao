@@ -45,6 +45,9 @@
     <div v-if="myAccount" class="mt-5">
       <rank :hide-current-rank="true" />
     </div>
+    <div v-else-if="account.rank" class="mt-5">
+      <rank-member :power="account.power" :nfx-staked="account.nfxStaked" :stake-age="account.stakeAge" :rank="account.rank" :hide-current-rank="true" />
+    </div>
     <div class="box mt-5">
       <h4 v-if="myAccount" class="box-title">Your Proposals</h4>
       <h4 v-else class="box-title">Proposals by {{account.name}}</h4>
@@ -85,13 +88,15 @@ import ICountUp from 'vue-countup-v2'
 import Avatar from '~/components/Avatar'
 import Proposals from '~/components/Proposals'
 import Rank from '~/components/Rank'
+import RankMember from '~/components/RankMember'
 
 export default {
   components: {
     Avatar,
     ICountUp,
     Proposals,
-    Rank
+    Rank,
+    RankMember
   },
 
   data () {

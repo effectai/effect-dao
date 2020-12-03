@@ -149,11 +149,11 @@
         </button>
       </div>
 
-      <div v-if="nfxUnstaking > 0" class="notification is-primary unstake mb-0 is-outlined has-text-centered">
+      <div v-if="!nfxCanRefund && nfxUnstaking > 0" class="notification is-primary unstake mb-0 is-outlined has-text-centered">
         You have a pending unstake of <b>{{ nfxUnstaking }} NFX</b> refundable at <b>{{ $moment(nfxUnstakingTime+"Z").fromNow() }}</b>.
       </div>
 
-      <div v-else-if="nfxUnstaking > 0" class="notification is-primary unstake mb-0 is-outlined">
+      <div v-else-if="nfxCanRefund && nfxUnstaking > 0" class="notification is-primary unstake mb-0 is-outlined">
         You have an available refund of <b>{{ nfxUnstaking }}</b> NFX
         <button class="button is-success is-pulled-right claim-efx" :class="{ 'is-loading': loading }" @click="refund('4,NFX')">
           Refund

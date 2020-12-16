@@ -10,7 +10,9 @@
           </div>
           <div class="media-content">
             <h2>{{ account.name }}</h2>
-            <h4 v-if="account.rank" class="rank">Rank {{ account.rank.currentRank }}</h4>
+            <h4 v-if="account.rank" class="rank">
+              Rank {{ account.rank.currentRank }}
+            </h4>
             <div v-if="account.signedConstitution">
               <ICountUp v-if="account.power >= 0" class="power" :options="{ prefix: 'EFX Power ', suffix: ' EP' }" :end-val="account.power" />
               <div v-else>
@@ -28,14 +30,19 @@
             </div>
           </div>
           <div class="media-right">
-            <div v-if="account.rank && account.rank.currentRank > 0" :class="['rank-icon', 'rank-'+account.rank.currentRank]"><img width="64px" :src="'/img/guardian-icons/guardian-'+account.rank.currentRank+'.png'" /></div>
+            <div v-if="account.rank && account.rank.currentRank > 0" :class="['rank-icon', 'rank-'+account.rank.currentRank]">
+              <img width="64px" :src="'/img/guardian-icons/guardian-'+account.rank.currentRank+'.png'">
+            </div>
           </div>
         </div>
-        <div class="rank-title" :class="[account.rank ? 'rank-'+account.rank.currentRank : '']"></div>
+        <div class="rank-title" :class="[account.rank ? 'rank-'+account.rank.currentRank : '']" />
         <div v-if="myAccount" class="has-text-centered mt-4">
           <a href="https://avatar.pixeos.art/" target="_blank" class="button is-primary">
-              Edit avatar
+            Edit avatar
           </a>
+          <!--          <button class="button is-primary" :class="{ 'is-loading': loadingDiscord }" @click="signDiscord()">-->
+          <!--            Join Discord-->
+          <!--          </button>-->
           <button class="button is-danger" :class="{ 'is-loading': loadingLogout }" @click="logout()">
             Disconnect
           </button>
@@ -49,9 +56,15 @@
       <rank-member :power="account.power" :nfx-staked="account.nfxStaked" :stake-age="account.stakeAge" :rank="account.rank" :hide-current-rank="true" />
     </div>
     <div class="box mt-5">
-      <h4 v-if="myAccount" class="box-title">Your Proposals</h4>
-      <h4 v-else class="box-title">Proposals by {{account.name}}</h4>
-      <div v-if="loadingProposals">Loading Proposals..</div>
+      <h4 v-if="myAccount" class="box-title">
+        Your Proposals
+      </h4>
+      <h4 v-else class="box-title">
+        Proposals by {{ account.name }}
+      </h4>
+      <div v-if="loadingProposals">
+        Loading Proposals..
+      </div>
       <proposals v-else-if="proposals && proposals.length > 0" :proposals="proposals" />
       <div v-else-if="proposals">
         No Proposals
@@ -60,17 +73,27 @@
         Could not retrieve proposals
       </div>
       <div class="has-text-centered mt-4">
-        <nuxt-link v-if="myAccount" class="button is-primary is-wide m-2" to="/proposals/new">New Proposal</nuxt-link>
-        <nuxt-link class="button is-primary is-outlined is-wide m-2" to="/proposals">All Proposals</nuxt-link>
+        <nuxt-link v-if="myAccount" class="button is-primary is-wide m-2" to="/proposals/new">
+          New Proposal
+        </nuxt-link>
+        <nuxt-link class="button is-primary is-outlined is-wide m-2" to="/proposals">
+          All Proposals
+        </nuxt-link>
       </div>
     </div>
     <div class="box">
-      <h4 v-if="myAccount" class="box-title">Your Votes</h4>
-      <h4 v-else class="box-title">Votes from {{account.name}}</h4>
-      <div v-if="loadingVotes">Loading Votes..</div>
+      <h4 v-if="myAccount" class="box-title">
+        Your Votes
+      </h4>
+      <h4 v-else class="box-title">
+        Votes from {{ account.name }}
+      </h4>
+      <div v-if="loadingVotes">
+        Loading Votes..
+      </div>
       <div v-else-if="votes && votes.length > 0">
         <div v-for="vote in votes" :key="vote.id">
-          {{vote}}
+          {{ vote }}
         </div>
       </div>
       <div v-else-if="votes">
@@ -104,20 +127,13 @@ export default {
       loadingLogout: false,
       loadingProposals: false,
       loadingVotes: false,
+      loadingDiscord: false,
       account: {
         name: this.$route.params.name
       },
       proposals: null,
       votes: null
     }
-  },
-
-  created () {
-    if (!this.wallet || this.wallet.accountName !== this.account.name) {
-      this.getAccountInfo()
-    }
-    this.getProposals()
-    this.getVotes()
   },
 
   computed: {
@@ -136,6 +152,14 @@ export default {
     currentCycle () {
       this.getProposals()
     }
+  },
+
+  created () {
+    if (!this.wallet || this.wallet.accountName !== this.account.name) {
+      this.getAccountInfo()
+    }
+    this.getProposals()
+    this.getVotes()
   },
 
   methods: {

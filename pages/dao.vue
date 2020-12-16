@@ -81,6 +81,20 @@
       </div>
     </div>
 
+    <div
+      v-else-if="!loading && signedConstitution && !signedLastConstitution"
+      class="notification is-warning is-outlined is-light mb-0 has-text-weight-bold notif-w-btn"
+    >
+      <div class="is-pulled-left">
+        The constitution has been updated to V{{ constitutionVersion }}, sign it to remain a DAO member!
+      </div>
+      <div class="is-pulled-right notif-btn">
+        <button class="button is-primary" @click="downloadConstitution(); constitutionModal = true">
+          Sign
+        </button>
+      </div>
+    </div>
+
     <rank v-if="wallet && wallet.auth && signedConstitution" class="mt-5" />
     <div class="box mt-5">
       <h5 class="box-title">
@@ -120,7 +134,7 @@
         Loading members..
       </h4>
       <div v-if="moreMembers" class="has-text-centered">
-        <button class="button" @click="loadMoreMembers" :class="{'is-loading': loadingMembers}">
+        <button class="button" :class="{'is-loading': loadingMembers}" @click="loadMoreMembers">
           Load More
         </button>
       </div>
@@ -132,7 +146,7 @@
 </template>
 
 <script>
-import { sha256 } from 'eosjs-ecc'
+// import { sha256 } from 'eosjs-ecc'
 import ICountUp from 'vue-countup-v2'
 import Rank from '~/components/Rank'
 import Avatar from '~/components/Avatar'
@@ -152,8 +166,6 @@ export default {
       constitutionLeaveModal: false,
 
       constitution: '',
-      constitutionHash: '',
-      constitutionVersion: '1',
       constitutionUrl: 'https://raw.githubusercontent.com/effectai/effect-network-eos/156f0f78cbce9f8f36fb8707285056cc800e25d3/constitution/constitution.md',
       moreMembers: true,
       nextKey: null,
@@ -167,6 +179,18 @@ export default {
     },
     signedConstitution () {
       return this.$wallet.signedConstitution
+    },
+    lastTerms () {
+      return this.$dao.lastTerms
+    },
+    constitutionVersion () {
+      return (this.lastTerms) ? this.lastTerms.version : 0
+    },
+    constitutionHash () {
+      return (this.lastTerms) ? this.lastTerms.hash : ''
+    },
+    signedLastConstitution () {
+      return this.$wallet.signedConstitutionVersion === this.constitutionVersion
     }
   },
 
@@ -253,7 +277,7 @@ export default {
         .then(data => data.text())
         .then((data) => {
           this.constitution = data
-          this.constitutionHash = sha256(data)
+          // this.constitutionHash = sha256(data)
         })
         .finally(() => {
           this.loading = false

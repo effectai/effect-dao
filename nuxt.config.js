@@ -19,7 +19,9 @@ export default {
     daoContract: 'theeffectdao',
     proposalContract: 'daoproposals',
     efxToken: 'EFX',
-    nfxToken: 'NFX'
+    nfxToken: 'NFX',
+    discordGuildId: '519860537891487745',
+    discordInviteUrl: 'https://discord.gg/hM3237cYXP'
   },
 
   // env: {
@@ -33,7 +35,9 @@ export default {
   //   daoContract: 'thedaonkylin',
   //   proposalContract: 'propsonkylin',
   //   efxToken: 'UTL',
-  //   nfxToken: 'GRN'
+  //   nfxToken: 'GRN',
+  //   discordGuildId: '519860537891487745',
+  //   discordInviteUrl: 'https://discord.gg/hM3237cYXP'
   // },
 
   // Global page headers (https://go.nuxtjs.dev/config-head)

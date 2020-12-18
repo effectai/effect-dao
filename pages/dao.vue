@@ -146,7 +146,7 @@
 </template>
 
 <script>
-// import { sha256 } from 'eosjs-ecc'
+import { sha256 } from 'eosjs-ecc'
 import ICountUp from 'vue-countup-v2'
 import Rank from '~/components/Rank'
 import Avatar from '~/components/Avatar'
@@ -166,6 +166,7 @@ export default {
       constitutionLeaveModal: false,
 
       constitution: '',
+      constitutionHash: '',
       constitutionUrl: 'https://raw.githubusercontent.com/effectai/effect-network-eos/156f0f78cbce9f8f36fb8707285056cc800e25d3/constitution/constitution.md',
       moreMembers: true,
       nextKey: null,
@@ -185,9 +186,6 @@ export default {
     },
     constitutionVersion () {
       return (this.lastTerms) ? this.lastTerms.version : 0
-    },
-    constitutionHash () {
-      return (this.lastTerms) ? this.lastTerms.hash : ''
     },
     signedLastConstitution () {
       return this.$wallet.signedConstitutionVersion === this.constitutionVersion
@@ -277,7 +275,7 @@ export default {
         .then(data => data.text())
         .then((data) => {
           this.constitution = data
-          // this.constitutionHash = sha256(data)
+          this.constitutionHash = sha256(data)
         })
         .finally(() => {
           this.loading = false

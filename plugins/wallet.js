@@ -19,6 +19,7 @@ export default (context, inject) => {
         nfxUnstakingTime: null,
 
         signedConstitution: false,
+        signedConstitutionVersion: 0,
 
         timer: null,
         updater: null,
@@ -276,6 +277,9 @@ export default (context, inject) => {
         if (this.wallet) {
           const member = await this.getDaoMember(this.wallet.auth.accountName)
           this.signedConstitution = !!member
+          if (this.signedConstitution) {
+            this.signedConstitutionVersion = member.agreedtermsversion
+          }
         }
       },
 

@@ -124,7 +124,7 @@ export default {
     }
 
     .navbar-menu {
-      margin-top: 2px;
+      margin-top: 8px;
       justify-content: center;
       .navbar-item {
         font-weight: 700;

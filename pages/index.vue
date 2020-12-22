@@ -233,7 +233,7 @@ export default {
     async getCircSupply () {
       const res = await this.$eos.rpc.get_table_rows({ code: process.env.tokenContract, scope: process.env.efxToken, table: 'stat' })
       if (res && res.rows && res.rows.length === 1) {
-        this.circSupply = parseFloat(res.rows[0].supply.replace(` ${process.env.efxToken}`, ''))
+        this.circSupply = parseFloat(res.rows[0].supply.replace(` ${process.env.efxToken}`, '')) - 170331473
       }
     },
 

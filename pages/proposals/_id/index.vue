@@ -31,6 +31,9 @@
         </div>
         <div class="box mt-5">
           <h5 class="box-title">Cast your vote</h5>
+          <div v-if="myVote">
+            <b>Current Vote {{myVote.voter}}:</b> {{voteTypes.find((vt) => vt.value === myVote.type).name}} - {{myVote.weight}}
+          </div>
           <div class="control" v-for="voteType in voteTypes" :key="voteType.value">
             <label class="radio">
               <input type="radio" name="answer" v-model="vote_type" :value="voteType.value">
@@ -69,8 +72,8 @@
             IPFS Hash
             <div class="hash"><a target="_blank" :href="`${ipfsExplorer}/ipfs/${proposal.content_hash}`">{{ proposal.content_hash }}</a></div>
           </div>
-          <div v-if="myProposal" class="mt-2"><nuxt-link class="button is-primary is-fullwidth" :to="`/proposals/${id}/edit`"><b>Edit</b></nuxt-link> </div>
-          <div v-if="myProposal && $dao.proposalConfig && proposal.cycle === 0" class="mt-2"><button class="button is-primary is-outlined is-fullwidth" @click.prevent="assignToNextCycle()"><b>Assign to next cycle</b></button> </div>
+          <div v-if="isMyProposal" class="mt-2"><nuxt-link class="button is-primary is-fullwidth" :to="`/proposals/${id}/edit`"><b>Edit</b></nuxt-link> </div>
+          <div v-if="isMyProposal && $dao.proposalConfig && proposal.cycle === 0" class="mt-2"><button class="button is-primary is-outlined is-fullwidth" @click.prevent="assignToNextCycle()"><b>Assign to next cycle</b></button> </div>
         </div>
         <div class="box">
           <h5 class="box-title">Results</h5>
@@ -119,8 +122,20 @@ export default {
     wallet () {
       return (this.$wallet) ? this.$wallet.wallet : null
     },
-    myProposal () {
+    isMyProposal () {
       return this.proposal && this.wallet && this.wallet.auth && this.wallet.auth.accountName === this.proposal.author
+    },
+    myVote () {
+      if (!this.votes || !this.wallet || !this.wallet.auth) {
+        return null
+      }
+      const vote = this.votes.find(vote => vote.voter === this.wallet.auth.accountName)
+      if (vote && this.vote_type === null) {
+        // TODO: side effect in computed property, move to watcher
+        // eslint-disable-next-line
+        this.vote_type = vote.type
+      }
+      return vote
     },
     currentCycle () {
       return this.$dao.proposalConfig ? this.$dao.proposalConfig.currentCycle : null

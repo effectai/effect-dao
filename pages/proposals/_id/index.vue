@@ -31,13 +31,25 @@
         </div>
         <div class="box mt-5">
           <h5 class="box-title">Cast your vote</h5>
+          <div class="control" v-for="voteType in voteTypes" :key="voteType.value">
+            <label class="radio">
+              <input type="radio" name="answer" v-model="vote_type" :value="voteType.value">
+              {{voteType.name}}
+            </label>
+          </div>
           <div>
-            <button class="button is-primary is-fullwidth" disabled="disabled">Vote</button>
+            <button class="button is-primary is-fullwidth" @click.prevent="vote" :disabled="!votes || vote_type === null || !wallet || !wallet.auth">Vote</button>
           </div>
         </div>
         <div class="box mt-5">
           <h5 class="box-title">Votes</h5>
-          <div class="has-text-centered">No votes yet</div>
+          <div class="votes" v-if="votes && votes.length">
+            <div v-for="vote in votes" :key="vote.id">
+              <b>{{vote.voter}}:</b> {{voteTypes.find((vt) => vt.value === vote.type).name}} - {{vote.weight}}
+            </div>
+          </div>
+          <div class="has-text-centered" v-else-if="votes">No votes yet</div>
+          <div class="has-text-centered" v-else>Loading votes..</div>
         </div>
       </div>
       <div class="column is-one-third">
@@ -77,6 +89,22 @@ export default {
       loading: false,
       proposal: null,
       id: this.$route.params.id,
+      vote_type: null,
+      voteTypes: [
+        {
+          value: 1,
+          name: 'Yes'
+        },
+        {
+          value: 2,
+          name: 'No'
+        },
+        {
+          value: 0,
+          name: 'Abstain'
+        }
+      ],
+      votes: null,
       categories: {
         0: 'Governance Proposal',
         1: 'Marketing',
@@ -188,14 +216,88 @@ export default {
             }
           }
           this.$set(this.proposal, 'status', status)
+          console.log(this.proposal)
           const ipfsProposal = await this.$dao.getIpfsProposal(this.proposal.content_hash)
           this.$set(this.proposal, 'title', ipfsProposal.title)
           this.$set(this.proposal, 'body', ipfsProposal.body)
           this.$set(this.proposal, 'files', ipfsProposal.files ? ipfsProposal.files : [])
+          await this.getVotes(parseInt(id))
         } catch (e) {
           console.log(e)
         }
         this.loading = false
+      }
+    },
+    async getVotes (id) {
+      this.loading = true
+      if (this.$dao.proposalConfig) {
+        try {
+          const config = {
+            code: process.env.proposalContract,
+            scope: process.env.proposalContract,
+            table: 'vote',
+            index_position: 4,
+            key_type: 'i64',
+            limit: 100,
+            lower_bound: id,
+            upper_bound: id + 1
+          }
+          // if (this.nextKey) {
+          //   config.lower_bound = this.nextKey
+          // }
+          const data = await this.$eos.rpc.get_table_rows(config)
+          // this.moreVotes = data.more
+          // this.nextKey = data.next_key
+          if (!this.votes) {
+            this.votes = data.rows
+          } else {
+            this.votes = this.votes.concat(data.rows)
+          }
+        } catch (e) {
+          console.log(e)
+        }
+        // if (this.moreProposals) {
+        //   this.getProposals()
+        // }
+        // this.loadingVotes = false
+      }
+    },
+    async vote () {
+      if (this.proposal && this.vote_type !== null) {
+        const actions = [{
+          account: process.env.proposalContract,
+          name: 'addvote',
+          authorization: [{
+            actor: this.wallet.auth.accountName,
+            permission: this.wallet.auth.permission
+          }],
+          data: {
+            voter: this.wallet.auth.accountName,
+            prop_id: this.proposal.id,
+            vote_type: this.vote_type
+          }
+        }]
+        try {
+          await this.$wallet.handleTransaction(actions)
+          this.$modal.show({
+            color: 'success',
+            title: 'Vote Submitted',
+            persistent: true,
+            text: 'Your vote for the proposal is sent!',
+            cancel: false,
+            onConfirm: () => {
+              this.getProposal(this.id)
+              return false
+            }
+          })
+        } catch (e) {
+          this.$modal.show({
+            color: 'danger',
+            title: 'Error',
+            persistent: true,
+            text: e
+          })
+        }
       }
     }
   }

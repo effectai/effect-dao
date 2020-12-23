@@ -127,8 +127,8 @@ export default {
         { name: 'Guardians', description: '', value: 97 },
         { name: 'Total Vote Weight', description: '', value: '443' },
         { name: 'Next Cycle', description: '', value: '1-1-2021' },
-        { name: 'Distribution Strategy', description: '', value: 'reward' },
-        { name: 'Recycle Strategy', description: '', value: 'hold' }
+        { name: 'Distribution Strategy', description: '', value: '100% reward' },
+        { name: 'Recycle Strategy', description: '', value: '100% hold' }
       ],
       contracts: [
         {

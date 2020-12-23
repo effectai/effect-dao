@@ -1,5 +1,10 @@
 <template>
   <div>
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+      integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+      crossorigin="anonymous">
     <div class="mb-2"><nuxt-link to="/proposals" class="is-size-7">&lt; All Proposals</nuxt-link></div>
     <div v-if="loading">Loading Proposal..</div>
     <div v-else-if="proposal" class="columns">
@@ -34,11 +39,15 @@
           <div v-if="myVote">
             <b>Current Vote {{myVote.voter}}:</b> {{voteTypes.find((vt) => vt.value === myVote.type).name}} - {{myVote.weight}}
           </div>
-          <div class="control" v-for="voteType in voteTypes" :key="voteType.value">
-            <label class="radio">
-              <input type="radio" name="answer" v-model="vote_type" :value="voteType.value">
-              {{voteType.name}}
-            </label>
+          <div class="columns">
+            <div class="control column" v-for="voteType in voteTypes" :key="voteType.value">
+              <button class="button is-fullwidth" @click.prevent="vote_type = voteType.value" :class="{'is-dark': voteType.value === 0, 'is-danger': voteType.value === 2, 'is-success': voteType.value === 1, 'is-outlined': vote_type !== voteType.value}">
+                <span class="icon">
+                  <i class="fas" :class="{'fa-sticky-note': voteType.value === 0, 'fa-times': voteType.value === 2, 'fa-check': voteType.value === 1}"></i>
+                </span>
+                <span>{{voteType.name}}</span>
+              </button>
+            </div>
           </div>
           <div>
             <button class="button is-primary is-fullwidth" @click.prevent="vote" :disabled="!votes || vote_type === null || !wallet || !wallet.auth">Vote</button>
@@ -46,9 +55,22 @@
         </div>
         <div class="box mt-5">
           <h5 class="box-title">Votes</h5>
-          <div class="votes" v-if="votes && votes.length">
-            <div v-for="vote in votes" :key="vote.id">
-              <b>{{vote.voter}}:</b> {{voteTypes.find((vt) => vt.value === vote.type).name}} - {{vote.weight}}
+          <div v-if="votes && votes.length">
+            <div class="columns is-vcentered is-mobile" v-for="vote in votes" :key="vote.id" >
+              <div class="column">
+                <div class="is-flex is-align-items-center">
+                  <div class="image is-32x32 is-rounded mr-2">
+                    <avatar :account-name="vote.voter" />
+                  </div>
+                  <span>{{vote.voter}}</span>
+                </div>
+              </div>
+              <div class="column has-text-centered">
+                <b :class="{'has-text-success': vote.type === 1, 'has-text-danger': vote.type === 2}">{{voteTypes.find((vt) => vt.value === vote.type).name}}</b>
+              </div>
+              <div class="column has-text-centered">
+                {{vote.weight}}
+              </div>
             </div>
           </div>
           <div class="has-text-centered" v-else-if="votes">No votes yet</div>

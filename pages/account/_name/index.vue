@@ -92,12 +92,19 @@
         Loading Votes..
       </div>
       <div v-else-if="votes && votes.length > 0">
-        <div v-for="vote in votes" :key="vote.id">
-          <nuxt-link :to="'/proposals/'+vote.proposal_id">
-            Proposal <b>{{vote.proposal_id}}:</b>
+          <nuxt-link :to="'/proposals/'+vote.proposal_id" class="columns is-vcentered is-mobile" v-for="vote in votes" :key="vote.id" >
+            <div class="column">
+              <div >
+                Proposal <b>{{vote.proposal_id}}</b>
+              </div>
+            </div>
+            <div class="column has-text-centered">
+              <b :class="{'has-text-success': vote.type === 1, 'has-text-danger': vote.type === 2}">{{voteTypes.find((vt) => vt.value === vote.type).name}}</b>
+            </div>
+            <div class="column has-text-centered">
+              {{vote.weight}}
+            </div>
           </nuxt-link>
-          {{voteTypes.find((vt) => vt.value === vote.type).name}} - {{vote.weight}}
-        </div>
       </div>
       <div v-else-if="votes">
         No Votes

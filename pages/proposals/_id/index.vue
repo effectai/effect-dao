@@ -57,7 +57,7 @@
           <h5 class="box-title">Votes</h5>
           <div v-if="votes && votes.length">
             <div class="columns is-vcentered is-mobile" v-for="vote in votes" :key="vote.id" >
-              <div class="column">
+              <div class="column is-4">
                 <div class="is-flex is-align-items-center">
                   <div class="image is-32x32 is-rounded mr-2">
                     <avatar :account-name="vote.voter" />
@@ -65,11 +65,11 @@
                   <span>{{vote.voter}}</span>
                 </div>
               </div>
-              <div class="column has-text-centered">
+              <div class="column is-4 has-text-centered">
                 <b :class="{'has-text-success': vote.type === 1, 'has-text-danger': vote.type === 2}">{{voteTypes.find((vt) => vt.value === vote.type).name}}</b>
               </div>
-              <div class="column has-text-centered">
-                {{vote.weight}}
+              <div class="column is-4 has-text-centered">
+                <b>{{vote.weight}}</b>
               </div>
             </div>
           </div>
@@ -99,6 +99,17 @@
         </div>
         <div class="box">
           <h5 class="box-title">Results</h5>
+          <div class="columns is-vcentered is-mobile" v-for="result in voteResults" :key="result.type" >
+            <div class="column is-4">
+              <b :class="{'has-text-success': result.type === 1, 'has-text-danger': result.type === 2}">{{voteTypes.find((vt) => vt.value == result.type).name}}</b>
+            </div>
+            <div class="column is-6">
+              <small># votes: </small> <span>{{result.votes}}</span>
+            </div>
+            <div class="column is-2">
+              <b>{{result.weight}}</b>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -146,6 +157,33 @@ export default {
     },
     isMyProposal () {
       return this.proposal && this.wallet && this.wallet.auth && this.wallet.auth.accountName === this.proposal.author
+    },
+    voteResults () {
+      const results = [
+        {
+          type: 1,
+          votes: 0,
+          weight: 0
+        },
+        {
+          type: 2,
+          votes: 0,
+          weight: 0
+        },
+        {
+          type: 0,
+          votes: 0,
+          weight: 0
+        }
+      ]
+      if (this.votes) {
+        this.votes.forEach((vote) => {
+          const result = results.find(result => result.type === parseInt(vote.type))
+          result.votes++
+          result.weight += vote.weight
+        })
+      }
+      return results
     },
     myVote () {
       if (!this.votes || !this.wallet || !this.wallet.auth) {

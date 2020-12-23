@@ -7,15 +7,15 @@
           <thead>
           <tr>
             <th>Name</th>
-            <th>Tokens</th>
-            <th>Address</th>
+            <th class="has-text-centered">Tokens</th>
+            <th class="has-text-left">Address</th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="(label, index) in chartData.datasets[1].labels" :key="label">
             <td>{{ label }} <span class="tag" v-if="chartData.datasets[1].meta[index].locked">locked</span></td>
-            <td>{{chartData.datasets[1].data[index]}} EFX</td>
-            <td><a :href="chartData.datasets[1].meta[index].link" target="_blank">{{ chartData.datasets[1].meta[index].addressName }}</a></td>
+            <td class="has-text-right">{{hello(chartData.datasets[1].data[index])}} EFX</td>
+            <td class="has-text-left"><a :href="chartData.datasets[1].meta[index].link" target="_blank">{{ chartData.datasets[1].meta[index].addressName }}</a></td>
           </tr>
           </tbody>
         </table>
@@ -39,7 +39,7 @@
             <td>{{ contract.name }}</td>
             <td>{{ contract.description }}</td>
             <td><a :href="contract.link" target="_blank">{{ contract.account }}</a></td>
-            <td><a :href="contract.source" target="_blank">{{ contract.source }}</a></td>
+            <td><a :href="contract.source" target="_blank">view source</a></td>
           </tr>
           </tbody>
         </table>
@@ -132,7 +132,7 @@ export default {
         },
         {
           name: 'Effect Proposals',
-          description: 'Holds the proposals and voting mechanism of the EffectDAO',
+          description: 'Stores proposals and handles the voting machanism of the EffectDAO',
           account: 'daoproposals',
           link: 'https://bloks.io/account/daoproposals?loadContract=true&tab=Tables&account=daoproposals&scope=daoproposals&limit=100&table=proposal',
           source: 'https://github.com/effectai/effect-network-eos/blob/proposals/contracts/effect-proposals/effect-proposals.cpp'
@@ -141,11 +141,11 @@ export default {
       chartOptions: {
       },
       chartData: {
-        labels: ['EffectDAO', 'Circulating Supply', 'Foundation Tokens', 'Team Tokens'],
+        labels: ['EffectDAO', 'Circulating Supply', 'Future Funding', 'Team Tokens'],
         datasets: [
           {
             name: 'Token Map',
-            backgroundColor: ['#E46651', '#41B883', '#A4B8BB', '#00D8FF'],
+            backgroundColor: ['#E46651', '#41B883', '#A4B8BB', '#00D8FF', '#00D8FF'],
             meta: [
               {
                 addressName: 'treasury.efx',
@@ -157,8 +157,14 @@ export default {
                 link: 'https://bloks.io/tokens/EFX-eos-effecttokens'
               },
               {
-                addressName: 'locked.efx',
-                link: 'https://bloks.io/account/locked.efx',
+                addressName: 'acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
+                link: 'https://neotracker.io/asset/acbc532904b6b51b5ea6d19b803d78af70e7e6f9'
+              },
+              {
+                // addressName: 'locked.efx',
+                // link: 'https://bloks.io/account/locked.efx',
+                addressName: 'AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
+                link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
                 locked: true
               },
               {
@@ -167,12 +173,12 @@ export default {
                 link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno'
               }
             ],
-            data: [170331473, 252168527, 130000000, 97500000],
-            labels: ['EffectDAO', 'Circulating Supply', 'Foundation Tokens', 'Team Tokens']
+            data: [170331473 + 500, 195708900 + 650000000 - (170331473 + 500 + 195708900 + 130000000 + 97500000), 130000000, 97500000],
+            labels: ['EffectDAO', 'Circulating Supply', 'Future Funding', 'Team Tokens']
           },
           {
             name: 'Token Map',
-            backgroundColor: ['#e4744c', '#e44707', '#0dd925', '#499166', '#A4B8BB', '#00D8FF'],
+            backgroundColor: ['#e4744c', '#e44707', '#0dd925', '#499166', '#376d4c', '#A4B8BB', '#00D8FF'],
             meta: [
               {
                 addressName: 'treasury.efx',
@@ -193,8 +199,14 @@ export default {
                 link: 'https://bloks.io/account/efxstakepool'
               },
               {
-                addressName: 'locked.efx',
-                link: 'https://bloks.io/account/locked.efx',
+                addressName: 'acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
+                link: 'https://neotracker.io/asset/acbc532904b6b51b5ea6d19b803d78af70e7e6f9'
+              },
+              {
+                // addressName: 'locked.efx',
+                // link: 'https://bloks.io/account/locked.efx',
+                addressName: 'AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
+                link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
                 locked: true
               },
               {
@@ -203,15 +215,24 @@ export default {
                 link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno'
               }
             ],
-            data: [85165736, 85165737, (252168527 - 107956552), 107956552, 130000000, 97500000],
-            labels: ['EffectDAO', 'Proposal Funds', 'Circulating Supply', 'Stake Pool', 'Foundation Tokens', 'Team Tokens']
+            data: [170331473, 500, (366040373 - 170331473 - 107956552), 107956552, 650000000 - (170331473 + 500 + 195708900 + 130000000 + 97500000), 130000000, 97500000],
+            labels: ['EffectDAO', 'Proposal Funds', 'Liquid Supply', 'Stake Pool', 'Unswapped on NEO', 'Future Funding', 'Team Tokens']
           }
         ]
       }
+    }
+  },
+  methods: {
+    hello (x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     }
   }
 }
 </script>
 
 <style lang="scss">
+  table {
+    font-size: 0.7em;
+    .tag { font-size: 0.9em; height: inherit; }
+  }
 </style>

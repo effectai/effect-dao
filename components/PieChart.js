@@ -8,14 +8,26 @@ export default {
     this.renderChart(this.data, {
       responsive: true,
       maintainAspectRatio: false,
-      onClick: this.clickHandle
+      onClick: this.clickHandle,
+      legend: {
+        onClick: () => {}
+      },
+      tooltips: {
+        callbacks: {
+          label: (tooltipItem, data) => {
+            const dataset = data.datasets[tooltipItem.datasetIndex]
+            const index = tooltipItem.index
+            return dataset.labels[index] + ': ' + dataset.data[index]
+          }
+        }
+      }
     })
   },
   methods: {
     clickHandle (point, event) {
       const item = event[0]
       if (item) {
-        window.open(this.data.datasets[0].meta[item._index].link, '_blank')
+        window.open(this.data.datasets[item._datasetIndex].meta[item._index].link, '_blank')
       }
     }
   }

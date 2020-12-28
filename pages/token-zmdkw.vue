@@ -165,12 +165,19 @@ export default {
           account: 'daoproposals',
           link: 'https://bloks.io/account/daoproposals?loadContract=true&tab=Tables&account=daoproposals&scope=daoproposals&limit=100&table=proposal',
           source: 'https://github.com/effectai/effect-network-eos/blob/proposals/contracts/effect-proposals/effect-proposals.cpp'
+        },
+        {
+          name: 'Effect.AI Token on NEO (legacy)',
+          description: 'Smart Contract on the NEO blockchain for the NEP5 EFX token',
+          account: 'acbc5...7e6f9',
+          link: 'https://neotracker.io/asset/acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
+          source: 'https://github.com/effectai/effect-network/blob/master/contracts/java/token/src/ai/effect/token/EffectToken.java'
         }
       ],
       chartOptions: {
       },
       chartData: {
-        labels: ['EffectDAO', 'Circulating Supply', 'Future Funding', 'Team Tokens'],
+        labels: ['EffectDAO', 'Circulating Supply', 'Foundation Tokens', 'Team Tokens'],
         datasets: [
           {
             name: 'Token Map',
@@ -203,8 +210,8 @@ export default {
                 link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno'
               }
             ],
-            data: [170331473 + 500, 195708900 + 650000000 - (170331473 + 500 + 195708900 + 130000000 + 97500000), 130000000, 97500000],
-            labels: ['EffectDAO', 'Circulating Supply', 'Future Funding', 'Team Tokens']
+            data: [170331473 + 500, 195708900 + 650000000 - (170331473 + 500 + 195708900 + 130000000 + 65375000 + 32125000), 130000000 + 65375000, 32125000],
+            labels: ['EffectDAO', 'Circulating Supply', 'Foundation Tokens', 'Team Tokens']
           },
           {
             name: 'Token Map',
@@ -246,8 +253,8 @@ export default {
                 link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno'
               }
             ],
-            data: [170331473, 500, (366040373 - 170331473 - 107956552), 107956552, 650000000 - (170331473 + 500 + 195708900 + 130000000 + 97500000), 130000000, 97500000],
-            labels: ['EffectDAO', 'Proposal Funds', 'Liquid Supply', 'Stake Pool', 'Unswapped on NEO', 'Future Funding', 'Team Tokens']
+            data: [170331473, 500, (366040373 - 170331473 - 107956552), 107956552, 650000000 - (170331473 + 195708900 + 130000000 + 65375000 + 32125000), 130000000 + 65375000, 32125000],
+            labels: ['EffectDAO', 'Proposal Funds', 'Liquid Supply', 'Stake Pool', 'Unswapped on NEO', 'Foundation Tokens', 'Team Tokens']
           }
         ]
       }

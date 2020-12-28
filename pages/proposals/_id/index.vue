@@ -4,121 +4,202 @@
       rel="stylesheet"
       href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
       integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
-      crossorigin="anonymous">
-    <div class="mb-2"><nuxt-link to="/proposals" class="is-size-7">&lt; All Proposals</nuxt-link></div>
-    <div v-if="loading">Loading Proposal..</div>
+      crossorigin="anonymous"
+    >
+    <div class="mb-2">
+      <nuxt-link to="/proposals" class="is-size-7">
+        &lt; All Proposals
+      </nuxt-link>
+    </div>
+    <div v-if="loading">
+      Loading Proposal..
+    </div>
     <div v-else-if="proposal" class="columns">
       <div class="column is-two-thirds">
-        <div class="is-pulled-right"><span class="tag" :class="{'is-success': proposal.status == 'ACTIVE', 'is-warning': proposal.status == 'DRAFT', 'is-link': proposal.status == 'PENDING', 'is-dark': proposal.status == 'CLOSED'}">{{ proposal.status }}</span></div>
-        <div v-if="proposal.title" class="title is-4">{{proposal.title}}</div>
-        <div v-else class="title is-4">...</div>
-        <div class="subtitle is-6"><b>{{ categories[proposal.category] }}</b></div>
+        <div class="is-pulled-right">
+          <span class="tag" :class="{'is-success': proposal.status == 'ACTIVE', 'is-warning': proposal.status == 'DRAFT', 'is-link': proposal.status == 'PENDING', 'is-dark': proposal.status == 'CLOSED'}">{{ proposal.status }}</span>
+        </div>
+        <div v-if="proposal.title" class="title is-4">
+          {{ proposal.title }}
+        </div>
+        <div v-else class="title is-4">
+          ...
+        </div>
+        <div class="subtitle is-6">
+          <b>{{ categories[proposal.category] }}</b>
+        </div>
         <small>
           <div v-if="proposal.body" v-html="$md.render(proposal.body)" />
           <div v-else>Loading content..</div>
         </small>
         <div class="box mt-5">
-          <h4 class="box-title">Attachments</h4>
-          <table class="table" v-if="proposal.files">
+          <h4 class="box-title">
+            Attachments
+          </h4>
+          <table v-if="proposal.files" class="table">
             <tbody v-if="proposal.files.length > 0">
-            <tr v-for="file in proposal.files" :key="file.Hash">
-              <td><a :href="ipfsExplorer + '/ipfs/' + file.Hash" target="_blank">{{ file.Name }}</a></td>
-              <td>{{ file.Size | formatBytes }}</td>
-            </tr>
+              <tr v-for="file in proposal.files" :key="file.Hash">
+                <td><a :href="ipfsExplorer + '/ipfs/' + file.Hash" target="_blank">{{ file.Name }}</a></td>
+                <td>{{ file.Size | formatBytes }}</td>
+              </tr>
             </tbody>
             <tbody v-else>
-            <tr>
-              <td colspan="2">No files attached</td>
-            </tr>
+              <tr>
+                <td colspan="2">
+                  No files attached
+                </td>
+              </tr>
             </tbody>
           </table>
-          <div v-else>Loading attachments..</div>
+          <div v-else>
+            Loading attachments..
+          </div>
         </div>
-        <div class="box mt-5">
-          <h5 class="box-title">Cast your vote</h5>
-          <div v-if="myVote">
-            <b>Current Vote {{myVote.voter}}:</b> {{voteTypes.find((vt) => vt.value === myVote.type).name}} - {{myVote.weight}}
+        <div v-if="proposal.status === 'ACTIVE' || proposal.status === 'CLOSED'" class="box mt-5">
+          <h5 class="box-title">
+            Cast your vote
+          </h5>
+          <div v-if="myVote && proposal.status === 'ACTIVE'">
+            <b>Current Vote {{ myVote.voter }}:</b> {{ voteTypes.find((vt) => vt.value === myVote.type).name }} - {{ myVote.weight }}
+          </div>
+          <div v-else-if="myVote && proposal.status === 'CLOSED'">
+            <b>You voted {{ myVote.voter }}:</b> {{ voteTypes.find((vt) => vt.value === myVote.type).name }} - {{ myVote.weight }}
           </div>
           <div class="columns">
-            <div class="control column" v-for="voteType in voteTypes" :key="voteType.value">
-              <button class="button is-fullwidth" @click.prevent="vote_type = voteType.value" :class="{'is-dark': voteType.value === 0, 'is-danger': voteType.value === 2, 'is-success': voteType.value === 1, 'is-outlined': vote_type !== voteType.value}">
+            <div v-for="voteType in voteTypes" :key="voteType.value" class="control column">
+              <button class="button is-fullwidth" :class="{'is-dark': voteType.value === 0, 'is-danger': voteType.value === 2, 'is-success': voteType.value === 1, 'is-outlined': vote_type !== voteType.value}" @click.prevent="vote_type = voteType.value">
                 <span class="icon">
-                  <i class="fas" :class="{'fa-sticky-note': voteType.value === 0, 'fa-times': voteType.value === 2, 'fa-check': voteType.value === 1}"></i>
+                  <i class="fas" :class="{'fa-sticky-note': voteType.value === 0, 'fa-times': voteType.value === 2, 'fa-check': voteType.value === 1}" />
                 </span>
-                <span>{{voteType.name}}</span>
+                <span>{{ voteType.name }}</span>
               </button>
             </div>
           </div>
           <div>
-            <button class="button is-primary is-fullwidth" @click.prevent="vote" :disabled="!votes || vote_type === null || !wallet || !wallet.auth">Vote</button>
+            <button class="button is-primary is-fullwidth" :disabled="!votes || vote_type === null || !wallet || !wallet.auth" @click.prevent="vote">
+              <span v-if="!wallet || !wallet.auth">Not connected to wallet</span>
+              <span v-else>Vote</span>
+            </button>
           </div>
         </div>
+        <div v-else class="box mt-5 faded">
+          <h5 class="box-title">
+            Cast your vote
+          </h5>
+          <p class="has-text-centered">
+            Voting will be possible once this proposal is active.
+          </p>
+        </div>
         <div class="box mt-5">
-          <h5 class="box-title">Votes</h5>
+          <h5 class="box-title">
+            Votes ({{ totalVotes }})
+          </h5>
           <div v-if="votes && votes.length">
-            <div class="columns is-vcentered is-mobile" v-for="vote in votes" :key="vote.id" >
-              <div class="column is-4">
+            <div v-for="vote in votes" :key="vote.id + vote.voter" class="columns is-vcentered is-mobile">
+              <div class="column is-8">
                 <div class="is-flex is-align-items-center">
                   <div class="image is-32x32 is-rounded mr-2">
                     <avatar :account-name="vote.voter" />
                   </div>
-                  <span>{{vote.voter}}</span>
+                  <span>{{ vote.voter }}</span>
                 </div>
               </div>
-              <div class="column is-4 has-text-centered">
-                <b :class="{'has-text-success': vote.type === 1, 'has-text-danger': vote.type === 2}">{{voteTypes.find((vt) => vt.value === vote.type).name}}</b>
+              <div class="column is-2 has-text-centered">
+                <b :class="{'has-text-success': vote.type === 1, 'has-text-danger': vote.type === 2}">{{ voteTypes.find((vt) => vt.value === vote.type).name }}</b>
               </div>
-              <div class="column is-4 has-text-centered">
-                <b>{{vote.weight}}</b>
+              <div class="column is-2 has-text-centered">
+                <b>{{ vote.weight }}</b>
               </div>
             </div>
           </div>
-          <div class="has-text-centered" v-else-if="votes">No votes yet</div>
-          <div class="has-text-centered" v-else>Loading votes..</div>
+          <div v-else-if="votes" class="has-text-centered">
+            No votes yet
+          </div>
+          <div v-else class="has-text-centered">
+            Loading votes..
+          </div>
         </div>
       </div>
       <div class="column is-one-third">
         <div class="box">
-          <h5 class="box-title">Information</h5>
+          <h5 class="box-title">
+            Information
+          </h5>
           <div class="block">
-              <i>author</i><br>
-              <nuxt-link :to="'/account/'+proposal.author"><b>{{proposal.author}}</b></nuxt-link>
+            <i>author</i><br>
+            <nuxt-link :to="'/account/'+proposal.author">
+              <b>{{ proposal.author }}</b>
+            </nuxt-link>
           </div>
-          <div class="block" v-for="(pay, index) in proposal.pay" :key="index">
+          <div v-for="(pay, index) in proposal.pay" :key="index" class="block">
             <i>requesting</i><br>
             <b>{{ pay.field_0.quantity }}</b><br>
             <i v-if="false">requestable</i>
-            <b v-if="false">{{ $moment(pay.field_1 + "Z").fromNow()}}</b>
+            <b v-if="false">{{ $moment(pay.field_1 + "Z").fromNow() }}</b>
           </div>
           <div class="block">
             IPFS Hash
-            <div class="hash"><a target="_blank" :href="`${ipfsExplorer}/ipfs/${proposal.content_hash}`">{{ proposal.content_hash }}</a></div>
+            <div class="hash">
+              <a target="_blank" :href="`${ipfsExplorer}/ipfs/${proposal.content_hash}`">{{ proposal.content_hash }}</a>
+            </div>
           </div>
-          <div v-if="isMyProposal" class="mt-2"><nuxt-link class="button is-primary is-fullwidth" :to="`/proposals/${id}/edit`"><b>Edit</b></nuxt-link> </div>
-          <div v-if="isMyProposal && $dao.proposalConfig && proposal.cycle === 0" class="mt-2"><button class="button is-primary is-outlined is-fullwidth" @click.prevent="assignToNextCycle()"><b>Assign to next cycle</b></button> </div>
+          <div class="block">
+            <i>cycle</i><br>
+            <b>{{ proposal.cycle }}</b>
+          </div>
+          <div v-if="isMyProposal" class="mt-2">
+            <nuxt-link class="button is-primary is-fullwidth" :to="`/proposals/${id}/edit`">
+              <b>Edit</b>
+            </nuxt-link>
+          </div>
+          <div v-if="isMyProposal && $dao.proposalConfig && proposal.cycle === 0" class="mt-2">
+            <button class="button is-primary is-outlined is-fullwidth" @click.prevent="assignToNextCycle()">
+              <b>Assign to next cycle</b>
+            </button>
+          </div>
         </div>
         <div class="box">
-          <h5 class="box-title">Results</h5>
-          <div class="columns is-vcentered is-mobile" v-for="result in voteResults" :key="result.type" >
-            <div class="column is-4">
-              <b :class="{'has-text-success': result.type === 1, 'has-text-danger': result.type === 2}">{{voteTypes.find((vt) => vt.value == result.type).name}}</b>
+          <h5 class="box-title">
+            Results
+          </h5>
+          <div v-for="result in voteResults" :key="result.type">
+            <div class="columns is-vcentered is-mobile">
+              <div class="column is-4">
+                <b :class="{'has-text-success': result.type === 1, 'has-text-danger': result.type === 2}">{{ voteTypes.find((vt) => vt.value == result.type).name }}</b>
+              </div>
+              <div class="column is-6">
+                <small># votes: </small> <span>{{ result.votes }}</span>
+              </div>
+              <div class="column is-2">
+                <b>{{ result.weight }}</b>
+              </div>
             </div>
-            <div class="column is-6">
-              <small># votes: </small> <span>{{result.votes}}</span>
-            </div>
-            <div class="column is-2">
-              <b>{{result.weight}}</b>
-            </div>
+            <progress :class="['progress', 'is-small', 'progress-type-' + result.type, {'is-danger': result.type === 2}, {'is-success': result.type === 1}]" :value="result.weight" :max="totalVoteWeight" />
           </div>
         </div>
       </div>
     </div>
-    <h4 v-else class="has-text-centered">Could not retrieve proposal</h4>
+    <h4 v-else class="has-text-centered">
+      Could not retrieve proposal
+    </h4>
   </div>
 </template>
 
 <script>
 export default {
+
+  filters: {
+    formatBytes (bytes, decimals = 2) {
+      if (bytes === 0) {
+        return '0 Bytes'
+      }
+      const k = 1024
+      const dm = decimals < 0 ? 0 : decimals
+      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+      const i = Math.floor(Math.log(bytes) / Math.log(k))
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
+    }
+  },
   data () {
     return {
       ipfsExplorer: process.env.ipfsExplorer,
@@ -132,12 +213,12 @@ export default {
           name: 'Yes'
         },
         {
-          value: 2,
-          name: 'No'
-        },
-        {
           value: 0,
           name: 'Abstain'
+        },
+        {
+          value: 2,
+          name: 'No'
         }
       ],
       votes: null,
@@ -185,6 +266,12 @@ export default {
       }
       return results
     },
+    totalVoteWeight () {
+      return Object.values(this.voteResults).reduce((acc, val) => acc + val.weight, 0)
+    },
+    totalVotes () {
+      return Object.values(this.voteResults).reduce((acc, val) => acc + val.votes, 0)
+    },
     myVote () {
       if (!this.votes || !this.wallet || !this.wallet.auth) {
         return null
@@ -198,20 +285,7 @@ export default {
       return vote
     },
     currentCycle () {
-      return this.$dao.proposalConfig ? this.$dao.proposalConfig.currentCycle : null
-    }
-  },
-
-  filters: {
-    formatBytes (bytes, decimals = 2) {
-      if (bytes === 0) {
-        return '0 Bytes'
-      }
-      const k = 1024
-      const dm = decimals < 0 ? 0 : decimals
-      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-      const i = Math.floor(Math.log(bytes) / Math.log(k))
-      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
+      return this.$dao.proposalConfig ? this.$dao.proposalConfig.current_cycle : null
     }
   },
 
@@ -386,5 +460,10 @@ export default {
     font-family: monospace;
     text-overflow: ellipsis;
     max-width: 100%;
+  }
+
+  .progress {
+    margin-top: -22px;
+    margin-bottom: 12px;
   }
 </style>

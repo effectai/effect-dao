@@ -1,21 +1,32 @@
 <template>
   <div>
     <div class="has-text-centered">
-        <nuxt-link class="button is-primary is-wide m-2" to="/proposals/new">New Proposal</nuxt-link>
-        <nuxt-link v-if="wallet && wallet.auth" :to="'/account/' + wallet.auth.accountName" class="button is-primary is-wide m-2 is-outlined">Your Proposals</nuxt-link>
-        <ConnectWallet v-else title="Your Proposals" button-class="is-wide is-outlined m-2"/>
+      <nuxt-link class="button is-primary is-wide m-2" to="/proposals/new">
+        New Proposal
+      </nuxt-link>
+      <nuxt-link
+        v-if="wallet && wallet.auth"
+        :to="'/account/' + wallet.auth.accountName"
+        class="button is-primary is-wide m-2 is-outlined"
+      >
+        Your Proposals
+      </nuxt-link>
+      <ConnectWallet v-else title="Your Proposals" button-class="is-wide is-outlined m-2" />
     </div>
     <div class="box mt-5">
-      <h4 class="box-title mb-0">Proposals
+      <h4 class="box-title mb-0">
+        Proposals
         <div class="is-size-6">
           <small>
-            <span v-if="currentCycle">Cycle {{currentCycle}}
+            <span v-if="currentCycle">Cycle {{ currentCycle }}
               <span v-if="$dao.cycleConfig">started {{ $moment($dao.cycleConfig.start_time + "Z").fromNow() }}</span>
             </span>
             <span v-else-if="$dao.cycleConfig">
               <!-- Genesis cycle!-->
               Waiting for <i>Genesis Cycle</i>
-              <span v-if="$dao.cycleConfig">start {{ $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow() }}</span>
+              <span v-if="$dao.cycleConfig">start {{
+                $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow()
+              }}</span>
             </span>
 
           </small>
@@ -23,25 +34,37 @@
       </h4>
       <div class="tabs">
         <ul>
-          <li v-for="status in statuses" :key="status.id" :class="{'is-active': filter === status.id}"><a @click.prevent="filter = status.id">{{status.name}}</a></li>
+          <li v-for="status in statuses" :key="status.id" :class="{'is-active': filter === status.id}">
+            <a
+              @click.prevent="filter = status.id"
+            >{{ status.name }}</a>
+          </li>
         </ul>
       </div>
       <template v-if="$dao.cycleConfig">
         <template v-if="currentCycle">
           <h5 v-if="filter === 'ACTIVE'">
-            Cycle {{currentCycle}} ends {{ $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow() }}
+            Cycle {{ currentCycle }} ends {{
+              $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow()
+            }}
           </h5>
           <h5 v-else-if="filter === 'PENDING'">
-            Proposals for cycle {{currentCycle + 1}} starting {{ $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow() }}
+            Proposals for cycle {{ currentCycle + 1 }} starting {{
+              $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow()
+            }}
           </h5>
         </template>
         <template v-else>
           <!-- Genesis cycle! -->
           <h5 v-if="filter === 'ACTIVE'">
-            Waiting for <i>Genesis Cycle</i> {{currentCycle + 1}} start {{ $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow() }}
+            Waiting for <i>Genesis Cycle</i> {{ currentCycle + 1 }} start {{
+              $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow()
+            }}
           </h5>
           <h5 v-if="filter === 'PENDING'">
-            Proposals for <i>Genesis Cycle</i> {{currentCycle + 1}} starting {{ $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow() }}
+            Proposals for <i>Genesis Cycle</i> {{ currentCycle + 1 }} starting {{
+              $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow()
+            }}
           </h5>
         </template>
       </template>
@@ -129,14 +152,14 @@ export default {
     }
   },
 
-  created () {
-    this.getProposals()
-  },
-
   watch: {
     currentCycle () {
       this.getProposals()
     }
+  },
+
+  created () {
+    this.getProposals()
   },
 
   methods: {

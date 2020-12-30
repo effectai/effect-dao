@@ -60,7 +60,7 @@
             Cast your vote
           </h5>
           <div v-if="myVote && proposal.status === 'ACTIVE'">
-            <b>Current Vote {{ myVote.voter }}:</b> {{ voteTypes.find((vt) => vt.value === myVote.type).name }} - {{ myVote.weight }}
+            <!--            <b>Current Vote {{ myVote.voter }}:</b> {{ voteTypes.find((vt) => vt.value === myVote.type).name }} - {{ myVote.weight }}-->
           </div>
           <div v-else-if="myVote && proposal.status === 'CLOSED'">
             <b>You voted {{ myVote.voter }}:</b> {{ voteTypes.find((vt) => vt.value === myVote.type).name }} - {{ myVote.weight }}
@@ -160,7 +160,7 @@
         </div>
         <div class="box">
           <h5 class="box-title">
-            Results
+            Results ({{ this.totalVoteWeight }}/{{ this.quorum }})
           </h5>
           <div v-for="result in voteResults" :key="result.type">
             <div class="columns is-vcentered is-mobile">
@@ -202,6 +202,7 @@ export default {
   },
   data () {
     return {
+      quorum: 0,
       ipfsExplorer: process.env.ipfsExplorer,
       loading: false,
       proposal: null,
@@ -297,6 +298,7 @@ export default {
 
   created () {
     this.getProposal(this.id)
+    this.getQuorum()
   },
 
   methods: {
@@ -340,6 +342,16 @@ export default {
           })
         }
       }
+    },
+    async getQuorum () {
+      const data = await this.$eos.rpc.get_table_rows({
+        code: process.env.proposalContract,
+        scope: process.env.proposalContract,
+        table: 'config',
+        limit: 1
+      })
+
+      this.quorum = data.rows[0].quorum
     },
     async getProposal (id) {
       this.loading = true
@@ -397,11 +409,12 @@ export default {
           const data = await this.$eos.rpc.get_table_rows(config)
           // this.moreVotes = data.more
           // this.nextKey = data.next_key
-          if (!this.votes) {
-            this.votes = data.rows
-          } else {
-            this.votes = this.votes.concat(data.rows)
-          }
+          this.votes = data.rows
+          // if (!this.votes) {
+          //   this.votes = data.rows
+          // } else {
+          //   this.votes = this.votes.concat(data.rows)
+          // }
         } catch (e) {
           console.log(e)
         }
@@ -431,12 +444,12 @@ export default {
           this.$modal.show({
             color: 'success',
             title: 'Vote Submitted',
-            persistent: true,
+            persistent: false,
             text: 'Your vote for the proposal is sent!',
             cancel: false,
             onConfirm: () => {
               this.getProposal(this.id)
-              return false
+              return true
             }
           })
         } catch (e) {

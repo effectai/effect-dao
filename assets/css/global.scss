@@ -354,6 +354,10 @@ a {
   }
 }
 
+.faded {
+  opacity: 0.5;
+}
+
 @media all and (max-width: 1024px) {
   .content {
     padding: 12px;

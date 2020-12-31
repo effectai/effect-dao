@@ -92,9 +92,19 @@
         Loading Votes..
       </div>
       <div v-else-if="votes && votes.length > 0">
-        <div v-for="vote in votes" :key="vote.id">
-          {{ vote }}
-        </div>
+          <nuxt-link :to="'/proposals/'+vote.proposal_id" class="columns is-vcentered is-mobile" v-for="vote in votes" :key="vote.id" >
+            <div class="column">
+              <div >
+                Proposal <b>{{vote.proposal_id}}</b>
+              </div>
+            </div>
+            <div class="column has-text-centered">
+              <b :class="{'has-text-success': vote.type === 1, 'has-text-danger': vote.type === 2}">{{voteTypes.find((vt) => vt.value === vote.type).name}}</b>
+            </div>
+            <div class="column has-text-centered">
+              {{vote.weight}}
+            </div>
+          </nuxt-link>
       </div>
       <div v-else-if="votes">
         No Votes
@@ -132,6 +142,20 @@ export default {
         name: this.$route.params.name
       },
       proposals: null,
+      voteTypes: [
+        {
+          value: 1,
+          name: 'Yes'
+        },
+        {
+          value: 2,
+          name: 'No'
+        },
+        {
+          value: 0,
+          name: 'Abstain'
+        }
+      ],
       votes: null
     }
   },
@@ -240,11 +264,33 @@ export default {
     async getVotes () {
       this.loadingVotes = true
       try {
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        this.votes = []
+        const config = {
+          code: process.env.proposalContract,
+          scope: process.env.proposalContract,
+          table: 'vote',
+          key_type: 'name',
+          index_position: 3,
+          lower_bound: this.account.name,
+          limit: 100
+        }
+        // if (this.nextKey) {
+        //   config.lower_bound = this.nextKey
+        // }
+        const data = await this.$eos.rpc.get_table_rows(config)
+        // this.moreVotes = data.more
+        // this.nextKey = data.next_key
+        if (!this.votes) {
+          this.votes = data.rows
+        } else {
+          this.votes = this.votes.concat(data.rows)
+        }
       } catch (e) {
         console.log(e)
       }
+      // if (this.moreProposals) {
+      //   this.getProposals()
+      // }
+      // this.loadingVotes = false
       this.loadingVotes = false
     },
 

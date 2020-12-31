@@ -333,7 +333,7 @@ export default {
             cancel: false,
             onConfirm: () => {
               this.getProposal(this.id)
-              return false
+              return true
             }
           })
         } catch (e) {

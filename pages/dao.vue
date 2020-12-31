@@ -301,6 +301,7 @@ export default {
       this.$wallet.handleTransaction(actions)
         .then(() => {
           this.init()
+          this.wallet.checkIfSigned()
           this.signedConstitution = true
           this.constitutionModal = false
         })

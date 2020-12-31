@@ -402,7 +402,7 @@ export default {
             key_type: 'i64',
             limit: 100,
             lower_bound: id,
-            upper_bound: id + 1
+            upper_bound: id
           }
           // if (this.nextKey) {
           //   config.lower_bound = this.nextKey

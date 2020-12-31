@@ -102,7 +102,9 @@
                   <div class="image is-32x32 is-rounded mr-2">
                     <avatar :account-name="vote.voter" />
                   </div>
-                  <span>{{ vote.voter }}</span>
+                  <nuxt-link :to="'/account/'+vote.voter">
+                    <b>{{ vote.voter }}</b>
+                  </nuxt-link>
                 </div>
               </div>
               <div class="column is-2 has-text-centered">

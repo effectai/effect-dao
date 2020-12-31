@@ -76,8 +76,9 @@
             </div>
           </div>
           <div>
-            <button class="button is-primary is-fullwidth" :disabled="!votes || vote_type === null || !wallet || !wallet.auth" @click.prevent="vote">
+            <button class="button is-primary is-fullwidth" :disabled="!votes || vote_type === null || !wallet || !wallet.auth || wallet.nfxStillClaimable" @click.prevent="vote">
               <span v-if="!wallet || !wallet.auth">Not connected to wallet</span>
+              <span v-else-if="wallet.nfxStillClaimable">Claim NFX before you can vote</span>
               <span v-else>Vote</span>
             </button>
           </div>

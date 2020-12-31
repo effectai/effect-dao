@@ -14,9 +14,14 @@
               <small>requesting <span v-for="(pay, index) in proposal.pay" :key="index"><span v-if="index > 0">,</span> {{ pay.field_0.quantity }}</span></small>
             </div>
           </div>
-          <div class="media-right">
-            <b class="is-size-7 has-text-right">{{categories[proposal.category]}}</b>
-            <div class="is-size-7 has-text-right" v-if="proposal.cycle">
+          <div class="media-right has-text-right">
+            <div class="is-size-7"><b>{{categories[proposal.category]}}</b></div>
+            <div v-if="proposal.status =='ACTIVE'">
+              <span class="vote-result" v-for="result in proposal.vote_counts" :key="result.key">
+                <small><b :class="{'has-text-success': result.key === 1, 'has-text-danger': result.key === 2}">{{ voteTypes.find((vt) => vt.value == result.key).name }}: {{result.value}}</b></small>
+              </span>
+            </div>
+            <div class="is-size-7 has-text-right" v-else-if="proposal.cycle">
               Cycle {{proposal.cycle}}
             </div>
           </div>
@@ -33,6 +38,20 @@ export default {
   props: ['proposals'],
   data () {
     return {
+      voteTypes: [
+        {
+          value: 1,
+          name: 'Y'
+        },
+        {
+          value: 0,
+          name: 'A'
+        },
+        {
+          value: 2,
+          name: 'N'
+        }
+      ],
       categories: {
         0: 'Governance Proposal',
         1: 'Marketing',
@@ -49,5 +68,18 @@ export default {
     .media-left {
       min-width: 72px;
     }
+  }
+  .vote-result {
+    //margin-right: 10px;
+    &:after {
+      content: " - "
+    }
+    &:last-of-type:after {
+      //margin-right:0;
+      content: ""
+    }
+  }
+  .media {
+    flex-wrap: wrap;
   }
 </style>

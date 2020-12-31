@@ -102,7 +102,9 @@
                   <div class="image is-32x32 is-rounded mr-2">
                     <avatar :account-name="vote.voter" />
                   </div>
-                  <span>{{ vote.voter }}</span>
+                  <nuxt-link :to="'/account/'+vote.voter">
+                    <b>{{ vote.voter }}</b>
+                  </nuxt-link>
                 </div>
               </div>
               <div class="column is-2 has-text-centered">
@@ -331,7 +333,7 @@ export default {
             cancel: false,
             onConfirm: () => {
               this.getProposal(this.id)
-              return false
+              return true
             }
           })
         } catch (e) {
@@ -402,7 +404,7 @@ export default {
             key_type: 'i64',
             limit: 100,
             lower_bound: id,
-            upper_bound: id + 1
+            upper_bound: id
           }
           // if (this.nextKey) {
           //   config.lower_bound = this.nextKey

@@ -54,7 +54,7 @@ export default (context, inject) => {
         if (data.rows.length > 0) {
           console.log(data.rows[0])
           this.proposalConfig = data.rows[0]
-          this.getCycleConfig(data.rows[0].currentCycle)
+          this.getCycleConfig(data.rows[0].current_cycle)
         }
       },
       async getCycleConfig (cycle) {

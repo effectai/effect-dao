@@ -92,19 +92,19 @@
         Loading Votes..
       </div>
       <div v-else-if="votes && votes.length > 0">
-          <nuxt-link :to="'/proposals/'+vote.proposal_id" class="columns is-vcentered is-mobile" v-for="vote in votes" :key="vote.id" >
-            <div class="column">
-              <div >
-                Proposal <b>{{vote.proposal_id}}</b>
-              </div>
+        <nuxt-link v-for="vote in votes" :key="vote.id" :to="'/proposals/'+vote.proposal_id" class="columns is-vcentered is-mobile">
+          <div class="column">
+            <div>
+              Proposal <b>{{ vote.proposal_id }}</b>
             </div>
-            <div class="column has-text-centered">
-              <b :class="{'has-text-success': vote.type === 1, 'has-text-danger': vote.type === 2}">{{voteTypes.find((vt) => vt.value === vote.type).name}}</b>
-            </div>
-            <div class="column has-text-centered">
-              {{vote.weight}}
-            </div>
-          </nuxt-link>
+          </div>
+          <div class="column has-text-centered">
+            <b :class="{'has-text-success': vote.type === 1, 'has-text-danger': vote.type === 2}">{{ voteTypes.find((vt) => vt.value === vote.type).name }}</b>
+          </div>
+          <div class="column has-text-centered">
+            {{ vote.weight }}
+          </div>
+        </nuxt-link>
       </div>
       <div v-else-if="votes">
         No Votes
@@ -271,6 +271,7 @@ export default {
           key_type: 'name',
           index_position: 3,
           lower_bound: this.account.name,
+          upper_bound: this.account.name,
           limit: 100
         }
         // if (this.nextKey) {

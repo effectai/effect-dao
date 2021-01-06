@@ -12,7 +12,9 @@
     "deploy": "push-dir --dir=dist --branch=gh-pages --cleanup"
   },
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@nuxtjs/axios": "^5.12.2",
+    "@nuxtjs/fontawesome": "^1.1.2",
     "@nuxtjs/markdownit": "^1.2.10",
     "bulma": "^0.9.1",
     "bulma-slider": "^2.0.4",

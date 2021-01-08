@@ -1,34 +1,22 @@
-name: ci
+name: github pages
 
 on:
   push:
     branches:
       - main
-      - master
-  pull_request:
-    branches:
-      - main
-      - master
 
 jobs:
-  ci:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node: [14]
-
+  deploy:
+    runs-on: ubuntu-18.04
     steps:
-      - name: Checkout 🛎
-        uses: actions/checkout@master
+      - uses: actions/checkout@v2
 
-      - name: Setup node env 🏗
-        uses: actions/setup-node@v2.1.2
+      - name: Setup Node
+        uses: actions/setup-node@v2.1.0
         with:
-          node-version: ${{ matrix.node }}
+          node-version: '12.x'
 
-      - name: Cache node_modules 📦
+      - name: Cache dependencies
         uses: actions/cache@v2
         with:
           path: ~/.npm
@@ -36,9 +24,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Install dependencies 👨🏻‍💻
-        run: npm ci
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run generate
 
-      - name: Run linter 👀
-        run: npm run lint
-
+      - name: deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist

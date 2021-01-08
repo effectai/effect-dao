@@ -69,7 +69,8 @@ export default {
         'faCaretSquareDown',
         'faStickyNote',
         'faTimes',
-        'faCheck'
+        'faCheck',
+        'faInfoCircle'
       ]
     }
   },

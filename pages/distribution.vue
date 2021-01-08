@@ -2,11 +2,13 @@
   <div>
     <div class="columns stakes is-multiline mt-5">
       <div class="column is-full">
-        <div class="box">
-          <h3>
-            Total EFX distributed:
+        <div class="box total-dist">
+          <h2>
             <ICountUp :end-val="totalFees" />
-          </h3>
+          </h2>
+          <div class="text">
+            Total EFX Distributed
+          </div>
         </div>
       </div>
 
@@ -56,6 +58,32 @@
           </div>
         </div>
       </div>
+
+      <div class="column is-full">
+        <div class="box">
+          <h5 class="box-title">
+            Distribution History
+          </h5>
+          <div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Cycle</th>
+                  <th><abbr title="Total EFX">Total</abbr></th>
+                  <th><abbr title="Your Claimed EFX">Your share</abbr></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>1</th>
+                  <th>200000 EFX</th>
+                  <th>300 EFX (0.01%)</th>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -98,5 +126,9 @@ export default {
 .buttons {
   margin-top: 25px;
   padding-bottom: 2px;
+}
+
+.total-dist {
+  text-align: center;
 }
 </style>

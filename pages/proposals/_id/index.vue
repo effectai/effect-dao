@@ -20,7 +20,7 @@
           <span class="tag" :class="{'is-success': proposal.status == 'ACTIVE', 'is-warning': proposal.status == 'DRAFT', 'is-link': proposal.status == 'PENDING', 'is-dark': proposal.status == 'CLOSED'}">{{ proposal.status }}</span>
         </div>
         <div v-if="proposal.title" class="title is-4">
-          {{ proposal.title }}
+          #{{ proposal.id }}: {{ proposal.title }}
         </div>
         <div v-else class="title is-4">
           ...

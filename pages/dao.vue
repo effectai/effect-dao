@@ -139,7 +139,7 @@
         </button>
       </div>
     </div>
-    <div v-if="signedConstitution" class="has-text-centered">
+    <div v-if="signedConstitution" class="has-text-centered mt-6">
       <small><a href="#" @click="constitutionLeaveModal = true">Leave DAO</a></small>
     </div>
   </div>

@@ -66,7 +66,10 @@ export default {
     icons: {
       solid: [
         'faHome',
-        'faCaretSquareDown'
+        'faCaretSquareDown',
+        'faStickyNote',
+        'faTimes',
+        'faCheck'
       ]
     }
   },

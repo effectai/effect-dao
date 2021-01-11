@@ -16,10 +16,20 @@
     <div class="box mt-5">
       <h4 class="box-title mb-0">
         Proposals
-        <div class="is-size-6">
+        <div class="is-size-6 mt-2">
           <small>
-            <span v-if="currentCycle">Cycle {{ currentCycle }}
-              <span v-if="$dao.cycleConfig">started {{ $moment($dao.cycleConfig.start_time + "Z").fromNow() }}</span>
+            <span v-if="$dao.cycleConfig && $moment($dao.cycleConfig.start_time + 'Z').add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isAfter()">
+              <span v-if="currentCycle">Cycle {{ currentCycle }}
+                <span v-if="$dao.cycleConfig">
+                  started {{ $moment($dao.cycleConfig.start_time + "Z").fromNow() }} and ends {{
+                    $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow()
+                  }} <br>
+                  Voting ends {{ $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').fromNow() }}
+                </span>
+              </span>
+            </span>
+            <span v-else-if="$dao.cycleConfig && currentCycle">
+              New cycle starts {{ $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow() }}
             </span>
             <span v-else-if="$dao.cycleConfig">
               <!-- Genesis cycle!-->
@@ -28,7 +38,6 @@
                 $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow()
               }}</span>
             </span>
-
           </small>
         </div>
       </h4>
@@ -112,6 +121,10 @@ export default {
           name: 'Draft'
         },
         {
+          id: 'PROCESSING',
+          name: 'Processing'
+        },
+        {
           id: 'CLOSED',
           name: 'Closed'
         },
@@ -192,6 +205,8 @@ export default {
                   status = 'DRAFT'
                 } else if (proposal.cycle === this.currentCycle) {
                   status = 'ACTIVE'
+                } else if (proposal.cycle < this.currentCycle) {
+                  status = 'PROCESSING'
                 } else {
                   status = 'PENDING'
                 }

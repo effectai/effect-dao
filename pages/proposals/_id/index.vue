@@ -94,7 +94,7 @@
             Cast your vote
           </h5>
           <p v-if="proposal.status === 'PENDING' || proposal.status === 'PROCESSING'" class="has-text-centered">
-            <span v-if="proposal.cycle < currentCycle">
+            <span v-if="proposal.cycle < currentCycle || proposal.status === 'PROCESSING'">
               Voting closed.
             </span>
             <span v-else>

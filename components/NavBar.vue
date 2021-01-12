@@ -167,7 +167,7 @@ export default {
       margin-right: 4px;
       img {
         border-radius: 100%;
-        width: 28px
+        width: 28px;
       }
     }
 

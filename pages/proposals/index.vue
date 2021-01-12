@@ -203,12 +203,15 @@ export default {
               if (proposal.state === 0) {
                 if (!proposal.cycle) {
                   status = 'DRAFT'
-                } else if (proposal.cycle === this.currentCycle) {
-                  status = 'ACTIVE'
-                } else if (proposal.cycle < this.currentCycle) {
-                  status = 'PROCESSING'
                 } else {
-                  status = 'PENDING'
+                  const proposalCycle = await this.$dao.getCycleConfig(proposal.cycle)
+                  if (proposalCycle && this.$moment(proposalCycle.start_time + 'Z').add(this.$dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isAfter()) {
+                    status = 'ACTIVE'
+                  } else if (proposalCycle && this.$moment(proposalCycle.start_time + 'Z').add(this.$dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isBefore()) {
+                    status = 'PROCESSING'
+                  } else {
+                    status = 'PENDING'
+                  }
                 }
               }
               this.$set(proposal, 'status', status)

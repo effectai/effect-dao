@@ -53,18 +53,20 @@
           <h5 class="box-title">
             Cast your vote
           </h5>
-          <div v-if="proposal.status === 'ACTIVE' && proposalCycle" class="has-text-centered mb-4">
-            Voting ends {{ $moment(proposalCycle.start_time + "Z").add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').fromNow() }}
+          <div v-if="proposalCycle" class="has-text-centered mb-4">
+            <span v-if="$moment(proposalCycle.start_time + 'Z').add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isBefore()">
+              Voting Closed
+            </span>
+            <span v-else>
+              Voting ends {{ $moment(proposalCycle.start_time + "Z").add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').fromNow() }}
+            </span>
             <!--            <b>Current Vote {{ myVote.voter }}:</b> {{ voteTypes.find((vt) => vt.value === myVote.type).name }} - {{ myVote.weight }}-->
           </div>
           <div v-else-if="myVote && proposal.status === 'CLOSED'">
             <b>You voted {{ myVote.voter }}:</b> {{ voteTypes.find((vt) => vt.value === myVote.type).name }} - {{ myVote.weight }}
           </div>
-          <div v-if="proposal.status === 'ACTIVE' && proposalCycle" class="columns">
-            <span v-if="$moment(proposalCycle.start_time + 'Z').add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isBefore()">
-              Voting closed
-            </span>
-            <div v-for="voteType in voteTypes" v-else :key="voteType.value" class="control column">
+          <div v-if="proposal.status === 'ACTIVE' && proposalCycle && $moment(proposalCycle.start_time + 'Z').add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isAfter()" class="columns">
+            <div v-for="voteType in voteTypes" :key="voteType.value" class="control column">
               <button class="button is-fullwidth" :class="{'is-dark': voteType.value === 0, 'is-danger': voteType.value === 2, 'is-success': voteType.value === 1, 'is-outlined': vote_type !== voteType.value}" @click.prevent="vote_type = voteType.value">
                 <span class="icon">
                   <i class="fas" :class="{'fa-sticky-note': voteType.value === 0, 'fa-times': voteType.value === 2, 'fa-check': voteType.value === 1}" />
@@ -384,27 +386,26 @@ export default {
             limit: 1
           })
           this.proposal = data.rows[0]
+          this.proposalCycle = await this.$dao.getCycleConfig(this.proposal.cycle)
           this.loading = false
           let status = 'CLOSED'
           if (this.proposal.state === 0) {
             if (!this.proposal.cycle) {
               status = 'DRAFT'
-            } else if (this.proposal.cycle === this.currentCycle) {
+            } else if (this.proposalCycle && this.$moment(this.proposalCycle.start_time + 'Z').add(this.$dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isAfter()) {
               status = 'ACTIVE'
-            } else if (this.proposal.cycle < this.currentCycle) {
+            } else if (this.proposalCycle && this.$moment(this.proposalCycle.start_time + 'Z').add(this.$dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isBefore()) {
               status = 'PROCESSING'
             } else {
               status = 'PENDING'
             }
           }
           this.$set(this.proposal, 'status', status)
-          console.log(this.proposal)
           const ipfsProposal = await this.$dao.getIpfsProposal(this.proposal.content_hash)
           this.$set(this.proposal, 'title', ipfsProposal.title)
           this.$set(this.proposal, 'body', ipfsProposal.body)
           this.$set(this.proposal, 'files', ipfsProposal.files ? ipfsProposal.files : [])
           await this.getVotes(parseInt(id))
-          this.proposalCycle = await this.$dao.getCycleConfig(this.proposal.cycle)
         } catch (e) {
           console.log(e)
         }

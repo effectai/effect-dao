@@ -26,7 +26,7 @@
                 </span>
               </td>
               <td class="has-text-right">
-                {{ hello(chartBalances[index]) }} EFX
+                {{ hello(balances[chartData.datasets[1].meta[index].balanceKey]) }} EFX
               </td>
               <td class="has-text-left">
                 <a
@@ -38,7 +38,7 @@
           </tbody>
         </table>
       </div>
-      <pie-chart :data="chartData" :options="chartOptions" />
+      <pie-chart v-if="!loading" :data="chartData" :options="chartOptions" />
     </div>
     <div class="box">
       <h4 class="box-title">
@@ -173,6 +173,7 @@ export default {
   },
   data () {
     return {
+      loading: true,
       balances: {
         daoBalance: 0,
         proposalBalance: 0,
@@ -265,11 +266,11 @@ export default {
   computed: {
     chartData () {
       return {
-        labels: ['EffectDAO', 'Circulating Supply', 'Foundation Tokens', 'Team Tokens'],
+        labels: ['Circulating Supply', 'Locked Supply'],
         datasets: [
           {
             name: 'Token Map',
-            backgroundColor: ['#E46651', '#41B883', '#A4B8BB', '#00D8FF', '#00D8FF'],
+            backgroundColor: ['#41B883', '#E46651'],
             weight: 0.9,
             meta: [
               {
@@ -298,14 +299,26 @@ export default {
                 link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno'
               }
             ],
-            data: this.innerChartBalances,
-            labels: ['Effect DAO', 'Circulating Supply', 'Foundation Tokens', 'Team Tokens']
+            data: this.chartBalances,
+            labels: ['Circulating Supply', 'Locked Supply']
           },
           {
             name: 'Token Map',
-            backgroundColor: ['#e4744c', '#e44707', '#0dd925', '#499166', '#376d4c', '#A4B8BB', '#00D8FF'],
+            backgroundColor: ['#0dd925', '#499166', '#394dfa', '#d6fca4', '#7aa7ff', '#A4B8BB', '#7e8a8c'],
             weight: 0.7,
             meta: [
+              {
+                addressName: 'effecttokens',
+                link: 'https://bloks.io/tokens/EFX-eos-effecttokens',
+                description: 'test',
+                balanceKey: 'liquidBalance'
+              },
+              {
+                addressName: 'acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
+                link: 'https://neotracker.io/asset/acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
+                description: 'test',
+                balanceKey: 'unswappedBalance'
+              },
               {
                 addressName: 'treasury.efx',
                 link: 'https://bloks.io/account/treasury.efx',
@@ -321,22 +334,11 @@ export default {
                 balanceKey: 'proposalBalance'
               },
               {
-                addressName: 'effecttokens',
-                link: 'https://bloks.io/tokens/EFX-eos-effecttokens',
-                description: 'test',
-                balanceKey: 'liquidBalance'
-              },
-              {
                 addressName: 'efxstakepool',
+                locked: true,
                 link: 'https://bloks.io/account/efxstakepool',
                 description: 'test',
                 balanceKey: 'stakeBalance'
-              },
-              {
-                addressName: 'acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
-                link: 'https://neotracker.io/asset/acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
-                description: 'test',
-                balanceKey: 'unswappedBalance'
               },
               {
                 // addressName: 'locked.efx',
@@ -355,17 +357,28 @@ export default {
                 balanceKey: 'teamBalance'
               }
             ],
-            data: this.chartBalances,
-            labels: ['Effect DAO', 'Proposal Funds', 'Liquid Supply', 'Stake Pool', 'Unswapped on NEO', 'Foundation Tokens', 'Team Tokens']
+            data: this.innerChartBalances,
+            labels: ['Liquid Supply', 'Unswapped on NEO', 'Effect DAO', 'Proposal Funds', 'Stake Pool', 'Foundation Tokens', 'Team Tokens']
           }
         ]
       }
     },
     chartBalances () {
-      return [this.balances.daoBalance, this.balances.proposalBalance, this.balances.liquidBalance, this.balances.stakeBalance, this.balances.unswappedBalance, this.balances.foundationBalance, this.balances.teamBalance]
+      return [
+        this.balances.liquidBalance + this.balances.unswappedBalance,
+        this.balances.foundationBalance + this.balances.teamBalance + this.balances.stakeBalance + this.balances.daoBalance + this.balances.proposalBalance
+      ]
     },
     innerChartBalances () {
-      return [this.balances.daoBalance + this.balances.proposalBalance, this.balances.foundationBalance + this.balances.maxSupply - (this.balances.stakeBalance + this.balances.proposalBalance + this.balances.foundationBalance + 130000000 + 65375000 + 32125000), 130000000 + 65375000, 32125000]
+      return [
+        this.balances.liquidBalance,
+        this.balances.unswappedBalance,
+        this.balances.daoBalance,
+        this.balances.proposalBalance,
+        this.balances.stakeBalance,
+        this.balances.teamBalance,
+        this.balances.foundationBalance
+      ]
     }
   },
   mounted () {
@@ -378,6 +391,7 @@ export default {
       this.balances.proposalBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'daoproposals', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.stakeBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'efxstakepool', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.liquidBalance = circSupply - this.balances.daoBalance - this.balances.stakeBalance
+      this.loading = false
     },
     hello (x) {
       if (!x) {

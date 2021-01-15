@@ -310,34 +310,34 @@ export default {
               {
                 addressName: 'effecttokens',
                 link: 'https://bloks.io/tokens/EFX-eos-effecttokens',
-                description: 'test',
+                description: 'Current supply in circulation and not locked in any staking or timelock.',
                 balanceKey: 'liquidBalance'
               },
               {
                 addressName: 'acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
                 link: 'https://neotracker.io/asset/acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
-                description: 'test',
+                description: 'EFX tokens that did not swap to EOS yet.',
                 balanceKey: 'unswappedBalance'
               },
               {
                 addressName: 'treasury.efx',
                 link: 'https://bloks.io/account/treasury.efx',
                 locked: true,
-                description: 'test',
+                description: 'Tokens governed by the DAO, from here proposals are funded.',
                 balanceKey: 'daoBalance'
               },
               {
                 addressName: 'daoproposals',
                 link: 'https://bloks.io/account/daoproposals',
                 locked: true,
-                description: 'test',
+                description: 'The proposal balance for the current cycle.',
                 balanceKey: 'proposalBalance'
               },
               {
                 addressName: 'efxstakepool',
                 locked: true,
                 link: 'https://bloks.io/account/efxstakepool',
-                description: 'test',
+                description: 'Staked EFX.',
                 balanceKey: 'stakeBalance'
               },
               {
@@ -346,14 +346,14 @@ export default {
                 addressName: 'AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
                 link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
                 locked: true,
-                description: 'test',
+                description: 'EFX locked by the foundation.',
                 balanceKey: 'foundationBalance'
               },
               {
                 addressName: 'AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
                 locked: true,
                 link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
-                description: 'test',
+                description: 'EFX locked by the team.',
                 balanceKey: 'teamBalance'
               }
             ],

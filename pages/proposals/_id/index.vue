@@ -69,7 +69,9 @@
             <div v-for="voteType in voteTypes" :key="voteType.value" class="control column">
               <button class="button is-fullwidth" :class="{'is-dark': voteType.value === 0, 'is-danger': voteType.value === 2, 'is-success': voteType.value === 1, 'is-outlined': vote_type !== voteType.value}" @click.prevent="vote_type = voteType.value">
                 <span class="icon">
-                  <i class="fas" :class="{'fa-sticky-note': voteType.value === 0, 'fa-times': voteType.value === 2, 'fa-check': voteType.value === 1}" />
+                  <font-awesome-icon v-if="voteType.value === 0" :icon="['fas', 'hand-paper']" />
+                  <font-awesome-icon v-else-if="voteType.value === 2" :icon="['fas', 'times']" />
+                  <font-awesome-icon v-else-if="voteType.value === 1" :icon="['fas', 'check']" />
                 </span>
                 <span>{{ voteType.name }}</span>
               </button>

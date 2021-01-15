@@ -65,11 +65,11 @@ export default {
   fontawesome: {
     icons: {
       solid: [
-        'faHome',
         'faCaretSquareDown',
         'faStickyNote',
         'faTimes',
-        'faCheck'
+        'faCheck',
+        'faHandPaper'
       ]
     }
   },

@@ -389,10 +389,13 @@ export default {
           this.proposalCycle = await this.$dao.getCycleConfig(this.proposal.cycle)
           this.loading = false
           let status = 'CLOSED'
+          // console.log(this.proposalCycle)
+          // console.log(this.proposal)
+          console.log(this.$dao.cycleConfig)
           if (this.proposal.state === 0) {
             if (!this.proposal.cycle) {
               status = 'DRAFT'
-            } else if (this.proposalCycle && this.proposal.cycle === this.$dao.cycleConfig.current_cycle && this.$moment(this.proposalCycle.start_time + 'Z').add(this.$dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isAfter()) {
+            } else if (this.proposalCycle && this.proposal.cycle === this.$dao.proposalConfig.current_cycle && this.$moment(this.proposalCycle.start_time + 'Z').add(this.$dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isAfter()) {
               status = 'ACTIVE'
             } else if (this.proposalCycle && this.$moment(this.proposalCycle.start_time + 'Z').add(this.$dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isBefore()) {
               status = 'PROCESSING'

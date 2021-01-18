@@ -1,11 +1,5 @@
 <template>
   <div>
-    <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
-      integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
-      crossorigin="anonymous"
-    >
     <div class="mb-2">
       <nuxt-link to="/proposals" class="is-size-7">
         &lt; All Proposals
@@ -59,24 +53,37 @@
           <h5 class="box-title">
             Cast your vote
           </h5>
-          <div v-if="myVote && proposal.status === 'ACTIVE'">
+          <div v-if="proposalCycle" class="has-text-centered mb-4">
+            <span v-if="$moment(proposalCycle.start_time + 'Z').add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isBefore()">
+              Voting Closed
+            </span>
+            <span v-else>
+              Voting ends {{ $moment(proposalCycle.start_time + "Z").add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').fromNow() }}
+            </span>
             <!--            <b>Current Vote {{ myVote.voter }}:</b> {{ voteTypes.find((vt) => vt.value === myVote.type).name }} - {{ myVote.weight }}-->
           </div>
           <div v-else-if="myVote && proposal.status === 'CLOSED'">
             <b>You voted {{ myVote.voter }}:</b> {{ voteTypes.find((vt) => vt.value === myVote.type).name }} - {{ myVote.weight }}
           </div>
-          <div class="columns">
+          <div v-if="proposal.status === 'ACTIVE' && proposalCycle && $moment(proposalCycle.start_time + 'Z').add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isAfter()" class="columns">
             <div v-for="voteType in voteTypes" :key="voteType.value" class="control column">
               <button class="button is-fullwidth" :class="{'is-dark': voteType.value === 0, 'is-danger': voteType.value === 2, 'is-success': voteType.value === 1, 'is-outlined': vote_type !== voteType.value}" @click.prevent="vote_type = voteType.value">
                 <span class="icon">
-                  <i class="fas" :class="{'fa-sticky-note': voteType.value === 0, 'fa-times': voteType.value === 2, 'fa-check': voteType.value === 1}" />
+                  <font-awesome-icon v-if="voteType.value === 0" :icon="['fas', 'hand-paper']" />
+                  <font-awesome-icon v-else-if="voteType.value === 2" :icon="['fas', 'times']" />
+                  <font-awesome-icon v-else-if="voteType.value === 1" :icon="['fas', 'check']" />
                 </span>
                 <span>{{ voteType.name }}</span>
               </button>
             </div>
           </div>
           <div>
-            <button class="button is-primary is-fullwidth" :disabled="!votes || vote_type === null || !wallet || !wallet.auth || wallet.nfxStillClaimable || !$wallet.rank || !$wallet.rank.currentRank" @click.prevent="vote">
+            <NuxtLink v-if="wallet && wallet.auth && !signedLastConstitution" to="/dao">
+              <button class="button is-primary is-fullwidth">
+                Sign new constitution
+              </button>
+            </NuxtLink>
+            <button v-else class="button is-primary is-fullwidth" :disabled="!votes || vote_type === null || !wallet || !wallet.auth || wallet.nfxStillClaimable || !$wallet.rank || !$wallet.rank.currentRank" @click.prevent="vote">
               <span v-if="!wallet || !wallet.auth">Not connected to wallet</span>
               <span v-else-if="!$wallet.rank || !$wallet.rank.currentRank">Not a Guardian</span>
               <span v-else-if="wallet.nfxStillClaimable">Claim NFX before you can vote</span>
@@ -88,8 +95,16 @@
           <h5 class="box-title">
             Cast your vote
           </h5>
-          <p class="has-text-centered">
-            Voting will be possible once this proposal is active.
+          <p v-if="proposal.status === 'PENDING' || proposal.status === 'PROCESSING'" class="has-text-centered">
+            <span v-if="proposal.cycle < currentCycle || proposal.status === 'PROCESSING'">
+              Voting closed.
+            </span>
+            <span v-else>
+              Voting will be possible once cycle {{ proposal.cycle }} is active.
+            </span>
+          </p>
+          <p v-else-if="proposal.status === 'DRAFT'" class="has-text-centered">
+            This proposal is currently in draft. It can be voted on once it is pushed to a cycle by the author and that cycle is live.
           </p>
         </div>
         <div class="box mt-5">
@@ -210,6 +225,7 @@ export default {
       ipfsExplorer: process.env.ipfsExplorer,
       loading: false,
       proposal: null,
+      proposalCycle: null,
       id: this.$route.params.id,
       vote_type: null,
       voteTypes: [
@@ -291,6 +307,9 @@ export default {
     },
     currentCycle () {
       return this.$dao.proposalConfig ? this.$dao.proposalConfig.current_cycle : null
+    },
+    signedLastConstitution () {
+      return this.$wallet.signedConstitutionVersion === (this.$dao.lastTerms ? this.$dao.lastTerms.version : 0)
     }
   },
 
@@ -369,19 +388,24 @@ export default {
             limit: 1
           })
           this.proposal = data.rows[0]
+          this.proposalCycle = await this.$dao.getCycleConfig(this.proposal.cycle)
           this.loading = false
           let status = 'CLOSED'
+          // console.log(this.proposalCycle)
+          // console.log(this.proposal)
+          console.log(this.$dao.cycleConfig)
           if (this.proposal.state === 0) {
             if (!this.proposal.cycle) {
               status = 'DRAFT'
-            } else if (this.proposal.cycle === this.currentCycle) {
+            } else if (this.proposalCycle && this.proposal.cycle === this.$dao.proposalConfig.current_cycle && this.$moment(this.proposalCycle.start_time + 'Z').add(this.$dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isAfter()) {
               status = 'ACTIVE'
+            } else if (this.proposalCycle && this.$moment(this.proposalCycle.start_time + 'Z').add(this.$dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isBefore()) {
+              status = 'PROCESSING'
             } else {
               status = 'PENDING'
             }
           }
           this.$set(this.proposal, 'status', status)
-          console.log(this.proposal)
           const ipfsProposal = await this.$dao.getIpfsProposal(this.proposal.content_hash)
           this.$set(this.proposal, 'title', ipfsProposal.title)
           this.$set(this.proposal, 'body', ipfsProposal.body)
@@ -394,7 +418,7 @@ export default {
       }
     },
     async getVotes (id) {
-      this.loading = true
+      // this.loading = true
       if (this.$dao.proposalConfig) {
         try {
           const config = {

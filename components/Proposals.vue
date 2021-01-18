@@ -7,11 +7,11 @@
             <span class="tag" :class="{'is-success': proposal.status == 'ACTIVE', 'is-warning': proposal.status == 'DRAFT', 'is-link': proposal.status == 'PENDING', 'is-dark': proposal.status == 'CLOSED'}">{{ proposal.status }}</span>
           </div>
           <div class="media-content">
-            <b v-if="proposal.title">#{{ proposal.id }}: {{ proposal.title | truncate(60) }}</b>
+            <b v-if="proposal.title">#{{ proposal.id }}: {{ proposal.title | truncate(50) }}</b>
             <b v-else>...</b>
             <div class="has-text-weight-light">
               <small class="mr-1">by <nuxt-link :to="'/account/'+proposal.author">{{ proposal.author }}</nuxt-link></small>
-              <small>requesting <span v-for="(pay, index) in proposal.pay" :key="index"><span v-if="index > 0">,</span> {{ pay.field_0.quantity }}</span></small>
+              <small>requesting <span v-for="(pay, index) in proposal.pay" :key="index"><span v-if="index > 0">,</span> {{ parseInt(pay.field_0.quantity) }} EFX</span></small>
             </div>
           </div>
           <div class="media-right has-text-right">

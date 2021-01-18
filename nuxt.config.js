@@ -69,6 +69,7 @@ export default {
         'faStickyNote',
         'faTimes',
         'faCheck',
+        'faInfoCircle',
         'faHandPaper'
       ]
     }

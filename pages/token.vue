@@ -188,7 +188,7 @@ export default {
         {
           name: 'Members',
           description: '',
-          value: 276
+          value: 296
         },
         {
           name: 'Guardians',
@@ -203,7 +203,7 @@ export default {
         {
           name: 'Next Cycle',
           description: '',
-          value: '1-1-2021'
+          value: '29-1-2021'
         },
         {
           name: 'Distribution Strategy',
@@ -330,7 +330,7 @@ export default {
                 addressName: 'daoproposals',
                 link: 'https://bloks.io/account/daoproposals',
                 locked: true,
-                description: 'The proposal balance for the current cycle.',
+                description: 'The funds reserved for the scheduled cycles.',
                 balanceKey: 'proposalBalance'
               },
               {
@@ -341,24 +341,24 @@ export default {
                 balanceKey: 'stakeBalance'
               },
               {
+                addressName: 'AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
+                locked: true,
+                link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
+                description: 'EFX locked by the team on NEO until 2021-04.',
+                balanceKey: 'teamBalance'
+              },
+              {
                 // addressName: 'locked.efx',
                 // link: 'https://bloks.io/account/locked.efx',
                 addressName: 'AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
                 link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
                 locked: true,
-                description: 'EFX locked by the foundation.',
+                description: 'EFX locked by the foundation until 2021-09.',
                 balanceKey: 'foundationBalance'
-              },
-              {
-                addressName: 'AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
-                locked: true,
-                link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
-                description: 'EFX locked by the team.',
-                balanceKey: 'teamBalance'
               }
             ],
             data: this.innerChartBalances,
-            labels: ['Liquid Supply', 'Unswapped on NEO', 'Effect DAO', 'Proposal Funds', 'Stake Pool', 'Foundation Tokens', 'Team Tokens']
+            labels: ['Liquid Supply', 'Unswapped on NEO', 'Effect DAO', 'Proposal Funds', 'Stake Pool', 'Team Tokens', 'Foundation Tokens']
           }
         ]
       }

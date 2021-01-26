@@ -234,11 +234,11 @@ export default (context, inject) => {
           const stakes = await this.getStake(this.wallet.auth.accountName)
           stakes.map((row) => {
             if (row.amount.includes(process.env.efxToken)) {
-              this.efxStaked = parseFloat(row.amount.replace(` ${process.env.efxToken}`, '').replace('.', ','))
+              this.efxStaked = parseFloat(row.amount.replace(` ${process.env.efxToken}`, ''))
               this.efxLastClaimTime = row.last_claim_time
               this.efxLastClaimAge = row.last_claim_age
             } else if (row.amount.includes(process.env.nfxToken)) {
-              this.nfxStaked = parseFloat(row.amount.replace(` ${process.env.nfxToken}`, '').replace('.', ','))
+              this.nfxStaked = parseFloat(row.amount.replace(` ${process.env.nfxToken}`, ''))
             }
           })
         }

@@ -262,10 +262,10 @@ export default (context, inject) => {
           }).then((data) => {
             data.rows.map((row) => {
               if (row.amount.includes(process.env.efxToken)) {
-                this.efxUnstaking = parseFloat(row.amount.replace(` ${process.env.efxToken}`, '').replace('.', ','))
+                this.efxUnstaking = parseFloat(row.amount.replace(` ${process.env.efxToken}`, ''))
                 this.efxUnstakingTime = row.time
               } else if (row.amount.includes(process.env.nfxToken)) {
-                this.nfxUnstaking = parseFloat(row.amount.replace(` ${process.env.nfxToken}`, '').replace('.', ','))
+                this.nfxUnstaking = parseFloat(row.amount.replace(` ${process.env.nfxToken}`, ''))
                 this.nfxUnstakingTime = row.time
               }
             })

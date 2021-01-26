@@ -252,14 +252,14 @@ export default {
 
       stakeInfo.map((row) => {
         if (row.amount.includes(process.env.efxToken)) {
-          const efxStaked = parseFloat(row.amount.replace(` ${process.env.efxToken}`, '').replace('.', ','))
+          const efxStaked = parseFloat(row.amount.replace(` ${process.env.efxToken}`, ''))
           const stakeAge = this.$wallet.calculateStakeAge(efxStaked, row.last_claim_time, row.last_claim_age)
           const efxPower = this.$wallet.calculateEfxPower(efxStaked, stakeAge)
           this.$set(member, 'efxStaked', efxStaked)
           this.$set(member, 'stakeAge', stakeAge)
           this.$set(member, 'power', efxPower)
         } else if (row.amount.includes(process.env.nfxToken)) {
-          const nfxStaked = parseFloat(row.amount.replace(` ${process.env.nfxToken}`, '').replace('.', ','))
+          const nfxStaked = parseFloat(row.amount.replace(` ${process.env.nfxToken}`, ''))
           this.$set(member, 'nfxStaked', nfxStaked)
         }
       })

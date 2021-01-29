@@ -150,7 +150,7 @@ export default {
           return true
         }
         return proposal.status === this.filter
-      }).sort(function (a, b) {
+      }).sort(function (a, b) { // Cycle sorting
         if (a.cycle === b.cycle) {
           return (a.id > b.id ? -1 : 1)
         }
@@ -158,6 +158,8 @@ export default {
           return 1
         }
         return b.cycle === 0 ? -1 : (a.cycle > b.cycle ? 1 : -1)
+      }).sort(function (a, b) { // Status sorting
+        return (a.status === 'CLOSED') ? 1 : -1
       })
     },
     currentCycle () {

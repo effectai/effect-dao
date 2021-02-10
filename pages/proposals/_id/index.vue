@@ -11,7 +11,7 @@
     <div v-else-if="proposal" class="columns">
       <div class="column is-two-thirds">
         <div class="is-pulled-right">
-          <span class="tag" :class="{'is-success': proposal.status == 'ACTIVE', 'is-warning': proposal.status == 'DRAFT', 'is-link': proposal.status == 'PENDING', 'is-dark': proposal.status == 'CLOSED'}">{{ proposal.status }}</span>
+          <span class="tag" :class="{'is-success': proposal.status === 'ACTIVE' || proposal.status === 'EXECUTED' || proposal.status == 'ACCEPTED', 'is-warning': proposal.status === 'DRAFT', 'is-link': proposal.status === 'PENDING', 'is-dark': proposal.status === 'WARNING', 'is-danger': proposal.status === 'REJECTED'}">{{ proposal.status }}</span>
         </div>
         <div v-if="proposal.title" class="title is-4">
           #{{ proposal.id }}: {{ proposal.title }}
@@ -391,9 +391,6 @@ export default {
           this.proposalCycle = await this.$dao.getCycleConfig(this.proposal.cycle)
           this.loading = false
           let status = 'CLOSED'
-          // console.log(this.proposalCycle)
-          // console.log(this.proposal)
-          console.log(this.$dao.cycleConfig)
           if (this.proposal.state === 0) {
             if (!this.proposal.cycle) {
               status = 'DRAFT'
@@ -404,6 +401,12 @@ export default {
             } else {
               status = 'PENDING'
             }
+          } else if (this.proposal.state === 1) {
+            status = 'ACCEPTED'
+          } else if (this.proposal.state === 2) {
+            status = 'REJECTED'
+          } else if (this.proposal.state === 3) {
+            status = 'EXECUTED'
           }
           this.$set(this.proposal, 'status', status)
           const ipfsProposal = await this.$dao.getIpfsProposal(this.proposal.content_hash)

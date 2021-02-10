@@ -179,6 +179,7 @@ export default {
         proposalBalance: 0,
         liquidBalance: 0,
         stakeBalance: 0,
+        feepoolBalance: 0,
         unswappedBalance: 56459627,
         foundationBalance: 195375000,
         teamBalance: 32125000,
@@ -304,7 +305,7 @@ export default {
           },
           {
             name: 'Token Map',
-            backgroundColor: ['#0dd925', '#499166', '#394dfa', '#d6fca4', '#7aa7ff', '#A4B8BB', '#7e8a8c'],
+            backgroundColor: ['#0dd925', '#499166', '29ab5d', '#394dfa', '#d6fca4', '#7aa7ff', '#A4B8BB', '#7e8a8c'],
             weight: 0.7,
             meta: [
               {
@@ -318,6 +319,12 @@ export default {
                 link: 'https://neotracker.io/asset/acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
                 description: 'EFX tokens that did not swap to EOS yet.',
                 balanceKey: 'unswappedBalance'
+              },
+              {
+                addressName: 'fees.efx',
+                link: 'https://bloks.io/account/fees.efx',
+                description: 'Collected fees, claimable by network contributors.',
+                balanceKey: 'feepoolBalance'
               },
               {
                 addressName: 'treasury.efx',
@@ -358,14 +365,14 @@ export default {
               }
             ],
             data: this.innerChartBalances,
-            labels: ['Liquid Supply', 'Unswapped on NEO', 'Effect DAO', 'Proposal Funds', 'Stake Pool', 'Team Tokens', 'Foundation Tokens']
+            labels: ['Liquid Supply', 'Unswapped on NEO', 'Feepool', 'Effect DAO', 'Proposal Funds', 'Stake Pool', 'Team Tokens', 'Foundation Tokens']
           }
         ]
       }
     },
     chartBalances () {
       return [
-        this.balances.liquidBalance + this.balances.unswappedBalance,
+        this.balances.liquidBalance + this.balances.unswappedBalance + this.balances.feepoolBalance,
         this.balances.foundationBalance + this.balances.teamBalance + this.balances.stakeBalance + this.balances.daoBalance + this.balances.proposalBalance
       ]
     },
@@ -373,6 +380,7 @@ export default {
       return [
         this.balances.liquidBalance,
         this.balances.unswappedBalance,
+        this.balances.feepoolBalance,
         this.balances.daoBalance,
         this.balances.proposalBalance,
         this.balances.stakeBalance,
@@ -390,6 +398,7 @@ export default {
       this.balances.daoBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'treasury.efx', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.proposalBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'daoproposals', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.stakeBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'efxstakepool', process.env.efxToken))[0].replace(' EFX', ''))
+      // this.balances.feepoolBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'fees.efx', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.liquidBalance = circSupply - this.balances.daoBalance - this.balances.stakeBalance
       this.loading = false
     },

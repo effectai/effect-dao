@@ -5,7 +5,9 @@
         <div class="navbar-start">
           <nuxt-link class="navbar-item navbar-item navbar-title" to="/">
             <img src="@/assets/img/logo.png" class="logo">
-            <span class="top-title"><span class="has-text-weight-normal">Effect</span>&nbsp;<b class="has-text-weight-bold">Dashboard</b></span>
+            <span class="top-title"><span class="has-text-weight-normal">Effect</span>&nbsp;<b
+              class="has-text-weight-bold"
+            >Dashboard</b></span>
           </nuxt-link>
 
           <a
@@ -65,9 +67,26 @@
               <a v-if="!wallet" class="button is-primary" @click="$wallet.loginModal = true">
                 <strong>Connect Wallet</strong>
               </a>
-              <nuxt-link v-else class="button is-primary" :to="'/account/'+wallet.auth.accountName">
-                <strong>{{ wallet.auth.accountName }}</strong>
-              </nuxt-link>
+              <div v-else class="dropdown account-name-dropdown" :class="{'is-active': dropdown}">
+                <div class="dropdown-trigger" @click="dropdown = !dropdown">
+                  <figure class="image">
+                    <avatar :account-name="wallet.auth.accountName" />
+                  </figure>
+                  <span>{{ wallet.auth.accountName }}</span>
+                  <font-awesome-icon :icon="['fas', 'caret-square-down']" style="font-size: 12px" />
+                </div>
+                <div id="dropdown-menu" class="dropdown-menu" role="menu">
+                  <div class="dropdown-content" @click="dropdown = false">
+                    <nuxt-link class="dropdown-item" :to="`/account/${wallet.auth.accountName}`">
+                      View Profile
+                    </nuxt-link>
+                    <hr class="dropdown-divider">
+                    <a href="#" class="dropdown-item" @click="$transit.logout()">
+                      Disconnect
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -77,11 +96,18 @@
 </template>
 
 <script>
+import Avatar from '~/components/Avatar'
+
 export default {
+  components: {
+    Avatar
+  },
+
   data () {
     return {
       loading: false,
-      mobileMenu: false
+      mobileMenu: false,
+      dropdown: false
     }
   },
 
@@ -94,80 +120,127 @@ export default {
 </script>
 
 <style lang="scss">
-  .navbar {
-    background: transparent;
+.navbar {
+  background: transparent;
+  margin-top: 8px;
+
+  .navbar-burger.burger {
+    margin-top: -48px;
+  }
+
+  .mobile-connect {
+    display: none;
+    margin-bottom: -50px;
+    margin-top: 12px;
+  }
+
+  .navbar-title {
+    min-width: 100px;
+    font-weight: 700;
+    font-size: 18px;
+
+    .logo {
+      height: 35px;
+      max-width: none;
+      max-height: none;
+      margin-right: 8px;
+    }
+
+    &:hover {
+      color: inherit;
+    }
+  }
+
+  .account-name-dropdown {
+    font-weight: bold;
+    border: 1px solid #d6d7db;
+    border-radius: 4px;
+    padding: 4px;
+    user-select: none;
+    &:hover {
+      cursor: pointer;
+    }
+
+    .image {
+      float: left;
+      margin-top: -4px;
+      margin-right: 4px;
+      img {
+        border-radius: 100%;
+        width: 28px;
+      }
+    }
+
+    svg {
+      position: relative;
+      opacity: 0.4;
+      margin-left: 4px;
+      margin-right: 4px;
+    }
+
+    &.is-active, &:hover {
+      background: #d6d7db;
+    }
+
+    &.is-active {
+      svg {
+        opacity: 0.75;
+        transform: rotate(180deg);
+        //transition: transform 100ms linear;
+      }
+    }
+  }
+
+  .navbar-menu {
     margin-top: 8px;
+    justify-content: center;
 
-    .navbar-burger.burger {
-      margin-top: -48px;
-    }
-
-    .mobile-connect {
-      display: none;
-      margin-bottom: -50px;
-      margin-top: 12px;
-    }
-
-    .navbar-title {
-      min-width: 100px;
+    .navbar-item {
       font-weight: 700;
-      font-size: 18px;
-      .logo {
-        height: 35px;
-        max-width: none;
-        max-height: none;
-        margin-right: 8px;
-      }
-      &:hover {
-        color: inherit;
-      }
-    }
 
-    .navbar-menu {
-      margin-top: 8px;
-      justify-content: center;
-      .navbar-item {
-        font-weight: 700;
+      &:after {
+        display: block;
+        width: 0;
+        height: 2px;
+        position: absolute;
+        transition: width 0.5s;
+        bottom: 10px;
+        background: $accent;
+        content: "";
+      }
+
+      &.is-active {
+        color: $primary;
+
         &:after {
-          display:block;
-          width:0;
-          height:2px;
-          position: absolute;
-          transition: width 0.5s;
-          bottom: 10px;
-          background: $accent;
-          content: "";
-        }
-        &.is-active {
-          color: $primary;
-          &:after {
-            width: calc(100% - 1.5rem);
-          }
-        }
-      }
-    }
-    @media all and (max-width: 828px) {
-      .top-title {
-        display: block;
-        margin-top: -39px;
-        margin-left: 40px;
-      }
-
-      .navbar-end {
-        display: none;
-      }
-
-      .mobile-connect {
-        display: block;
-      }
-
-      .navbar-menu {
-        .navbar-item {
-          &:after {
-            display: none;
-          }
+          width: calc(100% - 1.5rem);
         }
       }
     }
   }
+
+  @media all and (max-width: 828px) {
+    .top-title {
+      display: block;
+      margin-top: -39px;
+      margin-left: 40px;
+    }
+
+    .navbar-end {
+      display: none;
+    }
+
+    .mobile-connect {
+      display: block;
+    }
+
+    .navbar-menu {
+      .navbar-item {
+        &:after {
+          display: none;
+        }
+      }
+    }
+  }
+}
 </style>

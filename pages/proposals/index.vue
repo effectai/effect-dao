@@ -16,10 +16,20 @@
     <div class="box mt-5">
       <h4 class="box-title mb-0">
         Proposals
-        <div class="is-size-6">
+        <div class="is-size-6 mt-2">
           <small>
-            <span v-if="currentCycle">Cycle {{ currentCycle }}
-              <span v-if="$dao.cycleConfig">started {{ $moment($dao.cycleConfig.start_time + "Z").fromNow() }}</span>
+            <span v-if="$dao.cycleConfig && $moment($dao.cycleConfig.start_time + 'Z').add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isAfter()">
+              <span v-if="currentCycle">Cycle {{ currentCycle }}
+                <span v-if="$dao.cycleConfig">
+                  started {{ $moment($dao.cycleConfig.start_time + "Z").fromNow() }} and ends {{
+                    $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow()
+                  }} <br>
+                  Voting ends {{ $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').fromNow() }}
+                </span>
+              </span>
+            </span>
+            <span v-else-if="$dao.cycleConfig && currentCycle">
+              New cycle starts {{ $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow() }}
             </span>
             <span v-else-if="$dao.cycleConfig">
               <!-- Genesis cycle!-->
@@ -28,7 +38,6 @@
                 $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow()
               }}</span>
             </span>
-
           </small>
         </div>
       </h4>
@@ -112,6 +121,10 @@ export default {
           name: 'Draft'
         },
         {
+          id: 'PROCESSING',
+          name: 'Processing'
+        },
+        {
           id: 'CLOSED',
           name: 'Closed'
         },
@@ -137,7 +150,7 @@ export default {
           return true
         }
         return proposal.status === this.filter
-      }).sort(function (a, b) {
+      }).sort(function (a, b) { // Cycle sorting
         if (a.cycle === b.cycle) {
           return (a.id > b.id ? -1 : 1)
         }
@@ -145,6 +158,8 @@ export default {
           return 1
         }
         return b.cycle === 0 ? -1 : (a.cycle > b.cycle ? 1 : -1)
+      }).sort(function (a, b) { // Status sorting
+        return (a.status === 'CLOSED') ? 1 : -1
       })
     },
     currentCycle () {
@@ -190,10 +205,15 @@ export default {
               if (proposal.state === 0) {
                 if (!proposal.cycle) {
                   status = 'DRAFT'
-                } else if (proposal.cycle === this.currentCycle) {
-                  status = 'ACTIVE'
                 } else {
-                  status = 'PENDING'
+                  const proposalCycle = await this.$dao.getCycleConfig(proposal.cycle)
+                  if (proposalCycle && proposal.cycle === this.$dao.proposalConfig.current_cycle && this.$moment(proposalCycle.start_time + 'Z').add(this.$dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isAfter()) {
+                    status = 'ACTIVE'
+                  } else if (proposalCycle && this.$moment(proposalCycle.start_time + 'Z').add(this.$dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isBefore()) {
+                    status = 'PROCESSING'
+                  } else {
+                    status = 'PENDING'
+                  }
                 }
               }
               this.$set(proposal, 'status', status)

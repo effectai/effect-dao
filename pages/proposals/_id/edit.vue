@@ -1,9 +1,13 @@
 <template>
   <div>
     <div class="box">
-      <h4 class="box-title">Edit Proposal {{id}}</h4>
-      <h5 v-if="loadingProposal" class="has-text-centered">Loading proposal..</h5>
-      <form @submit.prevent="updateProposal" v-else-if="proposal && proposalIpfs">
+      <h4 class="box-title">
+        Edit Proposal {{ id }}
+      </h4>
+      <h5 v-if="loadingProposal" class="has-text-centered">
+        Loading proposal..
+      </h5>
+      <form v-else-if="proposal && proposalIpfs" @submit.prevent="updateProposal">
         <div class="field">
           <label class="label">Title</label>
           <div class="control">
@@ -15,17 +19,20 @@
           <label class="label">Description</label>
           <div class="tabs" style="margin-bottom: 0">
             <ul>
-              <li :class="{'is-active': !preview}"><a @click.prevent="preview = false">Edit</a></li>
-              <li :class="{'is-active': preview}"><a @click.prevent="preview = true">Preview</a></li>
+              <li :class="{'is-active': !preview}">
+                <a @click.prevent="preview = false">Edit</a>
+              </li>
+              <li :class="{'is-active': preview}">
+                <a @click.prevent="preview = true">Preview</a>
+              </li>
             </ul>
           </div>
           <div v-if="preview" class="p-2">
             <div v-html="$md.render(proposalIpfs.body)" />
           </div>
-          <div class="control" v-else>
-            <vue-simplemde required v-model="proposalIpfs.body" ref="markdownEditor" :configs="{promptURLs: true, spellChecker: false}" />
+          <div v-else class="control">
+            <vue-simplemde ref="markdownEditor" v-model="proposalIpfs.body" required :configs="{promptURLs: true, spellChecker: false}" />
           </div>
-
         </div>
 
         <div class="field">
@@ -33,36 +40,42 @@
           <div class="control">
             <div class="file has-name is-fullwidth">
               <label class="file-label">
-                <input class="file-input" type="file" id="file" ref="file" @change="getSelectedFile">
+                <input id="file" ref="file" class="file-input" type="file" @change="getSelectedFile">
                 <span class="file-cta">
                   <span class="file-icon">
-                    <i class="fa fa-upload"></i>
+                    <i class="fa fa-upload" />
                   </span>
                   <span class="file-label">
                     Choose a file…
                   </span>
                 </span>
                 <span class="file-name">
-                  <span v-if="selectedFile">{{selectedFile.name}}</span>
+                  <span v-if="selectedFile">{{ selectedFile.name }}</span>
                 </span>
                 <span>
-                  <button :class="{'is-loading': uploadingFile}" :disabled="!selectedFile" @click.prevent="uploadFile" class="button is-primary">Upload File</button>
+                  <button :class="{'is-loading': uploadingFile}" :disabled="!selectedFile" class="button is-primary" @click.prevent="uploadFile">Upload File</button>
                 </span>
               </label>
             </div>
           </div>
           <table class="table">
             <tbody v-if="proposalIpfs.files.length > 0">
-            <tr v-for="file in proposalIpfs.files" :key="file.Hash">
-              <td><a :href="ipfsExplorer + '/ipfs/' + file.Hash" target="_blank">{{ file.Name }}</a></td>
-              <td>{{ file.Size | formatBytes }}</td>
-              <td class="has-text-right"><button @click.prevent="removeFile(file)" class="button is-danger is-small">Remove</button></td>
-            </tr>
+              <tr v-for="file in proposalIpfs.files" :key="file.Hash">
+                <td><a :href="ipfsExplorer + '/ipfs/' + file.Hash" target="_blank">{{ file.Name }}</a></td>
+                <td>{{ file.Size | formatBytes }}</td>
+                <td class="has-text-right">
+                  <button class="button is-danger is-small" @click.prevent="removeFile(file)">
+                    Remove
+                  </button>
+                </td>
+              </tr>
             </tbody>
             <tbody v-else>
-            <tr>
-              <td colspan="3">No files uploaded</td>
-            </tr>
+              <tr>
+                <td colspan="3">
+                  No files uploaded
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -77,7 +90,8 @@
                   step="0.0001"
                   type="number"
                   min="0"
-                  placeholder="100">
+                  placeholder="100"
+                >
                 <span class="icon is-small is-right">
                   EFX
                 </span>
@@ -90,11 +104,21 @@
               <div class="control">
                 <div class="select" style="width: 100%">
                   <select v-model="proposal.category" required style="width: 100%">
-                    <option :value="0" disabled>Governance Proposal</option>
-                    <option :value="1">Marketing</option>
-                    <option :value="2">Design</option>
-                    <option :value="3">Technical</option>
-                    <option :value="4">Other</option>
+                    <option :value="0" disabled>
+                      Governance Proposal
+                    </option>
+                    <option :value="1">
+                      Marketing
+                    </option>
+                    <option :value="2">
+                      Design
+                    </option>
+                    <option :value="3">
+                      Technical
+                    </option>
+                    <option :value="4">
+                      Other
+                    </option>
                   </select>
                 </div>
               </div>
@@ -102,30 +126,40 @@
           </div>
         </div>
         <div v-show="false" class="has-text-centered">
-          <button class="button is-outlined is-small" disabled @click.prevent="">+ Add another reward</button>
+          <button class="button is-outlined is-small" disabled @click.prevent="">
+            + Add another reward
+          </button>
           <div><small class="is-size-7"><i>coming soon</i></small></div>
         </div>
 
         <fieldset v-show="false" class="collapsible" :class="{'is-expanded': advanced}">
-          <legend class="has-text-weight-bold"><a @click.prevent="advanced = !advanced">Advanced</a></legend>
+          <legend class="has-text-weight-bold">
+            <a @click.prevent="advanced = !advanced">Advanced</a>
+          </legend>
           <div class="field">
             <label class="label">Cycle</label>
             <div class="control">
-              <input required class="input" v-model="proposal.cycle" type="number" min="0">
+              <input v-model="proposal.cycle" required class="input" type="number" min="0">
             </div>
           </div>
         </fieldset>
 
         <div class="field is-grouped is-grouped-right mt-4">
           <div class="control">
-            <nuxt-link class="button is-light" to="/proposals">Cancel</nuxt-link>
+            <nuxt-link class="button is-light" to="/proposals">
+              Cancel
+            </nuxt-link>
           </div>
           <div class="control">
-            <button type="submit" class="button is-primary is-wide" :class="{'is-loading': loading}" :disabled="!loggedIn || !myProposal">Save Proposal</button>
+            <button type="submit" class="button is-primary is-wide" :class="{'is-loading': loading}" :disabled="!loggedIn || !myProposal">
+              Save Proposal
+            </button>
           </div>
         </div>
       </form>
-      <h5 v-else class="has-text-centered">Could not retrieve proposal</h5>
+      <h5 v-else class="has-text-centered">
+        Could not retrieve proposal
+      </h5>
     </div>
   </div>
 </template>
@@ -138,6 +172,19 @@ export default {
     VueSimplemde
   },
   middleware: ['authenticated'],
+
+  filters: {
+    formatBytes (bytes, decimals = 2) {
+      if (bytes === 0) {
+        return '0 Bytes'
+      }
+      const k = 1024
+      const dm = decimals < 0 ? 0 : decimals
+      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+      const i = Math.floor(Math.log(bytes) / Math.log(k))
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
+    }
+  },
   data () {
     return {
       id: this.$route.params.id,
@@ -152,19 +199,6 @@ export default {
       proposalIpfs: null,
       proposal: null,
       cachedFormData: null
-    }
-  },
-
-  filters: {
-    formatBytes (bytes, decimals = 2) {
-      if (bytes === 0) {
-        return '0 Bytes'
-      }
-      const k = 1024
-      const dm = decimals < 0 ? 0 : decimals
-      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-      const i = Math.floor(Math.log(bytes) / Math.log(k))
-      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
     }
   },
 

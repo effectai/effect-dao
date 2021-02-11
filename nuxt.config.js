@@ -62,6 +62,19 @@ export default {
     'simplemde/dist/simplemde.min.css'
   ],
 
+  fontawesome: {
+    icons: {
+      solid: [
+        'faCaretSquareDown',
+        'faStickyNote',
+        'faTimes',
+        'faCheck',
+        'faInfoCircle',
+        'faHandPaper'
+      ]
+    }
+  },
+
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
     { src: '@/plugins/transit.js', mode: 'client' },
@@ -78,7 +91,8 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
-    '@nuxtjs/moment'
+    '@nuxtjs/moment',
+    '@nuxtjs/fontawesome'
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)

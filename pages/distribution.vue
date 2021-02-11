@@ -4,7 +4,7 @@
       <div class="column is-full">
         <div class="box total-dist">
           <h2>
-            <ICountUp :end-val="totalFees" />
+            <ICountUp :end-val="totalBalance" />
           </h2>
           <div class="text">
             Total EFX Distributed
@@ -19,7 +19,7 @@
           </h5>
           <div class="has-text-centered">
             <h3>
-              <ICountUp :end-val="totalFees" />
+              <ICountUp :end-val="lastCycleFees" />
               <span class="symbol">EFX</span>
             </h3>
           </div>
@@ -28,7 +28,7 @@
           </h5>
           <div class="has-text-centered">
             <h3>
-              <ICountUp :end-val="totalVoteWeight" />
+              <ICountUp :end-val="lastCycleTotalWeight" />
             </h3>
           </div>
         </div>
@@ -39,22 +39,37 @@
           <h5 class="box-title">
             Your Share
           </h5>
-          <div class="has-text-centered">
-            <h3>
-              <ICountUp :end-val="userVoteWeight" />
-              <span class="symbol">EFX</span>
-            </h3>
-            <h6>
-              0.03% of pool
-            </h6>
+          <div v-if="accountName" class="has-text-centered">
+            <div class="has-text-centered">
+              <h3>
+                <ICountUp :end-val="lastCycleUserWeight" />
+                <span class="symbol">EFX</span>
+              </h3>
+              <h6 v-if="lastCycleUserWeight > 0">
+                {{ (lastCycleUserWeight / lastCycleTotalWeight * 100).toFixed(3) }}% of pool
+              </h6>
+            </div>
+            <div class="buttons">
+              <button
+                class="button is-primary is-fullwidth"
+                :class="{ 'is-loading': loading }"
+                :disabled="true"
+              >
+                Claim Rewards
+              </button>
+              <button
+                class="button is-primary is-fullwidth"
+                :class="{ 'is-loading': loading }"
+                :disabled="true"
+              >
+                Claim & Stake Rewards
+              </button>
+            </div>
           </div>
-          <div class="buttons">
-            <button class="button is-primary is-fullwidth" :class="{ 'is-loading': loading }" :disabled="userClaimable === 0">
-              Claim Rewards
-            </button>
-            <button class="button is-primary is-fullwidth" :class="{ 'is-loading': loading }" :disabled="userClaimable === 0">
-              Claim & Stake Rewards
-            </button>
+          <div v-else class="has-text-centered">
+            <a class="button is-primary" @click="$wallet.loginModal = true">
+              <strong>Connect Wallet</strong>
+            </a>
           </div>
         </div>
       </div>
@@ -70,14 +85,18 @@
                 <tr>
                   <th>Cycle</th>
                   <th><abbr title="Total EFX">Total</abbr></th>
-                  <th><abbr title="Your Claimed EFX">Your share</abbr></th>
+                  <th><abbr title="Your Claimed EFX">You claimed</abbr></th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th>1</th>
-                  <th>200000 EFX</th>
-                  <th>300 EFX (0.01%)</th>
+                <tr v-for="balance in distributionBalances" :key="balance.cycle_id">
+                  <th>{{ balance.cycle_id }}</th>
+                  <th>
+                    <span v-if="balance.balance.length > 0">
+                      {{ balance.balance[0].value / 10000 }} EFX
+                    </span>
+                  </th>
+                  <th>0 EFX</th>
                 </tr>
               </tbody>
             </table>
@@ -99,15 +118,36 @@ export default {
   data () {
     return {
       loading: false,
-      totalFees: 0,
-      totalVoteWeight: 0,
-      userVoteWeight: 0,
-      userClaimable: 0
+      balances: [],
+      lastCycleTotalWeight: 0,
+      lastCycleUserWeight: 0
     }
   },
 
   computed: {
+    accountName () {
+      return (this.$wallet && this.$wallet.wallet) ? this.$wallet.wallet.auth.accountName : null
+    },
+    totalBalance () {
+      return Object.values(this.balances).reduce((acc, item) => {
+        if (item.balance.length > 0) {
+          return acc + item.balance[0].value / 10000
+        }
+      }, 0)
+    },
+    lastCycleFees () {
+      return (this.balances.length > 0) ? this.balances[this.balances.length - 1].balance[0].value / 10000 : 0
+    },
+    distributionBalances () {
+      const tbl = this.balances
+      return tbl.reverse() // reverse the temp var instead of the original var
+    }
+  },
 
+  watch: {
+    accountName () {
+      this.init()
+    }
   },
 
   created () {
@@ -115,8 +155,53 @@ export default {
   },
 
   methods: {
-    init () {
+    async init () {
+      const feeData = await this.$eos.rpc.get_table_rows({
+        code: process.env.feepoolContract,
+        scope: process.env.feepoolContract,
+        table: 'balance'
+      })
 
+      if (feeData && feeData.rows.length > 0) {
+        this.balances = feeData.rows
+        // const lastCycleId = this.balances[this.balances.length - 1].cycle_id
+        const lastCycleId = 1
+
+        const proposalData = await this.$eos.rpc.get_table_rows({
+          code: process.env.proposalContract,
+          scope: process.env.proposalContract,
+          table: 'proposal',
+          key_type: 'i64',
+          index_position: 3,
+          lower_bound: lastCycleId,
+          upper_bound: lastCycleId
+        })
+
+        if (proposalData && proposalData.rows.length > 0) {
+          const proposalIds = proposalData.rows.map(row => row.id)
+
+          const voteData = await this.$eos.rpc.get_table_rows({
+            code: process.env.proposalContract,
+            scope: process.env.proposalContract,
+            table: 'vote',
+            key_type: 'i64',
+            index_position: 4,
+            lower_bound: Math.min(...proposalIds),
+            upper_bound: Math.max(...proposalIds)
+          })
+
+          if (voteData && voteData.rows.length > 0) {
+            voteData.rows.map((vote) => {
+              if (proposalIds.includes(vote.proposal_id)) {
+                this.lastCycleTotalWeight += vote.weight
+                if (this.accountName && vote.voter === this.accountName) {
+                  this.lastCycleUserWeight += vote.weight
+                }
+              }
+            })
+          }
+        }
+      }
     }
   }
 }

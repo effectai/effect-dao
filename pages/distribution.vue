@@ -98,6 +98,28 @@
 
 <script>
 import ICountUp from 'vue-countup-v2'
+import Long from 'long'
+const Eos = require('eosjs')
+
+
+function bytesToHex (bytes) {
+  let hex = ''
+  for (const b of bytes) {
+    const n = Number(b).toString(16)
+    hex += (n.length === 1 ? '0' : '') + n
+  }
+  return hex
+}
+
+function getCompositeKey (name, cycle) {
+  const buf = new Eos.Serialize.SerialBuffer()
+  buf.reserve(64)
+  buf.pushName(name)
+  const nameHex = bytesToHex(buf.getUint8Array(8)).match(/../g).reverse().join('')
+  const cycleHex = bytesToHex(Long.fromNumber(cycle).toBytes())
+  return `0x${cycleHex}${nameHex}`
+}
+console.log(getCompositeKey('propbhede', 2))
 
 export default {
   components: {

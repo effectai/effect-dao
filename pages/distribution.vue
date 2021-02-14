@@ -1,17 +1,6 @@
 <template>
   <div>
     <div class="columns stakes is-multiline mt-5">
-      <div class="column is-full">
-        <div class="box total-dist">
-          <h2>
-            <ICountUp :end-val="totalBalance" />
-          </h2>
-          <div class="text">
-            Total EFX Distributed
-          </div>
-        </div>
-      </div>
-
       <div class="column is-half">
         <div class="box">
           <h5 class="box-title">

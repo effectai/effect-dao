@@ -4,7 +4,7 @@
       <div class="column is-half">
         <div class="box">
           <h5 class="box-title">
-            Last Cycle Fees
+            Cycle {{ cycleId }} Fees
           </h5>
           <div class="has-text-centered">
             <h3>
@@ -13,7 +13,7 @@
             </h3>
           </div>
           <h5 class="box-title mt-6">
-            Last Cycle Votes
+            Cycle {{ cycleId }} Votes
           </h5>
           <div class="has-text-centered">
             <h3>
@@ -109,7 +109,8 @@ export default {
       loading: false,
       balances: [],
       lastCycleTotalWeight: 0,
-      lastCycleUserWeight: 0
+      lastCycleUserWeight: 0,
+      cycleId: ''
     }
   },
 
@@ -155,6 +156,7 @@ export default {
         this.balances = feeData.rows
         // const lastCycleId = this.balances[this.balances.length - 1].cycle_id
         const lastCycleId = 1
+        this.cycleId = lastCycleId
 
         const proposalData = await this.$eos.rpc.get_table_rows({
           code: process.env.proposalContract,

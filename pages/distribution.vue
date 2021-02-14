@@ -42,11 +42,11 @@
           <div v-if="accountName" class="has-text-centered">
             <div class="has-text-centered">
               <h3>
-                <ICountUp :end-val="lastCycleUserWeight" />
+                <ICountUp :end-val="lastCycleFees * (lastCycleUserWeight / lastCycleTotalWeight)" />
                 <span class="symbol">EFX</span>
               </h3>
               <h6 v-if="lastCycleUserWeight > 0">
-                {{ (lastCycleUserWeight / lastCycleTotalWeight * 100).toFixed(3) }}% of pool
+                {{ (lastCycleUserWeight / lastCycleTotalWeight * 100).toFixed(2) }}% of pool
               </h6>
             </div>
             <div class="buttons">

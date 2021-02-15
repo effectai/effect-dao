@@ -46,12 +46,13 @@
                 Claim & Stake Rewards
               </button>
               <button
-                class="button is-primary is-fullwidth"
+                class="button is-fullwidth is-text is-small mb-4"
+                style="margin-top: 2px;"
                 :class="{ 'is-loading': loading }"
                 :disabled="!canClaim"
                 @click="claimRewards"
               >
-                Claim Rewards
+                or claim without staking
               </button>
             </div>
           </div>

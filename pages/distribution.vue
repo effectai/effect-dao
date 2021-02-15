@@ -50,7 +50,7 @@
                 style="margin-top: 2px;"
                 :class="{ 'is-loading': loading }"
                 :disabled="!canClaim"
-                @click="claimRewards"
+                @click="claimRewards(false)"
               >
                 or claim without staking
               </button>
@@ -138,8 +138,8 @@ export default {
       return (this.lastCycleUserFees > 0) ? (this.lastCycleUserWeight / this.lastCycleTotalWeight * 100).toFixed(2) : 0
     },
     canClaim () {
-      return true
-      // return !this.claims[this.lastCycleId] && this.lastCycleUserFees > 0
+      // return true
+      return !this.claims[this.lastCycleId] && this.lastCycleUserFees > 0
     },
     efxToken () {
       return process.env.efxToken
@@ -310,7 +310,7 @@ export default {
 
       return actions
     },
-    claimRewards (stake = false) {
+    claimRewards (andStake) {
       let actions = [
         {
           account: process.env.feepoolContract,
@@ -325,7 +325,7 @@ export default {
         }
       ]
 
-      if (stake) {
+      if (andStake) {
         actions = this.addStakeActions(actions)
       }
 

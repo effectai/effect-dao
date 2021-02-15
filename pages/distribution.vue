@@ -4,16 +4,16 @@
       <div class="column is-half">
         <div class="box">
           <h5 class="box-title">
-            Cycle {{ cycleId }} Fees
+            Cycle {{ lastCycleId }} Fees
           </h5>
           <div class="has-text-centered">
             <h3>
-              <ICountUp :end-val="lastCycleFees" />
-              <span class="symbol">EFX</span>
+              <ICountUp :end-val="lastCycleTotalFees" />
+              <span class="symbol">{{ efxToken }}</span>
             </h3>
           </div>
           <h5 class="box-title mt-6">
-            Cycle {{ cycleId }} Votes
+            Cycle {{ lastCycleId }} Vote Weight
           </h5>
           <div class="has-text-centered">
             <h3>
@@ -31,25 +31,25 @@
           <div v-if="accountName" class="has-text-centered">
             <div class="has-text-centered">
               <h3>
-                <ICountUp :end-val="lastCycleFees * (lastCycleUserWeight / lastCycleTotalWeight)" />
-                <span class="symbol">EFX</span>
+                <ICountUp :end-val="lastCycleUserFees" />
+                <span class="symbol">{{ efxToken }}</span>
               </h3>
-              <h6 v-if="lastCycleUserWeight > 0">
-                {{ (lastCycleUserWeight / lastCycleTotalWeight * 100).toFixed(2) }}% of pool
-              </h6>
+              <h6>{{ lastCycleUserShare }}% of pool</h6>
             </div>
             <div class="buttons">
               <button
                 class="button is-primary is-fullwidth"
                 :class="{ 'is-loading': loading }"
-                :disabled="true"
+                :disabled="!canClaim"
+                @click="claimRewards"
               >
                 Claim Rewards
               </button>
               <button
                 class="button is-primary is-fullwidth"
                 :class="{ 'is-loading': loading }"
-                :disabled="true"
+                :disabled="!canClaim"
+                @click="claimRewards(true)"
               >
                 Claim & Stake Rewards
               </button>
@@ -82,10 +82,10 @@
                   <th>{{ balance.cycle_id }}</th>
                   <th>
                     <span v-if="balance.balance.length > 0">
-                      {{ balance.balance[0].value / 10000 }} EFX
+                      {{ balance.balance[0].value / 10000 }} {{ efxToken }}
                     </span>
                   </th>
-                  <th>0 EFX</th>
+                  <th>{{ getUserCycleClaim(balance.cycle_id) }} {{ efxToken }}</th>
                 </tr>
               </tbody>
             </table>
@@ -99,27 +99,7 @@
 <script>
 import ICountUp from 'vue-countup-v2'
 import Long from 'long'
-const Eos = require('eosjs')
-
-
-function bytesToHex (bytes) {
-  let hex = ''
-  for (const b of bytes) {
-    const n = Number(b).toString(16)
-    hex += (n.length === 1 ? '0' : '') + n
-  }
-  return hex
-}
-
-function getCompositeKey (name, cycle) {
-  const buf = new Eos.Serialize.SerialBuffer()
-  buf.reserve(64)
-  buf.pushName(name)
-  const nameHex = bytesToHex(buf.getUint8Array(8)).match(/../g).reverse().join('')
-  const cycleHex = bytesToHex(Long.fromNumber(cycle).toBytes())
-  return `0x${cycleHex}${nameHex}`
-}
-console.log(getCompositeKey('propbhede', 2))
+import { Serialize } from 'eosjs'
 
 export default {
   components: {
@@ -130,34 +110,46 @@ export default {
     return {
       loading: false,
       balances: [],
+      claims: {},
+      totalFees: 0,
+      lastCycleTotalFees: 0,
       lastCycleTotalWeight: 0,
-      lastCycleUserWeight: 0,
-      cycleId: ''
+      lastCycleUserWeight: 0
     }
   },
 
   computed: {
     accountName () {
+      // return 'efxkylin1111'
       return (this.$wallet && this.$wallet.wallet) ? this.$wallet.wallet.auth.accountName : null
-    },
-    totalBalance () {
-      return Object.values(this.balances).reduce((acc, item) => {
-        if (item.balance.length > 0) {
-          return acc + item.balance[0].value / 10000
-        }
-      }, 0)
-    },
-    lastCycleFees () {
-      return (this.balances.length > 0) ? this.balances[this.balances.length - 1].balance[0].value / 10000 : 0
     },
     distributionBalances () {
       const tbl = this.balances
       return tbl.reverse() // reverse the temp var instead of the original var
+    },
+    lastCycleId () {
+      return (this.$dao.cycleConfig) ? this.$dao.cycleConfig.id - 1 : null
+    },
+    lastCycleUserFees () {
+      return (this.lastCycleTotalFees > 0 && this.lastCycleUserWeight > 0) ? this.lastCycleTotalFees * (this.lastCycleUserWeight / this.lastCycleTotalWeight) : 0
+    },
+    lastCycleUserShare () {
+      return (this.lastCycleUserFees > 0) ? (this.lastCycleUserWeight / this.lastCycleTotalWeight * 100).toFixed(2) : 0
+    },
+    canClaim () {
+      // return true
+      return !this.claims[this.lastCycleId] && this.lastCycleUserFees > 0
+    },
+    efxToken () {
+      return process.env.efxToken
     }
   },
 
   watch: {
     accountName () {
+      this.init()
+    },
+    lastCycleId () {
       this.init()
     }
   },
@@ -168,6 +160,12 @@ export default {
 
   methods: {
     async init () {
+      if (!this.lastCycleId) {
+        return
+      }
+
+      await this.getClaims()
+
       const feeData = await this.$eos.rpc.get_table_rows({
         code: process.env.feepoolContract,
         scope: process.env.feepoolContract,
@@ -176,9 +174,6 @@ export default {
 
       if (feeData && feeData.rows.length > 0) {
         this.balances = feeData.rows
-        // const lastCycleId = this.balances[this.balances.length - 1].cycle_id
-        const lastCycleId = 1
-        this.cycleId = lastCycleId
 
         const proposalData = await this.$eos.rpc.get_table_rows({
           code: process.env.proposalContract,
@@ -186,8 +181,8 @@ export default {
           table: 'proposal',
           key_type: 'i64',
           index_position: 3,
-          lower_bound: lastCycleId,
-          upper_bound: lastCycleId
+          lower_bound: this.lastCycleId,
+          upper_bound: this.lastCycleId
         })
 
         if (proposalData && proposalData.rows.length > 0) {
@@ -215,6 +210,131 @@ export default {
           }
         }
       }
+
+      this.calculateFees()
+    },
+    calculateFees () {
+      this.totalFees = Object.values(this.balances).reduce((acc, item) => {
+        if (item.balance.length > 0) {
+          if (item.cycle_id === this.lastCycleId) {
+            this.lastCycleTotalFees = item.balance[0].value / 10000
+          }
+          return acc + item.balance[0].value / 10000
+        }
+      }, 0)
+    },
+    async getClaims () {
+      if (this.accountName) {
+        const compositeKey = this.getCompositeKey(this.accountName, this.lastCycleId)
+        const claimData = await this.$eos.rpc.get_table_rows({
+          code: process.env.feepoolContract,
+          scope: process.env.feepoolContract,
+          table: 'claim',
+          index_position: 2,
+          key_type: 'i128',
+          lower_bound: compositeKey,
+          upper_bound: compositeKey
+        })
+
+        if (claimData && claimData.rows.length > 0) {
+          claimData.rows.map((claim) => {
+            this.claims[claim.cycle_id] = parseFloat(claim.amounts[0].quantity.replace(` ${process.env.efxToken}`, ''))
+          })
+        }
+      }
+    },
+    bytesToHex (bytes) {
+      let hex = ''
+      for (const b of bytes) {
+        const n = Number(b).toString(16)
+        hex += (n.length === 1 ? '0' : '') + n
+      }
+      return hex
+    },
+    getCompositeKey (name, cycle) {
+      const buf = new Serialize.SerialBuffer()
+      buf.reserve(64)
+      buf.pushName(name)
+      const nameHex = this.bytesToHex(buf.getUint8Array(8)).match(/../g).reverse().join('')
+      const cycleHex = this.bytesToHex(Long.fromNumber(cycle).toBytes())
+      return `0x${cycleHex}${nameHex}`
+    },
+    getUserCycleClaim (cycleId) {
+      return (this.claims[cycleId]) ? this.claims[cycleId] : 0
+    },
+    addStakeActions (actions) {
+      if (this.$wallet.efxStaked > 0) {
+        actions.push({
+          account: process.env.stakingContract,
+          name: 'claim',
+          authorization: [{
+            actor: this.$wallet.wallet.auth.accountName,
+            permission: this.$wallet.wallet.auth.permission
+          }],
+          data: {
+            owner: this.$wallet.wallet.auth.accountName,
+            symbol: `4,${process.env.efxToken}`
+          }
+        })
+      } else {
+        actions.push({
+          account: process.env.stakingContract,
+          name: 'open',
+          authorization: [{
+            actor: this.$wallet.wallet.auth.accountName,
+            permission: this.$wallet.wallet.auth.permission
+          }],
+          data: {
+            owner: this.$wallet.wallet.auth.accountName,
+            symbol: `4,${process.env.efxToken}`,
+            ram_payer: this.$wallet.wallet.auth.accountName
+          }
+        })
+      }
+
+      actions.push({
+        account: process.env.tokenContract,
+        name: 'transfer',
+        authorization: [{
+          actor: this.$wallet.wallet.auth.accountName,
+          permission: this.$wallet.wallet.auth.permission
+        }],
+        data: {
+          from: this.$wallet.wallet.auth.accountName,
+          to: process.env.stakingContract,
+          quantity: `${Number.parseFloat(this.lastCycleUserFees).toFixed(4)} ${process.env.efxToken}`,
+          memo: 'stake'
+        }
+      })
+
+      return actions
+    },
+    claimRewards (stake = false) {
+      let actions = [
+        {
+          account: process.env.feepoolContract,
+          name: 'claimreward',
+          authorization: [{
+            actor: this.$wallet.wallet.auth.accountName,
+            permission: this.$wallet.wallet.auth.permission
+          }],
+          data: {
+            account: this.$wallet.wallet.auth.accountName
+          }
+        }
+      ]
+
+      if (stake) {
+        actions = this.addStakeActions(actions)
+      }
+
+      this.$wallet.handleTransaction(actions)
+        .then(() => {
+          this.init()
+        })
+        .finally(() => {
+          this.loading = false
+        })
     }
   }
 }

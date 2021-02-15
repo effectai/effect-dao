@@ -38,20 +38,20 @@
             </div>
             <div class="buttons">
               <button
+                class="button is-primary is-fullwidth rainbow-btn"
+                :class="{ 'is-loading': loading }"
+                :disabled="!canClaim"
+                @click="claimRewards(true)"
+              >
+                Claim & Stake Rewards
+              </button>
+              <button
                 class="button is-primary is-fullwidth"
                 :class="{ 'is-loading': loading }"
                 :disabled="!canClaim"
                 @click="claimRewards"
               >
                 Claim Rewards
-              </button>
-              <button
-                class="button is-primary is-fullwidth"
-                :class="{ 'is-loading': loading }"
-                :disabled="!canClaim"
-                @click="claimRewards(true)"
-              >
-                Claim & Stake Rewards
               </button>
             </div>
           </div>
@@ -137,8 +137,8 @@ export default {
       return (this.lastCycleUserFees > 0) ? (this.lastCycleUserWeight / this.lastCycleTotalWeight * 100).toFixed(2) : 0
     },
     canClaim () {
-      // return true
-      return !this.claims[this.lastCycleId] && this.lastCycleUserFees > 0
+      return true
+      // return !this.claims[this.lastCycleId] && this.lastCycleUserFees > 0
     },
     efxToken () {
       return process.env.efxToken

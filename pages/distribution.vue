@@ -162,7 +162,7 @@ export default {
       return (this.cycleOverride) ? this.cycleOverride : (this.$dao.cycleConfig) ? this.$dao.cycleConfig.id - 1 : null
     },
     lastCycleUserFees () {
-      return (this.lastCycleTotalFees > 0 && this.lastCycleUserWeight > 0) ? this.lastCycleTotalFees * (this.lastCycleUserWeight / this.lastCycleTotalWeight) : 0
+      return (this.lastCycleTotalFees > 0 && this.lastCycleUserWeight > 0) ? Math.trunc((this.lastCycleTotalFees * 10000) / this.lastCycleTotalWeight) / 10000 * this.lastCycleUserWeight : 0
     },
     lastCycleUserShare () {
       return (this.lastCycleUserFees > 0) ? (this.lastCycleUserWeight / this.lastCycleTotalWeight * 100).toFixed(2) : 0

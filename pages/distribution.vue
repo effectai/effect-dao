@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="columns stakes is-multiline mt-5">
+    <div v-if="!loading" class="columns stakes is-multiline mt-5">
       <div class="column is-half">
         <div class="box">
           <h5 class="box-title">
@@ -36,7 +36,10 @@
               </h3>
               <h6>{{ lastCycleUserShare }}% of pool</h6>
             </div>
-            <div class="buttons">
+            <div v-if="getUserCycleClaim(lastCycleId) > 0" class="claimed has-text-success">
+              You successfully claimed your share for this cycle!
+            </div>
+            <div v-else class="buttons">
               <button
                 class="button is-primary is-fullwidth rainbow-btn"
                 :class="{ 'is-loading': loading }"
@@ -86,7 +89,15 @@
                       {{ balance.balance[0].value / 10000 }} {{ efxToken }}
                     </span>
                   </th>
-                  <th>{{ getUserCycleClaim(balance.cycle_id) }} {{ efxToken }}</th>
+                  <th v-if="balance.cycle_id > lastCycleId">
+                    Can be claimed in next cycle
+                  </th>
+                  <th v-else-if="getUserCycleClaim(balance.cycle_id) > 0">
+                    {{ getUserCycleClaim(balance.cycle_id) }} {{ efxToken }}
+                  </th>
+                  <th v-else>
+                    -
+                  </th>
                 </tr>
               </tbody>
             </table>
@@ -94,6 +105,18 @@
         </div>
       </div>
     </div>
+
+    <form v-if="isTestnet">
+      <h4>Dev tools (override)</h4>
+      <label for="cycle">LastCycleId</label>
+      <input id="cycle" v-model="cycleOverride" type="number">
+      <br>
+      <label for="account">accountName</label>
+      <input id="account" v-model="accountOverride" type="text">
+      <br>
+      <label for="claim">canClaim</label>
+      <input id="claim" v-model="claimOverride" type="checkbox">
+    </form>
   </div>
 </template>
 
@@ -110,26 +133,33 @@ export default {
   data () {
     return {
       loading: false,
+
       balances: [],
       claims: {},
       totalFees: 0,
       lastCycleTotalFees: 0,
       lastCycleTotalWeight: 0,
-      lastCycleUserWeight: 0
+      lastCycleUserWeight: 0,
+      efxToken: process.env.efxToken,
+
+      // Testing/Dev
+      isTestnet: process.env.eosNodeUrl.includes('kylin'),
+      cycleOverride: null,
+      accountOverride: 'efxkylin1111',
+      claimOverride: null
     }
   },
 
   computed: {
     accountName () {
-      // return 'efxkylin1111'
-      return (this.$wallet && this.$wallet.wallet) ? this.$wallet.wallet.auth.accountName : null
+      return (this.accountOverride) ? this.accountOverride : (this.$wallet && this.$wallet.wallet) ? this.$wallet.wallet.auth.accountName : null
     },
     distributionBalances () {
       const tbl = this.balances
       return tbl.reverse() // reverse the temp var instead of the original var
     },
     lastCycleId () {
-      return (this.$dao.cycleConfig) ? this.$dao.cycleConfig.id - 1 : null
+      return (this.cycleOverride) ? this.cycleOverride : (this.$dao.cycleConfig) ? this.$dao.cycleConfig.id - 1 : null
     },
     lastCycleUserFees () {
       return (this.lastCycleTotalFees > 0 && this.lastCycleUserWeight > 0) ? this.lastCycleTotalFees * (this.lastCycleUserWeight / this.lastCycleTotalWeight) : 0
@@ -138,11 +168,7 @@ export default {
       return (this.lastCycleUserFees > 0) ? (this.lastCycleUserWeight / this.lastCycleTotalWeight * 100).toFixed(2) : 0
     },
     canClaim () {
-      // return true
-      return !this.claims[this.lastCycleId] && this.lastCycleUserFees > 0
-    },
-    efxToken () {
-      return process.env.efxToken
+      return (this.claimOverride) ? this.claimOverride : !this.claims[this.lastCycleId] && this.lastCycleUserFees > 0
     }
   },
 
@@ -165,7 +191,7 @@ export default {
         return
       }
 
-      await this.getClaims()
+      this.loading = true
 
       const feeData = await this.$eos.rpc.get_table_rows({
         code: process.env.feepoolContract,
@@ -175,6 +201,7 @@ export default {
 
       if (feeData && feeData.rows.length > 0) {
         this.balances = feeData.rows
+        this.getClaims(this.balances)
 
         const proposalData = await this.$eos.rpc.get_table_rows({
           code: process.env.proposalContract,
@@ -213,6 +240,7 @@ export default {
       }
 
       this.calculateFees()
+      this.loading = false
     },
     calculateFees () {
       this.totalFees = Object.values(this.balances).reduce((acc, item) => {
@@ -224,24 +252,26 @@ export default {
         }
       }, 0)
     },
-    async getClaims () {
+    getClaims (balances) {
       if (this.accountName) {
-        const compositeKey = this.getCompositeKey(this.accountName, this.lastCycleId)
-        const claimData = await this.$eos.rpc.get_table_rows({
-          code: process.env.feepoolContract,
-          scope: process.env.feepoolContract,
-          table: 'claim',
-          index_position: 2,
-          key_type: 'i128',
-          lower_bound: compositeKey,
-          upper_bound: compositeKey
-        })
-
-        if (claimData && claimData.rows.length > 0) {
-          claimData.rows.map((claim) => {
-            this.claims[claim.cycle_id] = parseFloat(claim.amounts[0].quantity.replace(` ${process.env.efxToken}`, ''))
+        balances.map(async (balance) => {
+          const compositeKey = this.getCompositeKey(this.accountName, balance.cycle_id)
+          const claimData = await this.$eos.rpc.get_table_rows({
+            code: process.env.feepoolContract,
+            scope: process.env.feepoolContract,
+            table: 'claim',
+            index_position: 2,
+            key_type: 'i128',
+            lower_bound: compositeKey,
+            upper_bound: compositeKey
           })
-        }
+
+          if (claimData && claimData.rows.length > 0) {
+            claimData.rows.map((claim) => {
+              this.claims[claim.cycle_id] = parseFloat(claim.amounts[0].quantity.replace(` ${process.env.efxToken}`, ''))
+            })
+          }
+        })
       }
     },
     bytesToHex (bytes) {
@@ -349,5 +379,11 @@ export default {
 
 .total-dist {
   text-align: center;
+}
+
+.claimed {
+  font-weight: bold;
+  max-width: 200px;
+  margin: 40px auto 27px;
 }
 </style>

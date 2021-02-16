@@ -211,6 +211,8 @@ export default {
                     status = 'ACTIVE'
                   } else if (proposalCycle && this.$moment(proposalCycle.start_time + 'Z').add(this.$dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isBefore()) {
                     status = 'PROCESSING'
+                  } else if (proposalCycle && proposal.cycle < this.currentCycle) {
+                    status = 'PROCESSING'
                   } else {
                     status = 'PENDING'
                   }

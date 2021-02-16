@@ -198,7 +198,8 @@ export default {
             lower_bound: Math.min(...proposalIds),
             upper_bound: Math.max(...proposalIds)
           })
-
+          this.lastCycleTotalWeight = 0
+          this.lastCycleUserWeight = 0
           if (voteData && voteData.rows.length > 0) {
             voteData.rows.map((vote) => {
               if (proposalIds.includes(vote.proposal_id)) {

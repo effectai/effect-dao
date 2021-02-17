@@ -39,6 +39,10 @@
 
     <nav-bar />
     <div class="container is-max-desktop content">
+      <div v-if="showAirdrop" class="airdrop">
+        You received <b>{{ genesisAirdrop.toFixed(0) }} EFX</b> in the genesis fee distribution!
+        <button class="delete" @click="closeAirdrop" />
+      </div>
       <nuxt />
     </div>
     <foot />
@@ -60,7 +64,8 @@ export default {
   data () {
     return {
       isTestnet: process.env.eosNodeUrl.includes('kylin'),
-      node: process.env.eosNodeUrl
+      node: process.env.eosNodeUrl,
+      closedAirdrop: localStorage.getItem('airdropClose') !== null
     }
   },
 
@@ -83,12 +88,24 @@ export default {
 
     discordMembersOnline () {
       return this.$dao.discordMembersOnline
+    },
+
+    genesisAirdrop () {
+      return this.$wallet.genesisAirdrop
+    },
+
+    showAirdrop () {
+      return (!this.closedAirdrop && this.genesisAirdrop > 0)
     }
   },
 
   methods: {
     clearTransaction () {
       this.$wallet.clearTransaction()
+    },
+    closeAirdrop () {
+      localStorage.setItem('airdropClose', new Date().toString())
+      this.closedAirdrop = true
     }
   }
 }
@@ -147,5 +164,21 @@ export default {
   right: 20px;
   z-index: 9999;
   top: 20px;
+}
+
+.airdrop {
+  border-radius: 4px;
+  background: gray;
+  text-align: center;
+  font-size: 19px;
+  padding: 14px;
+  color: #FFF;
+  background-image: linear-gradient(109.6deg,  rgba(62,161,219,1) 11.2%, rgba(93,52,236,1) 100.2%);
+  .delete {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    margin-left: -20px;
+  }
 }
 </style>

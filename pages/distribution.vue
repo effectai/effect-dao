@@ -147,7 +147,7 @@ export default {
       // Testing/Dev
       isTestnet: process.env.eosNodeUrl.includes('kylin'),
       cycleOverride: null,
-      accountOverride: 'efxkylin1111',
+      accountOverride: null,
       claimOverride: null
     }
   },

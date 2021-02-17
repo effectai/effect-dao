@@ -322,7 +322,7 @@ export default {
               },
               {
                 addressName: 'feepool.efx',
-                link: 'https://bloks.io/account/fees.efx',
+                link: 'https://bloks.io/account/feepool.efx',
                 description: 'Collected fees, claimable by network contributors.',
                 balanceKey: 'feepoolBalance'
               },
@@ -398,7 +398,7 @@ export default {
       this.balances.daoBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'treasury.efx', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.proposalBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'daoproposals', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.stakeBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'efxstakepool', process.env.efxToken))[0].replace(' EFX', ''))
-      // this.balances.feepoolBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'fees.efx', process.env.efxToken))[0].replace(' EFX', ''))
+      this.balances.feepoolBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'feepool.efx', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.liquidBalance = circSupply - this.balances.daoBalance - this.balances.stakeBalance
       this.loading = false
     },

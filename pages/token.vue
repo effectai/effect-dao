@@ -321,7 +321,7 @@ export default {
                 balanceKey: 'unswappedBalance'
               },
               {
-                addressName: 'fees.efx',
+                addressName: 'feepool.efx',
                 link: 'https://bloks.io/account/fees.efx',
                 description: 'Collected fees, claimable by network contributors.',
                 balanceKey: 'feepoolBalance'

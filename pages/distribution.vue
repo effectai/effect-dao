@@ -48,7 +48,7 @@
       <div class="column is-half">
         <div class="box">
           <h5 class="box-title">
-            Cycle {{ lastCycleId }}: Fees
+            Cycle {{ lastCycleId }}: Total Fees
           </h5>
           <div class="has-text-centered">
             <h3>
@@ -57,7 +57,7 @@
             </h3>
           </div>
           <h5 class="box-title mt-6">
-            Cycle {{ lastCycleId }}: Vote Weight
+            Cycle {{ lastCycleId }}: Total Vote Weight
           </h5>
           <div class="has-text-centered">
             <h3>

@@ -4,28 +4,6 @@
       <div class="column is-half">
         <div class="box">
           <h5 class="box-title">
-            Cycle {{ lastCycleId }} Fees
-          </h5>
-          <div class="has-text-centered">
-            <h3>
-              <ICountUp :end-val="lastCycleTotalFees" />
-              <span class="symbol">{{ efxToken }}</span>
-            </h3>
-          </div>
-          <h5 class="box-title mt-6">
-            Cycle {{ lastCycleId }} Vote Weight
-          </h5>
-          <div class="has-text-centered">
-            <h3>
-              <ICountUp :end-val="lastCycleTotalWeight" />
-            </h3>
-          </div>
-        </div>
-      </div>
-
-      <div class="column is-half">
-        <div class="box">
-          <h5 class="box-title">
             Your Share
           </h5>
           <div v-if="accountName" class="has-text-centered">
@@ -63,6 +41,28 @@
             <a class="button is-primary" @click="$wallet.loginModal = true">
               <strong>Connect Wallet</strong>
             </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="column is-half">
+        <div class="box">
+          <h5 class="box-title">
+            Cycle {{ lastCycleId }}: Fees
+          </h5>
+          <div class="has-text-centered">
+            <h3>
+              <ICountUp :end-val="lastCycleTotalFees" />
+              <span class="symbol">{{ efxToken }}</span>
+            </h3>
+          </div>
+          <h5 class="box-title mt-6">
+            Cycle {{ lastCycleId }}: Vote Weight
+          </h5>
+          <div class="has-text-centered">
+            <h3>
+              <ICountUp :end-val="lastCycleTotalWeight" />
+            </h3>
           </div>
         </div>
       </div>
@@ -116,6 +116,8 @@
       <br>
       <label for="claim">canClaim</label>
       <input id="claim" v-model="claimOverride" type="checkbox">
+      <br>
+      lastCycleUserWeight: {{ lastCycleUserWeight }}
     </form>
   </div>
 </template>
@@ -132,7 +134,7 @@ export default {
 
   data () {
     return {
-      loading: false,
+      loading: true,
 
       balances: [],
       claims: {},
@@ -191,8 +193,6 @@ export default {
         return
       }
 
-      this.loading = true
-
       const feeData = await this.$eos.rpc.get_table_rows({
         code: process.env.feepoolContract,
         scope: process.env.feepoolContract,
@@ -202,6 +202,18 @@ export default {
       if (feeData && feeData.rows.length > 0) {
         this.balances = feeData.rows
         this.getClaims(this.balances)
+
+        const cycleData = await this.$eos.rpc.get_table_rows({
+          code: process.env.proposalContract,
+          scope: process.env.proposalContract,
+          table: 'cycle',
+          lower_bound: this.lastCycleId,
+          upper_bound: this.lastCycleId
+        })
+
+        if (cycleData && cycleData.rows.length > 0) {
+          this.lastCycleTotalWeight = cycleData.rows[0].total_vote_weight
+        }
 
         const proposalData = await this.$eos.rpc.get_table_rows({
           code: process.env.proposalContract,
@@ -215,28 +227,7 @@ export default {
 
         if (proposalData && proposalData.rows.length > 0) {
           const proposalIds = proposalData.rows.map(row => row.id)
-
-          const voteData = await this.$eos.rpc.get_table_rows({
-            code: process.env.proposalContract,
-            scope: process.env.proposalContract,
-            table: 'vote',
-            key_type: 'i64',
-            index_position: 4,
-            lower_bound: Math.min(...proposalIds),
-            upper_bound: Math.max(...proposalIds)
-          })
-          this.lastCycleTotalWeight = 0
-          this.lastCycleUserWeight = 0
-          if (voteData && voteData.rows.length > 0) {
-            voteData.rows.map((vote) => {
-              if (proposalIds.includes(vote.proposal_id)) {
-                this.lastCycleTotalWeight += vote.weight
-                if (this.accountName && vote.voter === this.accountName) {
-                  this.lastCycleUserWeight += vote.weight
-                }
-              }
-            })
-          }
+          this.getLastCycleUserWeight(proposalIds)
         }
       }
 
@@ -252,6 +243,28 @@ export default {
           return acc + item.balance[0].value / 10000
         }
       }, 0)
+    },
+    getLastCycleUserWeight (proposalIds) {
+      this.lastCycleUserWeight = 0
+
+      if (this.accountName) {
+        proposalIds.map(async (proposalId) => {
+          const compositeKey = this.getCompositeKey(this.accountName, proposalId)
+          const claimData = await this.$eos.rpc.get_table_rows({
+            code: process.env.proposalContract,
+            scope: process.env.proposalContract,
+            table: 'vote',
+            index_position: 2,
+            key_type: 'i128',
+            lower_bound: compositeKey,
+            upper_bound: compositeKey
+          })
+
+          if (claimData && claimData.rows.length > 0) {
+            this.lastCycleUserWeight += claimData.rows[0].weight
+          }
+        })
+      }
     },
     getClaims (balances) {
       if (this.accountName) {
@@ -366,6 +379,7 @@ export default {
         })
         .finally(() => {
           this.loading = false
+          setTimeout(this.init, 1000)
         })
     }
   }

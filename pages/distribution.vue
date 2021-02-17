@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!loading" class="columns stakes is-multiline mt-5">
+    <div class="columns stakes is-multiline mt-5">
       <div class="column is-half">
         <div class="box">
           <h5 class="box-title">
@@ -52,7 +52,8 @@
           </h5>
           <div class="has-text-centered">
             <h3>
-              <ICountUp :end-val="lastCycleTotalFees" />
+              <ICountUp v-if="lastCycleTotalFees !== null" :end-val="lastCycleTotalFees" />
+              <span v-else>...</span>
               <span class="symbol">{{ efxToken }}</span>
             </h3>
           </div>
@@ -61,7 +62,8 @@
           </h5>
           <div class="has-text-centered">
             <h3>
-              <ICountUp :end-val="lastCycleTotalWeight" />
+              <ICountUp v-if="lastCycleTotalWeight !== null" :end-val="lastCycleTotalWeight" />
+              <span v-else>...</span>
             </h3>
           </div>
         </div>
@@ -138,10 +140,10 @@ export default {
 
       balances: [],
       claims: {},
-      totalFees: 0,
-      lastCycleTotalFees: 0,
-      lastCycleTotalWeight: 0,
-      lastCycleUserWeight: 0,
+      totalFees: null,
+      lastCycleTotalFees: null,
+      lastCycleTotalWeight: null,
+      lastCycleUserWeight: null,
       efxToken: process.env.efxToken,
 
       // Testing/Dev
@@ -189,6 +191,7 @@ export default {
 
   methods: {
     async init () {
+      this.loading = true
       if (!this.lastCycleId) {
         return
       }
@@ -355,6 +358,7 @@ export default {
       return actions
     },
     claimRewards (andStake) {
+      this.loading = true
       let actions = [
         {
           account: process.env.feepoolContract,
@@ -375,11 +379,10 @@ export default {
 
       this.$wallet.handleTransaction(actions)
         .then(() => {
-          this.init()
+          setTimeout(this.init, 3000)
         })
-        .finally(() => {
+        .catch(() => {
           this.loading = false
-          setTimeout(this.init, 1000)
         })
     }
   }

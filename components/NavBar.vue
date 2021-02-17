@@ -50,6 +50,11 @@
               Token Map
             </nuxt-link>
           </div>
+          <div @click="mobileMenu = false">
+            <nuxt-link class="navbar-item" to="/distribution" exact-active-class="is-active">
+              Rewards
+            </nuxt-link>
+          </div>
 
           <a class="navbar-item connect-wallet mobile-connect" @click="mobileMenu = false">
             <a v-if="!wallet" class="button is-primary" @click="$wallet.loginModal = true">

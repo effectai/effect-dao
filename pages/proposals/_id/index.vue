@@ -391,22 +391,24 @@ export default {
           this.proposalCycle = await this.$dao.getCycleConfig(this.proposal.cycle)
           this.loading = false
           let status = 'CLOSED'
-          if (this.proposal.state === 0) {
+          if (this.proposal.state === 1) {
+            status = 'ACCEPTED'
+          } else if (this.proposal.state === 2) {
+            status = 'REJECTED'
+          } else if (this.proposal.state === 3) {
+            status = 'EXECUTED'
+          } else if (this.proposal.state === 0) {
             if (!this.proposal.cycle) {
               status = 'DRAFT'
             } else if (this.proposalCycle && this.proposal.cycle === this.$dao.proposalConfig.current_cycle && this.$moment(this.proposalCycle.start_time + 'Z').add(this.$dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isAfter()) {
               status = 'ACTIVE'
             } else if (this.proposalCycle && this.$moment(this.proposalCycle.start_time + 'Z').add(this.$dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isBefore()) {
               status = 'PROCESSING'
+            } else if (this.proposalCycle.id < this.$dao.proposalConfig.current_cycle) {
+              status = 'PROCESSING'
             } else {
               status = 'PENDING'
             }
-          } else if (this.proposal.state === 1) {
-            status = 'ACCEPTED'
-          } else if (this.proposal.state === 2) {
-            status = 'REJECTED'
-          } else if (this.proposal.state === 3) {
-            status = 'EXECUTED'
           }
           this.$set(this.proposal, 'status', status)
           const ipfsProposal = await this.$dao.getIpfsProposal(this.proposal.content_hash)

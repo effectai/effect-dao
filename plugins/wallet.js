@@ -35,6 +35,14 @@ export default (context, inject) => {
         return context.$eos
       },
 
+      airdrop () {
+        return context.$airdrop
+      },
+
+      genesisAirdrop () {
+        return (this.wallet && this.wallet.auth && this.airdrop.genesis[this.wallet.auth.accountName]) ? this.airdrop.genesis[this.wallet.auth.accountName].amount : 0
+      },
+
       // Check if user still has unclaimed NFX before NFX generation stop date
       nfxStillClaimable () {
         if (!this.efxStaked) {

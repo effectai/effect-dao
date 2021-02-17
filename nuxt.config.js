@@ -8,37 +8,39 @@ export default {
     fallback: true
   },
 
-  env: {
-    eosNodeUrl: 'eos.greymass.com',
-    eosChainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
-    explorerUrl: 'https://bloks.io',
-    ipfsNode: 'https://ipfs.effect.ai',
-    ipfsExplorer: 'https://ipfs.effect.ai',
-    tokenContract: 'effecttokens',
-    stakingContract: 'efxstakepool',
-    daoContract: 'theeffectdao',
-    proposalContract: 'daoproposals',
-    efxToken: 'EFX',
-    nfxToken: 'NFX',
-    discordGuildId: '519860537891487745',
-    discordInviteUrl: 'https://discord.gg/hM3237cYXP'
-  },
-
   // env: {
-  //   eosNodeUrl: 'kylin.eosn.io',
-  //   eosChainId: '5fff1dae8dc8e2fc4d5b23b2c7665c97f9e9d8edf2b6485a86ba311c25639191',
-  //   explorerUrl: 'https://kylin.bloks.io',
+  //   eosNodeUrl: 'eos.greymass.com',
+  //   eosChainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
+  //   explorerUrl: 'https://bloks.io',
   //   ipfsNode: 'https://ipfs.effect.ai',
   //   ipfsExplorer: 'https://ipfs.effect.ai',
-  //   tokenContract: 'tokenonkylin',
-  //   stakingContract: 'stak3onkylin',
-  //   daoContract: 'thedaonkylin',
-  //   proposalContract: 'propsonkylin',
-  //   efxToken: 'UTL',
-  //   nfxToken: 'GRN',
+  //   tokenContract: 'effecttokens',
+  //   stakingContract: 'efxstakepool',
+  //   daoContract: 'theeffectdao',
+  //   proposalContract: 'daoproposals',
+  //   feepoolContract: 'feepool.efx',
+  //   efxToken: 'EFX',
+  //   nfxToken: 'NFX',
   //   discordGuildId: '519860537891487745',
   //   discordInviteUrl: 'https://discord.gg/hM3237cYXP'
   // },
+
+  env: {
+    eosNodeUrl: 'kylin.eosn.io',
+    eosChainId: '5fff1dae8dc8e2fc4d5b23b2c7665c97f9e9d8edf2b6485a86ba311c25639191',
+    explorerUrl: 'https://kylin.bloks.io',
+    ipfsNode: 'https://ipfs.effect.ai',
+    ipfsExplorer: 'https://ipfs.effect.ai',
+    tokenContract: 'tokenonkylin',
+    stakingContract: 'stak3onkylin',
+    daoContract: 'thedaonkylin',
+    proposalContract: 'propsonkylin',
+    feepoolContract: 'feepoolkylin',
+    efxToken: 'UTL',
+    nfxToken: 'GRN',
+    discordGuildId: '519860537891487745',
+    discordInviteUrl: 'https://discord.gg/hM3237cYXP'
+  },
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
@@ -81,7 +83,8 @@ export default {
     { src: '@/plugins/wallet.js', mode: 'client' },
     { src: '@/plugins/dao.js', mode: 'client' },
     '@/plugins/modal.js',
-    '@/plugins/eos.js'
+    '@/plugins/eos.js',
+    '@/plugins/airdrop.js'
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)

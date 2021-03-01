@@ -404,7 +404,7 @@ export default {
               status = 'ACTIVE'
             } else if (this.proposalCycle && this.$moment(this.proposalCycle.start_time + 'Z').add(this.$dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isBefore()) {
               status = 'PROCESSING'
-            } else if (this.proposalCycle.id < this.$dao.proposalConfig.current_cycle) {
+            } else if (this.proposalCycle && this.proposalCycle.id < this.$dao.proposalConfig.current_cycle) {
               status = 'PROCESSING'
             } else {
               status = 'PENDING'

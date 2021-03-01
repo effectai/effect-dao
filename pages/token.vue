@@ -182,6 +182,10 @@ export default {
         feepoolBalance: 0,
         unswappedBalance: 56459627,
         foundationBalance: 195375000,
+        // foundationBalance: 130375000,
+        // marketingBalance: 30000000,
+        // liquidityBalance: 30000000,
+        // communityBalance: 5000000,
         teamBalance: 32125000,
         maxSupply: 650000000
       },
@@ -326,6 +330,33 @@ export default {
                 description: 'Collected fees, claimable by network contributors.',
                 balanceKey: 'feepoolBalance'
               },
+              // {
+              //   // addressName: 'locked.efx',
+              //   // link: 'https://bloks.io/account/locked.efx',
+              //   addressName: 'AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
+              //   link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
+              //   locked: false,
+              //   description: 'Funds allocated for marketing and partnerships.',
+              //   balanceKey: 'marketingBalance'
+              // },
+              // {
+              //   // addressName: 'locked.efx',
+              //   // link: 'https://bloks.io/account/locked.efx',
+              //   addressName: 'AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
+              //   link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
+              //   locked: false,
+              //   description: 'Funds allocated for community incentives.',
+              //   balanceKey: 'communityBalance'
+              // },
+              // {
+              //   // addressName: 'locked.efx',
+              //   // link: 'https://bloks.io/account/locked.efx',
+              //   addressName: 'AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
+              //   link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
+              //   locked: false,
+              //   description: 'Funds allocated for market liquidity related usage.',
+              //   balanceKey: 'liquidityBalance'
+              // },
               {
                 addressName: 'treasury.efx',
                 link: 'https://bloks.io/account/treasury.efx',
@@ -365,6 +396,8 @@ export default {
               }
             ],
             data: this.innerChartBalances,
+            // labels: ['Liquid Supply', 'Unswapped on NEO', 'Feepool', 'Marketing & Partnerships', 'Community Incentives', 'Liquidity Tokens',
+            //   'Effect DAO', 'Proposal Funds', 'Stake Pool', 'Team Tokens', 'Foundation Tokens']
             labels: ['Liquid Supply', 'Unswapped on NEO', 'Feepool', 'Effect DAO', 'Proposal Funds', 'Stake Pool', 'Team Tokens', 'Foundation Tokens']
           }
         ]
@@ -372,6 +405,7 @@ export default {
     },
     chartBalances () {
       return [
+        // this.balances.liquidBalance + this.balances.unswappedBalance + this.balances.feepoolBalance + this.balances.marketingBalance + this.balances.liquidityBalance + this.balances.communityBalance,
         this.balances.liquidBalance + this.balances.unswappedBalance + this.balances.feepoolBalance,
         this.balances.foundationBalance + this.balances.teamBalance + this.balances.stakeBalance + this.balances.daoBalance + this.balances.proposalBalance
       ]
@@ -380,7 +414,10 @@ export default {
       return [
         this.balances.liquidBalance,
         this.balances.unswappedBalance,
-        this.balances.feepoolBalance,
+        // this.balances.feepoolBalance,
+        // this.balances.marketingBalance,
+        // this.balances.communityBalance,
+        this.balances.liquidityBalance,
         this.balances.daoBalance,
         this.balances.proposalBalance,
         this.balances.stakeBalance,

@@ -145,22 +145,37 @@ export default {
       return (this.$wallet) ? this.$wallet.wallet : null
     },
     proposalsFiltered () {
-      return this.proposals.filter((proposal) => {
+      let filteredProps = this.proposals.filter((proposal) => {
         if (!this.filter || this.filter === 'ALL') {
           return true
         }
+
         return proposal.status === this.filter
-      }).sort(function (a, b) { // Cycle sorting
+      })
+
+      filteredProps = filteredProps.sort(function (a, b) { // Cycle sorting
         if (a.cycle === b.cycle) {
           return (a.id > b.id ? -1 : 1)
         }
+
         if (a.cycle === 0) {
           return 1
         }
+
         return b.cycle === 0 ? -1 : (a.cycle > b.cycle ? 1 : -1)
-      }).sort(function (a, b) { // Status sorting
-        return (a.status === 'CLOSED') ? 1 : -1
       })
+
+      filteredProps = filteredProps.sort(function (a, b) {
+        if (a.status) {
+          if (a.status === 'CLOSED' || b.status === 'ACTIVE') {
+            return 1
+          }
+        }
+
+        return -1
+      })
+
+      return filteredProps
     },
     currentCycle () {
       return this.$dao.proposalConfig ? this.$dao.proposalConfig.current_cycle : null

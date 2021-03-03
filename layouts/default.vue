@@ -65,7 +65,7 @@ export default {
     return {
       isTestnet: process.env.eosNodeUrl.includes('kylin'),
       node: process.env.eosNodeUrl,
-      closedAirdrop: localStorage.getItem('airdropClose') !== null
+      closedAirdrop: localStorage.getItem('airdropTwoClose') !== null
     }
   },
 
@@ -104,7 +104,7 @@ export default {
       this.$wallet.clearTransaction()
     },
     closeAirdrop () {
-      localStorage.setItem('airdropClose', new Date().toString())
+      localStorage.setItem('airdropTwoClose', new Date().toString())
       this.closedAirdrop = true
     }
   }

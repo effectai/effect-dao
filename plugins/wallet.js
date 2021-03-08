@@ -239,7 +239,7 @@ export default (context, inject) => {
 
       async getMyStakes () {
         if (this.wallet) {
-          const stakes = await this.getStake()
+          const stakes = await this.getStake(this.wallet.auth.accountName)
           stakes.map((row) => {
             if (row.amount.includes(process.env.efxToken)) {
               this.efxStaked = parseFloat(row.amount.replace(` ${process.env.efxToken}`, ''))
@@ -252,10 +252,10 @@ export default (context, inject) => {
         }
       },
 
-      async getStake () {
+      async getStake (accountName) {
         const data = await this.eos.rpc.get_table_rows({
           code: process.env.stakingContract,
-          scope: ' ' + this.wallet.auth.accountName,
+          scope: ' ' + accountName,
           table: 'stake'
         })
         return data.rows

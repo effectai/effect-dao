@@ -109,15 +109,6 @@ export default (context, inject) => {
         this.updateAccount()
       },
 
-      bytesToHex (bytes) {
-        let hex = ''
-        for (const b of bytes) {
-          const n = Number(b).toString(16)
-          hex += (n.length === 1 ? '0' : '') + n
-        }
-        return hex
-      },
-
       calculateRankProgress (power, nfxStaked) {
         if (!power) {
           power = 0
@@ -265,7 +256,6 @@ export default (context, inject) => {
         const data = await this.eos.rpc.get_table_rows({
           code: process.env.stakingContract,
           scope: ' ' + this.wallet.auth.accountName,
-          key_type: 'i64',
           table: 'stake'
         })
         return data.rows

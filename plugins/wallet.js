@@ -109,6 +109,15 @@ export default (context, inject) => {
         this.updateAccount()
       },
 
+      bytesToHex (bytes) {
+        let hex = ''
+        for (const b of bytes) {
+          const n = Number(b).toString(16)
+          hex += (n.length === 1 ? '0' : '') + n
+        }
+        return hex
+      },
+
       calculateRankProgress (power, nfxStaked) {
         if (!power) {
           power = 0
@@ -239,7 +248,7 @@ export default (context, inject) => {
 
       async getMyStakes () {
         if (this.wallet) {
-          const stakes = await this.getStake(this.wallet.auth.accountName)
+          const stakes = await this.getStake()
           stakes.map((row) => {
             if (row.amount.includes(process.env.efxToken)) {
               this.efxStaked = parseFloat(row.amount.replace(` ${process.env.efxToken}`, ''))
@@ -252,10 +261,11 @@ export default (context, inject) => {
         }
       },
 
-      async getStake (accountName) {
+      async getStake () {
         const data = await this.eos.rpc.get_table_rows({
           code: process.env.stakingContract,
-          scope: accountName,
+          scope: ' ' + this.wallet.auth.accountName,
+          key_type: 'i64',
           table: 'stake'
         })
         return data.rows
@@ -265,7 +275,7 @@ export default (context, inject) => {
         if (this.wallet) {
           await this.eos.rpc.get_table_rows({
             code: process.env.stakingContract,
-            scope: this.wallet.auth.accountName,
+            scope: ' ' + this.wallet.auth.accountName,
             table: 'unstake'
           }).then((data) => {
             data.rows.map((row) => {

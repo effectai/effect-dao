@@ -9,10 +9,13 @@
           <div v-if="accountName" class="has-text-centered">
             <div class="has-text-centered">
               <h3>
-                <ICountUp :end-val="lastCycleUserFees" />
+                <ICountUp v-if="isFinite(lastCycleUserFees)" :end-val="lastCycleUserFees" />
+                <span v-else>...</span>
                 <span class="symbol">{{ efxToken }}</span>
               </h3>
-              <h6>{{ lastCycleUserShare }}% of pool</h6>
+              <h6 v-if="isFinite(lastCycleUserFees)">
+                {{ lastCycleUserShare }}% of pool
+              </h6>
             </div>
             <div v-if="getUserCycleClaim(lastCycleId) > 0" class="claimed has-text-success">
               You successfully claimed your share for this cycle!
@@ -172,7 +175,7 @@ export default {
       return (this.lastCycleUserFees > 0) ? (this.lastCycleUserWeight / this.lastCycleTotalWeight * 100).toFixed(2) : 0
     },
     canClaim () {
-      return (this.claimOverride) ? this.claimOverride : !this.claims[this.lastCycleId] && this.lastCycleUserFees > 0
+      return (this.claimOverride) ? this.claimOverride : !this.claims[this.lastCycleId] && this.lastCycleUserFees > 0 && isFinite(this.lastCycleUserFees)
     }
   },
 

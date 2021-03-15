@@ -174,6 +174,9 @@ export default {
   data () {
     return {
       loading: true,
+      totalVoteWeight: 0,
+      totalMembers: 300,
+      membersLowerBound: '13528614985990483600', // Hardcode lower bound from 300 members to minimize amount of fetches
       balances: {
         daoBalance: 0,
         proposalBalance: 0,
@@ -189,38 +192,6 @@ export default {
         teamBalance: 32125000,
         maxSupply: 650000000
       },
-      stats: [
-        {
-          name: 'Members',
-          description: '',
-          value: 296
-        },
-        {
-          name: 'Guardians',
-          description: '',
-          value: 97
-        },
-        {
-          name: 'Total Vote Weight',
-          description: '',
-          value: '443'
-        },
-        {
-          name: 'Next Cycle',
-          description: '',
-          value: '29-1-2021'
-        },
-        {
-          name: 'Distribution Strategy',
-          description: '',
-          value: '100% reward'
-        },
-        {
-          name: 'Recycle Strategy',
-          description: '',
-          value: '100% hold'
-        }
-      ],
       contracts: [
         {
           name: 'Effect Tokens',
@@ -269,6 +240,43 @@ export default {
     }
   },
   computed: {
+    lastCycleId () {
+      return (this.$dao.cycleConfig) ? this.$dao.cycleConfig.id - 1 : null
+    },
+    stats () {
+      return [
+        {
+          name: 'Members',
+          description: '',
+          value: this.totalMembers
+        },
+        // {
+        //   name: 'Guardians',
+        //   description: '',
+        //   value: 97
+        // },
+        {
+          name: 'Total Vote Weight',
+          description: '',
+          value: this.totalVoteWeight
+        },
+        {
+          name: 'Next Cycle',
+          description: '',
+          value: '29-1-2021'
+        },
+        {
+          name: 'Distribution Strategy',
+          description: '',
+          value: '100% reward'
+        },
+        {
+          name: 'Recycle Strategy',
+          description: '',
+          value: '100% hold'
+        }
+      ]
+    },
     chartData () {
       return {
         labels: ['Circulating Supply', 'Locked Supply'],
@@ -417,7 +425,7 @@ export default {
         // this.balances.feepoolBalance,
         // this.balances.marketingBalance,
         // this.balances.communityBalance,
-        this.balances.liquidityBalance,
+        // this.balances.liquidityBalance,
         this.balances.daoBalance,
         this.balances.proposalBalance,
         this.balances.stakeBalance,
@@ -426,8 +434,11 @@ export default {
       ]
     }
   },
-  mounted () {
-    this.getBalances()
+  async mounted () {
+    await this.getBalances()
+    await this.getTotalVoteWeight()
+    this.getDaoMembers()
+    this.loading = false
   },
   methods: {
     async getBalances () {
@@ -437,7 +448,36 @@ export default {
       this.balances.stakeBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'efxstakepool', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.feepoolBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'feepool.efx', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.liquidBalance = circSupply - this.balances.daoBalance - this.balances.stakeBalance
-      this.loading = false
+    },
+    async getTotalVoteWeight () {
+      const cycleData = await this.$eos.rpc.get_table_rows({
+        code: process.env.proposalContract,
+        scope: process.env.proposalContract,
+        table: 'cycle',
+        lower_bound: this.lastCycleId,
+        upper_bound: this.lastCycleId
+      })
+
+      if (cycleData && cycleData.rows.length > 0) {
+        this.totalVoteWeight = cycleData.rows[0].total_vote_weight
+      }
+    },
+    async getDaoMembers () {
+      while (this.membersLowerBound != null) {
+        const members = await this.$eos.rpc.get_table_rows({
+          code: process.env.daoContract,
+          scope: process.env.daoContract,
+          table: 'member',
+          lower_bound: this.membersLowerBound,
+          limit: 100
+        })
+
+        if (members && members.rows.length > 0) {
+          this.totalMembers += members.rows.length
+        }
+
+        this.membersLowerBound = (members.next_key.length > 0) ? members.next_key : null
+      }
     },
     hello (x) {
       if (!x) {

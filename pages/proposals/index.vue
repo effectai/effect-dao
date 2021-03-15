@@ -153,26 +153,34 @@ export default {
         return proposal.status === this.filter
       })
 
-      filteredProps = filteredProps.sort(function (a, b) { // Cycle sorting
-        if (a.cycle === b.cycle) {
-          return (a.id > b.id ? -1 : 1)
+      filteredProps = filteredProps.sort((a, b) => { // Cycle sorting
+        if (a.status === b.status) {
+          if (a.cycle !== 0) {
+            if (a.cycle === b.cycle) {
+              return 0
+            }
+          } else {
+            return (a.id > b.id) ? -1 : 1
+          }
+
+          return (a.cycle > b.cycle) ? -1 : 1
         }
 
-        if (a.cycle === 0) {
+        if (a.status === 'CLOSED') {
           return 1
         }
 
-        return b.cycle === 0 ? -1 : (a.cycle > b.cycle ? 1 : -1)
-      })
-
-      filteredProps = filteredProps.sort(function (a, b) {
-        if (a.status) {
-          if (a.status === 'CLOSED' || b.status === 'ACTIVE') {
-            return 1
-          }
+        if (a.status === 'DRAFT' && b.status === 'CLOSED') {
+          return -1
         }
 
-        return -1
+        return (a.id > b.id) ? -1 : 1
+      }).sort((a, b) => {
+        if (a.status === 'ACTIVE' || a.status === 'PROCESSING') {
+          return -1
+        }
+
+        return 0
       })
 
       return filteredProps

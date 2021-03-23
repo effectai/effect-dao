@@ -217,7 +217,7 @@
                 class="mt-2"
                 :progress="(stakeAge / (1000 * 24 * 3600))*100"
                 :size="250"
-                :fill="{ color: '#39e7bf' }"
+                :fill="{ color: '#d7ac00' }"
                 empty-fill="rgba(0,0,0,.02)"
                 :animation-start-value="0.0"
                 insert-mode="append"
@@ -525,7 +525,7 @@ export default {
 <style lang="scss">
 .circle {
   canvas {
-    box-shadow: inset -4px -4px 11px 0 #FFFFFF, inset 4px 4px 11px 0 #CDD4E6, 0px 0px 29px -22px #39e7bfd4;
+    box-shadow: inset -4px -4px 11px 0 #FFFFFF, inset 4px 4px 11px 0 #CDD4E6, 0px 0px 29px -22px #d7ac00d4;
     border-radius: 100%;
   }
 }
@@ -534,10 +534,10 @@ export default {
 <style lang="scss" scoped>
   @keyframes glow {
     from {
-      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 29px -22px #39e7bfd4;
+      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 29px -22px #d7ac00d4;
     }
     to {
-      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 40px 15px #39e7bfd4;
+      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 40px 15px #d7ac00d4;
     }
   }
   .circle {

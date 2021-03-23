@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content">
     <div class="mb-2">
       <nuxt-link to="/proposals" class="is-size-7">
         &lt; All Proposals

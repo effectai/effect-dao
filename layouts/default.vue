@@ -38,7 +38,7 @@
     </div>
 
     <nav-bar />
-    <div class="container is-max-desktop content">
+    <div class="container is-max-desktop">
       <div v-if="showAirdrop" class="airdrop">
         You received <b>{{ genesisAirdrop.toFixed(0) }} EFX</b> in the genesis fee distribution!
         <button class="delete" @click="closeAirdrop" />

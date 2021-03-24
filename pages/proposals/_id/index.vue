@@ -12,13 +12,11 @@
 
       <div class="column is-two-thirds">
 
-        <div class="box" v-if="proposalComment !== undefined">
-          <div class="box-title">
-            <h5>
-              High Guard Comment
-            </h5>
+        <div class="block" v-if="proposalComment !== undefined">
+          <div class="notification is-primary mb-0 is-outlined">
+            <h5>High Guard Comment</h5>
+            <p v-html="proposalComment" />
           </div>
-          <p v-html="proposalComment"></p>
         </div>
 
         <div class="is-pulled-right">
@@ -330,7 +328,7 @@ export default {
       } else if (jsonComment[this.$route.params.id] === undefined) {
         return undefined
       } else {
-        return jsonComment[this.$route.params.id]['text-body']
+        return jsonComment[this.$route.params.id].text
       }
     }
   },

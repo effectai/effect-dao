@@ -1,10 +1,5 @@
 {
     "28": {
-      "title": "Title will not be displayed",
-      "text-body" : "Lorem ipsum dolor sit amet, <i>consectetur</i> adipiscing elit, <b>sed</b> do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-    },
-    "numberHere": {
-      "title": "Title will not be displayed to the user.",
-      "text-body": "Textbody will be displayed to the user when they see proposal with corresponding id."
+      "text" : "This proposal was rejected by a resolution of the High Guard. It was identified to be in conflict with other developments in the network. The author will revisit this proposal with the given feedback."
     }
 }

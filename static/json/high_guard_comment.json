@@ -1,0 +1,10 @@
+{
+    "28": {
+      "title": "Title will not be displayed",
+      "text-body" : "Lorem ipsum dolor sit amet, <i>consectetur</i> adipiscing elit, <b>sed</b> do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    },
+    "numberHere": {
+      "title": "Title will not be displayed to the user.",
+      "text-body": "Textbody will be displayed to the user when they see proposal with corresponding id."
+    }
+}

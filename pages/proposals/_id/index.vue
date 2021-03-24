@@ -9,10 +9,22 @@
       Loading Proposal..
     </div>
     <div v-else-if="proposal" class="columns">
+
       <div class="column is-two-thirds">
+
+        <div class="box" v-if="proposalComment !== undefined">
+          <div class="box-title">
+            <h5>
+              High Guard Comment
+            </h5>
+          </div>
+          <p v-html="proposalComment"></p>
+        </div>
+
         <div class="is-pulled-right">
           <span class="tag" :class="{'is-success': proposal.status === 'ACTIVE' || proposal.status === 'EXECUTED' || proposal.status == 'ACCEPTED', 'is-warning': proposal.status === 'DRAFT', 'is-link': proposal.status === 'PENDING', 'is-dark': proposal.status === 'WARNING', 'is-danger': proposal.status === 'REJECTED'}">{{ proposal.status }}</span>
         </div>
+
         <div v-if="proposal.title" class="title is-4">
           #{{ proposal.id }}: {{ proposal.title }}
         </div>
@@ -205,8 +217,9 @@
 </template>
 
 <script>
-export default {
+import jsonComment from '@/static/json/high_guard_comment.json'
 
+export default {
   filters: {
     formatBytes (bytes, decimals = 2) {
       if (bytes === 0) {
@@ -310,6 +323,15 @@ export default {
     },
     signedLastConstitution () {
       return this.$wallet.signedConstitutionVersion === (this.$dao.lastTerms ? this.$dao.lastTerms.version : 0)
+    },
+    proposalComment () {
+      if (this.$route.params.id === undefined) {
+        return undefined
+      } else if (jsonComment[this.$route.params.id] === undefined) {
+        return undefined
+      } else {
+        return jsonComment[this.$route.params.id]['text-body']
+      }
     }
   },
 

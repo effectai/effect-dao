@@ -9,8 +9,8 @@
             </div>
           </div>
           <div class="media-content">
-            <h2>{{ account.name }}</h2>
-            <h4 v-if="account.rank" class="rank">
+            <h2 class="title is-3 is-family-sans-serif">{{ account.name }}</h2>
+            <h4 v-if="account.rank" class="rank subtitle is-5">
               Rank {{ account.rank.currentRank }}
             </h4>
             <div v-if="account.signedConstitution">

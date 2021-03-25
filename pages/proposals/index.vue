@@ -14,7 +14,7 @@
       <ConnectWallet v-else title="Your Proposals" button-class="is-wide is-outlined m-2" />
     </div>
     <div class="box mt-5">
-      <h4 class="box-title mb-0">
+      <h4 class="subtitle box-title mb-0 is-4 has-text-weight-bold">
         Proposals
         <div class="is-size-6 mt-2">
           <small>

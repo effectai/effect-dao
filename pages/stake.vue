@@ -163,11 +163,11 @@
       <div class="columns stakes is-multiline mt-5">
         <div class="column is-half">
           <div class="box">
-            <h5 class="box-title">
+            <h5 class="subtitle box-title">
               <img src="@/assets/img/efx-icon.png" class="token-icon">Staked EFX
             </h5>
             <div class="has-text-centered">
-              <h3>
+              <h3 class="subtitle is-3 has-text-weight-bold">
                 <ICountUp :end-val="efxStaked" />
                 <span class="symbol">EFX</span>
               </h3>
@@ -186,11 +186,11 @@
 
         <div class="column is-half">
           <div class="box">
-            <h5 class="box-title">
+            <h5 class="subtitle box-title">
               <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">Staked NFX
             </h5>
             <div class="has-text-centered">
-              <h3>
+              <h3 class="subtitle is-3 has-text-weight-bold">
                 <ICountUp :end-val="nfxStaked" />
                 <span class="symbol">NFX</span>
               </h3>
@@ -208,7 +208,7 @@
         </div>
         <div class="column is-half">
           <div class="box">
-            <h5 class="box-title">
+            <h5 class="subtitle box-title">
               Stake AGE
             </h5>
             <div class="has-text-centered">
@@ -226,7 +226,7 @@
                 :show-percent="false"
               >
                 <div class="value-circle">
-                  <h1>{{ stakeAge / (1000 * 24 * 3600) | percentage(1) }}<span class="has-text-weight-light">%</span></h1>
+                  <h1 class="title">{{ stakeAge / (1000 * 24 * 3600) | percentage(1) }}<span class="has-text-weight-light">%</span></h1>
                   <div class="age-amount">
                     {{ stakeAge | formatSeconds(this) }}
                   </div>
@@ -240,16 +240,16 @@
         </div>
         <div class="column is-half">
           <div class="box" style="height:100%">
-            <h5 class="box-title">
+            <h5 class="subtitle box-title">
               EFX Power
             </h5>
             <div class="value-circle big mt-6 glow">
               <div class="has-text-centered">
-                <h3>
+                <h3 class="has-text-weight-bold is-size-4">
                   <ICountUp :options="{decimalPlaces: 0}" :end-val="power" />
                   <small class="symbol has-text-weight-light is-size-6">EP</small>
                 </h3>
-                <b>EFX Power</b>
+                <span>EFX Power</span>
               </div>
             </div>
           </div>

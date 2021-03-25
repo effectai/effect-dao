@@ -41,6 +41,7 @@
             </div>
           </div>
           <div v-else class="has-text-centered">
+            <br>
             <a class="button is-secondary" @click="$wallet.loginModal = true">
               <strong>Connect Wallet</strong>
             </a>

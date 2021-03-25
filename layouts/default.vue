@@ -142,9 +142,9 @@ export default {
 
   button {
     float: right;
-    border: 1px solid #6575b5;
+    border: 1px solid #1148EB;
     border-radius: 4px;
-    background: #3d476e;
+    background: #1148EB;
     color: #FFF;
     font-weight: bold;
     font-size: 14px;

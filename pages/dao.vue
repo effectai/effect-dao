@@ -56,7 +56,7 @@
       </div>
     </div>
 
-    <div v-if="!loading && (!wallet || !wallet.auth)" class="has-text-centered is-outlined is-primary has-text-weight-bold notif-w-btn">
+    <div v-if="!loading && (!wallet || !wallet.auth)" class="has-text-centered is-outlined is-primary mb-0 has-text-weight-bold notif-w-btn">
       <!-- <div class="notif-btn">
         <a class="button is-secondary" @click="$wallet.loginModal = true">
           <strong>Connect Wallet</strong>
@@ -69,12 +69,12 @@
 
     <div
       v-else-if="!loading && !signedConstitution"
-      class="notification is-primary is-outlined is-light mb-0 has-text-weight-bold notif-w-btn"
+      class="has-text-centered notification is-primary is-outlined is-light mb-0 has-text-weight-bold notif-w-btn"
     >
-      <div class="is-pulled-left">
+      <div>
         Sign the constitution to participate in the DAO
       </div>
-      <div class="is-pulled-right notif-btn">
+      <div class="notif-btn">
         <button class="button is-secondary" @click="downloadConstitution(); constitutionModal = true">
           Become a member
         </button>

@@ -10,17 +10,11 @@
     </div>
     <div v-else-if="proposal" class="columns">
       <div class="column is-two-thirds">
-        <div class="is-pulled-right">
-          <span class="tag" :class="{'is-success': proposal.status === 'ACTIVE' || proposal.status === 'EXECUTED' || proposal.status == 'ACCEPTED', 'is-warning': proposal.status === 'DRAFT', 'is-link': proposal.status === 'PENDING', 'is-dark': proposal.status === 'WARNING', 'is-danger': proposal.status === 'REJECTED'}">{{ proposal.status }}</span>
-        </div>
         <div v-if="proposal.title" class="title is-4">
           #{{ proposal.id }}: {{ proposal.title }}
         </div>
         <div v-else class="title is-4">
           ...
-        </div>
-        <div class="subtitle is-6">
-          <b>{{ categories[proposal.category] }}</b>
         </div>
         <small>
           <div v-if="proposal.body" v-html="$md.render(proposal.body)" />
@@ -150,6 +144,10 @@
               <b>{{ proposal.author }}</b>
             </nuxt-link>
           </div>
+          <div class="block">
+            <i>Status</i><br>
+            <b class="tag" :class="{'is-success': proposal.status === 'ACTIVE' || proposal.status === 'EXECUTED' || proposal.status == 'ACCEPTED', 'is-warning': proposal.status === 'DRAFT', 'is-link': proposal.status === 'PENDING', 'is-dark': proposal.status === 'WARNING', 'is-danger': proposal.status === 'REJECTED'}">{{ proposal.status }}</b>
+          </div>
           <div v-for="(pay, index) in proposal.pay" :key="index" class="block">
             <i>requesting</i><br>
             <b>{{ pay.field_0.quantity }}</b><br>
@@ -165,6 +163,10 @@
           <div class="block">
             <i>cycle</i><br>
             <b>{{ proposal.cycle }}</b>
+          </div>
+          <div class="block">
+            <i>Category</i><br>
+            <b>{{ categories[proposal.category] }}</b>
           </div>
           <div v-if="isMyProposal" class="mt-2">
             <nuxt-link class="button is-primary is-fullwidth" :to="`/proposals/${id}/edit`">

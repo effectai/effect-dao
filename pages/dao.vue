@@ -76,7 +76,7 @@
         Sign the constitution to participate in the DAO
       </div>
       <div class="is-pulled-right notif-btn">
-        <button class="button is-primary" @click="downloadConstitution(); constitutionModal = true">
+        <button class="button is-secondary" @click="downloadConstitution(); constitutionModal = true">
           Become a member
         </button>
       </div>
@@ -90,7 +90,7 @@
         The constitution has been updated to V{{ constitutionVersion }}, sign it to remain a DAO member!
       </div>
       <div class="is-pulled-right notif-btn">
-        <button class="button is-primary" @click="downloadConstitution(); constitutionModal = true">
+        <button class="button is-secondary" @click="downloadConstitution(); constitutionModal = true">
           Sign
         </button>
       </div>

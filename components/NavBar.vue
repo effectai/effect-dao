@@ -52,15 +52,14 @@
               Rewards
             </nuxt-link>
           </div>
-
-          <a class="navbar-item connect-wallet mobile-connect" @click="mobileMenu = false">
-            <a v-if="!wallet" class="button is-secondary" @click="$wallet.loginModal = true">
+          <div @click="mobileMenu = false">
+            <a class="connect-wallet mobile-connect button is-secondary" v-if="!wallet" @click="$wallet.loginModal = true">
               <strong>Connect Wallet</strong>
             </a>
-            <nuxt-link v-else class="button is-secondary" :to="'/account/'+wallet.auth.accountName">
+            <nuxt-link v-else class="navbar-item button is-secondary" :to="'/account/'+wallet.auth.accountName">
               <strong>{{ wallet.auth.accountName }}</strong>
             </nuxt-link>
-          </a>
+          </div>
         </div>
 
         <div class="navbar-end">

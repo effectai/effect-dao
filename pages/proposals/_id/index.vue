@@ -9,7 +9,16 @@
       Loading Proposal..
     </div>
     <div v-else-if="proposal" class="columns">
+
       <div class="column is-two-thirds">
+
+        <div class="block" v-if="proposalComment !== undefined">
+          <div class="notification is-primary mb-0 is-outlined">
+            <h5>High Guard Comment</h5>
+            <p v-html="proposalComment" />
+          </div>
+        </div>
+
         <div v-if="proposal.title" class="title is-4">
           #{{ proposal.id }}: {{ proposal.title }}
         </div>
@@ -207,8 +216,9 @@
 </template>
 
 <script>
-export default {
+import jsonComment from '@/static/json/high_guard_comment.json'
 
+export default {
   filters: {
     formatBytes (bytes, decimals = 2) {
       if (bytes === 0) {
@@ -312,6 +322,15 @@ export default {
     },
     signedLastConstitution () {
       return this.$wallet.signedConstitutionVersion === (this.$dao.lastTerms ? this.$dao.lastTerms.version : 0)
+    },
+    proposalComment () {
+      if (this.$route.params.id === undefined) {
+        return undefined
+      } else if (jsonComment[this.$route.params.id] === undefined) {
+        return undefined
+      } else {
+        return jsonComment[this.$route.params.id].text
+      }
     }
   },
 

@@ -22,25 +22,25 @@
     <div v-if="wallet" class="columns balances">
       <div class="column">
         <div class="box">
-          <h5 class="box-title">
+          <h5 class="box-title subtitle">
             <img src="@/assets/img/efx-icon.png" class="token-icon">EFX Balance
           </h5>
           <div class="has-text-centered">
             <div class="mb-3">
               <div class="is-size-6">Available</div>
-              <div class="title is-3">
+              <div class="subtitle is-3 has-text-weight-semibold">
                 <ICountUp :end-val="efxAvailable" /> <span class="symbol">EFX</span>
               </div>
             </div>
             <div class="mb-3">
               <div class="is-size-6">Staked</div>
-              <div class="title is-5">
+              <div class="subtitle is-5 has-text-weight-semibold">
                 <ICountUp :end-val="efxStaked" /> <span class="symbol">EFX</span>
               </div>
             </div>
             <div class="mb-3">
               <div class="is-size-6">Total</div>
-              <div class="title is-5">
+              <div class="subtitle is-5 has-text-weight-semibold">
                 <ICountUp :end-val="efxAvailable + efxStaked" /> <span class="symbol">EFX</span>
               </div>
             </div>
@@ -50,26 +50,25 @@
 
       <div class="column">
         <div class="box">
-          <h5 class="box-title">
-
+          <h5 class="box-title subtitle">
             <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">NFX Balance
           </h5>
           <div class="has-text-centered">
             <div class="mb-3">
               <div class="is-size-6">Available</div>
-              <div class="title is-3">
+              <div class="subtitle is-3 has-text-weight-semibold">
                 <ICountUp :end-val="nfxAvailable" /> <span class="symbol">NFX</span>
               </div>
             </div>
             <div class="mb-3">
               <div class="is-size-6">Staked</div>
-              <div class="title is-5">
+              <div class="subtitle is-5 has-text-weight-semibold">
                 <ICountUp :end-val="nfxStaked" /> <span class="symbol">NFX</span>
               </div>
             </div>
             <div class="mb-3">
               <div class="is-size-6">Total</div>
-              <div class="title is-5">
+              <div class="subtitle is-5 has-text-weight-semibold">
                 <ICountUp :end-val="nfxAvailable + nfxStaked" /> <span class="symbol">NFX</span>
               </div>
             </div>

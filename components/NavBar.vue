@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
-      <div class="container is-max-widescreen">
+      <div class="container is-max-desktop">
         <div class="navbar-start">
           <nuxt-link class="navbar-item navbar-item navbar-title" to="/">
             <img src="@/assets/img/effect-dao_h100.png"  class="logo">
@@ -69,9 +69,6 @@
                 </a>
                 <div v-else class="dropdown account-name-dropdown" :class="{'is-active': dropdown}">
                   <div class="dropdown-trigger" @click="dropdown = !dropdown">
-                    <figure class="image">
-                      <avatar :account-name="wallet.auth.accountName" />
-                    </figure>
                     <span>{{ wallet.auth.accountName }}</span>
                     <font-awesome-icon :icon="['fas', 'caret-square-down']" style="font-size: 12px" />
                   </div>
@@ -96,11 +93,9 @@
 </template>
 
 <script>
-import Avatar from '~/components/Avatar'
 
 export default {
   components: {
-    Avatar
   },
 
   data () {

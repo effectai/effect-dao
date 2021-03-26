@@ -4,7 +4,7 @@
       Connected to Kylin testnet ({{ node }})
     </div>
     <div class="discord">
-      <div class="container is-max-widescreen">
+      <div class="container is-max-desktop">
         <img src="@/assets/img/discord.png" alt="Discord logo">
         <p class="is-hidden-mobile">
           The DAO Discord is now open with

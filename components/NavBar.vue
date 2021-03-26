@@ -1,8 +1,8 @@
 <template>
   <div>
     <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
-      <div class="container is-max-desktop">
-        <div class="navbar-start">
+      <div class="container is-max-widescreen">
+        <div class="navbar-brand">
           <nuxt-link class="navbar-item navbar-item navbar-title" to="/">
             <img src="@/assets/img/effect-dao_h100.png"  class="logo">
           </nuxt-link>
@@ -20,50 +20,41 @@
             <span aria-hidden="true" />
           </a>
         </div>
-
         <div id="navbarBasicExample" class="navbar-menu" :class="{'is-active': mobileMenu}">
-          <div @click="mobileMenu = false">
-            <nuxt-link class="navbar-item" to="/" exact-active-class="is-active">
-              Home
-            </nuxt-link>
+          <div class="navbar-start is-justify-content-center" style="width: 100%">
+            <div @click="mobileMenu = false">
+              <nuxt-link class="navbar-item" to="/" exact-active-class="is-active">
+                Home
+              </nuxt-link>
+            </div>
+            <div @click="mobileMenu = false">
+              <nuxt-link class="navbar-item" to="/stake" exact-active-class="is-active">
+                Stake
+              </nuxt-link>
+            </div>
+            <div @click="mobileMenu = false">
+              <nuxt-link class="navbar-item" to="/proposals" exact-active-class="is-active">
+                Proposals
+              </nuxt-link>
+            </div>
+            <div @click="mobileMenu = false">
+              <nuxt-link class="navbar-item" to="/dao" exact-active-class="is-active">
+                DAO
+              </nuxt-link>
+            </div>
+            <div @click="mobileMenu = false">
+              <nuxt-link class="navbar-item" to="/token" exact-active-class="is-active">
+                Token Map
+              </nuxt-link>
+            </div>
+            <div @click="mobileMenu = false">
+              <nuxt-link class="navbar-item" to="/distribution" exact-active-class="is-active">
+                Rewards
+              </nuxt-link>
+            </div>
           </div>
-          <div @click="mobileMenu = false">
-            <nuxt-link class="navbar-item" to="/stake" exact-active-class="is-active">
-              Stake
-            </nuxt-link>
-          </div>
-          <div @click="mobileMenu = false">
-            <nuxt-link class="navbar-item" to="/proposals" exact-active-class="is-active">
-              Proposals
-            </nuxt-link>
-          </div>
-          <div @click="mobileMenu = false">
-            <nuxt-link class="navbar-item" to="/dao" exact-active-class="is-active">
-              DAO
-            </nuxt-link>
-          </div>
-          <div @click="mobileMenu = false">
-            <nuxt-link class="navbar-item" to="/token" exact-active-class="is-active">
-              Token Map
-            </nuxt-link>
-          </div>
-          <div @click="mobileMenu = false">
-            <nuxt-link class="navbar-item" to="/distribution" exact-active-class="is-active">
-              Rewards
-            </nuxt-link>
-          </div>
-
-          <a class="navbar-item connect-wallet mobile-connect" @click="mobileMenu = false">
-            <a v-if="!wallet" class="button is-secondary" @click="$wallet.loginModal = true">
-              <strong>Connect Wallet</strong>
-            </a>
-            <nuxt-link v-else class="button is-secondary" :to="'/account/'+wallet.auth.accountName">
-              <strong>{{ wallet.auth.accountName }}</strong>
-            </nuxt-link>
-          </a>
-
           <div class="navbar-end">
-              <div class="wallet">
+              <div class="navbar-item">
                 <a v-if="!wallet" class="button is-secondary" @click="$wallet.loginModal = true">
                   <strong>Connect Wallet</strong>
                 </a>
@@ -118,16 +109,6 @@ export default {
 .navbar {
   background: transparent;
   margin-top: 8px;
-
-  .navbar-burger.burger {
-    margin-top: -48px;
-  }
-
-  .mobile-connect {
-    display: none;
-    margin-bottom: -50px;
-    margin-top: 12px;
-  }
 
   .navbar-title {
     min-width: 100px;
@@ -218,14 +199,6 @@ export default {
       display: block;
       margin-top: -39px;
       margin-left: 40px;
-    }
-
-    .navbar-end {
-      display: none;
-    }
-
-    .mobile-connect {
-      display: block;
     }
 
     .navbar-menu {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
-      <div class="container">
+      <div class="container is-max-widescreen">
         <div class="navbar-start">
           <nuxt-link class="navbar-item navbar-item navbar-title" to="/">
             <img src="@/assets/img/effect-dao_h100.png"  class="logo">
@@ -53,44 +53,41 @@
             </nuxt-link>
           </div>
 
-          <div class="navbar-item connect-wallet mobile-connect" @click="mobileMenu = false">
+          <a class="navbar-item connect-wallet mobile-connect" @click="mobileMenu = false">
             <a v-if="!wallet" class="button is-secondary" @click="$wallet.loginModal = true">
               <strong>Connect Wallet</strong>
             </a>
             <nuxt-link v-else class="button is-secondary" :to="'/account/'+wallet.auth.accountName">
               <strong>{{ wallet.auth.accountName }}</strong>
             </nuxt-link>
-          </div>
-        </div>
+          </a>
 
-<!-- Need to add isflex, ishidden modifier here. -->
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="buttons wallet">
-              <a v-if="!wallet" class="button is-secondary" @click="$wallet.loginModal = true">
-                <strong>Connect Wallet</strong>
-              </a>
-              <div v-else class="dropdown account-name-dropdown" :class="{'is-active': dropdown}">
-                <div class="dropdown-trigger" @click="dropdown = !dropdown">
-                  <figure class="image">
-                    <avatar :account-name="wallet.auth.accountName" />
-                  </figure>
-                  <span>{{ wallet.auth.accountName }}</span>
-                  <font-awesome-icon :icon="['fas', 'caret-square-down']" style="font-size: 12px" />
-                </div>
-                <div id="dropdown-menu" class="dropdown-menu" role="menu">
-                  <div class="dropdown-content" @click="dropdown = false">
-                    <nuxt-link class="dropdown-item" :to="`/account/${wallet.auth.accountName}`">
-                      View Profile
-                    </nuxt-link>
-                    <hr class="dropdown-divider">
-                    <a href="#" class="dropdown-item" @click="$transit.logout()">
-                      Disconnect
-                    </a>
+          <div class="navbar-end">
+              <div class="wallet">
+                <a v-if="!wallet" class="button is-secondary" @click="$wallet.loginModal = true">
+                  <strong>Connect Wallet</strong>
+                </a>
+                <div v-else class="dropdown account-name-dropdown" :class="{'is-active': dropdown}">
+                  <div class="dropdown-trigger" @click="dropdown = !dropdown">
+                    <figure class="image">
+                      <avatar :account-name="wallet.auth.accountName" />
+                    </figure>
+                    <span>{{ wallet.auth.accountName }}</span>
+                    <font-awesome-icon :icon="['fas', 'caret-square-down']" style="font-size: 12px" />
+                  </div>
+                  <div id="dropdown-menu" class="dropdown-menu" role="menu">
+                    <div class="dropdown-content" @click="dropdown = false">
+                      <nuxt-link class="dropdown-item" :to="`/account/${wallet.auth.accountName}`">
+                        View Profile
+                      </nuxt-link>
+                      <hr class="dropdown-divider">
+                      <a href="#" class="dropdown-item" @click="$transit.logout()">
+                        Disconnect
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
           </div>
         </div>
       </div>

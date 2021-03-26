@@ -12,7 +12,7 @@
             <span v-if="discordMembersOnline">{{ discordMembersOnline }}</span><span v-else>..</span> members
           </b> online!
         </p>
-        <p class="is-hidden-desktop">
+        <p class="is-hidden-tablet">
           The DAO Discord is now open!
         </p>
         <a :href="discordUrl" target="_blank">

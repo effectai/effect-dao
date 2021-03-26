@@ -28,7 +28,7 @@
           <div v-else>Loading content..</div>
         </small>
         <div class="box mt-5">
-          <h4 class="box-title">
+          <h4 class="box-title subtitle">
             Attachments
           </h4>
           <table v-if="proposal.files" class="table">
@@ -207,7 +207,7 @@
         </div>
       </div>
     </div>
-    <h4 v-else class="has-text-centered">
+    <h4 v-else class="has-text-centered subtitle">
       Could not retrieve proposal
     </h4>
   </div>

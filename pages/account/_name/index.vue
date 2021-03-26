@@ -11,6 +11,11 @@
           <div class="media-content">
             <h2 class="subtitle is-3 is-family-sans-serif">{{ account.name }}</h2>
             <h4 v-if="account.rank" class="rank subtitle is-5">
+              <div class="media-right is-hidden-mobile">
+                <div v-if="account.rank && account.rank.currentRank > 0" :class="['rank-icon', 'rank-'+account.rank.currentRank]">
+                  <img width="64px" :src="'/img/guardian-icons/guardian-'+account.rank.currentRank+'.png'">
+                </div>
+              </div>
               Rank {{ account.rank.currentRank }}
             </h4>
             <div v-if="account.signedConstitution">
@@ -27,11 +32,6 @@
             </div>
             <div v-else>
               <h5>Loading..</h5>
-            </div>
-          </div>
-          <div class="media-right">
-            <div v-if="account.rank && account.rank.currentRank > 0" :class="['rank-icon', 'rank-'+account.rank.currentRank]">
-              <img width="64px" :src="'/img/guardian-icons/guardian-'+account.rank.currentRank+'.png'">
             </div>
           </div>
         </div>

@@ -4,10 +4,7 @@
       <div class="container is-max-widescreen">
         <div class="navbar-start">
           <nuxt-link class="navbar-item navbar-item navbar-title" to="/">
-            <img src="@/assets/img/logo.png" class="logo">
-            <span class="top-title"><span class="has-text-weight-normal">Effect</span>&nbsp;<b
-              class="has-text-weight-bold"
-            >Dashboard</b></span>
+            <img src="@/assets/img/effect-dao_h100.png"  class="logo">
           </nuxt-link>
 
           <a
@@ -56,20 +53,20 @@
             </nuxt-link>
           </div>
 
-          <a class="navbar-item connect-wallet mobile-connect" @click="mobileMenu = false">
-            <a v-if="!wallet" class="button is-primary" @click="$wallet.loginModal = true">
+          <div class="navbar-item connect-wallet mobile-connect" @click="mobileMenu = false">
+            <a v-if="!wallet" class="button is-secondary" @click="$wallet.loginModal = true">
               <strong>Connect Wallet</strong>
             </a>
-            <nuxt-link v-else class="button is-primary" :to="'/account/'+wallet.auth.accountName">
+            <nuxt-link v-else class="button is-secondary" :to="'/account/'+wallet.auth.accountName">
               <strong>{{ wallet.auth.accountName }}</strong>
             </nuxt-link>
-          </a>
+          </div>
         </div>
 
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons wallet">
-              <a v-if="!wallet" class="button is-primary" @click="$wallet.loginModal = true">
+              <a v-if="!wallet" class="button is-secondary" @click="$wallet.loginModal = true">
                 <strong>Connect Wallet</strong>
               </a>
               <div v-else class="dropdown account-name-dropdown" :class="{'is-active': dropdown}">
@@ -145,7 +142,7 @@ export default {
     font-size: 18px;
 
     .logo {
-      height: 35px;
+      height: 45px;
       max-width: none;
       max-height: none;
       margin-right: 8px;
@@ -201,7 +198,6 @@ export default {
     justify-content: center;
 
     .navbar-item {
-      font-weight: 700;
 
       &:after {
         display: block;
@@ -216,7 +212,7 @@ export default {
 
       &.is-active {
         color: $primary;
-
+        font-weight: 600;
         &:after {
           width: calc(100% - 1.5rem);
         }

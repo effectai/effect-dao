@@ -163,11 +163,11 @@
       <div class="columns stakes is-multiline mt-5">
         <div class="column is-half">
           <div class="box">
-            <h5 class="box-title">
+            <h5 class="subtitle box-title">
               <img src="@/assets/img/efx-icon.png" class="token-icon">Staked EFX
             </h5>
             <div class="has-text-centered">
-              <h3>
+              <h3 class="subtitle is-3 has-text-weight-bold">
                 <ICountUp :end-val="efxStaked" />
                 <span class="symbol">EFX</span>
               </h3>
@@ -186,11 +186,11 @@
 
         <div class="column is-half">
           <div class="box">
-            <h5 class="box-title">
+            <h5 class="subtitle box-title">
               <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">Staked NFX
             </h5>
             <div class="has-text-centered">
-              <h3>
+              <h3 class="subtitle is-3 has-text-weight-bold">
                 <ICountUp :end-val="nfxStaked" />
                 <span class="symbol">NFX</span>
               </h3>
@@ -208,7 +208,7 @@
         </div>
         <div class="column is-half">
           <div class="box">
-            <h5 class="box-title">
+            <h5 class="subtitle box-title">
               Stake AGE
             </h5>
             <div class="has-text-centered">
@@ -217,7 +217,7 @@
                 class="mt-2"
                 :progress="(stakeAge / (1000 * 24 * 3600))*100"
                 :size="250"
-                :fill="{ color: '#39e7bf' }"
+                :fill="{ color: '#d7ac00' }"
                 empty-fill="rgba(0,0,0,.02)"
                 :animation-start-value="0.0"
                 insert-mode="append"
@@ -226,7 +226,7 @@
                 :show-percent="false"
               >
                 <div class="value-circle">
-                  <h1>{{ stakeAge / (1000 * 24 * 3600) | percentage(1) }}<span class="has-text-weight-light">%</span></h1>
+                  <h1 class="title">{{ stakeAge / (1000 * 24 * 3600) | percentage(1) }}<span class="has-text-weight-light">%</span></h1>
                   <div class="age-amount">
                     {{ stakeAge | formatSeconds(this) }}
                   </div>
@@ -240,16 +240,16 @@
         </div>
         <div class="column is-half">
           <div class="box" style="height:100%">
-            <h5 class="box-title">
+            <h5 class="subtitle box-title">
               EFX Power
             </h5>
             <div class="value-circle big mt-6 glow">
               <div class="has-text-centered">
-                <h3>
+                <h3 class="has-text-weight-bold is-size-4">
                   <ICountUp :options="{decimalPlaces: 0}" :end-val="power" />
                   <small class="symbol has-text-weight-light is-size-6">EP</small>
                 </h3>
-                <b>EFX Power</b>
+                <span>EFX Power</span>
               </div>
             </div>
           </div>
@@ -525,7 +525,7 @@ export default {
 <style lang="scss">
 .circle {
   canvas {
-    box-shadow: inset -4px -4px 11px 0 #FFFFFF, inset 4px 4px 11px 0 #CDD4E6, 0px 0px 29px -22px #39e7bfd4;
+    box-shadow: inset -4px -4px 11px 0 #FFFFFF, inset 4px 4px 11px 0 #CDD4E6, 0px 0px 29px -22px #d7ac00d4;
     border-radius: 100%;
   }
 }
@@ -534,10 +534,10 @@ export default {
 <style lang="scss" scoped>
   @keyframes glow {
     from {
-      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 29px -22px #39e7bfd4;
+      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 29px -22px #d7ac00d4;
     }
     to {
-      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 40px 15px #39e7bfd4;
+      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 40px 15px #d7ac00d4;
     }
   }
   .circle {

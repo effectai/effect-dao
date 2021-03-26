@@ -263,7 +263,7 @@ export default {
         {
           name: 'Next Cycle',
           description: '',
-          value: '29-1-2021'
+          value: '9-4-2021'
         },
         {
           name: 'Distribution Strategy',
@@ -273,7 +273,7 @@ export default {
         {
           name: 'Recycle Strategy',
           description: '',
-          value: '100% hold'
+          value: '70% hold, 30% distribute'
         }
       ]
     },

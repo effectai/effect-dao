@@ -1,20 +1,20 @@
 <template>
   <div>
     <div class="has-text-centered">
-      <nuxt-link class="button is-primary is-wide m-2" to="/proposals/new">
+      <nuxt-link class="button is-secondary is-wide m-2" to="/proposals/new">
         New Proposal
       </nuxt-link>
       <nuxt-link
         v-if="wallet && wallet.auth"
         :to="'/account/' + wallet.auth.accountName"
-        class="button is-primary is-wide m-2 is-outlined"
+        class="button is-secondary is-wide m-2 is-outlined"
       >
         Your Proposals
       </nuxt-link>
       <ConnectWallet v-else title="Your Proposals" button-class="is-wide is-outlined m-2" />
     </div>
     <div class="box mt-5">
-      <h4 class="box-title mb-0">
+      <h4 class="subtitle box-title mb-0 is-4 has-text-weight-bold">
         Proposals
         <div class="is-size-6 mt-2">
           <small>

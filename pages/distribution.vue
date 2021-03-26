@@ -3,12 +3,12 @@
     <div class="columns stakes is-multiline mt-5">
       <div class="column is-half">
         <div class="box">
-          <h5 class="box-title">
+          <h5 class="subtitle box-title">
             Your Share
           </h5>
           <div v-if="accountName" class="has-text-centered">
             <div class="has-text-centered">
-              <h3>
+              <h3 class="subtitle is-3 has-text-weight-bold">
                 <ICountUp v-if="isFinite(lastCycleUserFees)" :end-val="lastCycleUserFees" />
                 <span v-else>...</span>
                 <span class="symbol">{{ efxToken }}</span>
@@ -41,7 +41,8 @@
             </div>
           </div>
           <div v-else class="has-text-centered">
-            <a class="button is-primary" @click="$wallet.loginModal = true">
+            <br>
+            <a class="button is-secondary" @click="$wallet.loginModal = true">
               <strong>Connect Wallet</strong>
             </a>
           </div>
@@ -50,21 +51,21 @@
 
       <div class="column is-half">
         <div class="box">
-          <h5 class="box-title">
+          <h5 class="subtitle box-title">
             Cycle {{ lastCycleId }}: Total Fees
           </h5>
           <div class="has-text-centered">
-            <h3>
+            <h3 class="subtitle is-3 has-text-weight-bold">
               <ICountUp v-if="lastCycleTotalFees !== null" :end-val="lastCycleTotalFees" />
               <span v-else>...</span>
               <span class="symbol">{{ efxToken }}</span>
             </h3>
           </div>
-          <h5 class="box-title mt-6">
+          <h5 class="subtitle box-title mt-6">
             Cycle {{ lastCycleId }}: Total Vote Weight
           </h5>
           <div class="has-text-centered">
-            <h3>
+            <h3 class="subtitle has-text-weight-bold is-4">
               <ICountUp v-if="lastCycleTotalWeight !== null" :end-val="lastCycleTotalWeight" />
               <span v-else>...</span>
             </h3>
@@ -74,7 +75,7 @@
 
       <div class="column is-full">
         <div class="box">
-          <h5 class="box-title">
+          <h5 class="subtitle box-title">
             Distribution History
           </h5>
           <div>
@@ -407,4 +408,5 @@ export default {
   max-width: 200px;
   margin: 40px auto 27px;
 }
+.table { width: 100%; }
 </style>

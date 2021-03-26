@@ -56,26 +56,26 @@
       </div>
     </div>
 
-    <div v-if="!loading && (!wallet || !wallet.auth)" class="notification is-outlined is-primary has-text-weight-bold mb-0 notif-w-btn">
-      <div class="is-pulled-left">
-        Connect your wallet to participate in the DAO.
-      </div>
-      <div class="is-pulled-right notif-btn">
-        <a class="button is-primary" @click="$wallet.loginModal = true">
+    <div v-if="!loading && (!wallet || !wallet.auth)" class="has-text-centered is-outlined is-primary mb-0 has-text-weight-bold notif-w-btn">
+      <!-- <div class="notif-btn">
+        <a class="button is-secondary" @click="$wallet.loginModal = true">
           <strong>Connect Wallet</strong>
         </a>
+      </div> -->
+      <div>
+        Connect your wallet (drop down menu) to participate in the DAO.
       </div>
     </div>
 
     <div
       v-else-if="!loading && !signedConstitution"
-      class="notification is-primary is-outlined is-light mb-0 has-text-weight-bold notif-w-btn"
+      class="has-text-centered notification is-primary is-outlined is-light mb-0 has-text-weight-bold notif-w-btn"
     >
-      <div class="is-pulled-left">
+      <div>
         Sign the constitution to participate in the DAO
       </div>
-      <div class="is-pulled-right notif-btn">
-        <button class="button is-primary" @click="downloadConstitution(); constitutionModal = true">
+      <div class="notif-btn">
+        <button class="button is-secondary" @click="downloadConstitution(); constitutionModal = true">
           Become a member
         </button>
       </div>
@@ -89,7 +89,7 @@
         The constitution has been updated to V{{ constitutionVersion }}, sign it to remain a DAO member!
       </div>
       <div class="is-pulled-right notif-btn">
-        <button class="button is-primary" @click="downloadConstitution(); constitutionModal = true">
+        <button class="button is-secondary" @click="downloadConstitution(); constitutionModal = true">
           Sign
         </button>
       </div>

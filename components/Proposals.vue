@@ -6,7 +6,7 @@
           <div class="media-left">
             <span class="tag" :class="{'is-success': proposal.status == 'ACTIVE', 'is-warning': proposal.status == 'DRAFT', 'is-link': proposal.status == 'PENDING', 'is-dark': proposal.status == 'CLOSED'}">{{ proposal.status }}</span>
           </div>
-          <div class="media-content">
+          <div class="media-content has-text-weight-light">
             <b v-if="proposal.title">#{{ proposal.id }}: {{ proposal.title | truncate(45) }}</b>
             <b v-else>...</b>
             <div class="has-text-weight-light">

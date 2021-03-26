@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
-      <div class="container is-max-widescreen">
+      <div class="container">
         <div class="navbar-start">
           <nuxt-link class="navbar-item navbar-item navbar-title" to="/">
             <img src="@/assets/img/effect-dao_h100.png"  class="logo">
@@ -63,6 +63,7 @@
           </div>
         </div>
 
+<!-- Need to add isflex, ishidden modifier here. -->
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons wallet">

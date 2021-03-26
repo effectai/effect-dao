@@ -12,11 +12,9 @@
 
       <div class="column is-two-thirds">
 
-        <div class="block" v-if="proposalComment !== undefined">
-          <div class="notification is-primary mb-0 is-outlined">
-            <h5>High Guard Comment</h5>
-            <p v-html="proposalComment" />
-          </div>
+        <div class="message is-dark" v-if="proposalComment !== undefined">
+          <div class="message-header">High Guard Comment</div>
+          <div class="message-body" v-html="proposalComment"></div>
         </div>
 
         <div v-if="proposal.title" class="title is-4">

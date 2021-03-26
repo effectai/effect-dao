@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="box">
-      <h4 class="box-title">New Proposal</h4>
+      <h4 class="box-title subtitle">New Proposal</h4>
       <form @submit.prevent="createProposal">
         <div class="field">
           <label class="label">Title</label>
@@ -24,7 +24,6 @@
           <div class="control" v-else>
             <vue-simplemde required v-model="proposalIpfs.body" ref="markdownEditor" :configs="{promptURLs: true, spellChecker: false}" />
           </div>
-
         </div>
 
         <div class="field">

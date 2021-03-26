@@ -62,18 +62,19 @@
           <strong>Connect Wallet</strong>
         </a>
       </div> -->
-      <div>
-        Connect your wallet (drop down menu) to participate in the DAO.
+      <div class="notification is-primary is-outlined has-text-centered is-light has-text-weight-bold ">
+        Connect your wallet to participate in the DAO.
       </div>
     </div>
 
     <div
       v-else-if="!loading && !signedConstitution"
-      class="has-text-centered notification is-primary is-outlined is-light mb-0 has-text-weight-bold notif-w-btn"
+      class="has-text-centered notification is-primary is-outlined is-light mb-0 has-text-weight-bold"
     >
       <div>
         Sign the constitution to participate in the DAO
       </div>
+      <br>
       <div class="notif-btn">
         <button class="button is-secondary" @click="downloadConstitution(); constitutionModal = true">
           Become a member
@@ -83,7 +84,7 @@
 
     <div
       v-else-if="!loading && signedConstitution && !signedLastConstitution"
-      class="notification is-warning is-outlined is-light mb-0 has-text-weight-bold notif-w-btn"
+      class="notification is-warning is-outlined is-light mb-0 has-text-weight-bold"
     >
       <div class="is-pulled-left">
         The constitution has been updated to V{{ constitutionVersion }}, sign it to remain a DAO member!
@@ -97,7 +98,7 @@
 
     <rank v-if="wallet && wallet.auth && signedConstitution" class="mt-5" />
     <div class="box mt-5">
-      <h5 class="box-title">
+      <h5 class="box-title subtitle">
         EffectDAO Members
       </h5>
       <div v-if="constitutionMembers" class="members columns is-multiline mt-5">

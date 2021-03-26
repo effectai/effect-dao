@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="box">
-      <h4 class="box-title">
+      <h4 class="box-title subtitle">
         Token Map
       </h4>
       <div class="table-container">
@@ -41,7 +41,7 @@
       <pie-chart v-if="!loading" :data="chartData" :options="chartOptions" />
     </div>
     <div class="box">
-      <h4 class="box-title">
+      <h4 class="box-title subtitle">
         Smart Contracts
       </h4>
       <div class="table-container">
@@ -66,7 +66,7 @@
       </div>
     </div>
     <div class="box">
-      <h4 class="box-title">
+      <h4 class="box-title subtitle">
         Stats
       </h4>
       <div class="table-container">
@@ -89,7 +89,7 @@
       </div>
     </div>
     <div class="box">
-      <h4 class="box-title">
+      <h4 class="box-title subtitle">
         Other Resources
       </h4>
       <div class="table-container">

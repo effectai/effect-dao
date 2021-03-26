@@ -30,7 +30,7 @@
         </div>
       </nuxt-link>
     </div>
-    <h5 v-else class="has-text-centered">
+    <h5 v-else class="has-text-centered subtitle">
       No Proposals
     </h5>
   </div>

@@ -2,7 +2,7 @@
   <div>
     <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
       <div class="container is-max-widescreen">
-        <div class="navbar-start">
+        <div class="navbar-brand">
           <nuxt-link class="navbar-item navbar-item navbar-title" to="/">
             <img src="@/assets/img/effect-dao_h100.png"  class="logo">
           </nuxt-link>
@@ -20,76 +20,62 @@
             <span aria-hidden="true" />
           </a>
         </div>
-
         <div id="navbarBasicExample" class="navbar-menu" :class="{'is-active': mobileMenu}">
-          <div @click="mobileMenu = false">
-            <nuxt-link class="navbar-item" to="/" exact-active-class="is-active">
-              Home
-            </nuxt-link>
+          <div class="navbar-start is-justify-content-center" style="width: 100%">
+            <div @click="mobileMenu = false">
+              <nuxt-link class="navbar-item" to="/" exact-active-class="is-active">
+                Home
+              </nuxt-link>
+            </div>
+            <div @click="mobileMenu = false">
+              <nuxt-link class="navbar-item" to="/stake" exact-active-class="is-active">
+                Stake
+              </nuxt-link>
+            </div>
+            <div @click="mobileMenu = false">
+              <nuxt-link class="navbar-item" to="/proposals" exact-active-class="is-active">
+                Proposals
+              </nuxt-link>
+            </div>
+            <div @click="mobileMenu = false">
+              <nuxt-link class="navbar-item" to="/dao" exact-active-class="is-active">
+                DAO
+              </nuxt-link>
+            </div>
+            <div @click="mobileMenu = false">
+              <nuxt-link class="navbar-item" to="/token" exact-active-class="is-active">
+                Token Map
+              </nuxt-link>
+            </div>
+            <div @click="mobileMenu = false">
+              <nuxt-link class="navbar-item" to="/distribution" exact-active-class="is-active">
+                Rewards
+              </nuxt-link>
+            </div>
           </div>
-          <div @click="mobileMenu = false">
-            <nuxt-link class="navbar-item" to="/stake" exact-active-class="is-active">
-              Stake
-            </nuxt-link>
-          </div>
-          <div @click="mobileMenu = false">
-            <nuxt-link class="navbar-item" to="/proposals" exact-active-class="is-active">
-              Proposals
-            </nuxt-link>
-          </div>
-          <div @click="mobileMenu = false">
-            <nuxt-link class="navbar-item" to="/dao" exact-active-class="is-active">
-              DAO
-            </nuxt-link>
-          </div>
-          <div @click="mobileMenu = false">
-            <nuxt-link class="navbar-item" to="/token" exact-active-class="is-active">
-              Token Map
-            </nuxt-link>
-          </div>
-          <div @click="mobileMenu = false">
-            <nuxt-link class="navbar-item" to="/distribution" exact-active-class="is-active">
-              Rewards
-            </nuxt-link>
-          </div>
-
-          <div class="navbar-item connect-wallet mobile-connect" @click="mobileMenu = false">
-            <a v-if="!wallet" class="button is-secondary" @click="$wallet.loginModal = true">
-              <strong>Connect Wallet</strong>
-            </a>
-            <nuxt-link v-else class="button is-secondary" :to="'/account/'+wallet.auth.accountName">
-              <strong>{{ wallet.auth.accountName }}</strong>
-            </nuxt-link>
-          </div>
-        </div>
-
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="buttons wallet">
-              <a v-if="!wallet" class="button is-secondary" @click="$wallet.loginModal = true">
-                <strong>Connect Wallet</strong>
-              </a>
-              <div v-else class="dropdown account-name-dropdown" :class="{'is-active': dropdown}">
-                <div class="dropdown-trigger" @click="dropdown = !dropdown">
-                  <figure class="image">
-                    <avatar :account-name="wallet.auth.accountName" />
-                  </figure>
-                  <span>{{ wallet.auth.accountName }}</span>
-                  <font-awesome-icon :icon="['fas', 'caret-square-down']" style="font-size: 12px" />
-                </div>
-                <div id="dropdown-menu" class="dropdown-menu" role="menu">
-                  <div class="dropdown-content" @click="dropdown = false">
-                    <nuxt-link class="dropdown-item" :to="`/account/${wallet.auth.accountName}`">
-                      View Profile
-                    </nuxt-link>
-                    <hr class="dropdown-divider">
-                    <a href="#" class="dropdown-item" @click="$transit.logout()">
-                      Disconnect
-                    </a>
+          <div class="navbar-end">
+              <div class="navbar-item">
+                <a v-if="!wallet" class="button is-secondary" @click="$wallet.loginModal = true">
+                  <strong>Connect Wallet</strong>
+                </a>
+                <div v-else class="dropdown account-name-dropdown" :class="{'is-active': dropdown}">
+                  <div class="dropdown-trigger" @click="dropdown = !dropdown">
+                    <span>{{ wallet.auth.accountName }}</span>
+                    <font-awesome-icon :icon="['fas', 'caret-square-down']" style="font-size: 12px" />
+                  </div>
+                  <div id="dropdown-menu" class="dropdown-menu" role="menu">
+                    <div class="dropdown-content" @click="dropdown = false">
+                      <nuxt-link class="dropdown-item" :to="`/account/${wallet.auth.accountName}`">
+                        View Profile
+                      </nuxt-link>
+                      <hr class="dropdown-divider">
+                      <a href="#" class="dropdown-item" @click="$transit.logout()">
+                        Disconnect
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
           </div>
         </div>
       </div>
@@ -98,11 +84,9 @@
 </template>
 
 <script>
-import Avatar from '~/components/Avatar'
 
 export default {
   components: {
-    Avatar
   },
 
   data () {
@@ -125,16 +109,6 @@ export default {
 .navbar {
   background: transparent;
   margin-top: 8px;
-
-  .navbar-burger.burger {
-    margin-top: -48px;
-  }
-
-  .mobile-connect {
-    display: none;
-    margin-bottom: -50px;
-    margin-top: 12px;
-  }
 
   .navbar-title {
     min-width: 100px;
@@ -225,14 +199,6 @@ export default {
       display: block;
       margin-top: -39px;
       margin-left: 40px;
-    }
-
-    .navbar-end {
-      display: none;
-    }
-
-    .mobile-connect {
-      display: block;
     }
 
     .navbar-menu {

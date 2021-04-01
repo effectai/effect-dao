@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="box">
-      <h4 class="box-title">
+      <h4 class="box-title subtitle">
         Edit Proposal {{ id }}
       </h4>
       <h5 v-if="loadingProposal" class="has-text-centered">

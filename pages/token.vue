@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="box">
-      <h4 class="box-title">
+      <h4 class="box-title subtitle">
         Token Map
       </h4>
       <div class="table-container">
@@ -18,21 +18,21 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(label, index) in chartData.datasets[1].labels" :key="label">
+            <tr v-for="(label, index) in chartData.datasets[0].labels" :key="label">
               <td>
-                {{ label }} <span v-if="chartData.datasets[1].meta[index].locked" class="tag">locked</span>
-                <span class="is-pulled-right" :data-tooltip="chartData.datasets[1].meta[index].description">
+                {{ label }} <span v-if="chartData.datasets[0].meta[index].locked" class="tag">locked</span>
+                <span v-if="chartData.datasets[0].meta[index].description" class="is-pulled-right" :data-tooltip="chartData.datasets[0].meta[index].description">
                   <font-awesome-icon :icon="['fas', 'info-circle']" />
                 </span>
               </td>
               <td class="has-text-right">
-                {{ hello(balances[chartData.datasets[1].meta[index].balanceKey]) }} EFX
+                {{ hello(balances[chartData.datasets[0].meta[index].balanceKey]) }} EFX
               </td>
               <td class="has-text-left">
                 <a
-                  :href="chartData.datasets[1].meta[index].link"
+                  :href="chartData.datasets[0].meta[index].link"
                   target="_blank"
-                >{{ chartData.datasets[1].meta[index].addressName }}</a>
+                >{{ chartData.datasets[0].meta[index].addressName }}</a>
               </td>
             </tr>
           </tbody>
@@ -41,7 +41,7 @@
       <pie-chart v-if="!loading" :data="chartData" :options="chartOptions" />
     </div>
     <div class="box">
-      <h4 class="box-title">
+      <h4 class="box-title subtitle">
         Smart Contracts
       </h4>
       <div class="table-container">
@@ -66,7 +66,7 @@
       </div>
     </div>
     <div class="box">
-      <h4 class="box-title">
+      <h4 class="box-title subtitle">
         Stats
       </h4>
       <div class="table-container">
@@ -89,7 +89,7 @@
       </div>
     </div>
     <div class="box">
-      <h4 class="box-title">
+      <h4 class="box-title subtitle">
         Other Resources
       </h4>
       <div class="table-container">
@@ -128,7 +128,7 @@
                 <a
                   href="https://medium.com/effect-ai/the-effect-dao-voting-adopt-to-survive-c17252a90a47"
                   target="_blank"
-                >The Effect DAO Voting</a>
+                >The EffectDAO Voting</a>
               </td>
               <td>Blog</td>
             </tr>
@@ -179,16 +179,13 @@ export default {
       membersLowerBound: '13528614985990483600', // Hardcode lower bound from 300 members to minimize amount of fetches
       balances: {
         daoBalance: 0,
-        proposalBalance: 0,
         liquidBalance: 0,
         stakeBalance: 0,
-        feepoolBalance: 0,
-        unswappedBalance: 56459627,
-        foundationBalance: 195375000,
-        // foundationBalance: 130375000,
-        // marketingBalance: 30000000,
-        // liquidityBalance: 30000000,
-        // communityBalance: 5000000,
+        unswappedBalance: 0,
+        // foundationBalance: 195375000,
+        foundationBalance: 100000000,
+        liquidityBalance: 88447533,
+        communityBalance: 5000000,
         teamBalance: 32125000,
         maxSupply: 650000000
       },
@@ -215,7 +212,7 @@ export default {
           source: 'https://github.com/effectai/effect-network-eos/blob/master/contracts/swap/swap.cpp'
         },
         {
-          name: 'Effect DAO',
+          name: 'EffectDAO',
           description: 'Holds the registry of the members and guardians of the EffectDAO',
           account: 'theeffectdao',
           link: 'https://bloks.io/account/theeffectdao?loadContract=true&tab=Tables&account=theeffectdao&scope=theeffectdao&limit=100&table=member',
@@ -236,7 +233,9 @@ export default {
           source: 'https://github.com/effectai/effect-network/blob/master/contracts/java/token/src/ai/effect/token/EffectToken.java'
         }
       ],
-      chartOptions: {}
+      chartOptions: {
+        cutoutPercentage: 10
+      }
     }
   },
   computed: {
@@ -279,105 +278,19 @@ export default {
     },
     chartData () {
       return {
-        labels: ['Circulating Supply', 'Locked Supply'],
+        // labels: ['Circulating', 'Foundation'],
+        labels: ['Liquid Supply', 'Stake Pool', 'Liquidity & Partnerships', 'Unswapped on NEO', 'Team Tokens', 'EffectDAO', 'Foundation'],
         datasets: [
           {
             name: 'Token Map',
-            backgroundColor: ['#41B883', '#E46651'],
-            weight: 0.9,
-            meta: [
-              {
-                addressName: 'treasury.efx',
-                link: 'https://bloks.io/account/treasury.efx',
-                locked: true
-              },
-              {
-                addressName: 'effecttokens',
-                link: 'https://bloks.io/tokens/EFX-eos-effecttokens'
-              },
-              {
-                addressName: 'acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
-                link: 'https://neotracker.io/asset/acbc532904b6b51b5ea6d19b803d78af70e7e6f9'
-              },
-              {
-                // addressName: 'locked.efx',
-                // link: 'https://bloks.io/account/locked.efx',
-                addressName: 'AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
-                link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
-                locked: true
-              },
-              {
-                addressName: 'AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
-                locked: true,
-                link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno'
-              }
-            ],
-            data: this.chartBalances,
-            labels: ['Circulating Supply', 'Locked Supply']
-          },
-          {
-            name: 'Token Map',
-            backgroundColor: ['#0dd925', '#499166', '29ab5d', '#394dfa', '#d6fca4', '#7aa7ff', '#A4B8BB', '#7e8a8c'],
-            weight: 0.7,
+            backgroundColor: ['#0dd925', '#499166', '#fce68d', '#394dfa', '#d6fca4', '#7aa7ff', '#A4B8BB', '#7e8a8c'],
+            weight: 0.55,
             meta: [
               {
                 addressName: 'effecttokens',
                 link: 'https://bloks.io/tokens/EFX-eos-effecttokens',
-                description: 'Current supply in circulation and not locked in any staking or timelock.',
+                description: null, // 'Current supply in circulation and not locked in any staking or timelock.',
                 balanceKey: 'liquidBalance'
-              },
-              {
-                addressName: 'acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
-                link: 'https://neotracker.io/asset/acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
-                description: 'EFX tokens that did not swap to EOS yet.',
-                balanceKey: 'unswappedBalance'
-              },
-              {
-                addressName: 'feepool.efx',
-                link: 'https://bloks.io/account/feepool.efx',
-                description: 'Collected fees, claimable by network contributors.',
-                balanceKey: 'feepoolBalance'
-              },
-              // {
-              //   // addressName: 'locked.efx',
-              //   // link: 'https://bloks.io/account/locked.efx',
-              //   addressName: 'AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
-              //   link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
-              //   locked: false,
-              //   description: 'Funds allocated for marketing and partnerships.',
-              //   balanceKey: 'marketingBalance'
-              // },
-              // {
-              //   // addressName: 'locked.efx',
-              //   // link: 'https://bloks.io/account/locked.efx',
-              //   addressName: 'AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
-              //   link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
-              //   locked: false,
-              //   description: 'Funds allocated for community incentives.',
-              //   balanceKey: 'communityBalance'
-              // },
-              // {
-              //   // addressName: 'locked.efx',
-              //   // link: 'https://bloks.io/account/locked.efx',
-              //   addressName: 'AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
-              //   link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
-              //   locked: false,
-              //   description: 'Funds allocated for market liquidity related usage.',
-              //   balanceKey: 'liquidityBalance'
-              // },
-              {
-                addressName: 'treasury.efx',
-                link: 'https://bloks.io/account/treasury.efx',
-                locked: true,
-                description: 'Tokens governed by the DAO, from here proposals are funded.',
-                balanceKey: 'daoBalance'
-              },
-              {
-                addressName: 'daoproposals',
-                link: 'https://bloks.io/account/daoproposals',
-                locked: true,
-                description: 'The funds reserved for the scheduled cycles.',
-                balanceKey: 'proposalBalance'
               },
               {
                 addressName: 'efxstakepool',
@@ -387,26 +300,42 @@ export default {
                 balanceKey: 'stakeBalance'
               },
               {
+                addressName: 'bsc.efx',
+                link: 'https://bloks.io/account/bsc.efx',
+                locked: false,
+                description: 'Funds allocated for providing liquidity and partnership.',
+                balanceKey: 'liquidityBalance'
+              },
+              {
+                addressName: 'acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
+                link: 'https://neotracker.io/asset/acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
+                description: 'EFX tokens that did not swap to EOS yet.',
+                balanceKey: 'unswappedBalance'
+              },
+              {
                 addressName: 'AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
                 locked: true,
                 link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
-                description: 'EFX locked by the team on NEO until 2021-04.',
+                description: null,
                 balanceKey: 'teamBalance'
               },
               {
-                // addressName: 'locked.efx',
-                // link: 'https://bloks.io/account/locked.efx',
-                addressName: 'AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
-                link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
+                addressName: 'treasury.efx',
+                link: 'https://bloks.io/account/treasury.efx',
                 locked: true,
-                description: 'EFX locked by the foundation until 2021-09.',
+                description: 'Tokens governed by the DAO, from here proposals are funded.',
+                balanceKey: 'daoBalance'
+              },
+              {
+                addressName: 'efx',
+                link: 'https://bloks.io/account/efx',
+                locked: true,
+                description: null, // 'EFX locked by the foundation until 2021-09.',
                 balanceKey: 'foundationBalance'
               }
             ],
             data: this.innerChartBalances,
-            // labels: ['Liquid Supply', 'Unswapped on NEO', 'Feepool', 'Marketing & Partnerships', 'Community Incentives', 'Liquidity Tokens',
-            //   'Effect DAO', 'Proposal Funds', 'Stake Pool', 'Team Tokens', 'Foundation Tokens']
-            labels: ['Liquid Supply', 'Unswapped on NEO', 'Feepool', 'Effect DAO', 'Proposal Funds', 'Stake Pool', 'Team Tokens', 'Foundation Tokens']
+            labels: ['Liquid Supply', 'Stake Pool', 'Liquidity & Partnerships', 'Unswapped on NEO', 'Team Tokens', 'EffectDAO', 'Foundation']
           }
         ]
       }
@@ -414,22 +343,18 @@ export default {
     chartBalances () {
       return [
         // this.balances.liquidBalance + this.balances.unswappedBalance + this.balances.feepoolBalance + this.balances.marketingBalance + this.balances.liquidityBalance + this.balances.communityBalance,
-        this.balances.liquidBalance + this.balances.unswappedBalance + this.balances.feepoolBalance,
-        this.balances.foundationBalance + this.balances.teamBalance + this.balances.stakeBalance + this.balances.daoBalance + this.balances.proposalBalance
+        this.balances.liquidBalance + this.balances.liquidityBalance,
+        this.balances.foundationBalance + this.balances.teamBalance + this.balances.stakeBalance + this.balances.daoBalance
       ]
     },
     innerChartBalances () {
       return [
         this.balances.liquidBalance,
-        this.balances.unswappedBalance,
-        // this.balances.feepoolBalance,
-        // this.balances.marketingBalance,
-        // this.balances.communityBalance,
-        // this.balances.liquidityBalance,
-        this.balances.daoBalance,
-        this.balances.proposalBalance,
         this.balances.stakeBalance,
+        this.balances.liquidityBalance,
+        this.balances.unswappedBalance,
         this.balances.teamBalance,
+        this.balances.daoBalance,
         this.balances.foundationBalance
       ]
     }
@@ -444,10 +369,9 @@ export default {
     async getBalances () {
       const circSupply = parseInt((await fetch('https://www.api.bloks.io/tokens/EFX-eos-effecttokens').then(data => data.json()))[0].supply.circulating)
       this.balances.daoBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'treasury.efx', process.env.efxToken))[0].replace(' EFX', ''))
-      this.balances.proposalBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'daoproposals', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.stakeBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'efxstakepool', process.env.efxToken))[0].replace(' EFX', ''))
-      this.balances.feepoolBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'feepool.efx', process.env.efxToken))[0].replace(' EFX', ''))
-      this.balances.liquidBalance = circSupply - this.balances.daoBalance - this.balances.stakeBalance
+      this.balances.liquidBalance = circSupply - this.balances.daoBalance - this.balances.stakeBalance - this.balances.liquidityBalance - this.balances.foundationBalance
+      this.balances.unswappedBalance = 650000000 - (this.balances.liquidBalance + this.balances.stakeBalance + this.balances.foundationBalance + this.balances.teamBalance + this.balances.liquidityBalance + this.balances.daoBalance)
     },
     async getTotalVoteWeight () {
       const cycleData = await this.$eos.rpc.get_table_rows({

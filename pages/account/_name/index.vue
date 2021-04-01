@@ -9,8 +9,13 @@
             </div>
           </div>
           <div class="media-content">
-            <h2 class="title is-3 is-family-sans-serif">{{ account.name }}</h2>
+            <h2 class="subtitle is-3 is-family-sans-serif">{{ account.name }}</h2>
             <h4 v-if="account.rank" class="rank subtitle is-5">
+              <div class="media-right is-hidden-mobile">
+                <div v-if="account.rank && account.rank.currentRank > 0" :class="['rank-icon', 'rank-'+account.rank.currentRank]">
+                  <img width="64px" :src="'/img/guardian-icons/guardian-'+account.rank.currentRank+'.png'">
+                </div>
+              </div>
               Rank {{ account.rank.currentRank }}
             </h4>
             <div v-if="account.signedConstitution">
@@ -27,11 +32,6 @@
             </div>
             <div v-else>
               <h5>Loading..</h5>
-            </div>
-          </div>
-          <div class="media-right">
-            <div v-if="account.rank && account.rank.currentRank > 0" :class="['rank-icon', 'rank-'+account.rank.currentRank]">
-              <img width="64px" :src="'/img/guardian-icons/guardian-'+account.rank.currentRank+'.png'">
             </div>
           </div>
         </div>
@@ -56,10 +56,10 @@
       <rank-member :power="account.power" :nfx-staked="account.nfxStaked" :stake-age="account.stakeAge" :rank="account.rank" :hide-current-rank="true" />
     </div>
     <div class="box mt-5">
-      <h4 v-if="myAccount" class="box-title">
+      <h4 v-if="myAccount" class="box-title subtitle">
         Your Proposals
       </h4>
-      <h4 v-else class="box-title">
+      <h4 v-else class="box-title subtitle">
         Proposals by {{ account.name }}
       </h4>
       <div v-if="loadingProposals">
@@ -82,10 +82,10 @@
       </div>
     </div>
     <div class="box">
-      <h4 v-if="myAccount" class="box-title">
+      <h4 v-if="myAccount" class="box-title subtitle">
         Your Votes
       </h4>
-      <h4 v-else class="box-title">
+      <h4 v-else class="box-title subtitle">
         Votes from {{ account.name }}
       </h4>
       <div v-if="loadingVotes">

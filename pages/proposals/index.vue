@@ -46,6 +46,7 @@
         <ul>
           <li v-for="status in statuses" :key="status.id" :class="{'is-active': filter === status.id}">
             <a
+            v-if="status.name != 'Pending'"
               @click.prevent="filter = status.id"
             >{{ status.name }}</a>
           </li>
@@ -146,45 +147,41 @@ export default {
       return (this.$wallet) ? this.$wallet.wallet : null
     },
     proposalsFiltered () {
-      let filteredProps = this.proposals.filter((proposal) => {
-        if (!this.filter || this.filter === 'ALL') {
-          return true
-        }
-
-        return proposal.status === this.filter
-      })
-
-      filteredProps = filteredProps.sort((a, b) => { // Cycle sorting
-        if (a.status === b.status) {
-          if (a.cycle !== 0) {
-            if (a.cycle === b.cycle) {
-              return 0
-            }
-          } else {
-            return (a.id > b.id) ? -1 : 1
+      if (this.filter === 'ACTIVE') {
+        return this.proposals.filter((proposal) => {
+          return proposal.status === 'ACTIVE' || proposal.status === 'PENDING'
+        })
+      } else {
+        const filteredProps = this.proposals.filter((proposal) => {
+          if (!this.filter || this.filter === 'ALL') {
+            return true
           }
 
-          return (a.cycle > b.cycle) ? -1 : 1
-        }
+          return proposal.status === this.filter
+        })
 
-        if (a.status === 'CLOSED') {
-          return 1
-        }
+        const isActive = filteredProps.filter((proposal) => {
+          return proposal.status === 'ACTIVE'
+        }).reverse()
 
-        if (a.status === 'DRAFT' && b.status === 'CLOSED') {
-          return -1
-        }
+        const isPending = filteredProps.filter((proposals) => {
+          return proposals.status === 'PENDING'
+        }).reverse()
 
-        return (a.id > b.id) ? -1 : 1
-      }).sort((a, b) => {
-        if (a.status === 'ACTIVE' || a.status === 'PROCESSING') {
-          return -1
-        }
+        const isProcessing = filteredProps.filter((proposals) => {
+          return proposals.status === 'PROCESSING'
+        }).reverse()
 
-        return 0
-      })
+        const isDraft = filteredProps.filter((proposals) => {
+          return proposals.status === 'DRAFT'
+        }).reverse()
 
-      return filteredProps
+        const isClosed = filteredProps.filter((proposals) => {
+          return proposals.status === 'CLOSED'
+        }).reverse()
+
+        return [].concat(isActive, isPending, isProcessing, isDraft, isClosed)
+      }
     },
     currentCycle () {
       return this.$dao.proposalConfig ? this.$dao.proposalConfig.current_cycle : null

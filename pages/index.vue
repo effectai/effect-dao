@@ -242,7 +242,7 @@ export default {
     },
 
     async getEFXPrice () {
-      this.efxPrice = await fetch('https://api.coingecko.com/api/v3/coins/effect-ai/tickers')
+      this.efxPrice = await fetch('https://api.coingecko.com/api/v3/coins/effect-network/tickers')
         .then(data => data.json())
         .then((data) => {
           return data.tickers[0].converted_last.usd

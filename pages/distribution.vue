@@ -121,11 +121,11 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>Effect Network Fee Distribution</td>
+                  <td>Effect Network Fee Distribution II</td>
                   <td>{{ genesisAirdrop.toFixed(0) }} EFX</td>
                 </tr>
                 <tr>
-                  <td>Effect Network Fee Distribution II</td>
+                  <td>Effect Network Fee Distribution</td>
                   <td>{{ genesisAirdrop.toFixed(0) }} EFX</td>
                 </tr>
               </tbody>

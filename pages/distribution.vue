@@ -76,7 +76,7 @@
       <div class="column is-full">
         <div class="box">
           <h5 class="subtitle box-title">
-            Distribution History
+            Cycle Distribution History
           </h5>
           <div>
             <table class="table">

@@ -95,9 +95,9 @@
                       {{ balance.balance[0].value / 10000 }} {{ efxToken }}
                     </span>
                   </td>
-                  <th v-if="balance.cycle_id > lastCycleId">
+                  <td v-if="balance.cycle_id > lastCycleId">
                     Can be claimed in next cycle
-                  </th>
+                  </td>
                   <td v-else-if="getUserCycleClaim(balance.cycle_id) > 0">
                     {{ getUserCycleClaim(balance.cycle_id) }} {{ efxToken }}
                   </td>

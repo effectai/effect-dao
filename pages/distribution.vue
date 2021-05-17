@@ -76,7 +76,7 @@
       <div class="column is-full">
         <div class="box">
           <h5 class="subtitle box-title">
-            Distribution History
+            Cycle Distribution History
           </h5>
           <div>
             <table class="table">
@@ -89,21 +89,44 @@
               </thead>
               <tbody>
                 <tr v-for="balance in distributionBalances" :key="balance.cycle_id">
-                  <th>{{ balance.cycle_id }}</th>
-                  <th>
+                  <td>{{ balance.cycle_id }}</td>
+                  <td>
                     <span v-if="balance.balance.length > 0">
                       {{ balance.balance[0].value / 10000 }} {{ efxToken }}
                     </span>
-                  </th>
-                  <th v-if="balance.cycle_id > lastCycleId">
+                  </td>
+                  <td v-if="balance.cycle_id > lastCycleId">
                     Can be claimed in next cycle
-                  </th>
-                  <th v-else-if="getUserCycleClaim(balance.cycle_id) > 0">
+                  </td>
+                  <td v-else-if="getUserCycleClaim(balance.cycle_id) > 0">
                     {{ getUserCycleClaim(balance.cycle_id) }} {{ efxToken }}
-                  </th>
-                  <th v-else>
+                  </td>
+                  <td v-else>
                     -
-                  </th>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <h5 class="subtitle box-title">
+            Other Distribution History
+          </h5>
+          <div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Distribution Type</th>
+                  <th>Amount </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Effect Network Fee Distribution II</td>
+                  <td>{{ genesisAirdrop.toFixed(0) }} EFX</td>
+                </tr>
+                <tr>
+                  <td>Effect Network Fee Distribution</td>
+                  <td>{{ genesisAirdrop.toFixed(0) }} EFX</td>
                 </tr>
               </tbody>
             </table>
@@ -177,6 +200,9 @@ export default {
     },
     canClaim () {
       return (this.claimOverride) ? this.claimOverride : !this.claims[this.lastCycleId] && this.lastCycleUserFees > 0 && isFinite(this.lastCycleUserFees)
+    },
+    genesisAirdrop () {
+      return this.$wallet.genesisAirdrop
     }
   },
 

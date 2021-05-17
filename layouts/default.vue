@@ -95,7 +95,9 @@ export default {
     },
 
     showAirdrop () {
-      return (!this.closedAirdrop && this.genesisAirdrop > 0)
+      // return (!this.closedAirdrop && this.genesisAirdrop > 0)
+      // Don't show airdrop prompt
+      return false
     }
   },
 

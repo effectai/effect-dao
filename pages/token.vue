@@ -176,6 +176,7 @@ export default {
       loading: true,
       totalVoteWeight: 0,
       totalMembers: 300,
+      nextCycleStartDate: '9-4-2021',
       membersLowerBound: '13528614985990483600', // Hardcode lower bound from 300 members to minimize amount of fetches
       balances: {
         daoBalance: 0,
@@ -255,14 +256,14 @@ export default {
         //   value: 97
         // },
         {
-          name: 'Total Vote Weight',
+          name: 'Total Vote Weight Last Cycle',
           description: '',
           value: this.totalVoteWeight
         },
         {
           name: 'Next Cycle',
           description: '',
-          value: '9-4-2021'
+          value: this.nextCycleStartDate
         },
         {
           name: 'Distribution Strategy',
@@ -362,6 +363,7 @@ export default {
   async mounted () {
     await this.getBalances()
     await this.getTotalVoteWeight()
+    await this.getNextCycleDate()
     this.getDaoMembers()
     this.loading = false
   },
@@ -384,6 +386,36 @@ export default {
 
       if (cycleData && cycleData.rows.length > 0) {
         this.totalVoteWeight = cycleData.rows[0].total_vote_weight
+      }
+    },
+    async getNextCycleDate () {
+      const getCycleConfigRow = await this.$eos.rpc.get_table_rows({
+        code: process.env.proposalContract,
+        scope: process.env.proposalContract,
+        table: 'config',
+        limit: 1
+      })
+
+      if (getCycleConfigRow && getCycleConfigRow.rows.length > 0) {
+        const cycleConfig = getCycleConfigRow.rows[0]
+        const numCurCycle = cycleConfig.current_cycle
+        const lengthCycleSeconds = cycleConfig.cycle_duration_sec
+
+        const cycleData = await this.$eos.rpc.get_table_rows({
+          code: process.env.proposalContract,
+          scope: process.env.proposalContract,
+          table: 'cycle',
+          lower_bound: numCurCycle,
+          upper_bound: numCurCycle
+        })
+
+        if (cycleData && cycleData.rows.length > 0) {
+          const nextCycleStartDate = new Date(cycleData.rows[0].start_time)
+          nextCycleStartDate.setSeconds(nextCycleStartDate.getSeconds() + lengthCycleSeconds)
+          const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+
+          this.nextCycleStartDate = nextCycleStartDate.toLocaleDateString('en-US', options)
+        }
       }
     },
     async getDaoMembers () {

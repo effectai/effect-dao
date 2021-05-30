@@ -13,8 +13,12 @@
           </div>
           <div class="column is-one-fifths-desktop has-text-left-mobile has-text-right-desktop">
             <span class="tag" :class="{'is-success': proposal.status == 'ACTIVE', 'is-warning': proposal.status == 'DRAFT', 'is-link': proposal.status == 'PENDING', 'is-dark': proposal.status == 'CLOSED'}">{{ proposal.status }}</span>
-            <div class="is-size-7" v-if="proposal.status =='ACTIVE'">
-              <span v-for="result in proposal.vote_counts" :key="result.key" class="vote-result">
+            <span class="tag is-info" v-if="proposal.cycle">C{{ proposal.cycle }}</span>
+            <span class="tag is-success" v-if="proposal.state === 3">EXECUTED</span>
+            <span class="tag is-danger" v-if="proposal.state === 2">REJECTED</span>
+            <span class="tag is-success" v-if="proposal.state === 1">ACCEPTED</span>
+            <div class="is-size-7" v-if="(proposal.status ==='ACTIVE' || proposal.status ==='CLOSED')">
+               <span v-for="result in proposal.vote_counts" :key="result.key" class="vote-result">
                 <small><b :class="{'has-text-success': result.key === 1, 'has-text-danger': result.key === 2}">{{ voteTypes.find((vt) => vt.value == result.key).name }}: {{ result.value }}</b></small>
               </span>
             </div>

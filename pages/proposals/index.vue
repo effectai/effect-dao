@@ -55,9 +55,7 @@
       <template v-if="$dao.cycleConfig">
         <template v-if="currentCycle">
           <h5 v-if="filter === 'ACTIVE'">
-            Cycle {{ currentCycle }} ends {{
-              $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow()
-            }}
+
           </h5>
           <h5 v-else-if="filter === 'PENDING'">
             Proposals for cycle {{ currentCycle + 1 }} starting {{
@@ -108,7 +106,7 @@ export default {
 
   data () {
     return {
-      filter: 'ALL',
+      filter: 'ACTIVE',
       statuses: [
         {
           id: 'ACTIVE',

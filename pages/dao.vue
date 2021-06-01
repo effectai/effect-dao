@@ -260,7 +260,7 @@ export default {
       if (!member.power) {
         this.$set(member, 'power', 0)
       }
-      this.$set(member, 'rank', this.$wallet.calculateRankProgress(member.power, member.nfxStaked))
+      // this.$set(member, 'rank', this.$wallet.calculateRankProgress(member.power, member.nfxStaked))
     },
 
     async downloadConstitution () {

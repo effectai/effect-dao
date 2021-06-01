@@ -1,15 +1,9 @@
 <template>
+<!-- TODO: These status bars need to be updated, but not sure yet how they should look like? -->
   <div class="box" v-if="rank">
-    <div v-if="rank.currentRank > 0 && !hideCurrentRank" :class="['rank-icon', 'rank-'+rank.currentRank]"><img width="64px" :src="'/img/guardian-icons/guardian-'+rank.currentRank+'.png'" /></div>
-    <h1 :class="['rank-title', 'rank-'+rank.currentRank]" v-if="!hideCurrentRank">
-      Rank {{rank.currentRank}}
-    </h1>
     <div class="has-text-centered columns mt-2">
       <div class="next-level column is-one-third" v-if="rank.nextRank">
         <div class="box has-shadow-outside mt-1">
-          <h1 :class="['rank-title', 'rank-'+(rank.currentRank+1), 'small']">
-            Next Rank <b>{{rank.currentRank+1}}</b>
-          </h1>
           <div class="mt-4">
             <ICountUp :options="{decimalPlaces: 0, startVal: rank.nextRank.power}" :end-val="Math.max(0,rank.nextRank.power - power)" />
             <b class="symbol is-size-7">EP Needed</b>
@@ -23,9 +17,6 @@
       <div class="column progress-bar" v-if="rank.nextRank">
         <div class="is-pulled-left">
           <b>EFX Power</b>
-        </div>
-        <div class="is-pulled-right" v-if="rank.currentRank < 10">
-          next: <b>{{rank.currentRank + 1}}</b>
         </div>
         <progress :class="['progress', 'is-large', 'rank-'+rank.currentRank]" :value="progress" max="100">
           {{progress.toFixed(2)}}%
@@ -42,10 +33,6 @@
         <div :class="['progress-pointer', 'rank-'+rank.currentRank]" :style="{width: progressNfx + '%'}">
           <small class="is-size-7">(<ICountUp :end-val="nfxStaked" /> / <ICountUp :end-val="rank.nextRank.nfx" :options="{startVal: rank.nextRank.nfx}" /> NFX)</small>&nbsp;&nbsp;<b>{{progressNfx.toFixed(2)}}%</b>
         </div>
-        <!--<div class="is-size-7 has-text-left mt-4">
-          Required NFX: <b>{{nfxStaked}} / <ICountUp :end-val="rank.nextRank.nfx" :options="{startVal: rank.nextRank.nfx}" /> NFX</b>
-        </div>-->
-
       </div>
     </div>
   </div>

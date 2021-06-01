@@ -108,9 +108,6 @@
               <figure class="image is-64x64">
                 <avatar :account-name="member.account" />
               </figure>
-              <!-- <div v-if="member.rank" class="rank">
-                <div :class="['rank-color','rank-'+member.rank.currentRank]" /><span>Rank {{ member.rank.currentRank }}</span>
-              </div> -->
             </div>
             <div class="column">
               <div class="pl-2">

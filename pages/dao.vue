@@ -104,17 +104,13 @@
       <div v-if="constitutionMembers" class="members columns is-multiline mt-5">
         <div v-for="member in constitutionMembers" :key="member.account" class="column is-half">
           <nuxt-link :to="'/account/'+member.account" class="box has-shadow-outside is-narrow member columns is-gapless is-mobile">
-            <!--            <div v-if="member.rank && member.rank.currentRank == 0" class="tag is-primary is-light rank-name"></div>-->
-            <div v-if="member.rank && member.rank.currentRank > 0" class="rank-name">
-              <img width="25px" :src="'/img/guardian-icons/guardian-'+member.rank.currentRank+'.png'">
-            </div>
             <div class="column is-one-fifth" style="min-width: 70px">
               <figure class="image is-64x64">
                 <avatar :account-name="member.account" />
               </figure>
-              <div v-if="member.rank" class="rank">
+              <!-- <div v-if="member.rank" class="rank">
                 <div :class="['rank-color','rank-'+member.rank.currentRank]" /><span>Rank {{ member.rank.currentRank }}</span>
-              </div>
+              </div> -->
             </div>
             <div class="column">
               <div class="pl-2">

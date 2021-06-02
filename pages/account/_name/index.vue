@@ -11,7 +11,15 @@
           <div class="media-content">
             <h2 class="subtitle is-3 is-family-sans-serif">{{ account.name }}</h2>
             <div v-if="account.signedConstitution">
-              <ICountUp v-if="account.power >= 0" class="power" :options="{ prefix: 'EFX Power ', suffix: ' EP' }" :end-val="account.power" />
+              <ICountUp v-if="account.power >= 0" class="power" :options="{ prefix: 'EFX Power: ', suffix: ' EP - ' }" :end-val="account.power" />
+              <div v-else>
+                ...
+              </div>
+              <ICountUp v-if="account.power >= 0" class="power" :options="{ prefix: 'NFX Staked: ', suffix: ' NFX - ' }" :end-val="account.nfxStaked" />
+              <div v-else>
+                ...
+              </div>
+              <ICountUp v-if="account.power >= 0" class="power" :options="{ prefix: 'Votes: ', suffix: ' ' }" :end-val="account.votes" />
               <div v-else>
                 ...
               </div>
@@ -32,9 +40,6 @@
           <a href="https://avatar.pixeos.art/" target="_blank" class="button is-primary">
             Edit avatar
           </a>
-          <!--          <button class="button is-primary" :class="{ 'is-loading': loadingDiscord }" @click="signDiscord()">-->
-          <!--            Join Discord-->
-          <!--          </button>-->
           <button class="button is-danger" :class="{ 'is-loading': loadingLogout }" @click="logout()">
             Disconnect
           </button>
@@ -203,7 +208,8 @@ export default {
           if (!this.account.power) {
             this.$set(this.account, 'power', 0)
           }
-          this.$set(this.account, 'rank', this.$wallet.calculateRankProgress(this.account.power, this.account.nfxStaked))
+          const votes = this.$wallet.calculateVotePower(this.account.power, this.account.nfxStaked)
+          this.$set(this.account, 'votes', votes)
         }
       } catch (e) {
         console.log(e)

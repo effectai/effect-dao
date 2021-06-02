@@ -188,18 +188,29 @@
         </div>
         <div class="box">
           <h5 class="box-title">
-            Results ({{ this.totalVoteWeight }}/{{ this.quorum }})
+            Results ({{ $wallet.formatNumber(this.totalVoteWeight) }}/{{ this.quorum }})
           </h5>
+          <div class="columns is-vcentered is-mobile">
+            <div class="column is-4">
+
+            </div>
+            <div class="column is-4">
+              Votes
+            </div>
+            <div class="column is-4">
+              Weight
+            </div>
+          </div>
           <div v-for="result in voteResults" :key="result.type">
             <div class="columns is-vcentered is-mobile">
               <div class="column is-4">
                 <b :class="{'has-text-success': result.type === 1, 'has-text-danger': result.type === 2}">{{ voteTypes.find((vt) => vt.value == result.type).name }}</b>
               </div>
-              <div class="column is-6">
-                <small># votes: </small> <span>{{ result.votes }}</span>
+              <div class="column is-4">
+                # {{ result.votes }}
               </div>
               <div class="column is-2">
-                <b>{{ result.weight }}</b>
+                <b>{{ $wallet.formatNumber(result.weight) }}</b>
               </div>
             </div>
             <progress :class="['progress', 'is-small', 'progress-type-' + result.type, {'is-danger': result.type === 2}, {'is-success': result.type === 1}]" :value="result.weight" :max="totalVoteWeight" />
@@ -451,7 +462,7 @@ export default {
             table: 'vote',
             index_position: 4,
             key_type: 'i64',
-            limit: 100,
+            limit: 1000,
             lower_bound: id,
             upper_bound: id
           }

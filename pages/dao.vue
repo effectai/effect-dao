@@ -113,7 +113,7 @@
               <div class="pl-2">
                 <h5>{{ member.account }}</h5>
                 <div>
-                  <ICountUp v-if="member.power >= 0" class="power" :options="{ prefix: 'EFX Power ', suffix: ' EP' }" :end-val="member.power" />
+                  <ICountUp v-if="member.votes >= 0" class="power" :options="{ prefix: 'Votes: ' }" :end-val="member.votes" />
                   <div v-else>
                     ...
                   </div>
@@ -260,7 +260,8 @@ export default {
       if (!member.power) {
         this.$set(member, 'power', 0)
       }
-      // this.$set(member, 'rank', this.$wallet.calculateRankProgress(member.power, member.nfxStaked))
+      const votes = this.$wallet.calculateVotePower(member.power, member.nfxStaked)
+      this.$set(member, 'votes', votes)
     },
 
     async downloadConstitution () {

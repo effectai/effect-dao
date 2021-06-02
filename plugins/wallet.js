@@ -93,7 +93,6 @@ export default (context, inject) => {
     },
 
     created () {
-      console.log('created wallet')
       this.timer = setInterval(() => { this.refreshStakeAge = !this.refreshStakeAge }, 1000)
       this.updater = setInterval(() => { this.updateAccount() }, 10000)
     },
@@ -109,72 +108,17 @@ export default (context, inject) => {
         this.updateAccount()
       },
 
-      calculateRankProgress (power, nfxStaked) {
-        if (!power) {
-          power = 0
-        }
-        if (!nfxStaked) {
-          nfxStaked = 0
-        }
-        const rankRequirements = [
-          {
-            power: 0,
-            nfx: 0
-          },
-          {
-            power: 200000,
-            nfx: 10000
-          },
-          {
-            power: 348326,
-            nfx: 15505
-          },
-          {
-            power: 606655,
-            nfx: 24041
-          },
-          {
-            power: 1056569,
-            nfx: 37276
-          },
-          {
-            power: 1840152,
-            nfx: 57797
-          },
-          {
-            power: 3204864,
-            nfx: 89615
-          },
-          {
-            power: 5581687,
-            nfx: 138950
-          },
-          {
-            power: 9721233,
-            nfx: 215443
-          },
-          {
-            power: 16930792,
-            nfx: 334048
-          },
-          {
-            power: 29487176,
-            nfx: 517947
-          }
-        ]
-        let currentRequirements
-        let currentRank
-        let nextRank
-        for (let rank = 0; rank < rankRequirements.length; rank++) {
-          if (power >= rankRequirements[rank].power && nfxStaked >= rankRequirements[rank].nfx) {
-            currentRank = rank
-            currentRequirements = rankRequirements[rank]
-            nextRank = rankRequirements[rank + 1]
-          } else {
-            break
-          }
-        }
-        return { currentRank, currentRequirements, nextRank }
+      formatNumber (number) {
+        return Intl.NumberFormat('en-US', { notation: 'compact' }).format(number)
+      },
+
+      calculateVotePower (efxPower = 0, nfxStaked = 0) {
+        // Minimum( Staked NFX , EFX Power / 20) = Voting Power
+        // requirement: The minimum requirement to vote will be 1 NFX and 20 Effect Power.
+        const parsedEFX = parseInt(efxPower / 20)
+        const parsedNFX = parseInt(nfxStaked)
+        // console.log(`EFX:: ${parsedEFX}, NFX:: ${parsedNFX}`)
+        return Math.min(parsedEFX, parsedNFX)
       },
 
       calculateEfxPower (efxStaked, stakeAge) {

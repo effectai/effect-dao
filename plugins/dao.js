@@ -53,7 +53,7 @@ export default (context, inject) => {
           table: 'config'
         })
         if (data.rows.length > 0) {
-          console.log(data.rows[0])
+          // console.log(data.rows[0])
           this.proposalConfig = data.rows[0]
           this.cycleConfig = await this.getCycleConfig(data.rows[0].current_cycle)
           this.nextCycleConfig = await this.getCycleConfig(data.rows[0].current_cycle + 1)

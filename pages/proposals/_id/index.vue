@@ -190,26 +190,15 @@
           <h5 class="box-title">
             Results ({{ $wallet.formatNumber(this.totalVoteWeight) }}/{{ this.quorum }})
           </h5>
-          <div class="columns is-vcentered is-mobile">
-            <div class="column is-4">
-
-            </div>
-            <div class="column is-4">
-              Votes
-            </div>
-            <div class="column is-4">
-              Weight
-            </div>
-          </div>
           <div v-for="result in voteResults" :key="result.type">
             <div class="columns is-vcentered is-mobile">
               <div class="column is-4">
                 <b :class="{'has-text-success': result.type === 1, 'has-text-danger': result.type === 2}">{{ voteTypes.find((vt) => vt.value == result.type).name }}</b>
               </div>
-              <div class="column is-4">
+              <div class="column is-4" data-tooltip="Number of votes">
                 # {{ result.votes }}
               </div>
-              <div class="column is-2">
+              <div class="column is-2" :data-tooltip="'Total weight: ' + result.weight">
                 <b>{{ $wallet.formatNumber(result.weight) }}</b>
               </div>
             </div>

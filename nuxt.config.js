@@ -10,7 +10,7 @@ export default {
 
   // Production
   // env: {
-  //   eosNodeUrl: 'https://eos.greymass.com:443',
+  //   eosNodeUrl: 'eos.greymass.com',
   //   eosChainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
   //   explorerUrl: 'https://bloks.io',
   //   ipfsNode: 'https://ipfs.effect.ai',
@@ -27,40 +27,40 @@ export default {
   // },
 
   // Kylin Developement
-  // env: {
-  //   eosNodeUrl: 'https://kylin.eosn.io:443',
-  //   eosChainId: '5fff1dae8dc8e2fc4d5b23b2c7665c97f9e9d8edf2b6485a86ba311c25639191',
-  //   explorerUrl: 'https://kylin.bloks.io',
-  //   ipfsNode: 'https://ipfs.effect.ai',
-  //   ipfsExplorer: 'https://ipfs.effect.ai',
-  //   tokenContract: 'tokenonkylin',
-  //   stakingContract: 'stak3onkylin',
-  //   daoContract: 'thedaonkylin',
-  //   proposalContract: 'propsonkylin',
-  //   feepoolContract: 'feepoolkylin',
-  //   efxToken: 'UTL',
-  //   nfxToken: 'GRN',
-  //   discordGuildId: '519860537891487745',
-  //   discordInviteUrl: 'https://discord.gg/hM3237cYXP'
-  // },
-
-  // localdevelopement
   env: {
-    eosNodeUrl: 'http://127.0.0.1:8888',
-    eosChainId: '8a34ec7df1b8cd06ff4a8abbaa7cc50300823350cadc59ab296cb00d104d2b8f',
+    eosNodeUrl: 'kylin.eosn.io',
+    eosChainId: '5fff1dae8dc8e2fc4d5b23b2c7665c97f9e9d8edf2b6485a86ba311c25639191',
     explorerUrl: 'https://kylin.bloks.io',
     ipfsNode: 'https://ipfs.effect.ai',
     ipfsExplorer: 'https://ipfs.effect.ai',
-    tokenContract: 'tkngfcdc',
-    stakingContract: 'stkhgecf',
-    daoContract: 'daofdceh',
-    proposalContract: 'prphhgeb',
-    feepoolContract: 'feedecbd',
-    efxToken: 'EFX',
-    nfxToken: 'NFX',
+    tokenContract: 'tokenonkylin',
+    stakingContract: 'stak3onkylin',
+    daoContract: 'thedaonkylin',
+    proposalContract: 'propsonkylin',
+    feepoolContract: 'feepoolkylin',
+    efxToken: 'UTL',
+    nfxToken: 'GRN',
     discordGuildId: '519860537891487745',
     discordInviteUrl: 'https://discord.gg/hM3237cYXP'
   },
+
+  // localdevelopement
+  // env: {
+  //   eosNodeUrl: 'http://127.0.0.1:8888',
+  //   eosChainId: '8a34ec7df1b8cd06ff4a8abbaa7cc50300823350cadc59ab296cb00d104d2b8f',
+  //   explorerUrl: 'https://kylin.bloks.io',
+  //   ipfsNode: 'https://ipfs.effect.ai',
+  //   ipfsExplorer: 'https://ipfs.effect.ai',
+  //   tokenContract: 'tkngfcdc',
+  //   stakingContract: 'stkhgecf',
+  //   daoContract: 'daofdceh',
+  //   proposalContract: 'prphhgeb',
+  //   feepoolContract: 'feedecbd',
+  //   efxToken: 'EFX',
+  //   nfxToken: 'NFX',
+  //   discordGuildId: '519860537891487745',
+  //   discordInviteUrl: 'https://discord.gg/hM3237cYXP'
+  // },
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {

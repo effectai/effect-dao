@@ -2,7 +2,7 @@
 <!-- TODO: These status bars need to be updated, but not sure yet how they should look like? -->
   <div class="box" v-if="rank">
     <div class="has-text-centered columns mt-2">
-      <div class="next-level column is-one-third" v-if="rank.nextRank">
+      <!-- <div class="next-level column is-one-third" v-if="rank.nextRank">
         <div class="box has-shadow-outside mt-1">
           <div class="mt-4">
             <ICountUp :options="{decimalPlaces: 0, startVal: rank.nextRank.power}" :end-val="Math.max(0,rank.nextRank.power - power)" />
@@ -13,7 +13,7 @@
             <b class="symbol is-size-7">NFX Needed</b>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="column progress-bar" v-if="rank.nextRank">
         <div class="is-pulled-left">
           <!-- TODO remove these, or recalculate the new rank and add that. -->

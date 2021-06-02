@@ -1,4 +1,5 @@
 <template>
+
   <div class="box" v-if="rank">
     <div v-if="rank.currentRank > 0 && !hideCurrentRank" :class="['rank-icon', 'rank-'+rank.currentRank]"><img width="64px" :src="'/img/guardian-icons/guardian-'+rank.currentRank+'.png'" /></div>
     <h1 :class="['rank-title', 'rank-'+rank.currentRank]" v-if="!hideCurrentRank">
@@ -7,8 +8,9 @@
     <div class="has-text-centered columns mt-2">
       <div class="next-level column is-one-third" v-if="rank.nextRank">
         <div class="box has-shadow-outside mt-1">
+          <!-- TODO this is a good place to put the amount of EP and NFX needed to achieve next vote. -->
           <h1 :class="['rank-title', 'rank-'+(rank.currentRank+1), 'small']">
-            Next Rank <b>{{rank.currentRank+1}}</b>
+            <b>1+ vote</b>
           </h1>
           <div class="mt-4">
             <ICountUp :options="{decimalPlaces: 0, startVal: rank.nextRank.power}" :end-val="Math.max(0,rank.nextRank.power - power)" />
@@ -21,11 +23,9 @@
         </div>
       </div>
       <div class="column progress-bar" v-if="rank.nextRank">
+        <!-- TODO Show status bar of how much EFX Power is necessary to achieve max vote weight. -->
         <div class="is-pulled-left">
           <b>EFX Power</b>
-        </div>
-        <div class="is-pulled-right" v-if="rank.currentRank < 10">
-          next: <b>{{rank.currentRank + 1}}</b>
         </div>
         <progress :class="['progress', 'is-large', 'rank-'+rank.currentRank]" :value="progress" max="100">
           {{progress.toFixed(2)}}%

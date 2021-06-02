@@ -16,6 +16,7 @@
       </div>
       <div class="column progress-bar" v-if="rank.nextRank">
         <div class="is-pulled-left">
+          <!-- TODO remove these, or recalculate the new rank and add that. -->
           <b>EFX Power</b>
         </div>
         <progress :class="['progress', 'is-large', 'rank-'+rank.currentRank]" :value="progress" max="100">

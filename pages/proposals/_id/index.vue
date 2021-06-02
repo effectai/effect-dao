@@ -187,7 +187,7 @@
           </div>
         </div>
         <div class="box">
-          <h5 class="box-title">
+          <h5 class="box-title" :data-tooltip="'Total vote-weight: ' + this.totalVoteWeight">
             Results ({{ $wallet.formatNumber(this.totalVoteWeight) }}/{{ this.quorum }})
           </h5>
           <div v-for="result in voteResults" :key="result.type">
@@ -198,7 +198,7 @@
               <div class="column is-4" data-tooltip="Number of votes">
                 # {{ result.votes }}
               </div>
-              <div class="column is-2" :data-tooltip="'Total weight: ' + result.weight">
+              <div class="column is-2" :data-tooltip="'Vote-weight: ' + result.weight">
                 <b>{{ $wallet.formatNumber(result.weight) }}</b>
               </div>
             </div>

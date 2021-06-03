@@ -13,7 +13,7 @@
               <h2 class="subtitle is-3 is-family-sans-serif">{{ account.name }}</h2>
             </span>
             <span>
-              <ICountUp v-if="account.power >= 0" class="power" :options="{ prefix: 'Votes: ', suffix: ' ' }" :end-val="account.votes" />
+              <ICountUp v-if="account.votes >= 0" class="power" :options="{ prefix: 'Votes: ', suffix: ' ' }" :end-val="account.votes" />
                 <div v-else>
                   ...
                 </div>
@@ -26,7 +26,7 @@
                 </div>
               </div>
               <div>
-                <ICountUp v-if="account.power >= 0" class="power" :options="{ prefix: 'NFX Staked: ', suffix: ' NFX' }" :end-val="account.nfxStaked" />
+                <ICountUp v-if="account.nfxStaked >= 0" class="power" :options="{ prefix: 'NFX Staked: ', suffix: ' NFX' }" :end-val="account.nfxStaked" />
                 <div v-else>
                   ...
                 </div>
@@ -59,13 +59,13 @@
       <h4 class="box-title subtitle">Voting Power</h4>
       <div>
         <b>EFX Power</b>
-        <progress v-if="account.power == account.votes" class="progress is-primary" value="100" max="100">100%</progress>
-        <progress v-else class="progress is-primary" value="account.power" max="account.votes"></progress>
+        <progress v-if="(account.power / 20 )> account.votes" class="progress is-primary" value="100" max="100"></progress>
+        <progress v-else class="progress is-primary" :value="account.power" :max="account.votes"></progress>
       </div>
       <div>
         <b>NFX</b>
-        <progress v-if="account.nfxStaked == account.votes" class="progress is-primary" value="100" max="100">100%</progress>
-        <progress v-else class="progress is-primary" value="account.nfxStaked" max="account.votes"></progress>
+        <progress v-if="account.nfxStaked > account.votes" class="progress is-primary" value="100" max="100"></progress>
+        <progress v-else class="progress is-primary" :value="account.nfxStaked" :max="account.votes"></progress>
       </div>
     </div>
 

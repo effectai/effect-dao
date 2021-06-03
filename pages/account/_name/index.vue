@@ -9,19 +9,27 @@
             </div>
           </div>
           <div class="media-content">
-            <h2 class="subtitle is-3 is-family-sans-serif">{{ account.name }}</h2>
-            <div v-if="account.signedConstitution">
-              <ICountUp v-if="account.power >= 0" class="power" :options="{ prefix: 'EFX Power: ', suffix: ' EP - ' }" :end-val="account.power" />
-              <div v-else>
-                ...
-              </div>
-              <ICountUp v-if="account.power >= 0" class="power" :options="{ prefix: 'NFX Staked: ', suffix: ' NFX - ' }" :end-val="account.nfxStaked" />
-              <div v-else>
-                ...
-              </div>
+            <span>
+              <h2 class="subtitle is-3 is-family-sans-serif">{{ account.name }}</h2>
+            </span>
+            <span>
               <ICountUp v-if="account.power >= 0" class="power" :options="{ prefix: 'Votes: ', suffix: ' ' }" :end-val="account.votes" />
-              <div v-else>
-                ...
+                <div v-else>
+                  ...
+                </div>
+            </span>
+            <div v-if="account.signedConstitution">
+              <div>
+                <ICountUp v-if="account.power >= 0" class="power" :options="{ prefix: 'EFX Power: ', suffix: ' EP' }" :end-val="account.power" />
+                <div v-else>
+                  ...
+                </div>
+              </div>
+              <div>
+                <ICountUp v-if="account.power >= 0" class="power" :options="{ prefix: 'NFX Staked: ', suffix: ' NFX' }" :end-val="account.nfxStaked" />
+                <div v-else>
+                  ...
+                </div>
               </div>
               <div>
                 <small>Joined <span v-if="account.registration_time">{{ $moment(account.registration_time).fromNow() }}</span><span v-else>..</span></small>
@@ -50,7 +58,7 @@
       <rank :hide-current-rank="true" />
     </div>
     <div v-else-if="account.rank" class="mt-5">
-      <rank-member :power="account.power" :nfx-staked="account.nfxStaked" :stake-age="account.stakeAge" :rank="account.rank" :hide-current-rank="true" />
+      <rank-member :power="account.power" :nfx-staked="account.nfxStaked" :stake-age="account.stakeAge" :rank="account.rank" :hide-current-rank="false" />
     </div>
     <div class="box mt-5">
       <h4 v-if="myAccount" class="box-title subtitle">

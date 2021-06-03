@@ -54,11 +54,26 @@
         </div>
       </div>
     </div>
+    <br>
+    <div v-show="account.votes > 0" class="box">
+      <h4 class="box-title subtitle">Voting Power</h4>
+      <div>
+        <b>EFX Power</b>
+        <progress v-if="account.power == account.votes" class="progress is-primary" value="100" max="100">100%</progress>
+        <progress v-else class="progress is-primary" value="account.power" max="account.votes"></progress>
+      </div>
+      <div>
+        <b>NFX</b>
+        <progress v-if="account.nfxStaked == account.votes" class="progress is-primary" value="100" max="100">100%</progress>
+        <progress v-else class="progress is-primary" value="account.nfxStaked" max="account.votes"></progress>
+      </div>
+    </div>
+
     <div v-if="myAccount" class="mt-5">
       <rank :hide-current-rank="true" />
     </div>
     <div v-else-if="account.rank" class="mt-5">
-      <rank-member :power="account.power" :nfx-staked="account.nfxStaked" :stake-age="account.stakeAge" :rank="account.rank" :hide-current-rank="false" />
+      <rank-member :power="account.power" :nfx-staked="account.nfxStaked" :stake-age="account.stakeAge" :rank="account.rank" :hide-current-rank="true" />
     </div>
     <div class="box mt-5">
       <h4 v-if="myAccount" class="box-title subtitle">
@@ -217,6 +232,7 @@ export default {
             this.$set(this.account, 'power', 0)
           }
           const votes = this.$wallet.calculateVotePower(this.account.power, this.account.nfxStaked)
+          this.$set(this.account, 'canVote', this.$wallet.canVote())
           this.$set(this.account, 'votes', votes)
         }
       } catch (e) {

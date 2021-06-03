@@ -119,7 +119,7 @@ export default (context, inject) => {
       },
 
       canVote () {
-        return Boolean(this.calculateEfxPower >= 1)
+        return Boolean(this.calculateVotePower >= 1)
       },
 
       calculateEfxPower (efxStaked, stakeAge) {

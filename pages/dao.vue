@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mt-5">
     <div class="modal constitution-modal" :class="{ 'is-active': constitutionModal }">
       <div class="modal-background" />
       <div class="modal-card">
@@ -96,7 +96,7 @@
       </div>
     </div>
 
-    <rank v-if="wallet && wallet.auth && signedConstitution" class="mt-5" />
+    <votes class="mt-5" />
     <div class="box mt-5">
       <h5 class="box-title subtitle">
         EffectDAO Members
@@ -142,13 +142,13 @@
 <script>
 import { sha256 } from 'eosjs-ecc'
 import ICountUp from 'vue-countup-v2'
-import Rank from '~/components/Rank'
+import Votes from '~/components/Votes'
 import Avatar from '~/components/Avatar'
 
 export default {
   components: {
     ICountUp,
-    Rank,
+    Votes,
     Avatar
   },
 

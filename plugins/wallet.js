@@ -79,10 +79,6 @@ export default (context, inject) => {
         return this.calculateEfxPower(this.efxStaked, this.stakeAge)
       },
 
-      rank () {
-        return this.calculateRankProgress(this.power, this.nfxStaked)
-      },
-
       efxCanRefund () {
         return this.efxUnstaking > 0 && new Date(`${this.efxUnstakingTime}Z`) < new Date()
       },

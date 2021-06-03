@@ -85,9 +85,9 @@
               </button>
             </NuxtLink>
             <!-- TODO replace currentRank, with votes -->
-            <button v-else class="button is-primary is-fullwidth" :disabled="!votes || vote_type === null || !wallet || !wallet.auth || wallet.nfxStillClaimable || !$wallet.rank || !$wallet.rank.currentRank" @click.prevent="vote">
+            <button v-else class="button is-primary is-fullwidth" :disabled="!votes || vote_type === null || !wallet || !wallet.auth || wallet.nfxStillClaimable || !$wallet.canVote" @click.prevent="vote">
               <span v-if="!wallet || !wallet.auth">Not connected to wallet</span>
-              <span v-else-if="!$wallet.rank || !$wallet.rank.currentRank">Not a Guardian</span>
+              <span v-else-if="!$wallet.canVote">No voting power</span>
               <span v-else-if="wallet.nfxStillClaimable">Claim NFX before you can vote</span>
               <span v-else>Vote</span>
             </button>
@@ -189,7 +189,11 @@
         </div>
         <div class="box">
           <h5 class="box-title" :data-tooltip="'Total vote-weight: ' + this.totalVoteWeight">
-            Results ({{ $wallet.formatNumber(this.totalVoteWeight) }}/{{ this.quorum }})
+            Results: {{ $wallet.formatNumber(this.totalVoteWeight) }}
+          <div>
+            <small>Quorum: {{ this.quorum }}</small>
+          </div>
+
           </h5>
           <div v-for="result in voteResults" :key="result.type">
             <div class="columns is-vcentered is-mobile">

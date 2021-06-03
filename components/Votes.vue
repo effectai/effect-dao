@@ -16,7 +16,7 @@
         </div>
       </div>
       <div class="column progress-bar">
-        <div class="is-pulled-left"><b>EFX</b></div>
+        <div class="is-pulled-left"><b>EP</b></div>
         <div class="is-pulled-right">{{Math.max(nfxStaked * 20, power).toFixed(0)}}</div>
         <progress :class="['progress', 'is-large', 'rank-4']" :value="100 - (neededPower / power)*100" max="100">
           {{progress.toFixed(2)}}%

@@ -108,13 +108,18 @@ export default (context, inject) => {
         return Intl.NumberFormat('en-US', { notation: 'compact' }).format(number)
       },
 
+      /**
+       * Proposal 22
+       * Minimum( Staked NFX , EFX Power / 20) = Voting Power
+       */
       calculateVotePower (efxPower = 0, nfxStaked = 0) {
-        // Minimum( Staked NFX , EFX Power / 20) = Voting Power
-        // requirement: The minimum requirement to vote will be 1 NFX and 20 Effect Power.
         const parsedEFX = parseInt(efxPower / 20)
         const parsedNFX = parseInt(nfxStaked)
-        // console.log(`EFX:: ${parsedEFX}, NFX:: ${parsedNFX}`)
         return Math.min(parsedEFX, parsedNFX)
+      },
+
+      canVote () {
+        return Boolean(this.calculateEfxPower >= 1)
       },
 
       calculateEfxPower (efxStaked, stakeAge) {

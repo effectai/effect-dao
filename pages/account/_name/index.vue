@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mt-5">
     <div>
       <div class="box">
         <div class="media">
@@ -9,27 +9,13 @@
             </div>
           </div>
           <div class="media-content">
-            <span>
-              <h2 class="subtitle is-3 is-family-sans-serif">{{ account.name }}</h2>
-            </span>
-            <span>
-              <ICountUp v-if="account.votes >= 0" class="power" :options="{ prefix: 'Votes: ', suffix: ' ' }" :end-val="account.votes" />
-                <div v-else>
-                  ...
-                </div>
-            </span>
+            <div class="mb-4">
+              <span class="subtitle is-3 is-family-sans-serif">{{ account.name }}</span>
+              <!-- <span v-if="account.votes" class="is-5">(vote power: {{ account.votes }})</span> -->
+            </div>
             <div v-if="account.signedConstitution">
-              <div>
-                <ICountUp v-if="account.power >= 0" class="power" :options="{ prefix: 'EFX Power: ', suffix: ' EP' }" :end-val="account.power" />
-                <div v-else>
-                  ...
-                </div>
-              </div>
-              <div>
-                <ICountUp v-if="account.nfxStaked >= 0" class="power" :options="{ prefix: 'NFX Staked: ', suffix: ' NFX' }" :end-val="account.nfxStaked" />
-                <div v-else>
-                  ...
-                </div>
+              <div class="mb-4">
+                <ICountUp v-if="account.votes >= 0" class="is-size-5 power" :options="{ prefix: 'Vote power ', suffix: '' }" :end-val="account.votes" />
               </div>
               <div>
                 <small>Joined <span v-if="account.registration_time">{{ $moment(account.registration_time).fromNow() }}</span><span v-else>..</span></small>
@@ -43,38 +29,12 @@
             </div>
           </div>
         </div>
-        <div class="rank-title" :class="[account.rank ? 'rank-'+account.rank.currentRank : '']" />
-        <div v-if="myAccount" class="has-text-centered mt-4">
-          <a href="https://avatar.pixeos.art/" target="_blank" class="button is-primary">
-            Edit avatar
-          </a>
-          <button class="button is-danger" :class="{ 'is-loading': loadingLogout }" @click="logout()">
-            Disconnect
-          </button>
-        </div>
       </div>
     </div>
-    <br>
-    <div v-show="account.votes > 0" class="box">
-      <h4 class="box-title subtitle">Voting Power</h4>
-      <div>
-        <b>EFX Power</b>
-        <progress v-if="(account.power / 20 )> account.votes" class="progress is-primary" value="100" max="100"></progress>
-        <progress v-else class="progress is-primary" :value="account.power" :max="account.votes"></progress>
-      </div>
-      <div>
-        <b>NFX</b>
-        <progress v-if="account.nfxStaked > account.votes" class="progress is-primary" value="100" max="100"></progress>
-        <progress v-else class="progress is-primary" :value="account.nfxStaked" :max="account.votes"></progress>
-      </div>
-    </div>
-
     <div v-if="myAccount" class="mt-5">
       <rank :hide-current-rank="true" />
     </div>
-    <div v-else-if="account.rank" class="mt-5">
-      <rank-member :power="account.power" :nfx-staked="account.nfxStaked" :stake-age="account.stakeAge" :rank="account.rank" :hide-current-rank="true" />
-    </div>
+    <rank-member :power="account.power" :nfx-staked="account.nfxStaked" :stake-age="account.stakeAge" :rank="account.rank" :hide-current-rank="true" />
     <div class="box mt-5">
       <h4 v-if="myAccount" class="box-title subtitle">
         Your Proposals

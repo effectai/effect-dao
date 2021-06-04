@@ -373,6 +373,8 @@ export default {
       this.balances.liquidBalance = circSupply - this.balances.daoBalance - this.balances.stakeBalance - this.balances.liquidityBalance - this.balances.foundationBalance
       this.balances.unswappedBalance = 650000000 - (this.balances.liquidBalance + this.balances.stakeBalance + this.balances.foundationBalance + this.balances.teamBalance + this.balances.liquidityBalance + this.balances.daoBalance)
     },
+
+    // FIXME is this still right?
     async getTotalVoteWeight () {
       const cycleData = await this.$eos.rpc.get_table_rows({
         code: process.env.proposalContract,

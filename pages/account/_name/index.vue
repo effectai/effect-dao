@@ -31,31 +31,32 @@
         </div>
       </div>
     </div>
-     <div class="box mt-5">
-      <h4 v-if="myAccount" class="box-title subtitle">
-        Your Proposals
-      </h4>
-      <h4 v-else class="box-title subtitle">
-        Proposals by {{ account.name }}
-      </h4>
-      <div v-if="loadingProposals">
-        Loading Proposals..
-      </div>
-      <proposals v-else-if="proposals && proposals.length > 0" :proposals="proposals" />
-      <div v-else-if="proposals">
-        No Proposals
-      </div>
-      <div v-else>
-        Could not retrieve proposals
-      </div>
-      <div class="has-text-centered mt-4">
-        <nuxt-link v-if="myAccount" class="button is-secondary is-wide m-2" to="/proposals/new">
-          New Proposal
-        </nuxt-link>
-        <nuxt-link class="button is-secondary is-outlined is-wide m-2" to="/proposals">
-          All Proposals
-        </nuxt-link>
-      </div>
+    <votes class="mt-5" />
+    <div class="box mt-5">
+    <h4 v-if="myAccount" class="box-title subtitle">
+      Your Proposals
+    </h4>
+    <h4 v-else class="box-title subtitle">
+      Proposals by {{ account.name }}
+    </h4>
+    <div v-if="loadingProposals">
+      Loading Proposals..
+    </div>
+    <proposals v-else-if="proposals && proposals.length > 0" :proposals="proposals" />
+    <div v-else-if="proposals">
+      No Proposals
+    </div>
+    <div v-else>
+      Could not retrieve proposals
+    </div>
+    <div class="has-text-centered mt-4">
+      <nuxt-link v-if="myAccount" class="button is-secondary is-wide m-2" to="/proposals/new">
+        New Proposal
+      </nuxt-link>
+      <nuxt-link class="button is-secondary is-outlined is-wide m-2" to="/proposals">
+        All Proposals
+      </nuxt-link>
+    </div>
     </div>
     <div class="box">
       <h4 v-if="myAccount" class="box-title subtitle">

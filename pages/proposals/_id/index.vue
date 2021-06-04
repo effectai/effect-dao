@@ -343,7 +343,6 @@ export default {
   created () {
     this.getProposal(this.id)
     this.getQuorum()
-    console.log(`Votes::: ${this.$wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked)}`)
   },
 
   methods: {

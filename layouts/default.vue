@@ -43,7 +43,7 @@
         You received <b>{{ genesisAirdrop.toFixed(0) }} EFX</b> in the genesis fee distribution!
         <button class="delete" @click="closeAirdrop" />
       </div>
-      <nuxt />
+      <h2 class="subtitle">Effect Dashboard is under maintenance, please come back later</h2>
     </div>
     <foot />
   </div>

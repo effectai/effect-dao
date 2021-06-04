@@ -84,7 +84,6 @@
                 Sign new constitution
               </button>
             </NuxtLink>
-            <!-- TODO replace currentRank, with votes -->
             <button v-else class="button is-primary is-fullwidth" :disabled="!votes || vote_type === null || !wallet || !wallet.auth || wallet.nfxStillClaimable || $wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1 " @click.prevent="vote">
               <span v-if="!wallet || !wallet.auth">Not connected to wallet</span>
               <span v-else-if="$wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1">No voting power</span>

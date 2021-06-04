@@ -205,7 +205,7 @@
                 <button class="button is-primary is-outlined" :class="{ 'is-loading': loading }" :disabled="nfxStaked === 0" @click="unstakingModal = true; stakingModalEfx = false; removeStake = 0">
                   Unstake NFX
                 </button>
-                <button class="button is-outlined is-link">
+                <button class="button is-outlined is-link" data-tooltip="NFX can only be bought with EFX">
                   Get NFX
                   <a href=" https://defibox.io/pool-market-details/437" target="_blank" rel="noopener noreferrer"></a>
                 </button>

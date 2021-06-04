@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="has-text-centered">
-      <br>
       <nuxt-link class="button is-secondary is-wide m-2" to="/proposals/new">
         New Proposal
       </nuxt-link>

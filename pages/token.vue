@@ -195,7 +195,7 @@ export default {
           description: 'Contract managing the EFX and NFX tokens',
           account: 'effecttokens',
           link: 'https://bloks.io/account/effecttokens?loadContract=true&tab=Tables&table=stat&account=effecttokens&scope=EFX&limit=100',
-          source: 'https://github.com/effectai/effect-network-eos/tree/master/contracts/effect-token'
+          source: 'https://github.com/effectai/effect-network/tree/master/contracts/token'
         },
         {
           name: 'Effect Staking Protocol',
@@ -216,7 +216,7 @@ export default {
           description: 'Holds the registry of the members and guardians of the EffectDAO',
           account: 'theeffectdao',
           link: 'https://bloks.io/account/theeffectdao?loadContract=true&tab=Tables&account=theeffectdao&scope=theeffectdao&limit=100&table=member',
-          source: 'https://github.com/effectai/effect-network-eos/blob/master/contracts/effect-dao/effect-dao.cpp'
+          source: 'https://github.com/effectai/effect-network/blob/master/contracts/dao/dao.cpp'
         },
         {
           name: 'Effect Proposals',
@@ -230,7 +230,7 @@ export default {
           description: 'Smart Contract on the NEO blockchain for the NEP5 EFX token',
           account: 'acbc5...7e6f9',
           link: 'https://neotracker.io/asset/acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
-          source: 'https://github.com/effectai/effect-network/blob/master/contracts/java/token/src/ai/effect/token/EffectToken.java'
+          source: 'https://github.com/effectai/effect-network-neo/blob/master/contracts/java/token/src/ai/effect/token/EffectToken.java'
         }
       ],
       chartOptions: {

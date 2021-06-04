@@ -18,18 +18,14 @@
       <div class="column progress-bar">
         <div class="is-pulled-left"><b>EP</b></div>
         <div class="is-pulled-right">{{Math.max(nfxStaked * 20, power).toFixed(0)}}</div>
-        <progress :class="['progress', 'is-large', 'rank-4']" :value="100 - (neededPower / power)*100" max="100">
-          {{progress.toFixed(2)}}%
-        </progress>
-        <div :class="['progress-pointer', 'rank-4']" :style="{width: 100 - (neededPower / power)*100}">
+        <progress :class="['progress', 'is-large', 'rank-4']" :value="(power / (neededPower + power))*100" max="100"></progress>
+        <div :class="['progress-pointer', 'rank-4']" :style="{width: (power / (neededPower + power))*100 + '%'}">
           <small class="is-size-7">(<ICountUp :end-val="power" /> / <ICountUp :end-val="nfxStaked * 20" :options="{startVal: nfxStaked * 20}" /> EP)</small>
         </div>
         <div class="is-pulled-left"><b>NFX</b></div>
         <div class="is-pulled-right">{{Math.max(nfxStaked, power / 20).toFixed(0)}}</div>
-        <progress :class="['progress', 'is-large', 'rank-5']" :value="100 - (neededNfx / nfxStaked)*100" max="100">
-          {{progress.toFixed(2)}}%
-        </progress>
-        <div :class="['progress-pointer', 'rank-5']" :style="{width: 100 - (neededNfx / nfxStaked)*100 + '%'}">
+        <progress :class="['progress', 'is-large', 'rank-5']" :value="(nfxStaked / (neededNfx + nfxStaked))*100" max="100"></progress>
+        <div :class="['progress-pointer', 'rank-5']" :style="{width: (nfxStaked / (neededNfx + nfxStaked))*100 + '%'}">
           <small class="is-size-7">(<ICountUp :end-val="nfxStaked" /> / <ICountUp :end-val="power / 20" :options="{startVal: power / 20}" /> EP)</small>
         </div>
       </div>
@@ -85,7 +81,7 @@ export default {
     neededPower () {
       const powerFactor = this.$wallet.power / 20
       const nfx = this.$wallet.nfxStaked
-      return (powerFactor < nfx) ? powerFactor - nfx : 0
+      return (powerFactor < nfx) ? nfx * 20 - this.$wallet.power : 0
     },
     progress () {
       if (!this.mounted) {

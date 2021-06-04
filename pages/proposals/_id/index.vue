@@ -190,10 +190,6 @@
         <div class="box">
           <h5 class="box-title" :data-tooltip="'Total vote-weight: ' + this.totalVoteWeight">
             Results: {{ $wallet.formatNumber(this.totalVoteWeight) }}
-          <div>
-            <small>Quorum: {{ this.quorum }}</small>
-          </div>
-
           </h5>
           <div v-for="result in voteResults" :key="result.type">
             <div class="columns is-vcentered is-mobile">
@@ -209,6 +205,7 @@
             </div>
             <progress :class="['progress', 'is-small', 'progress-type-' + result.type, {'is-danger': result.type === 2}, {'is-success': result.type === 1}]" :value="result.weight" :max="totalVoteWeight" />
           </div>
+          <div class="has-text-centered is-italic mt-4 is-size-7">Quorum: {{ this.quorum }}</div>
         </div>
       </div>
     </div>

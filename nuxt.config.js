@@ -56,11 +56,11 @@ export default {
     --access-control-allow-origin='*'  --data-dir ~/.local/share/eosio/nodeos_local --contracts-console  --delete-all-blocks
    */
 
-    /**
-     *  git clone git@github.com:effectai/effect-network.git
-     *  npm run lumo e2e.scenario
-     *  copy paste new contract nameAddresses below in the configuration: ("tknbbhbf" "stkfhgae" "daogfhcd" "prpagacf" "feeffgee")
-     */
+  /**
+   * git clone git@github.com:effectai/effect-network.git
+   * npm run lumo e2e.scenario
+   * copy paste new contract nameAddresses below in the configuration: ("tknbbhbf" "stkfhgae" "daogfhcd" "prpagacf" "feeffgee")
+   */
   // env: {
   //   eosNodeUrl: '127.0.0.1',
   //   protocolUrl: 'http',

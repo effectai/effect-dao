@@ -178,6 +178,10 @@
                 <button class="button is-primary is-outlined" :class="{ 'is-loading': loading }" :disabled="efxStaked === 0" @click="unstakingModal = true; stakingModalEfx = true; removeStake = 0">
                   Unstake EFX
                 </button>
+                <button class="button is-outlined is-link" :class="{ 'is-loading': loading }">
+                  Get EFX
+                  <a href="https://effect.network/token-page/" target="_blank" rel="noopener noreferrer"></a>
+                </button>
               </div>
               <div class="has-text-centered is-italic"><small>Unstaking takes 5 days</small></div>
             </div>
@@ -200,6 +204,10 @@
                 </button>
                 <button class="button is-primary is-outlined" :class="{ 'is-loading': loading }" :disabled="nfxStaked === 0" @click="unstakingModal = true; stakingModalEfx = false; removeStake = 0">
                   Unstake NFX
+                </button>
+                <button class="button is-outlined is-link">
+                  Get NFX
+                  <a href=" https://defibox.io/pool-market-details/437" target="_blank" rel="noopener noreferrer"></a>
                 </button>
               </div>
               <div class="has-text-centered is-italic"><small>Unstaking takes 15 days</small></div>

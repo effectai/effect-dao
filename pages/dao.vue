@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mt-5">
     <div class="modal constitution-modal" :class="{ 'is-active': constitutionModal }">
       <div class="modal-background" />
       <div class="modal-card">
@@ -96,7 +96,7 @@
       </div>
     </div>
 
-    <rank v-if="wallet && wallet.auth && signedConstitution" class="mt-5" />
+    <votes class="mt-5" />
     <div class="box mt-5">
       <h5 class="box-title subtitle">
         EffectDAO Members
@@ -104,23 +104,16 @@
       <div v-if="constitutionMembers" class="members columns is-multiline mt-5">
         <div v-for="member in constitutionMembers" :key="member.account" class="column is-half">
           <nuxt-link :to="'/account/'+member.account" class="box has-shadow-outside is-narrow member columns is-gapless is-mobile">
-            <!--            <div v-if="member.rank && member.rank.currentRank == 0" class="tag is-primary is-light rank-name"></div>-->
-            <div v-if="member.rank && member.rank.currentRank > 0" class="rank-name">
-              <img width="25px" :src="'/img/guardian-icons/guardian-'+member.rank.currentRank+'.png'">
-            </div>
             <div class="column is-one-fifth" style="min-width: 70px">
               <figure class="image is-64x64">
                 <avatar :account-name="member.account" />
               </figure>
-              <div v-if="member.rank" class="rank">
-                <div :class="['rank-color','rank-'+member.rank.currentRank]" /><span>Rank {{ member.rank.currentRank }}</span>
-              </div>
             </div>
             <div class="column">
               <div class="pl-2">
                 <h5>{{ member.account }}</h5>
                 <div>
-                  <ICountUp v-if="member.power >= 0" class="power" :options="{ prefix: 'EFX Power ', suffix: ' EP' }" :end-val="member.power" />
+                  <ICountUp v-if="member.votes >= 0" class="power" :options="{ prefix: 'Votes: ' }" :end-val="member.votes" />
                   <div v-else>
                     ...
                   </div>
@@ -149,13 +142,13 @@
 <script>
 import { sha256 } from 'eosjs-ecc'
 import ICountUp from 'vue-countup-v2'
-import Rank from '~/components/Rank'
+import Votes from '~/components/Votes'
 import Avatar from '~/components/Avatar'
 
 export default {
   components: {
     ICountUp,
-    Rank,
+    Votes,
     Avatar
   },
 
@@ -267,7 +260,8 @@ export default {
       if (!member.power) {
         this.$set(member, 'power', 0)
       }
-      this.$set(member, 'rank', this.$wallet.calculateRankProgress(member.power, member.nfxStaked))
+      const votes = this.$wallet.calculateVotePower(member.power, member.nfxStaked)
+      this.$set(member, 'votes', votes)
     },
 
     async downloadConstitution () {

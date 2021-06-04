@@ -8,8 +8,11 @@ export default {
     fallback: true
   },
 
+  // Production
   env: {
     eosNodeUrl: 'eos.greymass.com',
+    protocolUrl: 'https',
+    portUrl: '443',
     eosChainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
     explorerUrl: 'https://bloks.io',
     ipfsNode: 'https://ipfs.effect.ai',
@@ -25,8 +28,11 @@ export default {
     discordInviteUrl: 'https://discord.gg/hM3237cYXP'
   },
 
+  // Kylin Developement
   // env: {
   //   eosNodeUrl: 'kylin.eosn.io',
+  //   protocolUrl: 'https',
+  //   portUrl: 443,
   //   eosChainId: '5fff1dae8dc8e2fc4d5b23b2c7665c97f9e9d8edf2b6485a86ba311c25639191',
   //   explorerUrl: 'https://kylin.bloks.io',
   //   ipfsNode: 'https://ipfs.effect.ai',
@@ -38,6 +44,38 @@ export default {
   //   feepoolContract: 'feepoolkylin',
   //   efxToken: 'UTL',
   //   nfxToken: 'GRN',
+  //   discordGuildId: '519860537891487745',
+  //   discordInviteUrl: 'https://discord.gg/hM3237cYXP'
+  // },
+
+  // Local Developement
+  /**
+   * You can run this command to bootstrap a local blockchain:
+    nodeos -e -p eosio --plugin eosio::producer_plugin --plugin eosio::producer_api_plugin --plugin eosio::chain_api_plugin \
+    --plugin eosio::http_plugin --plugin eosio::history_plugin --plugin eosio::history_api_plugin --filter-on="*" \
+    --access-control-allow-origin='*'  --data-dir ~/.local/share/eosio/nodeos_local --contracts-console  --delete-all-blocks
+   */
+
+    /**
+     *  git clone git@github.com:effectai/effect-network.git
+     *  npm run lumo e2e.scenario
+     *  copy paste new contract nameAddresses below in the configuration: ("tknbbhbf" "stkfhgae" "daogfhcd" "prpagacf" "feeffgee")
+     */
+  // env: {
+  //   eosNodeUrl: '127.0.0.1',
+  //   protocolUrl: 'http',
+  //   portUrl: 8888,
+  //   eosChainId: '8a34ec7df1b8cd06ff4a8abbaa7cc50300823350cadc59ab296cb00d104d2b8f',
+  //   explorerUrl: 'https://kylin.bloks.io',
+  //   ipfsNode: 'https://ipfs.effect.ai',
+  //   ipfsExplorer: 'https://ipfs.effect.ai',
+  //   tokenContract: 'tknbbhbf',
+  //   stakingContract: 'stkfhgae',
+  //   daoContract: 'daogfhcd',
+  //   proposalContract: 'prpagacf',
+  //   feepoolContract: 'feeffgee',
+  //   efxToken: 'EFX',
+  //   nfxToken: 'NFX',
   //   discordGuildId: '519860537891487745',
   //   discordInviteUrl: 'https://discord.gg/hM3237cYXP'
   // },

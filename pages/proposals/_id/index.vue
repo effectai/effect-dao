@@ -84,9 +84,10 @@
                 Sign new constitution
               </button>
             </NuxtLink>
-            <button v-else class="button is-primary is-fullwidth" :disabled="!votes || vote_type === null || !wallet || !wallet.auth || wallet.nfxStillClaimable || !$wallet.rank || !$wallet.rank.currentRank" @click.prevent="vote">
+            <!-- TODO replace currentRank, with votes -->
+            <button v-else class="button is-primary is-fullwidth" :disabled="!votes || vote_type === null || !wallet || !wallet.auth || wallet.nfxStillClaimable || $wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1 " @click.prevent="vote">
               <span v-if="!wallet || !wallet.auth">Not connected to wallet</span>
-              <span v-else-if="!$wallet.rank || !$wallet.rank.currentRank">Not a Guardian</span>
+              <span v-else-if="$wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1">No voting power</span>
               <span v-else-if="wallet.nfxStillClaimable">Claim NFX before you can vote</span>
               <span v-else>Vote</span>
             </button>
@@ -187,23 +188,24 @@
           </div>
         </div>
         <div class="box">
-          <h5 class="box-title">
-            Results ({{ this.totalVoteWeight }}/{{ this.quorum }})
+          <h5 class="box-title" :data-tooltip="'Total vote-weight: ' + this.totalVoteWeight">
+            Results: {{ $wallet.formatNumber(this.totalVoteWeight) }}
           </h5>
           <div v-for="result in voteResults" :key="result.type">
             <div class="columns is-vcentered is-mobile">
               <div class="column is-4">
                 <b :class="{'has-text-success': result.type === 1, 'has-text-danger': result.type === 2}">{{ voteTypes.find((vt) => vt.value == result.type).name }}</b>
               </div>
-              <div class="column is-6">
-                <small># votes: </small> <span>{{ result.votes }}</span>
+              <div class="column is-4" data-tooltip="Number of votes">
+                # {{ result.votes }}
               </div>
-              <div class="column is-2">
-                <b>{{ result.weight }}</b>
+              <div class="column is-2" :data-tooltip="'Vote-weight: ' + result.weight">
+                <b>{{ $wallet.formatNumber(result.weight) }}</b>
               </div>
             </div>
             <progress :class="['progress', 'is-small', 'progress-type-' + result.type, {'is-danger': result.type === 2}, {'is-success': result.type === 1}]" :value="result.weight" :max="totalVoteWeight" />
           </div>
+          <div class="has-text-centered is-italic mt-4 is-size-7">Quorum: {{ this.quorum }}</div>
         </div>
       </div>
     </div>
@@ -451,7 +453,7 @@ export default {
             table: 'vote',
             index_position: 4,
             key_type: 'i64',
-            limit: 100,
+            limit: 1000,
             lower_bound: id,
             upper_bound: id
           }

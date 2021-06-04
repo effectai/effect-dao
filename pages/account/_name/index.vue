@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mt-5">
     <div>
       <div class="box">
         <div class="media">
@@ -9,19 +9,13 @@
             </div>
           </div>
           <div class="media-content">
-            <h2 class="subtitle is-3 is-family-sans-serif">{{ account.name }}</h2>
-            <h4 v-if="account.rank" class="rank subtitle is-5">
-              <div class="media-right is-hidden-mobile">
-                <div v-if="account.rank && account.rank.currentRank > 0" :class="['rank-icon', 'rank-'+account.rank.currentRank]">
-                  <img width="64px" :src="'/img/guardian-icons/guardian-'+account.rank.currentRank+'.png'">
-                </div>
-              </div>
-              Rank {{ account.rank.currentRank }}
-            </h4>
+            <div class="mb-4">
+              <span class="subtitle is-3 is-family-sans-serif">{{ account.name }}</span>
+              <!-- <span v-if="account.votes" class="is-5">(vote power: {{ account.votes }})</span> -->
+            </div>
             <div v-if="account.signedConstitution">
-              <ICountUp v-if="account.power >= 0" class="power" :options="{ prefix: 'EFX Power ', suffix: ' EP' }" :end-val="account.power" />
-              <div v-else>
-                ...
+              <div class="mb-4">
+                <ICountUp v-if="account.votes >= 0" class="is-size-5 power" :options="{ prefix: 'Vote power ', suffix: '' }" :end-val="account.votes" />
               </div>
               <div>
                 <small>Joined <span v-if="account.registration_time">{{ $moment(account.registration_time).fromNow() }}</span><span v-else>..</span></small>
@@ -35,25 +29,7 @@
             </div>
           </div>
         </div>
-        <div class="rank-title" :class="[account.rank ? 'rank-'+account.rank.currentRank : '']" />
-        <div v-if="myAccount" class="has-text-centered mt-4">
-          <a href="https://avatar.pixeos.art/" target="_blank" class="button is-primary">
-            Edit avatar
-          </a>
-          <!--          <button class="button is-primary" :class="{ 'is-loading': loadingDiscord }" @click="signDiscord()">-->
-          <!--            Join Discord-->
-          <!--          </button>-->
-          <button class="button is-danger" :class="{ 'is-loading': loadingLogout }" @click="logout()">
-            Disconnect
-          </button>
-        </div>
       </div>
-    </div>
-    <div v-if="myAccount" class="mt-5">
-      <rank :hide-current-rank="true" />
-    </div>
-    <div v-else-if="account.rank" class="mt-5">
-      <rank-member :power="account.power" :nfx-staked="account.nfxStaked" :stake-age="account.stakeAge" :rank="account.rank" :hide-current-rank="true" />
     </div>
     <div class="box mt-5">
       <h4 v-if="myAccount" class="box-title subtitle">
@@ -72,14 +48,14 @@
       <div v-else>
         Could not retrieve proposals
       </div>
-      <div class="has-text-centered mt-4">
-        <nuxt-link v-if="myAccount" class="button is-secondary is-wide m-2" to="/proposals/new">
-          New Proposal
-        </nuxt-link>
-        <nuxt-link class="button is-secondary is-outlined is-wide m-2" to="/proposals">
-          All Proposals
-        </nuxt-link>
-      </div>
+    <div class="has-text-centered mt-4">
+      <nuxt-link v-if="myAccount" class="button is-secondary is-wide m-2" to="/proposals/new">
+        New Proposal
+      </nuxt-link>
+      <nuxt-link class="button is-secondary is-outlined is-wide m-2" to="/proposals">
+        All Proposals
+      </nuxt-link>
+    </div>
     </div>
     <div class="box">
       <h4 v-if="myAccount" class="box-title subtitle">
@@ -120,16 +96,12 @@
 import ICountUp from 'vue-countup-v2'
 import Avatar from '~/components/Avatar'
 import Proposals from '~/components/Proposals'
-import Rank from '~/components/Rank'
-import RankMember from '~/components/RankMember'
 
 export default {
   components: {
     Avatar,
     ICountUp,
-    Proposals,
-    Rank,
-    RankMember
+    Proposals
   },
 
   data () {
@@ -211,7 +183,9 @@ export default {
           if (!this.account.power) {
             this.$set(this.account, 'power', 0)
           }
-          this.$set(this.account, 'rank', this.$wallet.calculateRankProgress(this.account.power, this.account.nfxStaked))
+          const votes = this.$wallet.calculateVotePower(this.account.power, this.account.nfxStaked)
+          this.$set(this.account, 'canVote', this.$wallet.canVote())
+          this.$set(this.account, 'votes', votes)
         }
       } catch (e) {
         console.log(e)

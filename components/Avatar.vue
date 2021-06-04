@@ -12,6 +12,7 @@ export default {
   },
 
   methods: {
+    // TODO add identicon here.
     fallbackAvatar (event) {
       event.target.src = `https://ui-avatars.com/api/?name=${this.accountName}&size=100`
     }

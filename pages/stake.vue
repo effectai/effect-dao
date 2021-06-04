@@ -255,7 +255,6 @@
           </div>
         </div>
       </div>
-      <rank class="mb-6" v-if="signedConstitution" />
     </div>
 <!--    <div v-else class="has-text-centered">-->
 <!--      <a class="button is-primary" @click="$wallet.loginModal = true">-->
@@ -268,13 +267,11 @@
 <script>
 import ICountUp from 'vue-countup-v2'
 import VueCircle from 'vue2-circle-progress/src/index.vue'
-import Rank from '~/components/Rank'
 
 export default {
   components: {
     ICountUp,
-    VueCircle,
-    Rank
+    VueCircle
   },
   middleware: ['authenticated'],
   filters: {

@@ -54,7 +54,7 @@
             </div>
           </div>
           <div class="navbar-end">
-              <div class="navbar-item">
+              <div class="pt-0 navbar-item">
                 <a v-if="!wallet" class="button is-secondary" @click="$wallet.loginModal = true">
                   <strong>Connect Wallet</strong>
                 </a>

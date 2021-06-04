@@ -5,13 +5,15 @@ import tp from 'eos-transit-tokenpocket-provider'
 import Vue from 'vue'
 import lynx from 'eos-transit-lynx-provider'
 
+// Here
+
 const appName = 'effect_dashboard'
 const accessContext = initAccessContext({
   appName,
   network: {
     host: process.env.eosNodeUrl,
-    port: 443,
-    protocol: 'https',
+    port: process.env.portUrl,
+    protocol: process.env.protocolUrl,
     chainId: process.env.eosChainId
   },
   walletProviders: [

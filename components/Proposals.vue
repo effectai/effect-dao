@@ -19,7 +19,9 @@
             <span class="tag is-success" v-if="proposal.state === 1">ACCEPTED</span>
             <div class="is-size-7" v-if="(proposal.status ==='ACTIVE' || proposal.status ==='CLOSED')">
                <span v-for="result in proposal.vote_counts" :key="result.key" class="vote-result">
-                <small><b :class="{'has-text-success': result.key === 1, 'has-text-danger': result.key === 2}">{{ voteTypes.find((vt) => vt.value == result.key).name }}: {{ result.value }}</b></small>
+                 <small>
+                   <b :class="{'has-text-success': result.key === 1, 'has-text-danger': result.key === 2}" :data-tooltip="voteTypes.find((vt) => vt.value == result.key).fullName + ': ' + result.value">{{ voteTypes.find((vt) => vt.value == result.key).name }}: {{ $wallet.formatNumber(result.value) }}</b>
+                 </small>
               </span>
             </div>
           </div>
@@ -48,15 +50,18 @@ export default {
       voteTypes: [
         {
           value: 1,
-          name: 'Y'
+          name: 'Y',
+          fullName: 'Yes'
         },
         {
           value: 0,
-          name: 'A'
+          name: 'A',
+          fullName: 'Abstain'
         },
         {
           value: 2,
-          name: 'N'
+          name: 'N',
+          fullName: 'No'
         }
       ],
       categories: {

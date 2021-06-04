@@ -79,10 +79,6 @@ export default (context, inject) => {
         return this.calculateEfxPower(this.efxStaked, this.stakeAge)
       },
 
-      rank () {
-        return this.calculateRankProgress(this.power, this.nfxStaked)
-      },
-
       efxCanRefund () {
         return this.efxUnstaking > 0 && new Date(`${this.efxUnstakingTime}Z`) < new Date()
       },
@@ -93,7 +89,6 @@ export default (context, inject) => {
     },
 
     created () {
-      console.log('created wallet')
       this.timer = setInterval(() => { this.refreshStakeAge = !this.refreshStakeAge }, 1000)
       this.updater = setInterval(() => { this.updateAccount() }, 10000)
     },
@@ -109,72 +104,22 @@ export default (context, inject) => {
         this.updateAccount()
       },
 
-      calculateRankProgress (power, nfxStaked) {
-        if (!power) {
-          power = 0
-        }
-        if (!nfxStaked) {
-          nfxStaked = 0
-        }
-        const rankRequirements = [
-          {
-            power: 0,
-            nfx: 0
-          },
-          {
-            power: 200000,
-            nfx: 10000
-          },
-          {
-            power: 348326,
-            nfx: 15505
-          },
-          {
-            power: 606655,
-            nfx: 24041
-          },
-          {
-            power: 1056569,
-            nfx: 37276
-          },
-          {
-            power: 1840152,
-            nfx: 57797
-          },
-          {
-            power: 3204864,
-            nfx: 89615
-          },
-          {
-            power: 5581687,
-            nfx: 138950
-          },
-          {
-            power: 9721233,
-            nfx: 215443
-          },
-          {
-            power: 16930792,
-            nfx: 334048
-          },
-          {
-            power: 29487176,
-            nfx: 517947
-          }
-        ]
-        let currentRequirements
-        let currentRank
-        let nextRank
-        for (let rank = 0; rank < rankRequirements.length; rank++) {
-          if (power >= rankRequirements[rank].power && nfxStaked >= rankRequirements[rank].nfx) {
-            currentRank = rank
-            currentRequirements = rankRequirements[rank]
-            nextRank = rankRequirements[rank + 1]
-          } else {
-            break
-          }
-        }
-        return { currentRank, currentRequirements, nextRank }
+      formatNumber (number) {
+        return Intl.NumberFormat('en-US', { notation: 'compact' }).format(number)
+      },
+
+      /**
+       * Proposal 22
+       * Minimum( Staked NFX , EFX Power / 20) = Voting Power
+       */
+      calculateVotePower (efxPower = 0, nfxStaked = 0) {
+        const parsedEFX = parseInt(efxPower / 20)
+        const parsedNFX = parseInt(nfxStaked)
+        return Math.min(parsedEFX, parsedNFX)
+      },
+
+      canVote () {
+        return Boolean(this.calculateVotePower >= 1)
       },
 
       calculateEfxPower (efxStaked, stakeAge) {

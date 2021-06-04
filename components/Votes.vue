@@ -1,51 +1,33 @@
 <template>
-  <div class="box" v-if="rank">
-    <div v-if="rank.currentRank > 0 && !hideCurrentRank" :class="['rank-icon', 'rank-'+rank.currentRank]"><img width="64px" :src="'/img/guardian-icons/guardian-'+rank.currentRank+'.png'" /></div>
-    <h1 :class="['rank-title', 'rank-'+rank.currentRank]" v-if="!hideCurrentRank">
-      Rank {{rank.currentRank}}
-    </h1>
+  <div class="box" v-if="votes">
+    <h1 class="rank-title rank-4">Vote power <b><ICountUp :end-val="votes" /></b></h1>
     <div class="has-text-centered columns mt-2">
-      <div class="next-level column is-one-third" v-if="rank.nextRank">
+      <div class="next-level column is-one-third">
         <div class="box has-shadow-outside mt-1">
-          <h1 :class="['rank-title', 'rank-'+(rank.currentRank+1), 'small']">
-            Next Rank <b>{{rank.currentRank+1}}</b>
-          </h1>
+          <h1 class="rank-title rank-4 small">To get to <b>{{maxVotes}}</b>:</h1>
           <div class="mt-4">
-            <ICountUp :options="{decimalPlaces: 0, startVal: rank.nextRank.power}" :end-val="Math.max(0,rank.nextRank.power - power)" />
+            <ICountUp :end-val="neededPower" />
             <b class="symbol is-size-7">EP Needed</b>
           </div>
           <div class="mt-2 mb-4">
-            <ICountUp :options="{decimalPlaces: 0, startVal: rank.nextRank.nfx}" :end-val="Math.max(0, rank.nextRank.nfx - nfxStaked)" />
+            <ICountUp :options="{decimalPlaces: 0, startVal: neededNfx}" :end-val="neededNfx" />
             <b class="symbol is-size-7">NFX Needed</b>
           </div>
         </div>
       </div>
-      <div class="column progress-bar" v-if="rank.nextRank">
-        <div class="is-pulled-left">
-          <b>EFX Power</b>
+      <div class="column progress-bar">
+        <div class="is-pulled-left"><b>EP</b></div>
+        <div class="is-pulled-right">{{Math.max(nfxStaked * 20, power).toFixed(0)}}</div>
+        <progress :class="['progress', 'is-large', 'rank-4']" :value="(power / (neededPower + power))*100" max="100"></progress>
+        <div :class="['progress-pointer', 'rank-4']" :style="{width: (power / (neededPower + power))*100 + '%'}">
+          <small class="is-size-7">(<ICountUp :end-val="power" /> / <ICountUp :end-val="nfxStaked * 20" :options="{startVal: nfxStaked * 20}" /> EP)</small>
         </div>
-        <div class="is-pulled-right" v-if="rank.currentRank < 10">
-          next: <b>{{rank.currentRank + 1}}</b>
+        <div class="is-pulled-left"><b>NFX</b></div>
+        <div class="is-pulled-right">{{Math.max(nfxStaked, power / 20).toFixed(0)}}</div>
+        <progress :class="['progress', 'is-large', 'rank-5']" :value="(nfxStaked / (neededNfx + nfxStaked))*100" max="100"></progress>
+        <div :class="['progress-pointer', 'rank-5']" :style="{width: (nfxStaked / (neededNfx + nfxStaked))*100 + '%'}">
+          <small class="is-size-7">(<ICountUp :end-val="nfxStaked" /> / <ICountUp :end-val="power / 20" :options="{startVal: power / 20}" /> EP)</small>
         </div>
-        <progress :class="['progress', 'is-large', 'rank-'+rank.currentRank]" :value="progress" max="100">
-          {{progress.toFixed(2)}}%
-        </progress>
-        <div :class="['progress-pointer', 'rank-'+rank.currentRank]" :style="{width: progress + '%'}">
-          <small class="is-size-7">(<ICountUp :end-val="power" /> / <ICountUp :end-val="rank.nextRank.power" :options="{startVal: rank.nextRank.power}" /> EP)</small>&nbsp;&nbsp;<b>{{progress.toFixed(2)}}%</b>
-        </div>
-        <div class="is-pulled-left">
-          <b>NFX</b>
-        </div>
-        <progress :class="['progress', 'is-small', 'rank-'+rank.currentRank]" :value="progressNfx" max="100">
-          {{progress.toFixed(2)}}%
-        </progress>
-        <div :class="['progress-pointer', 'rank-'+rank.currentRank]" :style="{width: progressNfx + '%'}">
-          <small class="is-size-7">(<ICountUp :end-val="nfxStaked" /> / <ICountUp :end-val="rank.nextRank.nfx" :options="{startVal: rank.nextRank.nfx}" /> NFX)</small>&nbsp;&nbsp;<b>{{progressNfx.toFixed(2)}}%</b>
-        </div>
-        <!--<div class="is-size-7 has-text-left mt-4">
-          Required NFX: <b>{{nfxStaked}} / <ICountUp :end-val="rank.nextRank.nfx" :options="{startVal: rank.nextRank.nfx}" /> NFX</b>
-        </div>-->
-
       </div>
     </div>
   </div>
@@ -73,11 +55,6 @@ export default {
   },
 
   mounted () {
-    this.$nextTick(() => {
-      setTimeout(() => {
-        this.mounted = true
-      }, 100)
-    })
   },
 
   computed: {
@@ -89,6 +66,22 @@ export default {
     },
     nfxStaked () {
       return this.$wallet.nfxStaked
+    },
+    votes () {
+      return this.$wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked)
+    },
+    maxVotes () {
+      return Math.floor(Math.max(this.$wallet.power / 20, this.$wallet.nfxStaked))
+    },
+    neededNfx () {
+      const powerFactor = this.$wallet.power / 20
+      const nfx = this.$wallet.nfxStaked
+      return (nfx < powerFactor) ? (powerFactor - nfx) : 0
+    },
+    neededPower () {
+      const powerFactor = this.$wallet.power / 20
+      const nfx = this.$wallet.nfxStaked
+      return (powerFactor < nfx) ? nfx * 20 - this.$wallet.power : 0
     },
     progress () {
       if (!this.mounted) {

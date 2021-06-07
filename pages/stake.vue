@@ -171,19 +171,19 @@
                 <ICountUp :end-val="efxStaked" />
                 <span class="symbol">EFX</span>
               </h3>
-              <div class="buttons">
+              <div class="buttons" >
                 <button class="button is-primary is-fullwidth" :class="{ 'is-loading': loading }" :disabled="efxAvailable === 0" @click="stakingModal = true; stakingModalEfx = true; addStake = efxAvailable">
                   Stake EFX
                 </button>
                 <button class="button is-primary is-outlined" :class="{ 'is-loading': loading }" :disabled="efxStaked === 0" @click="unstakingModal = true; stakingModalEfx = true; removeStake = 0">
                   Unstake EFX
                 </button>
-                <button class="button is-outlined is-link" :class="{ 'is-loading': loading }">
-                  Get EFX
-                  <a href="https://effect.network/token-page/" target="_blank" rel="noopener noreferrer"></a>
-                </button>
               </div>
               <div class="has-text-centered is-italic"><small>Unstaking takes 5 days</small></div>
+              <hr class="has-background-grey-lighter">
+              <div>
+                <a href="https://effect.network/token-page/" target="_blank" rel="noopener noreferrer">Get EFX</a>
+              </div>
             </div>
           </div>
         </div>
@@ -205,12 +205,14 @@
                 <button class="button is-primary is-outlined" :class="{ 'is-loading': loading }" :disabled="nfxStaked === 0" @click="unstakingModal = true; stakingModalEfx = false; removeStake = 0">
                   Unstake NFX
                 </button>
-                <button class="button is-outlined is-link" data-tooltip="NFX can only be bought with EFX">
-                  Get NFX
-                  <a href=" https://defibox.io/pool-market-details/437" target="_blank" rel="noopener noreferrer"></a>
-                </button>
               </div>
               <div class="has-text-centered is-italic"><small>Unstaking takes 15 days</small></div>
+              <hr class="has-background-grey-lighter">
+              <div>
+                <a href=" https://defibox.io/pool-market-details/437" target="_blank" rel="noopener noreferrer" data-tooltip="NFX can only be bought with EFX">
+                Get NFX <i class="fa fa-external-link"></i>
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -275,7 +277,7 @@
 <script>
 import ICountUp from 'vue-countup-v2'
 import VueCircle from 'vue2-circle-progress/src/index.vue'
-
+// TODO add external link icon
 export default {
   components: {
     ICountUp,

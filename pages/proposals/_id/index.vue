@@ -114,7 +114,7 @@
           </h5>
           <div v-if="votes && votes.length">
             <div v-for="vote in votes" :key="vote.id + vote.voter" class="columns is-vcentered is-mobile">
-              <div class="column is-8">
+              <div class="column is-6">
                 <div class="is-flex is-align-items-center">
                   <div class="image is-32x32 is-rounded mr-2">
                     <avatar :account-name="vote.voter" />
@@ -124,11 +124,11 @@
                   </nuxt-link>
                 </div>
               </div>
-              <div class="column is-2 has-text-centered">
+              <div class="column is-3 has-text-centered">
                 <b :class="{'has-text-success': vote.type === 1, 'has-text-danger': vote.type === 2}">{{ voteTypes.find((vt) => vt.value === vote.type).name }}</b>
               </div>
-              <div class="column is-2 has-text-centered">
-                <b>{{ vote.weight }}</b>
+              <div class="column is-3 has-text-centered" :data-tooltip="'Vote-weight: ' + vote.weight">
+                <b>{{ $wallet.formatNumber(vote.weight) }}</b>
               </div>
             </div>
           </div>
@@ -341,7 +341,7 @@ export default {
 
   created () {
     this.getProposal(this.id)
-    this.getQuorum()
+    // this.getQuorum()
   },
 
   methods: {
@@ -386,15 +386,20 @@ export default {
         }
       }
     },
-    async getQuorum () {
-      const data = await this.$eos.rpc.get_table_rows({
-        code: process.env.proposalContract,
-        scope: process.env.proposalContract,
-        table: 'config',
-        limit: 1
-      })
-
-      this.quorum = data.rows[0].quorum
+    async getQuorum (cycleNumber) {
+      if (cycleNumber.id === 0) {
+        this.quorom = 0
+      } else {
+        const data = await this.$eos.rpc.get_table_rows({
+          json: true, // optional ?
+          code: process.env.proposalContract,
+          scope: process.env.proposalContract,
+          table: 'cycle',
+          limit: 1,
+          lower_bound: cycleNumber.id // This parameter is how we can query by id.
+        })
+        this.quorum = data.rows[0].quorum
+      }
     },
     async getProposal (id) {
       this.loading = true
@@ -436,6 +441,7 @@ export default {
           this.$set(this.proposal, 'body', ipfsProposal.body)
           this.$set(this.proposal, 'files', ipfsProposal.files ? ipfsProposal.files : [])
           await this.getVotes(parseInt(id))
+          await this.getQuorum(this.proposalCycle)
         } catch (e) {
           console.log(e)
         }

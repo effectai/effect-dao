@@ -342,7 +342,7 @@ export default {
 
   created () {
     this.getProposal(this.id)
-    this.getQuorum()
+    // this.getQuorum()
   },
 
   methods: {
@@ -387,15 +387,20 @@ export default {
         }
       }
     },
-    async getQuorum () {
-      const data = await this.$eos.rpc.get_table_rows({
-        code: process.env.proposalContract,
-        scope: process.env.proposalContract,
-        table: 'config',
-        limit: 1
-      })
-
-      this.quorum = data.rows[0].quorum
+    async getQuorum (cycleNumber) {
+      if (cycleNumber.id === 0) {
+        this.quorom = 0
+      } else {
+        const data = await this.$eos.rpc.get_table_rows({
+          json: true, // optional ?
+          code: process.env.proposalContract,
+          scope: process.env.proposalContract,
+          table: 'cycle',
+          limit: 1,
+          lower_bound: cycleNumber.id // This parameter is how we can query by id.
+        })
+        this.quorum = data.rows[0].quorum
+      }
     },
     async getProposal (id) {
       this.loading = true
@@ -437,6 +442,7 @@ export default {
           this.$set(this.proposal, 'body', ipfsProposal.body)
           this.$set(this.proposal, 'files', ipfsProposal.files ? ipfsProposal.files : [])
           await this.getVotes(parseInt(id))
+          await this.getQuorum(this.proposalCycle)
         } catch (e) {
           console.log(e)
         }

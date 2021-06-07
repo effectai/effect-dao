@@ -115,7 +115,7 @@
           </h5>
           <div v-if="votes && votes.length">
             <div v-for="vote in votes" :key="vote.id + vote.voter" class="columns is-vcentered is-mobile">
-              <div class="column is-8">
+              <div class="column is-6">
                 <div class="is-flex is-align-items-center">
                   <div class="image is-32x32 is-rounded mr-2">
                     <avatar :account-name="vote.voter" />
@@ -125,11 +125,11 @@
                   </nuxt-link>
                 </div>
               </div>
-              <div class="column is-2 has-text-centered">
+              <div class="column is-3 has-text-centered">
                 <b :class="{'has-text-success': vote.type === 1, 'has-text-danger': vote.type === 2}">{{ voteTypes.find((vt) => vt.value === vote.type).name }}</b>
               </div>
-              <div class="column is-2 has-text-centered">
-                <b>{{ vote.weight }}</b>
+              <div class="column is-3 has-text-centered" :data-tooltip="'Vote-weight: ' + vote.weight">
+                <b>{{ $wallet.formatNumber(vote.weight) }}</b>
               </div>
             </div>
           </div>

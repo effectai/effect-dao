@@ -22,8 +22,8 @@
             <b v-else>...</b>
             <div class="has-text-weight-light">
               <small>
-                <div class="tag is-info" v-if="proposal.cycle">C{{ proposal.cycle }}</div>
-                <div class="tag is-info" v-else>N/A</div>
+                <div class="tag" v-if="proposal.cycle">C{{ proposal.cycle }}</div>
+                <div class="tag" v-else>N/A</div>
               </small>
               <small class="mr-1">&nbsp;by <nuxt-link :to="'/account/'+proposal.author">{{ proposal.author }}</nuxt-link></small>
               <small>requesting <span v-for="(pay, index) in proposal.pay" :key="index"><span v-if="index > 0">,</span> {{ parseInt(pay.field_0.quantity) }} EFX</span></small>

@@ -182,7 +182,9 @@
               <div class="has-text-centered is-italic"><small>Unstaking takes 5 days</small></div>
               <hr class="has-background-grey-lighter">
               <div>
-                <a href="https://effect.network/token-page/" target="_blank" rel="noopener noreferrer">Get EFX</a>
+                <a href="https://effect.network/token-page/" target="_blank" rel="noopener noreferrer">
+                Get EFX <font-awesome-icon :icon="['fas', 'external-link-alt']"/>
+                </a>
               </div>
             </div>
           </div>
@@ -210,7 +212,7 @@
               <hr class="has-background-grey-lighter">
               <div>
                 <a href=" https://defibox.io/pool-market-details/437" target="_blank" rel="noopener noreferrer" data-tooltip="NFX can only be bought with EFX">
-                Get NFX <i class="fa fa-external-link"></i>
+                Get NFX <font-awesome-icon :icon="['fas', 'external-link-alt']"/>
                 </a>
               </div>
             </div>

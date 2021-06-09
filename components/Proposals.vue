@@ -3,27 +3,37 @@
     <div v-if="proposals.length > 0">
       <nuxt-link v-for="proposal in proposals" :key="proposal.id" :to="'/proposals/'+proposal.id" class="box has-shadow-outside is-narrow">
         <div class="columns is-desktop is-gapless">
-          <div class="has-text-weight-light column is-four-fifths-desktop">
-            <b v-if="proposal.title">#{{ proposal.id }}: {{ proposal.title | truncate(60) }}</b>
+          <div class="has-text-weight-light column  is-10">
+            <b v-if="proposal.title">
+              <!-- <span v-if="proposal.vote_counts[1] != undefined && proposal.vote_counts[2] != undefined" @click="print(proposals.vote_counts)">
+                <font-awesome-icon v-if="proposal.vote_counts[1].value > proposal.vote_counts[2].value" :icon="['fa', 'arrow-up']" style="font-size: 20px" class="has-text-success" />
+                <font-awesome-icon v-else-if="proposal.vote_counts[1].value < proposal.vote_counts[2].value" :icon="['fa', 'arrow-down']" style="font-size: 20px" class="has-text-danger" />
+                <font-awesome-icon v-else :icon="['fa', 'minus']" style="font-size: 20px"/>
+              </span> -->
+              <span v-if="proposal.vote_counts[1] != undefined && proposal.vote_counts[2] != undefined" class="icon">
+                <img src="@/assets/img/up.svg" class="" v-if="proposal.vote_counts[1].value > proposal.vote_counts[2].value">
+                <img src="@/assets/img/down.svg" class="" v-else-if="proposal.vote_counts[1].value < proposal.vote_counts[2].value">
+                <img src="@/assets/img/empty.svg" class="" v-else>
+              </span>
+              <span v-else class="icon">
+                <img src="@/assets/img/empty.svg" class="">
+              </span>
+              #{{ proposal.id }}: {{ proposal.title | truncate(60) }}</b>
             <b v-else>...</b>
             <div class="has-text-weight-light">
-              <small class="mr-1">by <nuxt-link :to="'/account/'+proposal.author">{{ proposal.author }}</nuxt-link></small>
-              <small>requesting <span v-for="(pay, index) in proposal.pay" :key="index"><span v-if="index > 0">,</span> {{ parseInt(pay.field_0.quantity) }} EFX</span></small>
+              <small>
+                <div class="tag" v-if="proposal.cycle">C{{ proposal.cycle }}</div>
+                <div class="tag" v-else>N/A</div>
+              </small>
+              <small class="mr-1">&nbsp;by <nuxt-link :to="'/account/'+proposal.author">{{ proposal.author }}</nuxt-link></small>
+              <small><span v-for="(pay, index) in proposal.pay" :key="index"><span v-if="index > 0">,</span> {{ $wallet.formatNumber(parseInt(pay.field_0.quantity)) }} EFX</span></small>
             </div>
           </div>
-          <div class="column is-one-fifths-desktop has-text-left-mobile has-text-right-desktop">
-            <span class="tag" :class="{'is-success': proposal.status == 'ACTIVE', 'is-warning': proposal.status == 'DRAFT', 'is-link': proposal.status == 'PENDING', 'is-dark': proposal.status == 'CLOSED'}">{{ proposal.status }}</span>
-            <span class="tag is-info" v-if="proposal.cycle">C{{ proposal.cycle }}</span>
-            <span class="tag is-success" v-if="proposal.state === 3">EXECUTED</span>
+          <div class="column is-2 has-text-left-mobile has-text-right-desktop has-text-left-tablet">
+            <div class="tag" :class="{'is-success': proposal.status == 'ACTIVE', 'is-warning': proposal.status == 'DRAFT', 'is-link': proposal.status == 'PENDING', 'is-dark': proposal.status == 'CLOSED'}">{{ proposal.status }}</div>
+            <!-- <span class="tag is-success" v-if="proposal.state === 3">EXECUTED</span>
             <span class="tag is-danger" v-if="proposal.state === 2">REJECTED</span>
-            <span class="tag is-success" v-if="proposal.state === 1">ACCEPTED</span>
-            <div class="is-size-7" v-if="(proposal.status ==='ACTIVE' || proposal.status ==='CLOSED')">
-               <span v-for="result in proposal.vote_counts" :key="result.key" class="vote-result">
-                 <small>
-                   <b :class="{'has-text-success': result.key === 1, 'has-text-danger': result.key === 2}" :data-tooltip="voteTypes.find((vt) => vt.value == result.key).fullName + ': ' + result.value">{{ voteTypes.find((vt) => vt.value == result.key).name }}: {{ $wallet.formatNumber(result.value) }}</b>
-                 </small>
-              </span>
-            </div>
+            <span class="tag is-success" v-if="proposal.state === 1">ACCEPTED</span> -->
           </div>
         </div>
       </nuxt-link>
@@ -72,6 +82,11 @@ export default {
         4: 'Other'
       }
     }
+  },
+  methods: {
+    print (x) {
+      console.log(x)
+    }
   }
 }
 </script>
@@ -93,5 +108,9 @@ export default {
   }
   .media {
     flex-wrap: wrap;
+  }
+  .icon {
+      height: 40px;
+      width: 40px;
   }
 </style>

@@ -110,7 +110,11 @@ export default {
         'faTimes',
         'faCheck',
         'faInfoCircle',
-        'faHandPaper'
+        'faHandPaper',
+        'faExternalLinkAlt',
+        'faArrowUp',
+        'faArrowDown',
+        'faMinus'
       ]
     }
   },

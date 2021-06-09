@@ -26,21 +26,14 @@
                 <div class="tag" v-else>N/A</div>
               </small>
               <small class="mr-1">&nbsp;by <nuxt-link :to="'/account/'+proposal.author">{{ proposal.author }}</nuxt-link></small>
-              <small>requesting <span v-for="(pay, index) in proposal.pay" :key="index"><span v-if="index > 0">,</span> {{ parseInt(pay.field_0.quantity) }} EFX</span></small>
+              <small><span v-for="(pay, index) in proposal.pay" :key="index"><span v-if="index > 0">,</span> {{ $wallet.formatNumber(parseInt(pay.field_0.quantity)) }} EFX</span></small>
             </div>
           </div>
           <div class="column is-2 has-text-left-mobile has-text-right-desktop has-text-left-tablet">
             <div class="tag" :class="{'is-success': proposal.status == 'ACTIVE', 'is-warning': proposal.status == 'DRAFT', 'is-link': proposal.status == 'PENDING', 'is-dark': proposal.status == 'CLOSED'}">{{ proposal.status }}</div>
-            <!-- <span class="tag is-success" v-if="proposal.state === 3">EXECUTED</span> -->
-            <!-- <span class="tag is-danger" v-if="proposal.state === 2">REJECTED</span> -->
-            <!-- <span class="tag is-success" v-if="proposal.state === 1">ACCEPTED</span> -->
-            <!-- <div class="is-size-7" v-if="(proposal.status ==='ACTIVE' || proposal.status ==='CLOSED')"> -->
-               <!-- <span v-for="result in proposal.vote_counts" :key="result.key" class="vote-result"> -->
-                 <!-- <small> -->
-                   <!-- <b :class="{'has-text-success': result.key === 1, 'has-text-danger': result.key === 2}" :data-tooltip="voteTypes.find((vt) => vt.value == result.key).fullName + ': ' + result.value">{{ voteTypes.find((vt) => vt.value == result.key).name }}: {{ $wallet.formatNumber(result.value) }}</b> -->
-                 <!-- </small> -->
-              <!-- </span> -->
-            <!-- </div> -->
+            <!-- <span class="tag is-success" v-if="proposal.state === 3">EXECUTED</span>
+            <span class="tag is-danger" v-if="proposal.state === 2">REJECTED</span>
+            <span class="tag is-success" v-if="proposal.state === 1">ACCEPTED</span> -->
           </div>
         </div>
       </nuxt-link>

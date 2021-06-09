@@ -110,7 +110,7 @@ export default {
     flex-wrap: wrap;
   }
   .icon {
-      height: 40px;
+      height: 23px;
       width: 40px;
   }
 </style>

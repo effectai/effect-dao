@@ -38,7 +38,7 @@
           </tbody>
         </table>
       </div>
-      <pie-chart v-if="!loading" :data="chartData" :options="chartOptions" />
+      <pie-chart v-if="!loadingBalances" :data="chartData" :options="chartOptions" />
     </div>
     <div class="box">
       <h4 class="box-title subtitle">
@@ -173,9 +173,10 @@ export default {
   },
   data () {
     return {
-      loading: true,
+      loadingBalances: false,
       totalVoteWeight: 0,
       totalMembers: 300,
+      nextCycleStartDate: '...',
       membersLowerBound: '13528614985990483600', // Hardcode lower bound from 300 members to minimize amount of fetches
       balances: {
         daoBalance: 0,
@@ -238,6 +239,16 @@ export default {
       }
     }
   },
+  watch: {
+    // eslint-disable-next-line
+    '$dao.cycleConfig': function (value) {
+      console.log('cycle config ready')
+      if (value) {
+        this.getTotalVoteWeight()
+        this.getNextCycleDate()
+      }
+    }
+  },
   computed: {
     lastCycleId () {
       return (this.$dao.cycleConfig) ? this.$dao.cycleConfig.id - 1 : null
@@ -255,14 +266,14 @@ export default {
         //   value: 97
         // },
         {
-          name: 'Total Vote Weight',
+          name: 'Total Vote Weight Last Cycle',
           description: '',
           value: this.totalVoteWeight
         },
         {
           name: 'Next Cycle',
           description: '',
-          value: '9-4-2021'
+          value: this.nextCycleStartDate
         },
         {
           name: 'Distribution Strategy',
@@ -359,19 +370,21 @@ export default {
       ]
     }
   },
-  async mounted () {
-    await this.getBalances()
-    await this.getTotalVoteWeight()
+  mounted () {
+    this.getBalances()
+    this.getTotalVoteWeight()
+    this.getNextCycleDate()
     this.getDaoMembers()
-    this.loading = false
   },
   methods: {
     async getBalances () {
+      this.loadingBalances = true
       const circSupply = parseInt((await fetch('https://www.api.bloks.io/tokens/EFX-eos-effecttokens').then(data => data.json()))[0].supply.circulating)
       this.balances.daoBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'treasury.efx', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.stakeBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'efxstakepool', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.liquidBalance = circSupply - this.balances.daoBalance - this.balances.stakeBalance - this.balances.liquidityBalance - this.balances.foundationBalance
       this.balances.unswappedBalance = 650000000 - (this.balances.liquidBalance + this.balances.stakeBalance + this.balances.foundationBalance + this.balances.teamBalance + this.balances.liquidityBalance + this.balances.daoBalance)
+      this.loadingBalances = false
     },
 
     // FIXME is this still right?
@@ -386,6 +399,15 @@ export default {
 
       if (cycleData && cycleData.rows.length > 0) {
         this.totalVoteWeight = cycleData.rows[0].total_vote_weight
+      }
+    },
+    getNextCycleDate () {
+      if (this.$dao.proposalConfig && this.$dao.cycleConfig) {
+        const lengthCycleSeconds = this.$dao.proposalConfig.cycle_duration_sec
+        const nextCycleStartDate = new Date(this.$dao.cycleConfig.start_time)
+        nextCycleStartDate.setSeconds(nextCycleStartDate.getSeconds() + lengthCycleSeconds)
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+        this.nextCycleStartDate = nextCycleStartDate.toLocaleDateString('en-US', options)
       }
     },
     async getDaoMembers () {

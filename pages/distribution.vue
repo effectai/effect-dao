@@ -229,7 +229,8 @@ export default {
       const feeData = await this.$eos.rpc.get_table_rows({
         code: process.env.feepoolContract,
         scope: process.env.feepoolContract,
-        table: 'balance'
+        table: 'balance',
+        limit: 20
       })
 
       if (feeData && feeData.rows.length > 0) {

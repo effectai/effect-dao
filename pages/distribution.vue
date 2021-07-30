@@ -256,7 +256,8 @@ export default {
           key_type: 'i64',
           index_position: 3,
           lower_bound: this.lastCycleId,
-          upper_bound: this.lastCycleId
+          upper_bound: this.lastCycleId,
+          limit: 50
         })
 
         if (proposalData && proposalData.rows.length > 0) {

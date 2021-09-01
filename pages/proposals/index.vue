@@ -94,6 +94,8 @@
 </template>
 
 <script>
+// import Long from 'long'
+// import { Serialize } from 'eosjs'
 import Proposals from '~/components/Proposals'
 import ConnectWallet from '~/components/ConnectWallet'
 
@@ -196,6 +198,14 @@ export default {
   },
 
   methods: {
+    bytesToHex (bytes) {
+      let hex = ''
+      for (const b of bytes) {
+        const n = Number(b).toString(16)
+        hex += (n.length === 1 ? '0' : '') + n
+      }
+      return hex
+    },
     async getProposals () {
       this.loading = true
       if (this.$dao.proposalConfig) {
@@ -245,6 +255,27 @@ export default {
               } catch (e) {
                 console.error(e)
               }
+            }
+            if (proposal.status === 'ACTIVE') {
+              // proposal.id works
+              const name = this.wallet.accountInfo.account_name
+              // const buf = new Serialize.SerialBuffer()
+              // buf.reserve(64)
+              // buf.pushName(name)
+              const nameHex = this.bytesToHex(Buffer.from(name))
+              const proposalHex = this.bytesToHex(Buffer.from(proposal.id))
+              const hex = `0x${proposalHex}${nameHex}`
+              const voteData = await this.$eos.rpc.get_table_rows({
+                code: process.env.proposalContract,
+                scope: process.env.proposalContract,
+                table: 'vote',
+                key_type: 'i64',
+                index_position: 2,
+                lower_bound: hex,
+                upper_bound: hex,
+                limit: 10
+              })
+              console.log(voteData, proposal.id, name, hex)
             }
           })
         } catch (e) {

@@ -153,8 +153,6 @@
 
 <script>
 import ICountUp from 'vue-countup-v2'
-import Long from 'long'
-import { Serialize } from 'eosjs'
 
 export default {
   components: {
@@ -284,7 +282,7 @@ export default {
 
       if (this.accountName) {
         proposalIds.map(async (proposalId) => {
-          const compositeKey = this.getCompositeKey(this.accountName, proposalId)
+          const compositeKey = this.$helpers.getCompositeKey(this.accountName, proposalId)
           const claimData = await this.$eos.rpc.get_table_rows({
             code: process.env.proposalContract,
             scope: process.env.proposalContract,
@@ -304,7 +302,7 @@ export default {
     getClaims (balances) {
       if (this.accountName) {
         balances.map(async (balance) => {
-          const compositeKey = this.getCompositeKey(this.accountName, balance.cycle_id)
+          const compositeKey = this.$helpers.getCompositeKey(this.accountName, balance.cycle_id)
           const claimData = await this.$eos.rpc.get_table_rows({
             code: process.env.feepoolContract,
             scope: process.env.feepoolContract,
@@ -322,22 +320,6 @@ export default {
           }
         })
       }
-    },
-    bytesToHex (bytes) {
-      let hex = ''
-      for (const b of bytes) {
-        const n = Number(b).toString(16)
-        hex += (n.length === 1 ? '0' : '') + n
-      }
-      return hex
-    },
-    getCompositeKey (name, cycle) {
-      const buf = new Serialize.SerialBuffer()
-      buf.reserve(64)
-      buf.pushName(name)
-      const nameHex = this.bytesToHex(buf.getUint8Array(8)).match(/../g).reverse().join('')
-      const cycleHex = this.bytesToHex(Long.fromNumber(cycle).toBytes())
-      return `0x${cycleHex}${nameHex}`
     },
     getUserCycleClaim (cycleId) {
       return (this.claims[cycleId]) ? this.claims[cycleId] : 0

@@ -126,7 +126,8 @@ export default {
     { src: '@/plugins/dao.js', mode: 'client' },
     '@/plugins/modal.js',
     '@/plugins/eos.js',
-    '@/plugins/airdrop.js'
+    '@/plugins/airdrop.js',
+    '@/plugins/helpers.js'
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)

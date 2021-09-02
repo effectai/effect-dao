@@ -31,6 +31,7 @@
           </div>
           <div class="column is-2 has-text-left-mobile has-text-right-desktop has-text-left-tablet">
             <div class="tag" :class="{'is-success': proposal.status == 'ACTIVE', 'is-warning': proposal.status == 'DRAFT', 'is-link': proposal.status == 'PENDING', 'is-dark': proposal.status == 'CLOSED'}">{{ proposal.status }}</div>
+            <div v-if="proposal.vote_status" class="tag" :class="{'is-success': proposal.vote_status == 1, 'is-secondary': proposal.vote_status == 0, 'is-danger': proposal.vote_status == 2}">VOTED: {{ (voteTypes.find((vt) => vt.value === proposal.vote_status)).fullName.toUpperCase() }}</div>
             <!-- <span class="tag is-success" v-if="proposal.state === 3">EXECUTED</span>
             <span class="tag is-danger" v-if="proposal.state === 2">REJECTED</span>
             <span class="tag is-success" v-if="proposal.state === 1">ACCEPTED</span> -->

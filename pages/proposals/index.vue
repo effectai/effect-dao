@@ -245,7 +245,7 @@ export default {
                 console.error(e)
               }
             }
-            if (proposal.status === 'ACTIVE') {
+            if (proposal.status === 'ACTIVE' && this.wallet) {
               const name = this.wallet.accountInfo.account_name
               const hex = this.$helpers.getCompositeKey(name, proposal.id)
               const voteData = await this.$eos.rpc.get_table_rows({

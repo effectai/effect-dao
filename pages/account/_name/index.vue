@@ -208,7 +208,6 @@ export default {
           this.moreProposals = data.more
           this.nextKey = data.next_key
           this.proposals = data.rows.filter(proposal => proposal.author === this.account.name)
-          console.log(data.rows)
           this.proposals.forEach(async (proposal) => {
             let status = 'CLOSED'
             if (proposal.state === 0) {

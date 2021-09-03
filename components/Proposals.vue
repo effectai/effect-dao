@@ -52,15 +52,6 @@
 </template>
 <script>
 export default {
-  filters: {
-    truncate (string, value) {
-      if (string.length <= value) {
-        return string
-      }
-
-      return string.substring(0, value) + '…'
-    }
-  },
   props: ['proposals'],
   data () {
     return {

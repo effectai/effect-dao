@@ -1,9 +1,17 @@
 import Long from 'long'
-import {
-  Serialize
-} from 'eosjs'
+import Serialize from 'eosjs'
+import Vue from 'vue'
+
+Vue.filter('truncate', (string, value) => helpers.truncate(string, value))
 
 const helpers = {
+  truncate (string, value) {
+    if (string.length <= value) {
+      return string
+    }
+    return string.substring(0, value) + '…'
+  },
+
   bytesToHex (bytes) {
     let hex = ''
     for (const b of bytes) {

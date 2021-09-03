@@ -1,5 +1,5 @@
 import Long from 'long'
-import Serialize from 'eosjs'
+import { Serialize } from 'eosjs'
 import Vue from 'vue'
 
 Vue.filter('truncate', (string, value) => helpers.truncate(string, value))

@@ -33,6 +33,11 @@
               </nuxt-link>
             </div>
             <div @click="mobileMenu = false">
+              <nuxt-link class="navbar-item" to="/constitution" exact-active-class="is-active">
+                Constitution
+              </nuxt-link>
+            </div>
+            <div @click="mobileMenu = false">
               <nuxt-link class="navbar-item" to="/proposals" exact-active-class="is-active">
                 Proposals
               </nuxt-link>

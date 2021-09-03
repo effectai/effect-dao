@@ -25,7 +25,9 @@ export default {
     efxToken: 'EFX',
     nfxToken: 'NFX',
     discordGuildId: '519860537891487745',
-    discordInviteUrl: 'https://discord.gg/hM3237cYXP'
+    discordInviteUrl: 'https://discord.gg/hM3237cYXP',
+    constitutionUrl: 'https://raw.githubusercontent.com/effectai/effect-network-eos/9522a000cf96269912a47fdd4653c14ac26bbf61/constitution/constitution.md',
+
   },
 
   // Kylin Developement
@@ -45,7 +47,9 @@ export default {
   //   efxToken: 'UTL',
   //   nfxToken: 'GRN',
   //   discordGuildId: '519860537891487745',
-  //   discordInviteUrl: 'https://discord.gg/hM3237cYXP'
+  //   discordInviteUrl: 'https://discord.gg/hM3237cYXP',
+  //   constitutionUrl: 'https://raw.githubusercontent.com/effectai/effect-network-eos/9522a000cf96269912a47fdd4653c14ac26bbf61/constitution/constitution.md'
+
   // },
 
   // Local Developement
@@ -77,7 +81,9 @@ export default {
   //   efxToken: 'EFX',
   //   nfxToken: 'NFX',
   //   discordGuildId: '519860537891487745',
-  //   discordInviteUrl: 'https://discord.gg/hM3237cYXP'
+  //   discordInviteUrl: 'https://discord.gg/hM3237cYXP',
+  //   constitutionUrl: 'https://raw.githubusercontent.com/effectai/effect-network-eos/9522a000cf96269912a47fdd4653c14ac26bbf61/constitution/constitution.md'
+
   // },
 
   // Global page headers (https://go.nuxtjs.dev/config-head)

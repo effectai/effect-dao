@@ -221,7 +221,7 @@ export default {
             }
             this.$set(proposal, 'status', status)
             try {
-              const ipfsProposal = await this.$dao.getIpfsProposal(proposal.content_hash)
+              const ipfsProposal = await this.$dao.getIpfsContent(proposal.content_hash)
               this.$set(proposal, 'title', ipfsProposal.title)
             } catch (e) {
               console.error(e)

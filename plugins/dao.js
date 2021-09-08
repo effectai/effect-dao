@@ -71,7 +71,7 @@ export default (context, inject) => {
           return data.rows[0]
         }
       },
-      async getIpfsProposal (hash) {
+      async getIpfsContent (hash) {
         await new Promise(resolve => setTimeout(resolve, 1000))
         const data = await fetch(process.env.ipfsExplorer + '/ipfs/' + hash)
         return data.json()

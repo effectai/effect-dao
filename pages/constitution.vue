@@ -1,7 +1,6 @@
 <template>
   <span v-if="loading">Loading constitution..</span>
   <div v-else v-html="$md.render(constitution)" />
-  <!-- <div>hello</div> -->
 </template>
 
 <script>

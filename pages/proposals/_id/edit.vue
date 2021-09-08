@@ -249,7 +249,7 @@ export default {
         this.proposal = data.rows[0]
         this.$set(this.proposal, 'reward', parseFloat(this.proposal.pay[0].field_0.quantity))
 
-        const ipfsProposal = await this.$dao.getIpfsProposal(this.proposal.content_hash)
+        const ipfsProposal = await this.$dao.getIpfsContent(this.proposal.content_hash)
         this.proposalIpfs = ipfsProposal
         if (!this.proposalIpfs.files) {
           this.$set(this.proposalIpfs, 'files', [])

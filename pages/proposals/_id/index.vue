@@ -122,7 +122,7 @@
           </h5>
           <div v-if="votes && votes.length">
             <div v-for="vote in votes" :key="vote.id + vote.voter" class="columns is-vcentered is-mobile">
-              <div class="column is-6">
+              <div class="column is-5">
                 <div class="is-flex is-align-items-center">
                   <div class="image is-32x32 is-rounded mr-2">
                     <avatar :account-name="vote.voter" />
@@ -135,8 +135,11 @@
               <div class="column is-3 has-text-centered">
                 <b :class="{'has-text-success': vote.type === 1, 'has-text-danger': vote.type === 2}">{{ voteTypes.find((vt) => vt.value === vote.type).name }}</b>
               </div>
-              <div class="column is-3 has-text-centered" :data-tooltip="'Vote-weight: ' + vote.weight">
+              <div class="column is-2 has-text-centered" :data-tooltip="'Vote-weight: ' + vote.weight">
                 <b>{{ $wallet.formatNumber(vote.weight) }}</b>
+              </div>
+              <div v-if="vote.comment_hash.length > 0" class="column is-2 has-text-centered" :data-tooltip="vote.comment">
+                <font-awesome-icon :icon="['fas', 'comment-dots']" />
               </div>
             </div>
           </div>
@@ -446,7 +449,7 @@ export default {
             }
           }
           this.$set(this.proposal, 'status', status)
-          const ipfsProposal = await this.$dao.getIpfsProposal(this.proposal.content_hash)
+          const ipfsProposal = await this.$dao.getIpfsContent(this.proposal.content_hash)
           this.$set(this.proposal, 'title', ipfsProposal.title)
           this.$set(this.proposal, 'body', ipfsProposal.body)
           this.$set(this.proposal, 'files', ipfsProposal.files ? ipfsProposal.files : [])
@@ -464,7 +467,7 @@ export default {
       }
     },
     async createCommentHash () {
-      if (this.comment == null) { return '' }
+      if (this.comment == null || this.comment === '') { return '' }
       const blob = new Blob([JSON.stringify(this.comment)], { type: 'text/json' })
       const formData = new FormData()
       formData.append('file', blob)
@@ -518,6 +521,14 @@ export default {
           // this.moreVotes = data.more
           // this.nextKey = data.next_key
           this.votes = data.rows
+          this.votes.forEach(async (vote) => {
+            if (vote.comment_hash.length > 0) {
+              const comment = await this.$dao.getIpfsContent(vote.comment_hash)
+              this.$set(vote, 'comment', comment)
+            } else {
+              this.$set(vote, 'comment', null)
+            }
+          })
           // if (!this.votes) {
           //   this.votes = data.rows
           // } else {
@@ -531,10 +542,6 @@ export default {
             text: e
           })
         }
-        // if (this.moreProposals) {
-        //   this.getProposals()
-        // }
-        // this.loadingVotes = false
       }
     },
     async vote () {
@@ -550,8 +557,8 @@ export default {
           data: {
             voter: this.wallet.auth.accountName,
             prop_id: this.proposal.id,
-            vote_type: this.vote_type
-            // comment_hash: hash
+            vote_type: this.vote_type,
+            comment_hash: hash
           }
         }]
         try {
@@ -561,7 +568,7 @@ export default {
               color: 'success',
               title: 'Vote Submitted',
               persistent: false,
-              text: `Your vote for the proposal is sent!\nComment hash: ${await hash}`,
+              text: 'Your vote for the proposal is sent!',
               cancel: false,
               onConfirm: () => {
                 this.getProposal(this.id)

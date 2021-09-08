@@ -138,8 +138,8 @@
               <div class="column is-2 has-text-centered" :data-tooltip="'Vote-weight: ' + vote.weight">
                 <b>{{ $wallet.formatNumber(vote.weight) }}</b>
               </div>
-              <div v-if="vote.comment_hash.length > 0" class="column is-2 has-text-centered" :data-tooltip="vote.comment">
-                <font-awesome-icon :icon="['fas', 'comment-dots']" />
+              <div v-if="vote.comment_hash.length > 0" class="column is-2 has-text-centered">
+                <a @click.prevent="commentModal(vote)"><font-awesome-icon :icon="['fas', 'comment-dots']"/></a>
               </div>
             </div>
           </div>
@@ -467,6 +467,7 @@ export default {
       }
     },
     async createCommentHash () {
+      this.comment = this.sanitize(this.comment)
       if (this.comment == null || this.comment === '') { return '' }
       const blob = new Blob([JSON.stringify(this.comment)], { type: 'text/json' })
       const formData = new FormData()
@@ -500,6 +501,10 @@ export default {
         }
       }
     },
+    sanitize (str) {
+      const arr = str.trim().split(' ')
+      return arr.filter(n => n).join(' ')
+    },
     async getVotes (id) {
       // this.loading = true
       if (this.$dao.proposalConfig) {
@@ -521,14 +526,6 @@ export default {
           // this.moreVotes = data.more
           // this.nextKey = data.next_key
           this.votes = data.rows
-          this.votes.forEach(async (vote) => {
-            if (vote.comment_hash.length > 0) {
-              const comment = await this.$dao.getIpfsContent(vote.comment_hash)
-              this.$set(vote, 'comment', comment)
-            } else {
-              this.$set(vote, 'comment', null)
-            }
-          })
           // if (!this.votes) {
           //   this.votes = data.rows
           // } else {
@@ -542,6 +539,17 @@ export default {
             text: e
           })
         }
+      }
+    },
+    async commentModal (vote) {
+      if (vote.comment_hash.length > 0) {
+        const comment = await this.$dao.getIpfsContent(vote.comment_hash)
+        this.$modal.show({
+          color: 'default',
+          title: `Comment | ${vote.voter}`,
+          persistent: false,
+          text: comment
+        })
       }
     },
     async vote () {

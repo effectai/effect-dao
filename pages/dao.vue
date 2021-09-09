@@ -134,7 +134,10 @@
       </div>
     </div>
     <div v-if="signedConstitution" class="has-text-centered mt-6">
-      <small><a href="#" @click="constitutionLeaveModal = true">Leave DAO</a></small>
+      <small>
+        <nuxt-link to="/constitution">View Constitution</nuxt-link>
+        <a href="#" @click="constitutionLeaveModal = true">Leave DAO</a>
+      </small>
     </div>
   </div>
 </template>
@@ -334,6 +337,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+small a:first-child {
+  margin-right: 10px
+}
 .constitution-modal {
   .modal-card {
     max-width: 800px;

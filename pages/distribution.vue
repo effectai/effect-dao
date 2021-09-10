@@ -121,6 +121,10 @@
               </thead>
               <tbody>
                 <tr>
+                  <td>Effect Network Fee Distribution III</td>
+                  <td>{{ q1q2Airdrop.toFixed(0) }} EFX</td>
+                </tr>
+                <tr>
                   <td>Effect Network Fee Distribution II</td>
                   <td>{{ genesisAirdrop.toFixed(0) }} EFX</td>
                 </tr>
@@ -200,6 +204,9 @@ export default {
     },
     canClaim () {
       return (this.claimOverride) ? this.claimOverride : !this.claims[this.lastCycleId] && this.lastCycleUserFees > 0 && isFinite(this.lastCycleUserFees)
+    },
+    q1q2Airdrop () {
+      return this.$wallet.q1q2Airdrop
     },
     genesisAirdrop () {
       return this.$wallet.genesisAirdrop

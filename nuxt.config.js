@@ -125,8 +125,7 @@ export default {
     { src: '@/plugins/wallet.js', mode: 'client' },
     { src: '@/plugins/dao.js', mode: 'client' },
     '@/plugins/modal.js',
-    '@/plugins/eos.js',
-    '@/plugins/airdrop.js'
+    '@/plugins/eos.js'
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)

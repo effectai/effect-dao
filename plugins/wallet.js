@@ -1,4 +1,6 @@
 import Vue from 'vue'
+import genesisAirdrop from '@/static/json/genesis_airdrop.json'
+import q1q2Airdrop from '@/static/json/q1_q2_airdrop.json'
 
 export default (context, inject) => {
   const wallet = new Vue({
@@ -25,6 +27,9 @@ export default (context, inject) => {
         updater: null,
         refreshStakeAge: true,
 
+        genesis: genesisAirdrop,
+        q1q2: q1q2Airdrop,
+
         transaction: null,
         transactionError: null
       }
@@ -35,12 +40,12 @@ export default (context, inject) => {
         return context.$eos
       },
 
-      airdrop () {
-        return context.$airdrop
+      genesisAirdrop () {
+        return (this.wallet && this.wallet.auth && this.genesis[this.wallet.auth.accountName]) ? this.genesis[this.wallet.auth.accountName].amount : 0
       },
 
-      genesisAirdrop () {
-        return (this.wallet && this.wallet.auth && this.airdrop.genesis[this.wallet.auth.accountName]) ? this.airdrop.genesis[this.wallet.auth.accountName].amount : 0
+      q1q2Airdrop () {
+        return (this.wallet && this.wallet.auth && this.q1q2[this.wallet.auth.accountName]) ? this.q1q2[this.wallet.auth.accountName].amount : 0
       },
 
       // Check if user still has unclaimed NFX before NFX generation stop date

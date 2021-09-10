@@ -101,7 +101,11 @@ export default {
     Proposals,
     ConnectWallet
   },
-
+  head () {
+    return {
+      title: 'Proposals'
+    }
+  },
   data () {
     return {
       filter: 'ACTIVE',

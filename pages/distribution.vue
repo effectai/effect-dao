@@ -158,7 +158,11 @@ export default {
   components: {
     ICountUp
   },
-
+  head () {
+    return {
+      title: 'Distribution'
+    }
+  },
   data () {
     return {
       loading: true,

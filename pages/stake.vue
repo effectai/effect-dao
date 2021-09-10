@@ -304,7 +304,11 @@ export default {
       return `${Math.floor(vm.$moment.duration(seconds, 'seconds').asDays())}:${vm.$moment.duration(seconds, 'seconds').hours()}:${vm.$moment.duration(seconds, 'seconds').minutes()}:${vm.$moment.duration(seconds, 'seconds').seconds()}`
     }
   },
-
+  head () {
+    return {
+      title: 'Staking'
+    }
+  },
   data () {
     return {
       loading: false,

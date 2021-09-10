@@ -89,11 +89,70 @@ export default {
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
     titleTemplate: '%s - Effect Dashboard',
-    title: 'Effect Dashboard',
+    title: 'Effect DAO',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' }
+      {
+        hid: 'description',
+        name: 'description',
+        content: 'Decentralized Proposals and voting. Power to the people.'
+      },
+      {
+        hid: 'og:url',
+        property: 'og:url',
+        content: 'https://dao.effect.network/'
+      },
+      {
+        hid: 'og:type',
+        property: 'og:type',
+        content: 'website'
+      },
+      {
+        hid: 'og:title',
+        property: 'og:title',
+        content: 'Effect Dashboard'
+      },
+      {
+        hid: 'og:description',
+        property: 'og:description',
+        content: 'Decentralized Proposals and voting. Power to the people.'
+      },
+      {
+        hid: 'og:image',
+        property: 'og:image',
+        content: 'https://effect.network/_nuxt/img/effect-dao_h100.62b6528.png'
+      },
+      {
+        hid: 'twitter:card',
+        name: 'twitter:card',
+        content: 'summary_large_image'
+      },
+      {
+        hid: 'twitter:domain',
+        property: 'twitter:domain',
+        content: 'dao.effect.network'
+      },
+      {
+        hid: 'twitter:url',
+        property: 'twitter:url',
+        content: 'https://dao.effect.network/'
+      },
+      {
+        hid: 'twitter:title',
+        name: 'twitter:title',
+        content: 'Effect Dashboard'
+      },
+      {
+        hid: 'twitter:description',
+        property: 'twitter:description',
+        content: 'Decentralized Proposals and voting. Power to the people.'
+      },
+      {
+        hid: 'twitter:image',
+        property: 'twitter:image',
+        content: 'https://effect.network/_nuxt/img/effect-dao_h100.62b6528.png'
+      }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -120,8 +179,9 @@ export default {
         'faExternalLinkAlt',
         'faArrowUp',
         'faArrowDown',
-        'faMinus'
-      ]
+        'faMinus',
+        'faCommentDots'
+      ],
     }
   },
 

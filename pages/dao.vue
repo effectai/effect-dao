@@ -154,7 +154,11 @@ export default {
     Votes,
     Avatar
   },
-
+  head () {
+    return {
+      title: 'The DAO'
+    }
+  },
   data () {
     return {
       loading: false,

@@ -136,6 +136,11 @@ export default {
     VueSimplemde
   },
   middleware: ['authenticated'],
+  head () {
+    return {
+      title: 'New Proposal'
+    }
+  },
   data () {
     let proposal = window.localStorage.getItem('cached_proposal')
     let proposalIpfs = window.localStorage.getItem('cached_proposalIpfs')

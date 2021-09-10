@@ -103,7 +103,11 @@ export default {
     ICountUp,
     Proposals
   },
-
+  head () {
+    return {
+      title: this.account.name + '\'s Account'
+    }
+  },
   data () {
     return {
       loadingLogout: false,

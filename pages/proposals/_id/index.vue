@@ -247,7 +247,7 @@ export default {
       ipfsExplorer: process.env.ipfsExplorer,
       loading: false,
       modalVisible: false,
-      proposal: null,
+      proposal: undefined,
       proposalCycle: null,
       id: this.$route.params.id,
       vote_type: null,
@@ -276,7 +276,11 @@ export default {
       }
     }
   },
-
+  head () {
+    return {
+      title: 'Proposal ' + this.id
+    }
+  },
   computed: {
     wallet () {
       return (this.$wallet) ? this.$wallet.wallet : null

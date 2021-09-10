@@ -185,6 +185,11 @@ export default {
       return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
     }
   },
+  head () {
+    return {
+      title: 'Edit Proposal ' + this.id
+    }
+  },
   data () {
     return {
       id: this.$route.params.id,

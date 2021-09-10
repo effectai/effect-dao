@@ -10,7 +10,11 @@ export default {
 
   components: {
   },
-
+  head () {
+    return {
+      title: 'Constitution'
+    }
+  },
   data () {
     return {
       loading: false,

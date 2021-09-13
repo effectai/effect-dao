@@ -19,7 +19,7 @@
             </ul>
           </div>
           <div v-if="preview" class="p-2">
-            <div v-html="$md.render(proposalIpfs.body)" />
+            <div class="content" v-html="$md.render(proposalIpfs.body)" />
           </div>
           <div class="control" v-else>
             <vue-simplemde required v-model="proposalIpfs.body" ref="markdownEditor" :configs="{promptURLs: true, spellChecker: false}" />

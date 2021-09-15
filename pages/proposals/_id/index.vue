@@ -251,7 +251,7 @@ export default {
       loading: false,
       modalVisible: false,
       proposal: undefined,
-      hideComment: false,
+      hideComment: true,
       proposalCycle: null,
       id: this.$route.params.id,
       vote_type: null,

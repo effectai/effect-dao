@@ -80,10 +80,10 @@
               </div>
             </div>
             <div class="rows">
-              <div class="has-text-centered mb-4">
-                <span>Comment below</span>
+              <div class="has-text-centered mb-4" v-if="!hideComment">
+                <span>Comment section</span>
               </div>
-              <textarea class="control row" v-model="comment" cols="30" rows="4"></textarea>
+              <textarea v-if="!hideComment" class="control row" v-model="comment" cols="30" rows="4"></textarea>
             </div>
           </div>
           <div>
@@ -98,6 +98,9 @@
               <span v-else-if="wallet.nfxStillClaimable">Claim NFX before you can vote</span>
               <span v-else>Vote</span>
             </button>
+            <small>
+              <a href="#" class="comment-button" v-on:click.prevent="hideComment = !hideComment">Toggle comment section</a>
+            </small>
           </div>
         </div>
         <div v-else class="box mt-5 faded">
@@ -248,6 +251,7 @@ export default {
       loading: false,
       modalVisible: false,
       proposal: undefined,
+      hideComment: false,
       proposalCycle: null,
       id: this.$route.params.id,
       vote_type: null,
@@ -616,6 +620,11 @@ export default {
     margin-bottom: 12px;
   }
 
+  small {
+    .comment-button {
+    font-size: 0.7em;
+    }
+  }
   textarea {
     width: 100%;
   }

@@ -58,7 +58,7 @@
 
     <div v-if="!loading && (!wallet || !wallet.auth)" class="has-text-centered is-outlined is-primary mb-0 has-text-weight-bold notif-w-btn">
       <!-- <div class="notif-btn">
-        <a class="button is-secondary" @click="$wallet.loginModal = true">
+        <a class="button is-primary" @click="$wallet.loginModal = true">
           <strong>Connect Wallet</strong>
         </a>
       </div> -->
@@ -76,7 +76,7 @@
       </div>
       <br>
       <div class="notif-btn">
-        <button class="button is-secondary" @click="downloadConstitution(); constitutionModal = true">
+        <button class="button is-primary" @click="downloadConstitution(); constitutionModal = true">
           Become a member
         </button>
       </div>
@@ -90,7 +90,7 @@
         The constitution has been updated to V{{ constitutionVersion }}, sign it to remain a DAO member!
       </div>
       <div class="is-pulled-right notif-btn">
-        <button class="button is-secondary" @click="downloadConstitution(); constitutionModal = true">
+        <button class="button is-primary" @click="downloadConstitution(); constitutionModal = true">
           Sign
         </button>
       </div>

@@ -496,7 +496,7 @@ export default {
             voter: this.wallet.auth.accountName,
             prop_id: this.proposal.id,
             vote_type: this.vote_type,
-            comment_hash: ''
+            comment_hash: null
           }
         }]
         try {

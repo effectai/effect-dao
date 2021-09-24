@@ -238,7 +238,7 @@
                 :show-percent="false"
               >
                 <div class="value-circle">
-                  <h1 class="title">{{ stakeAge / (1000 * 24 * 3600) | percentage(1) }}<span class="has-text-weight-light">%</span></h1>
+                  <h1 class="has-text-weight-bold is-size-4">{{ stakeAge / (1000 * 24 * 3600) | percentage(1) }}<span class="has-text-weight-light">%</span></h1>
                   <div class="age-amount">
                     {{ stakeAge | formatSeconds(this) }}
                   </div>

@@ -146,7 +146,7 @@ export default {
     float: right;
     border: 1px solid #1148EB;
     border-radius: 4px;
-    background: #1148EB;
+    background: #101D56;
     color: #FFF;
     font-weight: bold;
     font-size: 14px;

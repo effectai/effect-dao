@@ -141,7 +141,7 @@
               <div class="column is-2 has-text-centered" :data-tooltip="'Vote-weight: ' + vote.weight">
                 <b>{{ $wallet.formatNumber(vote.weight) }}</b>
               </div>
-              <div v-if="vote.comment_hash.length > 0" class="column is-2 has-text-centered">
+              <div v-if="vote.comment_hash != null" class="column is-2 has-text-centered">
                 <a @click.prevent="commentModal(vote)"><font-awesome-icon :icon="['fas', 'comment-dots']"/></a>
               </div>
             </div>
@@ -475,8 +475,8 @@ export default {
       }
     },
     async createCommentHash () {
+      if (this.comment == null || this.comment === '') { return null }
       this.comment = this.sanitize(this.comment)
-      if (this.comment == null || this.comment === '') { return '' }
       const blob = new Blob([JSON.stringify(this.comment)], { type: 'text/json' })
       const formData = new FormData()
       formData.append('file', blob)
@@ -550,7 +550,7 @@ export default {
       }
     },
     async commentModal (vote) {
-      if (vote.comment_hash.length > 0) {
+      if (vote.comment_hash != null) {
         const comment = await this.$dao.getIpfsContent(vote.comment_hash)
         this.$modal.show({
           color: 'default',

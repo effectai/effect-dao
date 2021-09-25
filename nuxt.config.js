@@ -180,7 +180,8 @@ export default {
         'faArrowUp',
         'faArrowDown',
         'faMinus',
-        'faCommentDots'
+        'faCommentDots',
+        'faCheckSquare'
       ],
     }
   },

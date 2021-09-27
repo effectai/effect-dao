@@ -103,7 +103,11 @@ export default {
     ICountUp,
     Proposals
   },
-
+  head () {
+    return {
+      title: this.account.name + '\'s Account'
+    }
+  },
   data () {
     return {
       loadingLogout: false,
@@ -208,7 +212,6 @@ export default {
           this.moreProposals = data.more
           this.nextKey = data.next_key
           this.proposals = data.rows.filter(proposal => proposal.author === this.account.name)
-          console.log(data.rows)
           this.proposals.forEach(async (proposal) => {
             let status = 'CLOSED'
             if (proposal.state === 0) {
@@ -222,7 +225,7 @@ export default {
             }
             this.$set(proposal, 'status', status)
             try {
-              const ipfsProposal = await this.$dao.getIpfsProposal(proposal.content_hash)
+              const ipfsProposal = await this.$dao.getIpfsContent(proposal.content_hash)
               this.$set(proposal, 'title', ipfsProposal.title)
             } catch (e) {
               console.error(e)

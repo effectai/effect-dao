@@ -21,6 +21,11 @@
               #{{ proposal.id }}: {{ proposal.title | truncate(60) }}</b>
             <b v-else>...</b>
             <div class="has-text-weight-light">
+              <small v-if="Object.keys(proposal).includes('vote_status')" class="vote_indicator">
+                <span :class="{'is-dark': proposal.vote_status === 0, 'is-danger': proposal.vote_status === 2, 'is-success': proposal.vote_status === 1}" :data-tooltip="'You voted: ' + voteTypes.find((vt) => { vt.value === proposal.vote_status; return vt.name}).fullName">
+                  <font-awesome-icon :icon="['fas', 'check-square']" />
+                </span>
+              </small>
               <small>
                 <div class="tag" v-if="proposal.cycle">C{{ proposal.cycle }}</div>
                 <div class="tag" v-else>N/A</div>
@@ -45,15 +50,6 @@
 </template>
 <script>
 export default {
-  filters: {
-    truncate (string, value) {
-      if (string.length <= value) {
-        return string
-      }
-
-      return string.substring(0, value) + '…'
-    }
-  },
   props: ['proposals'],
   data () {
     return {
@@ -110,7 +106,10 @@ export default {
     flex-wrap: wrap;
   }
   .icon {
-      height: 23px;
-      width: 40px;
+    height: 23px;
+    width: 40px;
+  }
+  small.vote_indicator {
+    margin-left: 14px;
   }
 </style>

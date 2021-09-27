@@ -66,16 +66,24 @@
           <div v-else-if="myVote && proposal.status === 'CLOSED'">
             <b>You voted {{ myVote.voter }}:</b> {{ voteTypes.find((vt) => vt.value === myVote.type).name }} - {{ myVote.weight }}
           </div>
-          <div v-if="proposal.status === 'ACTIVE' && proposalCycle && $moment(proposalCycle.start_time + 'Z').add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isAfter()" class="columns">
-            <div v-for="voteType in voteTypes" :key="voteType.value" class="control column">
-              <button class="button is-fullwidth" :class="{'is-dark': voteType.value === 0, 'is-danger': voteType.value === 2, 'is-success': voteType.value === 1, 'is-outlined': vote_type !== voteType.value}" @click.prevent="vote_type = voteType.value">
-                <span class="icon">
-                  <font-awesome-icon v-if="voteType.value === 0" :icon="['fas', 'hand-paper']" />
-                  <font-awesome-icon v-else-if="voteType.value === 2" :icon="['fas', 'times']" />
-                  <font-awesome-icon v-else-if="voteType.value === 1" :icon="['fas', 'check']" />
-                </span>
-                <span>{{ voteType.name }}</span>
-              </button>
+          <div v-if="proposal.status === 'ACTIVE' && proposalCycle && $moment(proposalCycle.start_time + 'Z').add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isAfter()">
+            <div class="columns">
+              <div v-for="voteType in voteTypes" :key="voteType.value" class="control column">
+                <button class="button is-fullwidth" :class="{'is-dark': voteType.value === 0, 'is-danger': voteType.value === 2, 'is-success': voteType.value === 1, 'is-outlined': vote_type !== voteType.value}" @click.prevent="vote_type = voteType.value">
+                  <span class="icon">
+                    <font-awesome-icon v-if="voteType.value === 0" :icon="['fas', 'hand-paper']" />
+                    <font-awesome-icon v-else-if="voteType.value === 2" :icon="['fas', 'times']" />
+                    <font-awesome-icon v-else-if="voteType.value === 1" :icon="['fas', 'check']" />
+                  </span>
+                  <span>{{ voteType.name }}</span>
+                </button>
+              </div>
+            </div>
+            <div class="rows">
+              <div class="has-text-centered mb-4" v-if="!hideComment">
+                <span>Comment section</span>
+              </div>
+              <textarea v-if="!hideComment" class="control row" v-model="comment" cols="30" rows="4"></textarea>
             </div>
           </div>
           <div>
@@ -84,12 +92,15 @@
                 Sign new constitution
               </button>
             </NuxtLink>
-            <button v-else class="button is-primary is-fullwidth" :disabled="!votes || vote_type === null || !wallet || !wallet.auth || wallet.nfxStillClaimable || $wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1 " @click.prevent="vote">
+            <button v-else class="button is-primary is-fullwidth" :disabled="!votes || vote_type === null || !wallet || !wallet.auth || wallet.nfxStillClaimable || $wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1" @click.prevent="vote">
               <span v-if="!wallet || !wallet.auth">Not connected to wallet</span>
               <span v-else-if="$wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1">No voting power</span>
               <span v-else-if="wallet.nfxStillClaimable">Claim NFX before you can vote</span>
               <span v-else>Vote</span>
             </button>
+            <small>
+              <a href="#" class="comment-button" v-on:click.prevent="hideComment = !hideComment">Toggle comment section</a>
+            </small>
           </div>
         </div>
         <div v-else class="box mt-5 faded">
@@ -114,7 +125,7 @@
           </h5>
           <div v-if="votes && votes.length">
             <div v-for="vote in votes" :key="vote.id + vote.voter" class="columns is-vcentered is-mobile">
-              <div class="column is-6">
+              <div class="column is-5">
                 <div class="is-flex is-align-items-center">
                   <div class="image is-32x32 is-rounded mr-2">
                     <avatar :account-name="vote.voter" />
@@ -127,8 +138,11 @@
               <div class="column is-3 has-text-centered">
                 <b :class="{'has-text-success': vote.type === 1, 'has-text-danger': vote.type === 2}">{{ voteTypes.find((vt) => vt.value === vote.type).name }}</b>
               </div>
-              <div class="column is-3 has-text-centered" :data-tooltip="'Vote-weight: ' + vote.weight">
+              <div class="column is-2 has-text-centered" :data-tooltip="'Vote-weight: ' + vote.weight">
                 <b>{{ $wallet.formatNumber(vote.weight) }}</b>
+              </div>
+              <div v-if="vote.comment_hash != null" class="column is-2 has-text-centered">
+                <a @click.prevent="commentModal(vote)"><font-awesome-icon :icon="['fas', 'comment-dots']"/></a>
               </div>
             </div>
           </div>
@@ -235,10 +249,13 @@ export default {
       quorum: 0,
       ipfsExplorer: process.env.ipfsExplorer,
       loading: false,
-      proposal: null,
+      modalVisible: false,
+      proposal: undefined,
+      hideComment: true,
       proposalCycle: null,
       id: this.$route.params.id,
       vote_type: null,
+      comment: null,
       voteTypes: [
         {
           value: 1,
@@ -263,7 +280,11 @@ export default {
       }
     }
   },
-
+  head () {
+    return {
+      title: 'Proposal ' + this.id
+    }
+  },
   computed: {
     wallet () {
       return (this.$wallet) ? this.$wallet.wallet : null
@@ -436,17 +457,61 @@ export default {
             }
           }
           this.$set(this.proposal, 'status', status)
-          const ipfsProposal = await this.$dao.getIpfsProposal(this.proposal.content_hash)
+          const ipfsProposal = await this.$dao.getIpfsContent(this.proposal.content_hash)
           this.$set(this.proposal, 'title', ipfsProposal.title)
           this.$set(this.proposal, 'body', ipfsProposal.body)
           this.$set(this.proposal, 'files', ipfsProposal.files ? ipfsProposal.files : [])
           await this.getVotes(parseInt(id))
           await this.getQuorum(this.proposalCycle)
         } catch (e) {
-          console.log(e)
+          this.$modal.show({
+            color: 'danger',
+            title: 'Error',
+            persistent: true,
+            text: e
+          })
         }
         this.loading = false
       }
+    },
+    async createCommentHash () {
+      if (this.comment == null || this.comment === '') { return null }
+      this.comment = this.sanitize(this.comment)
+      const blob = new Blob([JSON.stringify(this.comment)], { type: 'text/json' })
+      const formData = new FormData()
+      formData.append('file', blob)
+      if (blob.size > 500) {
+        this.$modal.show({
+          color: 'danger',
+          title: 'Error',
+          persistent: true,
+          text: 'Comment cannot contain more than 500 characters.'
+        })
+        this.modalVisible = true
+      } else {
+        try {
+          const response = await fetch(`${process.env.ipfsNode}/api/v0/add?pin=true`,
+            {
+              method: 'POST',
+              body: formData
+            })
+          const comment = await response.json()
+          return comment.Hash
+        } catch (e) {
+          this.$modal.show({
+            color: 'danger',
+            title: 'Error',
+            persistent: true,
+            text: e
+          })
+          this.modalVisible = true
+          return ''
+        }
+      }
+    },
+    sanitize (str) {
+      const arr = str.trim().split(' ')
+      return arr.filter(n => n).join(' ')
     },
     async getVotes (id) {
       // this.loading = true
@@ -475,16 +540,29 @@ export default {
           //   this.votes = this.votes.concat(data.rows)
           // }
         } catch (e) {
-          console.log(e)
+          this.$modal.show({
+            color: 'danger',
+            title: 'Error',
+            persistent: true,
+            text: e
+          })
         }
-        // if (this.moreProposals) {
-        //   this.getProposals()
-        // }
-        // this.loadingVotes = false
+      }
+    },
+    async commentModal (vote) {
+      if (vote.comment_hash != null) {
+        const comment = await this.$dao.getIpfsContent(vote.comment_hash)
+        this.$modal.show({
+          color: 'default',
+          title: `Comment | ${vote.voter}`,
+          persistent: false,
+          text: comment
+        })
       }
     },
     async vote () {
       if (this.proposal && this.vote_type !== null) {
+        const hash = await this.createCommentHash()
         const actions = [{
           account: process.env.proposalContract,
           name: 'addvote',
@@ -496,22 +574,24 @@ export default {
             voter: this.wallet.auth.accountName,
             prop_id: this.proposal.id,
             vote_type: this.vote_type,
-            comment_hash: null
+            comment_hash: hash
           }
         }]
         try {
-          await this.$wallet.handleTransaction(actions)
-          this.$modal.show({
-            color: 'success',
-            title: 'Vote Submitted',
-            persistent: false,
-            text: 'Your vote for the proposal is sent!',
-            cancel: false,
-            onConfirm: () => {
-              this.getProposal(this.id)
-              return true
-            }
-          })
+          if (!this.modalVisible) {
+            await this.$wallet.handleTransaction(actions)
+            this.$modal.show({
+              color: 'success',
+              title: 'Vote Submitted',
+              persistent: false,
+              text: 'Your vote for the proposal is sent!',
+              cancel: false,
+              onConfirm: () => {
+                this.getProposal(this.id)
+                return true
+              }
+            })
+          }
         } catch (e) {
           this.$modal.show({
             color: 'danger',
@@ -538,5 +618,14 @@ export default {
   .progress {
     margin-top: -22px;
     margin-bottom: 12px;
+  }
+
+  small {
+    .comment-button {
+    font-size: 0.7em;
+    }
+  }
+  textarea {
+    width: 100%;
   }
 </style>

@@ -181,7 +181,11 @@ export default {
     ICountUp,
     Avatar
   },
-
+  head () {
+    return {
+      title: 'Home'
+    }
+  },
   data () {
     return {
       efxPrice: 0,

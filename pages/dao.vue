@@ -134,7 +134,10 @@
       </div>
     </div>
     <div v-if="signedConstitution" class="has-text-centered mt-6">
-      <small><a href="#" @click="constitutionLeaveModal = true">Leave DAO</a></small>
+      <small>
+        <nuxt-link to="/constitution">View Constitution</nuxt-link>
+        <a href="#" @click="constitutionLeaveModal = true">Leave DAO</a>
+      </small>
     </div>
   </div>
 </template>
@@ -151,7 +154,11 @@ export default {
     Votes,
     Avatar
   },
-
+  head () {
+    return {
+      title: 'The DAO'
+    }
+  },
   data () {
     return {
       loading: false,
@@ -161,7 +168,6 @@ export default {
 
       constitution: '',
       constitutionHash: '',
-      constitutionUrl: 'https://raw.githubusercontent.com/effectai/effect-network-eos/9522a000cf96269912a47fdd4653c14ac26bbf61/constitution/constitution.md',
       moreMembers: true,
       nextKey: null,
       constitutionMembers: null
@@ -266,7 +272,7 @@ export default {
 
     async downloadConstitution () {
       this.loading = true
-      await fetch(this.constitutionUrl)
+      await fetch(process.env.constitutionUrl)
         .then(data => data.text())
         .then((data) => {
           this.constitution = data
@@ -335,6 +341,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+small a:first-child {
+  margin-right: 10px
+}
 .constitution-modal {
   .modal-card {
     max-width: 800px;

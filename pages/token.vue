@@ -171,6 +171,11 @@ export default {
   components: {
     PieChart
   },
+  head () {
+    return {
+      title: 'Token'
+    }
+  },
   data () {
     return {
       loadingBalances: false,

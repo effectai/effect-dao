@@ -5,8 +5,6 @@ import tp from 'eos-transit-tokenpocket-provider'
 import Vue from 'vue'
 import lynx from 'eos-transit-lynx-provider'
 
-// Here
-
 const appName = 'effect_dashboard'
 const accessContext = initAccessContext({
   appName,
@@ -36,18 +34,37 @@ export default (context, inject) => {
         }
       }
     },
+    created () {
+      setTimeout(() => {
+        if (localStorage.getItem('accountInfo')) {
+          const accountInfo = JSON.parse(localStorage.getItem('accountInfo'))
+          this.login(accountInfo.provider, accountInfo.auth)
+        }
+      }, 50)
+    },
     methods: {
-      async login (provider) {
+      async login (provider, auth) {
         const providers = accessContext.getWalletProviders()
         const selectedProvider = providers.find(r => r.id === provider)
         const wallet = accessContext.initWallet(selectedProvider)
         await wallet.connect()
-        await wallet.login()
 
-        context.$wallet.init(wallet)
+        if (auth !== undefined) {
+          await wallet.login(auth.accountName, auth.permission)
+          context.$wallet.init(wallet)
+        } else {
+          wallet.login().then(() => {
+            localStorage.setItem('accountInfo', JSON.stringify({ loggedIn: true, provider, auth: wallet.auth }))
+            context.$wallet.init(wallet)
+          }).catch((err) => {
+            localStorage.removeItem('accountInfo')
+            console.log(err)
+          })
+        }
       },
 
       async logout () {
+        localStorage.removeItem('accountInfo')
         await context.$wallet.wallet.logout()
         context.$wallet.clear()
       }

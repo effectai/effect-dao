@@ -96,13 +96,16 @@
 <script>
 import Proposals from '~/components/Proposals'
 import ConnectWallet from '~/components/ConnectWallet'
-
 export default {
   components: {
     Proposals,
     ConnectWallet
   },
-
+  head () {
+    return {
+      title: 'Proposals'
+    }
+  },
   data () {
     return {
       filter: 'ACTIVE',
@@ -240,11 +243,28 @@ export default {
             }
             if (!proposal.title) {
               try {
-                const ipfsProposal = await this.$dao.getIpfsProposal(proposal.content_hash)
+                const ipfsProposal = await this.$dao.getIpfsContent(proposal.content_hash)
                 this.$set(proposal, 'title', ipfsProposal.title)
               } catch (e) {
                 console.error(e)
               }
+            }
+            if (proposal.status === 'ACTIVE' && this.wallet) {
+              const name = this.wallet.accountInfo.account_name
+              const hex = this.$helpers.getCompositeKey(name, proposal.id)
+              const voteData = await this.$eos.rpc.get_table_rows({
+                code: process.env.proposalContract,
+                scope: process.env.proposalContract,
+                table: 'vote',
+                key_type: 'i128',
+                index_position: 2,
+                lower_bound: hex,
+                upper_bound: hex,
+                limit: 10
+              })
+              voteData.rows.forEach((vote) => {
+                if (proposal.id === vote.proposal_id) { this.$set(proposal, 'vote_status', vote.type) }
+              })
             }
           })
         } catch (e) {

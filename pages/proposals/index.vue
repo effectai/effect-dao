@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="has-text-centered">
-      <nuxt-link class="button is-secondary is-wide m-2" to="/proposals/new">
+      <nuxt-link class="button is-primary is-wide m-2" to="/proposals/new">
         New Proposal
       </nuxt-link>
       <nuxt-link
         v-if="wallet && wallet.auth"
         :to="'/account/' + wallet.auth.accountName"
-        class="button is-secondary is-wide m-2 is-outlined"
+        class="button is-primary is-wide m-2 is-outlined"
       >
         Your Proposals
       </nuxt-link>

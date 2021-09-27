@@ -49,10 +49,10 @@
         Could not retrieve proposals
       </div>
     <div class="has-text-centered mt-4">
-      <nuxt-link v-if="myAccount" class="button is-secondary is-wide m-2" to="/proposals/new">
+      <nuxt-link v-if="myAccount" class="button is-primary is-wide m-2" to="/proposals/new">
         New Proposal
       </nuxt-link>
-      <nuxt-link class="button is-secondary is-outlined is-wide m-2" to="/proposals">
+      <nuxt-link class="button is-primary is-outlined is-wide m-2" to="/proposals">
         All Proposals
       </nuxt-link>
     </div>

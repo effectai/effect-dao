@@ -12,7 +12,7 @@
         <h1 class="title">Welcome to the Effect Dashboard.</h1>
         <div class="subtitle">Stake, vote and swap all in one place!</div>
         <div class="has-text-centered my-4">
-          <a class="button is-secondary" @click="$wallet.loginModal = true">
+          <a class="button is-primary" @click="$wallet.loginModal = true">
             <strong>Connect Wallet</strong>
           </a>
         </div>

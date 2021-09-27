@@ -60,7 +60,7 @@
           </div>
           <div class="navbar-end">
               <div class="pt-0 navbar-item">
-                <a v-if="!wallet" class="button is-secondary" @click="$wallet.loginModal = true">
+                <a v-if="!wallet" class="button is-primary" @click="$wallet.loginModal = true">
                   <strong>Connect Wallet</strong>
                 </a>
                 <div v-else class="dropdown account-name-dropdown" :class="{'is-active': dropdown}">

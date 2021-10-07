@@ -408,8 +408,8 @@ export default {
       }
     },
     async getQuorum (cycleNumber) {
-      if (cycleNumber.id === 0) {
-        this.quorom = 0
+      if (!cycleNumber || cycleNumber.id === 0) {
+        this.quorum = 0
       } else {
         const data = await this.$eos.rpc.get_table_rows({
           json: true, // optional ?
@@ -464,6 +464,7 @@ export default {
           await this.getVotes(parseInt(id))
           await this.getQuorum(this.proposalCycle)
         } catch (e) {
+          console.error('ERROR', e)
           this.$modal.show({
             color: 'danger',
             title: 'Error',

@@ -239,7 +239,7 @@ export default {
         code: process.env.feepoolContract,
         scope: process.env.feepoolContract,
         table: 'balance',
-        limit: 20
+        limit: 50
       })
 
       if (feeData && feeData.rows.length > 0) {

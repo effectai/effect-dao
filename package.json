@@ -42,7 +42,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^7.10.0",
     "eslint-plugin-nuxt": "^1.0.0",
-    "node-sass": "^4.14.1",
+    "node-sass": "^6.0.1",
     "push-dir": "^0.4.1",
     "sass-loader": "^10.0.3"
   }

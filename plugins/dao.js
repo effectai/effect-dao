@@ -7,6 +7,8 @@ export default (context, inject) => {
         proposalConfig: null,
         cycleConfig: null,
         nextCycleConfig: null,
+        hackathonConfig: null,
+        hackathonCycleConfig: null,
         discordMembersOnline: null,
         lastTerms: null
       }
@@ -65,6 +67,31 @@ export default (context, inject) => {
           scope: process.env.proposalContract,
           table: 'cycle',
           lower_bound: cycle,
+          limit: 1
+        })
+        if (data.rows.length > 0) {
+          return data.rows[0]
+        }
+      },
+      async getHackathonVotesConfig () {
+        // TODO Double check this works properly.
+        const data = await this.eos.rpc.get_table_rows({
+          code: process.env.hackathonConfig,
+          scope: process.env.hackathonConfig,
+          table: 'config'
+        })
+        if (data.rows.length > 0) {
+          this.hackathonConfig = data.rows[0]
+          this.hackathonCycleConfig = await this.getCycleConfig(data.rows[0].current_cycle)
+        }
+      },
+      async getHackathonCycleConfig () {
+        // TODO Double check this works properly.
+        const data = await this.eos.rpc.get_table_rows({
+          code: process.env.hackathonConfig,
+          scope: process.env.hackathonConfig,
+          table: 'cycle',
+          lower_bound: 1,
           limit: 1
         })
         if (data.rows.length > 0) {

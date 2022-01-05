@@ -89,10 +89,13 @@
                 <div class="select" style="width: 100%">
                   <select v-model="proposal.category" required style="width: 100%">
                     <option :value="0" disabled>Governance Proposal</option>
-                    <option :value="1">Marketing</option>
-                    <option :value="2">Design</option>
-                    <option :value="3">Technical</option>
-                    <option :value="4">Other</option>
+                    <option :value="1">Sentiment</option>
+                    <option :value="2">Grant Request</option>
+                    <option :value="3">Marketing</option>
+                    <option :value="4">Cycle Budget</option>
+                    <option :value="5">Network Fees</option>
+                    <option :value="6">Smart Contract Updates</option>
+                    <option :value="7">Other</option>
                   </select>
                 </div>
               </div>

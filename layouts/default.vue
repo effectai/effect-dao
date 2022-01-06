@@ -24,15 +24,13 @@
     </div> -->
     <div class="discord">
       <div class="container is-max-widescreen">
-        <img src="@/assets/img/discord.png" alt="Discord logo">
+        <!-- <img src="@/assets/img/discord.png" alt="Discord logo"> -->
+
         <p class="is-hidden-mobile">
-          The DAO Hackathon voting is now open with.
-          <b>
-            <span v-if="discordMembersOnline">{{ discordMembersOnline }}</span><span v-else>..</span> members
-          </b> online!
+          🔥 - The DAO Hackathon voting is now open - 🔥
         </p>
         <p class="is-hidden-tablet">
-          The DAO Hackathon voting is now open.
+          🔥 - The DAO Hackathon voting is now open - 🔥
         </p>
         <!-- <a :href= target="_blank">
           <button class="discord-btn">
@@ -40,7 +38,7 @@
           </button>
         </a> -->
          <button class="discord-btn">
-          <nuxt-link class="" to="/hackathon">
+          <nuxt-link to="/hackathon">
               Go Vote!
             </nuxt-link>
          </button>

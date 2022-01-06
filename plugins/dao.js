@@ -50,8 +50,8 @@ export default (context, inject) => {
       },
       async getProposalConfig () {
         const data = await this.eos.rpc.get_table_rows({
-          code: process.env.proposalContract,
-          scope: process.env.proposalContract,
+          code: process.env.votingContract,
+          scope: process.env.votingContract,
           table: 'config'
         })
         if (data.rows.length > 0) {
@@ -63,8 +63,8 @@ export default (context, inject) => {
       },
       async getCycleConfig (cycle) {
         const data = await this.eos.rpc.get_table_rows({
-          code: process.env.proposalContract,
-          scope: process.env.proposalContract,
+          code: process.env.votingContract,
+          scope: process.env.votingContract,
           table: 'cycle',
           lower_bound: cycle,
           limit: 1

@@ -24,45 +24,30 @@
           <div v-else>Loading content..</div>
         </small>
         <div class="box mt-5">
-          <h4 class="box-title subtitle">
-            Attachments
-          </h4>
-          <table v-if="proposal.files" class="table">
-            <tbody v-if="proposal.files.length > 0">
-              <tr v-for="file in proposal.files" :key="file.Hash">
-                <td><a :href="ipfsExplorer + '/ipfs/' + file.Hash" target="_blank">{{ file.Name }}</a></td>
-                <td>{{ file.Size | formatBytes }}</td>
-              </tr>
-            </tbody>
-            <tbody v-else>
-              <tr>
-                <td colspan="2">
-                  No files attached
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div v-else>
-            Loading attachments..
+          <div v-for="submission in submissions" :key="submission.group_name">
+            <!-- <input type="number" name="vote_name" id="vote_id"> -->
+            <b>{{ submission.group_name }}</b>
+
           </div>
         </div>
         <div v-if="proposal.status === 'ACTIVE' || proposal.status === 'CLOSED'" class="box mt-5">
           <h5 class="box-title">
             Cast your vote
           </h5>
+
           <div v-if="proposalCycle" class="has-text-centered mb-4">
-            <span v-if="$moment(proposalCycle.start_time + 'Z').add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isBefore()">
+            <span v-if="$moment(proposalCycle.start_time + 'Z').add($dao.getHackathonVotesConfig.cycle_voting_duration_sec, 'seconds').isBefore()">
               Voting Closed
             </span>
             <span v-else>
-              Voting ends {{ $moment(proposalCycle.start_time + "Z").add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').fromNow() }}
+              Voting ends {{ $moment(proposalCycle.start_time + "Z").add($dao.getHackathonVotesConfig.cycle_voting_duration_sec, 'seconds').fromNow() }}
             </span>
             <!--            <b>Current Vote {{ myVote.voter }}:</b> {{ voteTypes.find((vt) => vt.value === myVote.type).name }} - {{ myVote.weight }}-->
           </div>
           <div v-else-if="myVote && proposal.status === 'CLOSED'">
             <b>You voted {{ myVote.voter }}:</b> {{ voteTypes.find((vt) => vt.value === myVote.type).name }} - {{ myVote.weight }}
           </div>
-          <div v-if="proposal.status === 'ACTIVE' && proposalCycle && $moment(proposalCycle.start_time + 'Z').add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isAfter()">
+          <div v-if="proposal.status === 'ACTIVE' && proposalCycle && $moment(proposalCycle.start_time + 'Z').add($dao.getHackathonVotesConfig.cycle_voting_duration_sec, 'seconds').isAfter()">
             <div class="columns">
               <div v-for="voteType in voteTypes" :key="voteType.value" class="control column">
                 <button class="button is-fullwidth" :class="{'is-dark': voteType.value === 0, 'is-danger': voteType.value === 2, 'is-success': voteType.value === 1, 'is-outlined': vote_type !== voteType.value}" @click.prevent="vote_type = voteType.value">
@@ -165,22 +150,14 @@
             <i>Status</i><br>
             <b class="tag" :class="{'is-success': proposal.status === 'ACTIVE' || proposal.status === 'EXECUTED' || proposal.status == 'ACCEPTED', 'is-warning': proposal.status === 'DRAFT', 'is-link': proposal.status === 'PENDING', 'is-dark': proposal.status === 'WARNING', 'is-danger': proposal.status === 'REJECTED'}">{{ proposal.status }}</b>
           </div>
-          <div v-for="(pay, index) in proposal.pay" :key="index" class="block">
-            <i>requesting</i><br>
-            <b>{{ pay.field_0.quantity }}</b><br>
-            <i v-if="false">requestable</i>
-            <b v-if="false">{{ $moment(pay.field_1 + "Z").fromNow() }}</b>
-          </div>
+
           <div class="block">
             IPFS Hash
             <div class="hash">
               <a target="_blank" :href="`${ipfsExplorer}/ipfs/${proposal.content_hash}`">{{ proposal.content_hash }}</a>
             </div>
           </div>
-          <div class="block">
-            <i>cycle</i><br>
-            <b>{{ proposal.cycle }}</b>
-          </div>
+
           <div class="block">
             <i>Category</i><br>
             <b>{{ categories[proposal.category] }}</b>
@@ -190,7 +167,7 @@
               <b>Edit</b>
             </nuxt-link>
           </div>
-          <div v-if="isMyProposal && $dao.proposalConfig && proposal.cycle === 0" class="mt-2">
+          <div v-if="isMyProposal && $dao.getHackathonVotesConfig && proposal.cycle === 0" class="mt-2">
             <button class="button is-primary is-outlined is-fullwidth" @click.prevent="assignToNextCycle()">
               <b>Assign to next cycle</b>
             </button>
@@ -200,20 +177,6 @@
           <h5 class="box-title" :data-tooltip="'Total vote-weight: ' + this.totalVoteWeight">
             Results: {{ $wallet.formatNumber(this.totalVoteWeight) }}
           </h5>
-          <div v-for="result in voteResults" :key="result.type">
-            <div class="columns is-vcentered is-mobile">
-              <div class="column is-4">
-                <b :class="{'has-text-success': result.type === 1, 'has-text-danger': result.type === 2}">{{ voteTypes.find((vt) => vt.value == result.type).name }}</b>
-              </div>
-              <div class="column is-4" data-tooltip="Number of votes">
-                # {{ result.votes }}
-              </div>
-              <div class="column is-2" :data-tooltip="'Vote-weight: ' + result.weight">
-                <b>{{ $wallet.formatNumber(result.weight) }}</b>
-              </div>
-            </div>
-            <progress :class="['progress', 'is-small', 'progress-type-' + result.type, {'is-danger': result.type === 2}, {'is-success': result.type === 1}]" :value="result.weight" :max="totalVoteWeight" />
-          </div>
           <div class="has-text-centered is-italic mt-4 is-size-7">Quorum: {{ this.quorum }}</div>
         </div>
       </div>
@@ -226,10 +189,12 @@
 
 <script>
 import jsonComment from '@/static/json/high_guard_comment.json'
+import hackathon from '@/static/json/hackathon.json'
+import proposal from '@/static/json/proposal.json'
 
 // Load all hackathon submissions into hackathon.json
-import jsonHackathon from '@static/json/hackathon.json'
-console.log(jsonHackathon)
+console.log(hackathon)
+console.log(proposal)
 
 export default {
   filters: {
@@ -253,22 +218,31 @@ export default {
       proposal: undefined,
       hideComment: true,
       proposalCycle: null,
-      id: '1',
+      id: 0,
       vote_type: null,
       comment: null,
+      submissions: hackathon,
       voteTypes: [
         {
           value: 1,
-          name: 'Submit'
+          name: 'Y',
+          fullName: 'Yes'
+        },
+        {
+          value: 0,
+          name: 'A',
+          fullName: 'Abstain'
+        },
+        {
+          value: 2,
+          name: 'N',
+          fullName: 'No'
         }
       ],
       votes: null,
       categories: {
         0: 'Governance Proposal',
-        1: 'Marketing',
-        2: 'Design',
-        3: 'Technical',
-        4: 'Other'
+        1: 'Hackathon'
       }
     }
   },
@@ -330,7 +304,7 @@ export default {
       return vote
     },
     currentCycle () {
-      return this.$dao.proposalConfig ? this.$dao.proposalConfig.current_cycle : null
+      return this.$dao.getHackathonVotesConfig ? this.$dao.getHackathonVotesConfig.current_cycle : null
     },
     signedLastConstitution () {
       return this.$wallet.signedConstitutionVersion === (this.$dao.lastTerms ? this.$dao.lastTerms.version : 0)
@@ -348,65 +322,68 @@ export default {
 
   watch: {
     currentCycle () {
-      this.getProposal(this.id)
+      // this.getProposal(this.id)
+      console.log('Current Cycle')
     }
   },
 
   created () {
-    this.getProposal(this.id)
+    this.proposal = proposal
+    console.log(proposal)
+    this.getProposal(0)
     // this.getQuorum()
   },
 
   methods: {
-    // async assignToNextCycle () {
-    //   if (this.$dao.proposalConfig && this.proposal) {
-    //     const actions = [{
-    //       account: process.env.proposalContract,
-    //       name: 'updateprop',
-    //       authorization: [{
-    //         actor: this.wallet.auth.accountName,
-    //         permission: this.wallet.auth.permission
-    //       }],
-    //       data: {
-    //         id: this.proposal.id,
-    //         pay: this.proposal.pay,
-    //         content_hash: this.proposal.content_hash,
-    //         category: this.proposal.category,
-    //         cycle: this.$dao.proposalConfig.current_cycle + 1,
-    //         transaction_hash: this.proposal.transaction_hash
-    //       }
-    //     }]
-    //     try {
-    //       await this.$wallet.handleTransaction(actions)
-    //       this.$modal.show({
-    //         color: 'success',
-    //         title: 'Transaction Sent',
-    //         persistent: true,
-    //         text: 'Your transaction to assign proposal to next cycle is sent!',
-    //         cancel: false,
-    //         onConfirm: () => {
-    //           this.getProposal(this.id)
-    //           return true
-    //         }
-    //       })
-    //     } catch (e) {
-    //       this.$modal.show({
-    //         color: 'danger',
-    //         title: 'Error',
-    //         persistent: true,
-    //         text: e
-    //       })
-    //     }
-    //   }
-    // },
+    async assignToNextCycle () {
+      if (this.$dao.getHackathonVotesConfig && this.proposal) {
+        const actions = [{
+          account: process.env.votingContract,
+          name: 'updateprop',
+          authorization: [{
+            actor: this.wallet.auth.accountName,
+            permission: this.wallet.auth.permission
+          }],
+          data: {
+            id: this.proposal.id,
+            pay: this.proposal.pay,
+            content_hash: this.proposal.content_hash,
+            category: this.proposal.category,
+            cycle: this.$dao.getHackathonVotesConfig.current_cycle + 1,
+            transaction_hash: this.proposal.transaction_hash
+          }
+        }]
+        try {
+          await this.$wallet.handleTransaction(actions)
+          this.$modal.show({
+            color: 'success',
+            title: 'Transaction Sent',
+            persistent: true,
+            text: 'Your transaction to assign proposal to next cycle is sent!',
+            cancel: false,
+            onConfirm: () => {
+              this.getProposal(this.id)
+              return true
+            }
+          })
+        } catch (e) {
+          this.$modal.show({
+            color: 'danger',
+            title: 'Error',
+            persistent: true,
+            text: e
+          })
+        }
+      }
+    },
     async getQuorum (cycleNumber) {
       if (!cycleNumber || cycleNumber.id === 0) {
         this.quorum = 0
       } else {
         const data = await this.$eos.rpc.get_table_rows({
           json: true, // optional ?
-          code: process.env.proposalContract,
-          scope: process.env.proposalContract,
+          code: process.env.votingContract,
+          scope: process.env.votingContract,
           table: 'cycle',
           limit: 1,
           lower_bound: cycleNumber.id // This parameter is how we can query by id.
@@ -416,11 +393,11 @@ export default {
     },
     async getProposal (id) {
       this.loading = true
-      if (this.$dao.proposalConfig) {
+      if (this.$dao.getHackathonVotesConfig) {
         try {
           const data = await this.$eos.rpc.get_table_rows({
-            code: process.env.proposalContract,
-            scope: process.env.proposalContract,
+            code: process.env.votingContract,
+            scope: process.env.votingContract,
             table: 'proposal',
             lower_bound: id,
             limit: 1
@@ -438,11 +415,11 @@ export default {
           } else if (this.proposal.state === 0) {
             if (!this.proposal.cycle) {
               status = 'DRAFT'
-            } else if (this.proposalCycle && this.proposal.cycle === this.$dao.proposalConfig.current_cycle && this.$moment(this.proposalCycle.start_time + 'Z').add(this.$dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isAfter()) {
+            } else if (this.proposalCycle && this.proposal.cycle === this.$dao.getHackathonVotesConfig.current_cycle && this.$moment(this.proposalCycle.start_time + 'Z').add(this.$dao.getHackathonVotesConfig.cycle_voting_duration_sec, 'seconds').isAfter()) {
               status = 'ACTIVE'
-            } else if (this.proposalCycle && this.$moment(this.proposalCycle.start_time + 'Z').add(this.$dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isBefore()) {
+            } else if (this.proposalCycle && this.$moment(this.proposalCycle.start_time + 'Z').add(this.$dao.getHackathonVotesConfig.cycle_voting_duration_sec, 'seconds').isBefore()) {
               status = 'PROCESSING'
-            } else if (this.proposalCycle && this.proposalCycle.id < this.$dao.proposalConfig.current_cycle) {
+            } else if (this.proposalCycle && this.proposalCycle.id < this.$dao.getHackathonVotesConfig.current_cycle) {
               status = 'PROCESSING'
             } else {
               status = 'PENDING'
@@ -508,11 +485,11 @@ export default {
     },
     async getVotes (id) {
       // this.loading = true
-      if (this.$dao.proposalConfig) {
+      if (this.$dao.getHackathonVotesConfig) {
         try {
           const config = {
-            code: process.env.proposalContract,
-            scope: process.env.proposalContract,
+            code: process.env.votingContract,
+            scope: process.env.votingContract,
             table: 'vote',
             index_position: 4,
             key_type: 'i64',
@@ -557,7 +534,7 @@ export default {
       if (this.proposal && this.vote_type !== null) {
         const hash = await this.createCommentHash()
         const actions = [{
-          account: process.env.proposalContract,
+          account: process.env.votingContract,
           name: 'addvote',
           authorization: [{
             actor: this.wallet.auth.accountName,

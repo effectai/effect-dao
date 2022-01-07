@@ -42,6 +42,7 @@ export default {
   //   stakingContract: 'stak3onkylin',
   //   daoContract: 'thedaonkylin',
   //   proposalContract: 'propsonkylin',
+  //   votingContract: 'effect.votes',
   //   feepoolContract: 'feepoolkylin',
   //   efxToken: 'UTL',
   //   nfxToken: 'GRN',

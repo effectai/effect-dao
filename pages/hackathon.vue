@@ -24,10 +24,20 @@
           <div v-else>Loading content..</div>
         </small>
         <div class="box mt-5">
-          <div v-for="submission in submissions" :key="submission.group_name">
-            <!-- <input type="number" name="vote_name" id="vote_id"> -->
-            <b>{{ submission.group_name }}</b>
+          <h2>Hackathon Submissions</h2>
+          <div v-for="submission in submissions.submissions" :key="submission.group_name" >
 
+            <div class="card">
+              <div class="card-header title has-text-centered ">{{ submission.group_name }}</div>
+              <div class="card-content">
+                <div>{{ submission.description }}</div>
+                <a :href=submission.github_url target="_blank">{{ submission.github_url }}</a>
+                <br>
+                <a :href=submission.campaign_url target="_blank">{{ submission.campaign_url }}</a>
+              </div>
+            </div>
+
+            <br>
           </div>
         </div>
         <div v-if="proposal.status === 'ACTIVE' || proposal.status === 'CLOSED'" class="box mt-5">
@@ -114,7 +124,7 @@
                   <nuxt-link :to="'/account/'+vote.voter">
                     <b>{{ vote.voter }}</b>
                   </nuxt-link>
-                </div>
+                </div>ty
               </div>
               <div class="column is-3 has-text-centered">
                 <b :class="{'has-text-success': vote.type === 1, 'has-text-danger': vote.type === 2}">{{ voteTypes.find((vt) => vt.value === vote.type).name }}</b>
@@ -192,7 +202,7 @@ import jsonComment from '@/static/json/high_guard_comment.json'
 import hackathon from '@/static/json/hackathon.json'
 import proposal from '@/static/json/proposal.json'
 
-// Load all hackathon submissions into hackathon.json
+// Load hackathon into hackathon.json
 console.log(hackathon)
 console.log(proposal)
 

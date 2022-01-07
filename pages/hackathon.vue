@@ -28,13 +28,14 @@
           <div v-for="submission in submissions.submissions" :key="submission.group_name" >
 
             <div class="card">
-              <div class="card-header title has-text-centered ">{{ submission.group_name }}</div>
               <div class="card-content">
-                <div>{{ submission.description }}</div>
+                <div class="title is-4">{{ submission.group_name }}</div>
+                <div class="subtitle is-6">{{ submission.description }}</div>
                 <a :href=submission.github_url target="_blank">{{ submission.github_url }}</a>
                 <br>
                 <a :href=submission.campaign_url target="_blank">{{ submission.campaign_url }}</a>
                 <br>
+                <hr>
                 <button class="button is-centered" @click="addVoteToList(submission)">Add to VoteList</button>
               </div>
             </div>

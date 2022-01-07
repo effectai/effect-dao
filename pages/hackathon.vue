@@ -34,12 +34,25 @@
                 <a :href=submission.github_url target="_blank">{{ submission.github_url }}</a>
                 <br>
                 <a :href=submission.campaign_url target="_blank">{{ submission.campaign_url }}</a>
+                <br>
+                <button class="button is-centered" @click="addVoteToList(submission)">Add to VoteList</button>
               </div>
             </div>
-
             <br>
           </div>
         </div>
+
+        <div class="box mt-5">
+          <h5>Selection List</h5>
+
+          <ul>
+            <li v-for="(item, index) of votes_list" :key="item.group_name">
+              {{ index }} - {{ item.group_name }}
+            </li>
+          </ul>
+          <button class="button" @click="clearVotesList()">Clear</button>
+        </div>
+
         <div v-if="proposal.status === 'ACTIVE' || proposal.status === 'CLOSED'" class="box mt-5">
           <h5 class="box-title">
             Cast your vote
@@ -232,6 +245,7 @@ export default {
       vote_type: null,
       comment: null,
       submissions: hackathon,
+      votes_list: [],
       voteTypes: [
         {
           value: 1,
@@ -581,6 +595,18 @@ export default {
           })
         }
       }
+    },
+    addVoteToList (submsission) {
+      if (!this.votes_list.includes(submsission)) {
+        this.votes_list.push(submsission)
+        console.log(this.votes_list)
+      }
+    },
+    clearVotesList () {
+      this.votes_list = []
+    },
+    calculateVotePower () {
+      return null
     }
   }
 }

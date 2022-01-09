@@ -1,16 +1,15 @@
 <template>
   <div class="content">
-
     <div v-if="loading">
       Loading Proposal..
     </div>
     <div v-else-if="proposal" class="columns">
-
       <div class="column is-two-thirds">
-
-        <div class="message is-dark" v-if="proposalComment !== undefined">
-          <div class="message-header">High Guard Comment</div>
-          <div class="message-body" v-html="proposalComment"></div>
+        <div v-if="proposalComment !== undefined" class="message is-dark">
+          <div class="message-header">
+            High Guard Comment
+          </div>
+          <div class="message-body" v-html="proposalComment" />
         </div>
 
         <div v-if="proposal.title" class="title is-4">
@@ -25,18 +24,26 @@
         </small>
         <div class="box mt-5">
           <h2>Hackathon Submissions</h2>
-          <div v-for="submission in submissions.submissions" :key="submission.group_name" >
-
+          <div v-for="submission in submissions.submissions" :key="submission.group_name">
             <div class="card">
               <div class="card-content">
-                <div class="title is-4">{{ submission.group_name }}</div>
-                <div class="subtitle is-6">{{ submission.description }}</div>
-                <a :href=submission.github_url target="_blank">{{ submission.github_url }}</a>
+                <div class="title is-4">
+                  {{ submission.group_name }}
+                </div>
+                <div class="subtitle is-6">
+                  {{ submission.description }}
+                </div>
+                <a :href="submission.github_url" target="_blank">{{ submission.github_url }}</a>
                 <br>
-                <a :href=submission.campaign_url target="_blank">{{ submission.campaign_url }}</a>
+                <a :href="submission.campaign_url" target="_blank">{{ submission.campaign_url }}</a>
                 <br>
                 <hr>
-                <button class="button is-centered" @click="addVoteToList(submission)">Add to VoteList</button>
+                <button v-if="votes_list.find(v => v.id === submission.id)" disabled class="button is-centered">
+                  Added
+                </button>
+                <button v-else class="button is-centered is-primary" @click="addVoteToList(submission)">
+                  Add to VoteList
+                </button>
               </div>
             </div>
             <br>
@@ -48,10 +55,12 @@
 
           <ul>
             <li v-for="(item, index) of votes_list" :key="item.group_name">
-              {{ index }} - {{ item.group_name }}
+              {{ index + 1 }} - {{ item.group_name }}
             </li>
           </ul>
-          <button class="button" @click="clearVotesList()">Clear</button>
+          <button class="button" @click="clearVotesList()">
+            Clear
+          </button>
         </div>
 
         <div v-if="proposal.status === 'ACTIVE' || proposal.status === 'CLOSED'" class="box mt-5">
@@ -85,10 +94,10 @@
               </div>
             </div>
             <div class="rows">
-              <div class="has-text-centered mb-4" v-if="!hideComment">
+              <div v-if="!hideComment" class="has-text-centered mb-4">
                 <span>Comment section</span>
               </div>
-              <textarea v-if="!hideComment" class="control row" v-model="comment" cols="30" rows="4"></textarea>
+              <textarea v-if="!hideComment" v-model="comment" class="control row" cols="30" rows="4" />
             </div>
           </div>
           <div>
@@ -104,7 +113,7 @@
               <span v-else>Vote</span>
             </button>
             <small>
-              <a href="#" class="comment-button" v-on:click.prevent="hideComment = !hideComment">Toggle comment section</a>
+              <a href="#" class="comment-button" @click.prevent="hideComment = !hideComment">Toggle comment section</a>
             </small>
           </div>
         </div>
@@ -146,10 +155,9 @@
               <div class="column is-2 has-text-centered" :data-tooltip="'Vote-weight: ' + vote.weight">
                 <b>{{ $wallet.formatNumber(vote.weight) }}</b>
               </div>
-              <!-- disable comment modal for hackathon, we are hijacking this for the voting mechanism -->
-              <!-- <div v-if="vote.comment_hash != null" class="column is-2 has-text-centered">
-                <a @click.prevent="commentModal(vote)"><font-awesome-icon :icon="['fas', 'comment-dots']"/></a>
-              </div> -->
+              <div v-if="vote.comment_hash != null" class="column is-2 has-text-centered">
+                <a @click.prevent="commentModal(vote)"><font-awesome-icon :icon="['fas', 'comment-dots']" /></a>
+              </div>
             </div>
           </div>
           <div v-else-if="votes" class="has-text-centered">
@@ -202,7 +210,9 @@
           <h5 class="box-title" :data-tooltip="'Total vote-weight: ' + this.totalVoteWeight">
             Results: {{ $wallet.formatNumber(this.totalVoteWeight) }}
           </h5>
-          <div class="has-text-centered is-italic mt-4 is-size-7">Quorum: {{ this.quorum }}</div>
+          <div class="has-text-centered is-italic mt-4 is-size-7">
+            Quorum: {{ this.quorum }}
+          </div>
         </div>
       </div>
     </div>
@@ -268,11 +278,6 @@ export default {
         0: 'Governance Proposal',
         1: 'Hackathon'
       }
-    }
-  },
-  head () {
-    return {
-      title: 'Proposal ' + this.id
     }
   },
   computed: {
@@ -606,6 +611,11 @@ export default {
     },
     calculateVotePower () {
       return null
+    }
+  },
+  head () {
+    return {
+      title: 'Proposal ' + this.id
     }
   }
 }

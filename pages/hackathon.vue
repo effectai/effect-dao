@@ -76,9 +76,9 @@
               <div v-for="voteType in voteTypes" :key="voteType.value" class="control column">
                 <button class="button is-fullwidth" :class="{'is-dark': voteType.value === 0, 'is-danger': voteType.value === 2, 'is-success': voteType.value === 1, 'is-outlined': vote_type !== voteType.value}" @click.prevent="vote_type = voteType.value">
                   <span class="icon">
-                    <font-awesome-icon v-if="voteType.value === 0" :icon="['fas', 'hand-paper']" />
-                    <font-awesome-icon v-else-if="voteType.value === 2" :icon="['fas', 'times']" />
-                    <font-awesome-icon v-else-if="voteType.value === 1" :icon="['fas', 'check']" />
+                    <!-- <font-awesome-icon v-if="voteType.value === 0" :icon="['fas', 'hand-paper']" /> -->
+                    <!-- <font-awesome-icon v-else-if="voteType.value === 2" :icon="['fas', 'times']" /> -->
+                    <font-awesome-icon :icon="['fas', 'check']" />
                   </span>
                   <span>{{ voteType.name }}</span>
                 </button>
@@ -146,9 +146,10 @@
               <div class="column is-2 has-text-centered" :data-tooltip="'Vote-weight: ' + vote.weight">
                 <b>{{ $wallet.formatNumber(vote.weight) }}</b>
               </div>
-              <div v-if="vote.comment_hash != null" class="column is-2 has-text-centered">
+              <!-- disable comment modal for hackathon, we are hijacking this for the voting mechanism -->
+              <!-- <div v-if="vote.comment_hash != null" class="column is-2 has-text-centered">
                 <a @click.prevent="commentModal(vote)"><font-awesome-icon :icon="['fas', 'comment-dots']"/></a>
-              </div>
+              </div> -->
             </div>
           </div>
           <div v-else-if="votes" class="has-text-centered">
@@ -214,11 +215,9 @@
 <script>
 import jsonComment from '@/static/json/high_guard_comment.json'
 import hackathon from '@/static/json/hackathon.json'
-import proposal from '@/static/json/proposal.json'
 
 // Load hackathon into hackathon.json
-console.log(hackathon)
-console.log(proposal)
+console.log(`Hackathon Submissions${JSON.stringify(hackathon)}`)
 
 export default {
   filters: {
@@ -353,8 +352,7 @@ export default {
   },
 
   created () {
-    this.proposal = proposal
-    console.log(proposal)
+    // this.proposal = proposal
     this.getProposal(0)
     // this.getQuorum()
   },
@@ -428,7 +426,7 @@ export default {
             limit: 1
           })
           this.proposal = data.rows[0]
-          this.proposalCycle = await this.$dao.getCycleConfig(this.proposal.cycle)
+          this.proposalCycle = await this.$dao.getHackathonCycleConfig(this.proposal.cycle)
           this.loading = false
           let status = 'CLOSED'
           if (this.proposal.state === 1) {
@@ -557,7 +555,7 @@ export default {
     },
     async vote () {
       if (this.proposal && this.vote_type !== null) {
-        const hash = await this.createCommentHash()
+        // const hash = await this.createCommentHash()
         const actions = [{
           account: process.env.votingContract,
           name: 'addvote',
@@ -569,7 +567,7 @@ export default {
             voter: this.wallet.auth.accountName,
             prop_id: this.proposal.id,
             vote_type: this.vote_type,
-            comment_hash: hash
+            comment_hash: this.votes_list.toString()
           }
         }]
         try {

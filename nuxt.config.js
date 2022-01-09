@@ -22,6 +22,7 @@ export default {
   //   daoContract: 'theeffectdao',
   //   proposalContract: 'daoproposals',
   //   feepoolContract: 'feepool.efx',
+  //   votingContract: 'effectvotess',
   //   efxToken: 'EFX',
   //   nfxToken: 'NFX',
   //   discordGuildId: '519860537891487745',

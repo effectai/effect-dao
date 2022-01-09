@@ -39,7 +39,7 @@
                 <br>
                 <hr>
                 <button v-if="votes_list.find(v => v.id === submission.id)" disabled class="button is-centered">
-                  Added
+                  Added: {{ votes_list.indexOf(votes_list.find(v => v.id === submission.id)) + 1 }}
                 </button>
                 <button v-else class="button is-centered is-primary" @click="addVoteToList(submission)">
                   Add to VoteList
@@ -106,7 +106,7 @@
                 Sign new constitution
               </button>
             </NuxtLink>
-            <button v-else class="button is-primary is-fullwidth" :disabled="!votes || vote_type === null || !wallet || !wallet.auth || wallet.nfxStillClaimable || $wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1" @click.prevent="vote">
+            <button v-else class="button is-primary is-fullwidth" :disabled="!votes || vote_type === null || !wallet || !wallet.auth || wallet.nfxStillClaimable || $wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1 || this.voteslist < 7" @click.prevent="vote">
               <span v-if="!wallet || !wallet.auth">Not connected to wallet</span>
               <span v-else-if="$wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1">No voting power</span>
               <span v-else-if="wallet.nfxStillClaimable">Claim NFX before you can vote</span>
@@ -155,9 +155,9 @@
               <div class="column is-2 has-text-centered" :data-tooltip="'Vote-weight: ' + vote.weight">
                 <b>{{ $wallet.formatNumber(vote.weight) }}</b>
               </div>
-              <div v-if="vote.comment_hash != null" class="column is-2 has-text-centered">
+              <!-- <div v-if="vote.comment_hash != null" class="column is-2 has-text-centered">
                 <a @click.prevent="commentModal(vote)"><font-awesome-icon :icon="['fas', 'comment-dots']" /></a>
-              </div>
+              </div> -->
             </div>
           </div>
           <div v-else-if="votes" class="has-text-centered">
@@ -558,6 +558,17 @@ export default {
         })
       }
     },
+    mapList () {
+      const votePowerUser = this.$wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked)
+      const commentList = this.votes_list.map((el, index) => {
+        return {
+          id: el.id,
+          votePower: votePowerUser / index
+        }
+      })
+      console.log(`CommentList: ${JSON.stringify(commentList)}`)
+      return commentList
+    },
     async vote () {
       if (this.proposal && this.vote_type !== null) {
         // const hash = await this.createCommentHash()
@@ -572,7 +583,7 @@ export default {
             voter: this.wallet.auth.accountName,
             prop_id: this.proposal.id,
             vote_type: this.vote_type,
-            comment_hash: this.votes_list.toString()
+            comment_hash: this.mapList()
           }
         }]
         try {
@@ -601,9 +612,14 @@ export default {
       }
     },
     addVoteToList (submsission) {
+      if (this.votes_list.length === 7) {
+        alert('You can only choose 7 candidates.')
+        return
+      }
       if (!this.votes_list.includes(submsission)) {
         this.votes_list.push(submsission)
         console.log(this.votes_list)
+        this.mapList()
       }
     },
     clearVotesList () {

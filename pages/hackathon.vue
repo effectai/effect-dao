@@ -38,7 +38,10 @@
                 <a :href="submission.campaign_url" target="_blank">{{ submission.campaign_url }}</a>
                 <br>
                 <hr>
-                <button class="button is-centered" @click="addVoteToList(submission)">
+                <button v-if="votes_list.find(v => v.id === submission.id)" disabled class="button is-centered">
+                  Added
+                </button>
+                <button v-else class="button is-centered is-primary" @click="addVoteToList(submission)">
                   Add to VoteList
                 </button>
               </div>
@@ -52,7 +55,7 @@
 
           <ul>
             <li v-for="(item, index) of votes_list" :key="item.group_name">
-              {{ index }} - {{ item.group_name }}
+              {{ index + 1 }} - {{ item.group_name }}
             </li>
           </ul>
           <button class="button" @click="clearVotesList()">

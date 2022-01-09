@@ -8,7 +8,9 @@ export default {
     fallback: true
   },
 
-  // Production
+  /**
+   * Production
+   */
   // env: {
   //   eosNodeUrl: 'eos.greymass.com',
   //   protocolUrl: 'https',

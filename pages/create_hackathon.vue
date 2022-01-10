@@ -309,7 +309,7 @@ export default {
         const addPayment = true
         if (addPayment) {
           actions.push({
-            account: this.$dao.hackathonConfig.proposal_cost.contract,
+            account: 'effecttokens',
             name: 'transfer',
             authorization: [{
               actor: this.wallet.auth.accountName,
@@ -317,15 +317,15 @@ export default {
             }],
             data: {
               from: this.wallet.auth.accountName,
-              to: process.env.proposalContract,
-              quantity: this.$dao.hackathonConfig.proposal_cost.quantity,
+              to: process.env.votingContract,
+              quantity: '0.0000 EFX',
               memo: 'proposal'
             }
           })
         }
         actions.push(
           {
-            account: process.env.proposalContract,
+            account: process.env.votingContract,
             name: 'createprop',
             authorization: [{
               actor: this.wallet.auth.accountName,
@@ -342,7 +342,7 @@ export default {
                   field_1: payoutTime.toISOString().slice(0, -1)
                 }],
               content_hash: this.proposal.content_hash,
-              category: parseInt(this.proposal.category),
+              category: parseInt(1),
               cycle: parseInt(this.proposal.cycle),
               transaction_hash: null
             }
@@ -358,9 +358,7 @@ export default {
             text: 'Your Proposal Creation Transaction was sent! It might take a couple of minutes before your proposals shows up.',
             cancel: false,
             onConfirm: () => {
-              this.$router.push({
-                path: '/proposals'
-              })
+              console.log('Success! 🔥🔥')
             }
           })
         } catch (e) {

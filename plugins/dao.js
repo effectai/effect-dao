@@ -91,8 +91,8 @@ export default (context, inject) => {
         const data = await this.eos.rpc.get_table_rows({
           // code: process.env.hackathonConfig,
           // scope: process.env.hackathonConfig,
-          code: 'effect.votes',
-          scope: 'effect.votes',
+          code: 'effectvotess',
+          scope: 'effectvotess',
           table: 'cycle',
           lower_bound: cycle,
           limit: 1

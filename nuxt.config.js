@@ -11,26 +11,26 @@ export default {
   /**
    * Production
    */
-  // env: {
-  //   eosNodeUrl: 'eos.greymass.com',
-  //   protocolUrl: 'https',
-  //   portUrl: '443',
-  //   eosChainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
-  //   explorerUrl: 'https://bloks.io',
-  //   ipfsNode: 'https://ipfs.effect.ai',
-  //   ipfsExplorer: 'https://ipfs.effect.ai',
-  //   tokenContract: 'effecttokens',
-  //   stakingContract: 'efxstakepool',
-  //   daoContract: 'theeffectdao',
-  //   proposalContract: 'daoproposals',
-  //   feepoolContract: 'feepool.efx',
-  //   votingContract: 'effectvotess',
-  //   efxToken: 'EFX',
-  //   nfxToken: 'NFX',
-  //   discordGuildId: '519860537891487745',
-  //   discordInviteUrl: 'https://discord.gg/hM3237cYXP',
-  //   constitutionUrl: 'https://raw.githubusercontent.com/effectai/effect-network-eos/9522a000cf96269912a47fdd4653c14ac26bbf61/constitution/constitution.md'
-  // },
+  env: {
+    eosNodeUrl: 'eos.greymass.com',
+    protocolUrl: 'https',
+    portUrl: '443',
+    eosChainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
+    explorerUrl: 'https://bloks.io',
+    ipfsNode: 'https://ipfs.effect.ai',
+    ipfsExplorer: 'https://ipfs.effect.ai',
+    tokenContract: 'effecttokens',
+    stakingContract: 'efxstakepool',
+    daoContract: 'theeffectdao',
+    proposalContract: 'daoproposals',
+    feepoolContract: 'feepool.efx',
+    votingContract: 'effectvotess',
+    efxToken: 'EFX',
+    nfxToken: 'NFX',
+    discordGuildId: '519860537891487745',
+    discordInviteUrl: 'https://discord.gg/hM3237cYXP',
+    constitutionUrl: 'https://raw.githubusercontent.com/effectai/effect-network-eos/9522a000cf96269912a47fdd4653c14ac26bbf61/constitution/constitution.md'
+  },
 
   // Kylin Developement
   // env: {
@@ -92,26 +92,26 @@ export default {
   /**
    * ./local.sh from scripts folder in `effect-network`
    */
-  env: {
-    eosNodeUrl: '127.0.0.1',
-    protocolUrl: 'http',
-    portUrl: 8888,
-    eosChainId: '8a34ec7df1b8cd06ff4a8abbaa7cc50300823350cadc59ab296cb00d104d2b8f',
-    explorerUrl: 'https://local.bloks.io',
-    ipfsNode: 'https://ipfs.effect.ai',
-    ipfsExplorer: 'https://ipfs.effect.ai',
-    tokenContract: 'effect.token',
-    stakingContract: 'effect.stake',
-    daoContract: 'effect.daofx',
-    proposalContract: 'effect.props',
-    votingContract: 'effect.votes',
-    feepoolContract: 'effect.feefx',
-    efxToken: 'EFX',
-    nfxToken: 'NFX',
-    discordGuildId: '519860537891487745',
-    discordInviteUrl: 'https://discord.gg/hM3237cYXP',
-    constitutionUrl: 'https://raw.githubusercontent.com/effectai/effect-network-eos/9522a000cf96269912a47fdd4653c14ac26bbf61/constitution/constitution.md'
-  },
+  // env: {
+  //   eosNodeUrl: '127.0.0.1',
+  //   protocolUrl: 'http',
+  //   portUrl: 8888,
+  //   eosChainId: '8a34ec7df1b8cd06ff4a8abbaa7cc50300823350cadc59ab296cb00d104d2b8f',
+  //   explorerUrl: 'https://local.bloks.io',
+  //   ipfsNode: 'https://ipfs.effect.ai',
+  //   ipfsExplorer: 'https://ipfs.effect.ai',
+  //   tokenContract: 'effect.token',
+  //   stakingContract: 'effect.stake',
+  //   daoContract: 'effect.daofx',
+  //   proposalContract: 'effect.props',
+  //   votingContract: 'effect.votes',
+  //   feepoolContract: 'effect.feefx',
+  //   efxToken: 'EFX',
+  //   nfxToken: 'NFX',
+  //   discordGuildId: '519860537891487745',
+  //   discordInviteUrl: 'https://discord.gg/hM3237cYXP',
+  //   constitutionUrl: 'https://raw.githubusercontent.com/effectai/effect-network-eos/9522a000cf96269912a47fdd4653c14ac26bbf61/constitution/constitution.md'
+  // },
 
 
   // Global page headers (https://go.nuxtjs.dev/config-head)

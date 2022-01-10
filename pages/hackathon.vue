@@ -33,13 +33,15 @@
                 <div class="subtitle is-6">
                   {{ submission.description }}
                 </div>
-                <a :href="submission.github_url" target="_blank">{{ submission.github_url }}</a>
+                  <a :href="submission.github_url" target="_blank">
+                  GitHub 
+                </a>
                 <br>
-                <a :href="submission.campaign_url" target="_blank">{{ submission.campaign_url }}</a>
+                <a :href="submission.campaign_url" target="_blank">Campaign 🌟</a>
                 <br>
                 <hr>
                 <button v-if="votes_list.find(v => v.id === submission.id)" disabled class="button is-centered">
-                  Added: {{ votes_list.indexOf(votes_list.find(v => v.id === submission.id)) + 1 }}
+                  Added: #{{ votes_list.indexOf(votes_list.find(v => v.id === submission.id)) + 1 }}
                 </button>
                 <button v-else class="button is-centered is-primary" @click="addVoteToList(submission)">
                   Add to VoteList
@@ -93,12 +95,12 @@
                 </button>
               </div>
             </div>
-            <div class="rows">
+            <!-- <div class="rows">
               <div v-if="!hideComment" class="has-text-centered mb-4">
                 <span>Comment section</span>
               </div>
               <textarea v-if="!hideComment" v-model="comment" class="control row" cols="30" rows="4" />
-            </div>
+            </div> -->
           </div>
           <div>
             <NuxtLink v-if="wallet && wallet.auth && !signedLastConstitution" to="/dao">
@@ -106,15 +108,15 @@
                 Sign new constitution
               </button>
             </NuxtLink>
-            <button v-else class="button is-primary is-fullwidth" :disabled="!votes || vote_type === null || !wallet || !wallet.auth || wallet.nfxStillClaimable || $wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1 || this.voteslist < 7" @click.prevent="vote">
+            <button v-else class="button is-primary is-fullwidth" :disabled="!votes || vote_type === null || !wallet || !wallet.auth || wallet.nfxStillClaimable || $wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1 || this.voteslist < 3" @click.prevent="vote">
               <span v-if="!wallet || !wallet.auth">Not connected to wallet</span>
               <span v-else-if="$wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1">No voting power</span>
               <span v-else-if="wallet.nfxStillClaimable">Claim NFX before you can vote</span>
               <span v-else>Vote</span>
             </button>
-            <small>
+            <!-- <small>
               <a href="#" class="comment-button" @click.prevent="hideComment = !hideComment">Toggle comment section</a>
-            </small>
+            </small> -->
           </div>
         </div>
         <div v-else class="box mt-5 faded">
@@ -227,7 +229,7 @@ import jsonComment from '@/static/json/high_guard_comment.json'
 import hackathon from '@/static/json/hackathon.json'
 
 // Load hackathon into hackathon.json
-console.log(`Hackathon Submissions${JSON.stringify(hackathon)}`)
+// console.log(`Hackathon Submissions${JSON.stringify(hackathon)}`)
 
 export default {
   filters: {
@@ -251,7 +253,7 @@ export default {
       proposal: undefined,
       hideComment: true,
       proposalCycle: null,
-      id: 0,
+      id: '0',
       vote_type: null,
       comment: null,
       submissions: hackathon,
@@ -351,14 +353,15 @@ export default {
 
   watch: {
     currentCycle () {
-      // this.getProposal(this.id)
+      this.getProposal(this.id)
+      // this.getProposal(0)
       console.log('Current Cycle')
     }
   },
 
   created () {
     // this.proposal = proposal
-    this.getProposal(0)
+    this.getProposal('0')
     // this.getQuorum()
   },
 
@@ -427,9 +430,10 @@ export default {
             code: process.env.votingContract,
             scope: process.env.votingContract,
             table: 'proposal',
-            lower_bound: id,
-            limit: 1
-          })
+            lower_bound: 0,
+            limit: 100
+          }).catch(error => console.error(`hackathon, getproposal error: ${error}`))
+          console.log(`getProposal::Data: ${JSON.stringify(data)}`)
           this.proposal = data.rows[0]
           this.proposalCycle = await this.$dao.getHackathonCycleConfig(this.proposal.cycle)
           this.loading = false
@@ -455,6 +459,7 @@ export default {
           }
           this.$set(this.proposal, 'status', status)
           const ipfsProposal = await this.$dao.getIpfsContent(this.proposal.content_hash)
+          console.log(`ipfsProposal: ${ipfsProposal}`)
           this.$set(this.proposal, 'title', ipfsProposal.title)
           this.$set(this.proposal, 'body', ipfsProposal.body)
           this.$set(this.proposal, 'files', ipfsProposal.files ? ipfsProposal.files : [])
@@ -529,14 +534,14 @@ export default {
           //   config.lower_bound = this.nextKey
           // }
           const data = await this.$eos.rpc.get_table_rows(config)
-          // this.moreVotes = data.more
-          // this.nextKey = data.next_key
+          this.moreVotes = data.more
+          this.nextKey = data.next_key
           this.votes = data.rows
-          // if (!this.votes) {
-          //   this.votes = data.rows
-          // } else {
-          //   this.votes = this.votes.concat(data.rows)
-          // }
+          if (!this.votes) {
+            this.votes = data.rows
+          } else {
+            this.votes = this.votes.concat(data.rows)
+          }
         } catch (e) {
           this.$modal.show({
             color: 'danger',
@@ -559,11 +564,10 @@ export default {
       }
     },
     mapList () {
-      const votePowerUser = this.$wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked)
+      // const votePowerUser = this.$wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked)
       const commentList = this.votes_list.map((el, index) => {
         return {
-          id: el.id,
-          votePower: votePowerUser / index
+          id: el.id
         }
       })
       console.log(`CommentList: ${JSON.stringify(commentList)}`)
@@ -612,8 +616,8 @@ export default {
       }
     },
     addVoteToList (submsission) {
-      if (this.votes_list.length === 7) {
-        alert('You can only choose 7 candidates.')
+      if (this.votes_list.length === 3) {
+        alert('You can only choose 3 candidates, remember; the order matters.')
         return
       }
       if (!this.votes_list.includes(submsission)) {
@@ -624,9 +628,6 @@ export default {
     },
     clearVotesList () {
       this.votes_list = []
-    },
-    calculateVotePower () {
-      return null
     }
   },
   head () {

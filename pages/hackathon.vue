@@ -84,23 +84,15 @@
           </div>
           <div v-if="proposal.status === 'ACTIVE' && proposalCycle && $moment(proposalCycle.start_time + 'Z').add($dao.getHackathonVotesConfig.cycle_voting_duration_sec, 'seconds').isAfter()">
             <div class="columns">
-              <div v-for="voteType in voteTypes" :key="voteType.value" class="control column">
-                <button class="button is-fullwidth" :class="{'is-dark': voteType.value === 0, 'is-danger': voteType.value === 2, 'is-success': voteType.value === 1, 'is-outlined': vote_type !== voteType.value}" @click.prevent="vote_type = voteType.value">
+              <div class="control column">
+                <button class="button is-fullwidth is-success is-outlined" @click.prevent="vote_type = 1">
                   <span class="icon">
-                    <!-- <font-awesome-icon v-if="voteType.value === 0" :icon="['fas', 'hand-paper']" /> -->
-                    <!-- <font-awesome-icon v-else-if="voteType.value === 2" :icon="['fas', 'times']" /> -->
                     <font-awesome-icon :icon="['fas', 'check']" />
                   </span>
-                  <span>{{ voteType.name }}</span>
+                  <span>Vote</span>
                 </button>
               </div>
             </div>
-            <!-- <div class="rows">
-              <div v-if="!hideComment" class="has-text-centered mb-4">
-                <span>Comment section</span>
-              </div>
-              <textarea v-if="!hideComment" v-model="comment" class="control row" cols="30" rows="4" />
-            </div> -->
           </div>
           <div>
             <NuxtLink v-if="wallet && wallet.auth && !signedLastConstitution" to="/dao">
@@ -114,9 +106,6 @@
               <span v-else-if="wallet.nfxStillClaimable">Claim NFX before you can vote</span>
               <span v-else>Vote</span>
             </button>
-            <!-- <small>
-              <a href="#" class="comment-button" @click.prevent="hideComment = !hideComment">Toggle comment section</a>
-            </small> -->
           </div>
         </div>
         <div v-else class="box mt-5 faded">
@@ -157,9 +146,6 @@
               <div class="column is-2 has-text-centered" :data-tooltip="'Vote-weight: ' + vote.weight">
                 <b>{{ $wallet.formatNumber(vote.weight) }}</b>
               </div>
-              <!-- <div v-if="vote.comment_hash != null" class="column is-2 has-text-centered">
-                <a @click.prevent="commentModal(vote)"><font-awesome-icon :icon="['fas', 'comment-dots']" /></a>
-              </div> -->
             </div>
           </div>
           <div v-else-if="votes" class="has-text-centered">

@@ -74,6 +74,7 @@ export default (context, inject) => {
         }
       },
       async getHackathonVotesConfig () {
+        console.log(`GetHackathonVotesConfig:: ${process.env.hackathonContract}`)
         const data = await this.eos.rpc.get_table_rows({
           code: process.env.hackathonConfig,
           scope: process.env.hackathonConfig,
@@ -88,12 +89,15 @@ export default (context, inject) => {
       async getHackathonCycleConfig (cycle) {
         console.log('getHackathonCycleConfig')
         const data = await this.eos.rpc.get_table_rows({
-          code: process.env.hackathonConfig,
-          scope: process.env.hackathonConfig,
+          // code: process.env.hackathonConfig,
+          // scope: process.env.hackathonConfig,
+          code: 'effect.votes',
+          scope: 'effect.votes',
           table: 'cycle',
           lower_bound: cycle,
           limit: 1
         }).catch(error => console.log(`getHackathonCycleConfig Error: ${error}`))
+        console.log(data)
         if (data.rows.length > 0) {
           console.log(`Hackathon cycles: ${JSON.stringify(data)}`)
           return data.rows[0]

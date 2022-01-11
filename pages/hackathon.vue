@@ -100,7 +100,7 @@
                 Sign new constitution
               </button>
             </NuxtLink>
-            <button v-else class="button is-primary is-fullwidth" :disabled="!votes || vote_type === null || !wallet || !wallet.auth || wallet.nfxStillClaimable || $wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1 || this.voteslist < 3" @click.prevent="vote">
+            <button v-else class="button is-primary is-fullwidth" :disabled=" !wallet || !wallet.auth || wallet.nfxStillClaimable || $wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1 || this.voteslist < 3" @click.prevent="vote">
               <span v-if="!wallet || !wallet.auth">Not connected to wallet</span>
               <span v-else-if="$wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1">No voting power</span>
               <span v-else-if="wallet.nfxStillClaimable">Claim NFX before you can vote</span>

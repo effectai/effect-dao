@@ -27,18 +27,27 @@
           <div v-for="submission in submissions.submissions" :key="submission.group_name">
             <div class="card">
               <div class="card-content">
-                <div class="title is-4">
-                  {{ submission.group_name }}
+                <div class="media">
+                  <div class="image is-32x32 media-left">
+                    <avatar :account-name="submission.group_name" />
+                  </div>
+                  <div class="title is-3">
+                    {{ submission.group_name }}
+                  </div>
                 </div>
+                <hr>
                 <div class="subtitle is-6">
                   {{ submission.description }}
                 </div>
-                  <a :href="submission.github_url" target="_blank">
-                  GitHub 
-                </a>
+                  <a :href="submission.github_url" target="_blank">🞄 GitHub</a>
                 <br>
-                <a :href="submission.campaign_url" target="_blank">Campaign 🌟</a>
+                <a :href="submission.campaign_url" target="_blank">🞄 Campaign</a>
                 <br>
+                <a :href="submission.website" target="_blank" rel="noopener noreferrer">🞄 Website</a>
+                <br>
+                <a :href="submission.youtube_url" target="_blank" rel="noopener noreferrer">🞄 Presentation</a>
+                <br>
+                <a :href="submission.devpost" target="_blank" rel="noopener noreferrer">🞄 Devpost</a>
                 <hr>
                 <button v-if="votes_list.find(v => v.id === submission.id)" disabled class="button is-centered">
                   Added: #{{ votes_list.indexOf(votes_list.find(v => v.id === submission.id)) + 1 }}

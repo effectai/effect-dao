@@ -39,16 +39,26 @@
                 <div class="subtitle is-6">
                   {{ submission.description }}
                 </div>
+                <div v-if="submission.github_url">
                   <a :href="submission.github_url" target="_blank">🞄 GitHub</a>
-                <br>
-                <a :href="submission.campaign_url" target="_blank">🞄 Campaign</a>
-                <br>
-                <a :href="submission.website" target="_blank" rel="noopener noreferrer">🞄 Website</a>
-                <br>
-                <a :href="submission.youtube_url" target="_blank" rel="noopener noreferrer">🞄 Presentation</a>
-                <br>
-                <a :href="submission.devpost" target="_blank" rel="noopener noreferrer">🞄 Devpost</a>
-                <hr>
+                  <br>
+                </div>
+               <div v-if="submission.campaign_url">
+                  <a :href="submission.campaign_url" target="_blank">🞄 Campaign</a>
+                  <br>
+               </div>
+                <div v-if="submission.website">
+                  <a :href="submission.website" target="_blank" rel="noopener noreferrer">🞄 Website</a>
+                  <br>
+                </div>
+                <div v-if="submission.youtube_url">
+                  <a :href="submission.youtube_url" target="_blank" rel="noopener noreferrer">🞄 YouTube</a>
+                  <br>
+                </div>
+                <div v-if="submission.devpost">
+                  <a :href="submission.devpost" target="_blank" rel="noopener noreferrer">🞄 Devpost</a>
+                  <hr>
+                </div>
                 <button v-if="votes_list.find(v => v.id === submission.id)" disabled class="button is-centered">
                   Added: #{{ votes_list.indexOf(votes_list.find(v => v.id === submission.id)) + 1 }}
                 </button>

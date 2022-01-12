@@ -26,6 +26,7 @@ export default (context, inject) => {
       setTimeout(() => {
         this.getProposalConfig()
         this.getLastTerms()
+        this.getHackathonVotesConfig()
       })
     },
 

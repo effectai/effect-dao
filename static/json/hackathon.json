@@ -164,7 +164,7 @@
     {
       "id": 18,
       "group_name": "EffectAndroidWallet",
-      "description": "Android Wallet for Effect Network",
+      "description": "Android Wallet for Effect Network. EffectWallet allows campaign creation directly from the app.",
       "github_url": "https://github.com/bobguy101/EffectAndroidWallet",
       "campaign_url": "https://testnet.effect.network/campaigns/329/1413044240384",
       "youtube_url": "https://youtu.be/90Coagi08_Y",
@@ -185,7 +185,7 @@
       "id": 20,
       "group_name": "EffectQA",
       "description": "Effect Voice is an Effect Network template that allow worker to complete tasks with their voice and earn EFX rewards. Freedom to work from anywhere at anytime with your voice, even stuck in traffic jams, exercising or doing any relaxation and time consuming activity.",
-      "github_url": "https://github.com/cbonoz/effect22 ",
+      "github_url": "https://github.com/effectai/hackathon-submission-repo/tree/main/EffectQA ",
       "campaign_url": "https://testnet.effect.network/campaigns/144 ",
       "youtube_url": "https://youtu.be/E32y-08ZYrg",
       "website": "",

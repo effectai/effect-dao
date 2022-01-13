@@ -90,18 +90,18 @@
           </h5>
 
           <div v-if="proposalCycle" class="has-text-centered mb-4">
-            <span v-if="$moment(proposalCycle.start_time + 'Z').add($dao.getHackathonVotesConfig.cycle_voting_duration_sec, 'seconds').isBefore()">
+            <span v-if="$moment(proposalCycle.start_time + 'Z').add($dao.hackathonConfig.cycle_voting_duration_sec, 'seconds').isBefore()">
               Voting Closed
             </span>
             <span v-else>
-              Voting ends {{ $moment(proposalCycle.start_time + "Z").add($dao.getHackathonVotesConfig.cycle_voting_duration_sec, 'seconds').fromNow() }}
+              Voting ends {{ $moment(proposalCycle.start_time + "Z").add($dao.hackathonConfig.cycle_voting_duration_sec, 'seconds').fromNow() }}
             </span>
             <!--            <b>Current Vote {{ myVote.voter }}:</b> {{ voteTypes.find((vt) => vt.value === myVote.type).name }} - {{ myVote.weight }}-->
           </div>
           <div v-else-if="myVote && proposal.status === 'CLOSED'">
             <b>You voted {{ myVote.voter }}:</b> {{ voteTypes.find((vt) => vt.value === myVote.type).name }} - {{ myVote.weight }}
           </div>
-          <div v-if="proposal.status === 'ACTIVE' && proposalCycle && $moment(proposalCycle.start_time + 'Z').add($dao.getHackathonVotesConfig.cycle_voting_duration_sec, 'seconds').isAfter()">
+          <div v-if="proposal.status === 'ACTIVE' && proposalCycle && $moment(proposalCycle.start_time + 'Z').add($dao.hackathonConfig.cycle_voting_duration_sec, 'seconds').isAfter()">
             <div class="columns">
               <div class="control column">
                 <button class="button is-fullwidth is-success is-outlined" @click.prevent="vote_type = 1">
@@ -207,7 +207,7 @@
               <b>Edit</b>
             </nuxt-link>
           </div>
-          <div v-if="isMyProposal && $dao.getHackathonVotesConfig && proposal.cycle === 0" class="mt-2">
+          <div v-if="isMyProposal && $dao.hackathonConfig && proposal.cycle === 0" class="mt-2">
             <button class="button is-primary is-outlined is-fullwidth" @click.prevent="assignToNextCycle()">
               <b>Assign to next cycle</b>
             </button>
@@ -340,7 +340,7 @@ export default {
       return vote
     },
     currentCycle () {
-      return this.$dao.getHackathonVotesConfig ? this.$dao.getHackathonVotesConfig.current_cycle : null
+      return this.$dao.hackathonConfig ? this.$dao.hackathonConfig.current_cycle : null
     },
     signedLastConstitution () {
       return this.$wallet.signedConstitutionVersion === (this.$dao.lastTerms ? this.$dao.lastTerms.version : 0)
@@ -372,7 +372,7 @@ export default {
 
   methods: {
     async assignToNextCycle () {
-      if (this.$dao.getHackathonVotesConfig && this.proposal) {
+      if (this.$dao.hackathonConfig && this.proposal) {
         const actions = [{
           account: process.env.votingContract,
           name: 'updateprop',
@@ -385,7 +385,7 @@ export default {
             pay: this.proposal.pay,
             content_hash: this.proposal.content_hash,
             category: this.proposal.category,
-            cycle: this.$dao.getHackathonVotesConfig.current_cycle + 1,
+            cycle: this.$dao.hackathonConfig.current_cycle + 1,
             transaction_hash: this.proposal.transaction_hash
           }
         }]
@@ -429,7 +429,7 @@ export default {
     },
     async getProposal (id) {
       this.loading = true
-      if (this.$dao.getHackathonVotesConfig) {
+      if (this.$dao.hackathonConfig) {
         try {
           const data = await this.$eos.rpc.get_table_rows({
             code: process.env.votingContract,
@@ -452,11 +452,11 @@ export default {
           } else if (this.proposal.state === 0) {
             if (!this.proposal.cycle) {
               status = 'DRAFT'
-            } else if (this.proposalCycle && this.proposal.cycle === this.$dao.getHackathonVotesConfig.current_cycle && this.$moment(this.proposalCycle.start_time + 'Z').add(this.$dao.getHackathonVotesConfig.cycle_voting_duration_sec, 'seconds').isAfter()) {
+            } else if (this.proposalCycle && this.proposal.cycle === this.$dao.hackathonConfig.current_cycle && this.$moment(this.proposalCycle.start_time + 'Z').add(this.$dao.hackathonConfig.cycle_voting_duration_sec, 'seconds').isAfter()) {
               status = 'ACTIVE'
-            } else if (this.proposalCycle && this.$moment(this.proposalCycle.start_time + 'Z').add(this.$dao.getHackathonVotesConfig.cycle_voting_duration_sec, 'seconds').isBefore()) {
+            } else if (this.proposalCycle && this.$moment(this.proposalCycle.start_time + 'Z').add(this.$dao.hackathonConfig.cycle_voting_duration_sec, 'seconds').isBefore()) {
               status = 'PROCESSING'
-            } else if (this.proposalCycle && this.proposalCycle.id < this.$dao.getHackathonVotesConfig.current_cycle) {
+            } else if (this.proposalCycle && this.proposalCycle.id < this.$dao.hackathonConfig.current_cycle) {
               status = 'PROCESSING'
             } else {
               status = 'PENDING'
@@ -523,7 +523,7 @@ export default {
     },
     async getVotes (id) {
       // this.loading = true
-      if (this.$dao.getHackathonVotesConfig) {
+      if (this.$dao.hackathonConfig) {
         try {
           const config = {
             code: process.env.votingContract,

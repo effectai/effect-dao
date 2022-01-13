@@ -102,7 +102,14 @@
             <b>You voted {{ myVote.voter }}:</b> {{ voteTypes.find((vt) => vt.value === myVote.type).name }} - {{ myVote.weight }}
           </div>
           <div v-if="proposal.status === 'ACTIVE' && proposalCycle && $moment(proposalCycle.start_time + 'Z').add($dao.hackathonConfig.cycle_voting_duration_sec, 'seconds').isAfter()">
-            <div class="columns">
+          </div>
+          <div>
+            <NuxtLink v-if="wallet && wallet.auth && !signedLastConstitution" to="/dao">
+              <button class="button is-primary is-fullwidth">
+                Sign new constitution
+              </button>
+            </NuxtLink>
+                        <!-- <div class="columns">
               <div class="control column">
                 <button class="button is-fullwidth is-success is-outlined" @click.prevent="vote_type = 1">
                   <span class="icon">
@@ -111,19 +118,15 @@
                   <span>Vote</span>
                 </button>
               </div>
-            </div>
-          </div>
-          <div>
-            <NuxtLink v-if="wallet && wallet.auth && !signedLastConstitution" to="/dao">
-              <button class="button is-primary is-fullwidth">
-                Sign new constitution
-              </button>
-            </NuxtLink>
-            <button v-else class="button is-primary is-fullwidth" :disabled=" !wallet || !wallet.auth || wallet.nfxStillClaimable || $wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1 || this.voteslist < 7" @click.prevent="vote">
+            </div> -->
+            <button v-else class="button is-success is-outlined is-fullwidth" :disabled=" !wallet || !wallet.auth || wallet.nfxStillClaimable || $wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1 || this.votes_list.length < 7" @click="vote()">
               <span v-if="!wallet || !wallet.auth">Not connected to wallet</span>
               <span v-else-if="$wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1">No voting power</span>
               <span v-else-if="wallet.nfxStillClaimable">Claim NFX before you can vote</span>
               <span v-else>Vote</span>
+              <span class="icon">
+                <font-awesome-icon :icon="['fas', 'check']" />
+              </span>
             </button>
           </div>
         </div>
@@ -570,16 +573,14 @@ export default {
     },
     mapList () {
       // const votePowerUser = this.$wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked)
-      const commentList = this.votes_list.map((el, index) => {
-        return {
-          id: el.id
-        }
-      })
-      console.log(`CommentList: ${JSON.stringify(commentList)}`)
+      const commentList = this.votes_list.map((el) => {
+        return el.id
+      }).join(',')
+      console.log(`CommentList: ${commentList}`)
       return commentList
     },
     async vote () {
-      if (this.proposal && this.vote_type !== null) {
+      if (this.votes_list.length === 7) {
         // const hash = await this.createCommentHash()
         const actions = [{
           account: process.env.votingContract,
@@ -591,7 +592,7 @@ export default {
           data: {
             voter: this.wallet.auth.accountName,
             prop_id: this.proposal.id,
-            vote_type: this.vote_type,
+            vote_type: 1,
             comment_hash: this.mapList()
           }
         }]

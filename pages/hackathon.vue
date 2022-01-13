@@ -24,7 +24,7 @@
         </small>
         <div class="box mt-5">
           <h2>Hackathon Submissions</h2>
-          <div v-for="submission in submissions.submissions" :key="submission.group_name">
+          <div v-for="submission in submissions" :key="submission.group_name">
             <div class="card">
               <div class="card-content">
                 <div class="media">
@@ -59,10 +59,10 @@
                   <a :href="submission.devpost" target="_blank" rel="noopener noreferrer">🞄 Devpost</a>
                   <hr>
                 </div>
-                <button v-if="votes_list.find(v => v.id === submission.id)" disabled class="button is-centered">
+                <button v-if="votes_list.find(v => v.id === submission.id)" disabled class="button is-centered is-fullwidth">
                   Added: #{{ votes_list.indexOf(votes_list.find(v => v.id === submission.id)) + 1 }}
                 </button>
-                <button v-else class="button is-centered is-primary" @click="addVoteToList(submission)">
+                <button v-else class="button is-centered is-primary is-fullwidth" @click="addVoteToList(submission)">
                   Add to VoteList
                 </button>
               </div>
@@ -109,16 +109,6 @@
                 Sign new constitution
               </button>
             </NuxtLink>
-                        <!-- <div class="columns">
-              <div class="control column">
-                <button class="button is-fullwidth is-success is-outlined" @click.prevent="vote_type = 1">
-                  <span class="icon">
-                    <font-awesome-icon :icon="['fas', 'check']" />
-                  </span>
-                  <span>Vote</span>
-                </button>
-              </div>
-            </div> -->
             <button v-else class="button is-success is-outlined is-fullwidth" :disabled=" !wallet || !wallet.auth || wallet.nfxStillClaimable || $wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1 || this.votes_list.length < 7" @click="vote()">
               <span v-if="!wallet || !wallet.auth">Not connected to wallet</span>
               <span v-else-if="$wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1">No voting power</span>
@@ -236,6 +226,16 @@
 import jsonComment from '@/static/json/high_guard_comment.json'
 import hackathon from '@/static/json/hackathon.json'
 
+function shuffle (array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]
+  }
+}
+
+const hackathonlist = hackathon.submissions.sort((a, b) => Math.random() - 0.5)
+shuffle(hackathonlist)
+
 // Load hackathon into hackathon.json
 // console.log(`Hackathon Submissions${JSON.stringify(hackathon)}`)
 
@@ -264,7 +264,7 @@ export default {
       id: '0',
       vote_type: null,
       comment: null,
-      submissions: hackathon,
+      submissions: hackathonlist,
       votes_list: [],
       voteTypes: [
         {
@@ -545,11 +545,6 @@ export default {
           this.moreVotes = data.more
           this.nextKey = data.next_key
           this.votes = data.rows
-          // if (!this.votes) {
-          //   this.votes = data.rows
-          // } else {
-          //   this.votes = this.votes.concat(data.rows)
-          // }
         } catch (e) {
           this.$modal.show({
             color: 'danger',

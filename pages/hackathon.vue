@@ -160,7 +160,7 @@
                   <nuxt-link :to="'/account/'+vote.voter">
                     <b>{{ vote.voter }}</b>
                   </nuxt-link>
-                </div>ty
+                </div>
               </div>
               <div class="column is-3 has-text-centered">
                 <b :class="{'has-text-success': vote.type === 1, 'has-text-danger': vote.type === 2}">{{ voteTypes.find((vt) => vt.value === vote.type).name }}</b>
@@ -534,7 +534,7 @@ export default {
             table: 'vote',
             index_position: 4,
             key_type: 'i64',
-            limit: 1000,
+            limit: -1,
             lower_bound: id,
             upper_bound: id
           }
@@ -545,11 +545,11 @@ export default {
           this.moreVotes = data.more
           this.nextKey = data.next_key
           this.votes = data.rows
-          if (!this.votes) {
-            this.votes = data.rows
-          } else {
-            this.votes = this.votes.concat(data.rows)
-          }
+          // if (!this.votes) {
+          //   this.votes = data.rows
+          // } else {
+          //   this.votes = this.votes.concat(data.rows)
+          // }
         } catch (e) {
           this.$modal.show({
             color: 'danger',

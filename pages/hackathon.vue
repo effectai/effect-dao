@@ -363,7 +363,7 @@ export default {
     currentCycle () {
       this.getProposal(this.id)
       // this.getProposal(0)
-      console.log('Current Cycle')
+      // console.log('Current Cycle')
     }
   },
 
@@ -441,7 +441,7 @@ export default {
             lower_bound: 0,
             limit: 100
           }).catch(error => console.error(`hackathon, getproposal error: ${error}`))
-          console.log(`getProposal::Data: ${JSON.stringify(data)}`)
+          // console.log(`getProposal::Data: ${JSON.stringify(data)}`)
           this.proposal = data.rows[0]
           this.proposalCycle = await this.$dao.getHackathonCycleConfig(this.proposal.cycle)
           this.loading = false
@@ -467,7 +467,7 @@ export default {
           }
           this.$set(this.proposal, 'status', status)
           const ipfsProposal = await this.$dao.getIpfsContent(this.proposal.content_hash)
-          console.log(`ipfsProposal: ${ipfsProposal}`)
+          // console.log(`ipfsProposal: ${ipfsProposal}`)
           this.$set(this.proposal, 'title', ipfsProposal.title)
           this.$set(this.proposal, 'body', ipfsProposal.body)
           this.$set(this.proposal, 'files', ipfsProposal.files ? ipfsProposal.files : [])
@@ -628,7 +628,7 @@ export default {
       }
       if (!this.votes_list.includes(submsission)) {
         this.votes_list.push(submsission)
-        console.log(this.votes_list)
+        // console.log(this.votes_list)
         this.mapList()
       }
     },

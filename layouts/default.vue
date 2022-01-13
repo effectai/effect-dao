@@ -22,19 +22,19 @@
         </a>
       </div>
     </div> -->
-    <div class="discord">
+    <div class="testnet">
       <div class="container is-max-widescreen">
         <p class="is-hidden-mobile">
-          🔥 - The DAO Hackathon voting is now open - 🔥
+          <a href="/hackathon">💸 - The DAO Hackathon voting is now open - 💸</a>
         </p>
         <p class="is-hidden-tablet">
-          🔥 - The DAO Hackathon voting is now open - 🔥
+          <a href="/hackathon">💸 - The DAO Hackathon voting is now open - 💸</a>
         </p>
-         <button class="discord-btn">
+         <!-- <button class="discord-btn">
           <nuxt-link to="/hackathon">
               Go Vote!
             </nuxt-link>
-         </button>
+         </button> -->
       </div>
     </div>
     <modal />

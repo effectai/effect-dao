@@ -119,7 +119,7 @@
                 Sign new constitution
               </button>
             </NuxtLink>
-            <button v-else class="button is-primary is-fullwidth" :disabled=" !wallet || !wallet.auth || wallet.nfxStillClaimable || $wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1 || this.voteslist < 3" @click.prevent="vote">
+            <button v-else class="button is-primary is-fullwidth" :disabled=" !wallet || !wallet.auth || wallet.nfxStillClaimable || $wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1 || this.voteslist < 7" @click.prevent="vote">
               <span v-if="!wallet || !wallet.auth">Not connected to wallet</span>
               <span v-else-if="$wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked) < 1">No voting power</span>
               <span v-else-if="wallet.nfxStillClaimable">Claim NFX before you can vote</span>
@@ -621,8 +621,8 @@ export default {
       }
     },
     addVoteToList (submsission) {
-      if (this.votes_list.length === 3) {
-        alert('You can only choose 3 candidates, remember; the order matters.')
+      if (this.votes_list.length === 7) {
+        alert('You can only choose 7 candidates, remember; the order matters.')
         return
       }
       if (!this.votes_list.includes(submsission)) {

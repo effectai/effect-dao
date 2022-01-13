@@ -33,7 +33,7 @@
               </nuxt-link>
             </div>
             <div @click="mobileMenu = false">
-              <a class="navbar-item" href="https://bridge.effect.network/">
+              <a class="navbar-item" href="https://bridge.effect.network/" target="_blank">
                 BSC Bridge
               </a>
             </div>

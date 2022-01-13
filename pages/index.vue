@@ -6,10 +6,10 @@
           <avatar class="is-rounded" style="margin: 0 auto" :account-name="wallet.auth.accountName" />
         </div>
         <h1 class="title">Hi, {{ wallet.auth.accountName }}!</h1>
-        <div class="subtitle">Welcome to the Effect Dashboard.</div>
+        <div class="subtitle">Effect Network DAO</div>
       </div>
       <div v-else class="has-text-centered">
-        <h1 class="title">Welcome to the Effect Dashboard.</h1>
+        <h1 class="title">Effect Network DAO</h1>
         <div class="subtitle">Stake, vote and swap all in one place!</div>
         <div class="has-text-centered my-4">
           <a class="button is-primary" @click="$wallet.loginModal = true">

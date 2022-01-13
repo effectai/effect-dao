@@ -8,7 +8,9 @@ export default {
     fallback: true
   },
 
-  // Production
+  /**
+   * Production
+   */
   env: {
     eosNodeUrl: 'eos.greymass.com',
     protocolUrl: 'https',
@@ -22,6 +24,7 @@ export default {
     daoContract: 'theeffectdao',
     proposalContract: 'daoproposals',
     feepoolContract: 'feepool.efx',
+    votingContract: 'effectvotess',
     efxToken: 'EFX',
     nfxToken: 'NFX',
     discordGuildId: '519860537891487745',
@@ -42,6 +45,7 @@ export default {
   //   stakingContract: 'stak3onkylin',
   //   daoContract: 'thedaonkylin',
   //   proposalContract: 'propsonkylin',
+  //   votingContract: 'effect.votes',
   //   feepoolContract: 'feepoolkylin',
   //   efxToken: 'UTL',
   //   nfxToken: 'GRN',
@@ -84,6 +88,31 @@ export default {
   //   constitutionUrl: 'https://raw.githubusercontent.com/effectai/effect-network-eos/9522a000cf96269912a47fdd4653c14ac26bbf61/constitution/constitution.md'
 
   // },
+
+  /**
+   * ./local.sh from scripts folder in `effect-network`
+   */
+  // env: {
+  //   eosNodeUrl: '127.0.0.1',
+  //   protocolUrl: 'http',
+  //   portUrl: 8888,
+  //   eosChainId: '8a34ec7df1b8cd06ff4a8abbaa7cc50300823350cadc59ab296cb00d104d2b8f',
+  //   explorerUrl: 'https://local.bloks.io',
+  //   ipfsNode: 'https://ipfs.effect.ai',
+  //   ipfsExplorer: 'https://ipfs.effect.ai',
+  //   tokenContract: 'effect.token',
+  //   stakingContract: 'effect.stake',
+  //   daoContract: 'effect.daofx',
+  //   proposalContract: 'effect.props',
+  //   votingContract: 'effect.votes',
+  //   feepoolContract: 'effect.feefx',
+  //   efxToken: 'EFX',
+  //   nfxToken: 'NFX',
+  //   discordGuildId: '519860537891487745',
+  //   discordInviteUrl: 'https://discord.gg/hM3237cYXP',
+  //   constitutionUrl: 'https://raw.githubusercontent.com/effectai/effect-network-eos/9522a000cf96269912a47fdd4653c14ac26bbf61/constitution/constitution.md'
+  // },
+
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {

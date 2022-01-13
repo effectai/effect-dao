@@ -3,7 +3,7 @@
     <div v-if="isTestnet" class="testnet">
       Connected to Kylin testnet ({{ node }})
     </div>
-    <div class="discord">
+    <!-- <div class="discord">
       <div class="container is-max-widescreen">
         <img src="@/assets/img/discord.png" alt="Discord logo">
         <p class="is-hidden-mobile">
@@ -20,6 +20,21 @@
             Join
           </button>
         </a>
+      </div>
+    </div> -->
+    <div class="testnet">
+      <div class="container is-max-widescreen">
+        <p class="is-hidden-mobile">
+          <a href="/hackathon">💸 - The DAO Hackathon voting is now open - 💸</a>
+        </p>
+        <p class="is-hidden-tablet">
+          <a href="/hackathon">💸 - The DAO Hackathon voting is now open - 💸</a>
+        </p>
+         <!-- <button class="discord-btn">
+          <nuxt-link to="/hackathon">
+              Go Vote!
+            </nuxt-link>
+         </button> -->
       </div>
     </div>
     <modal />

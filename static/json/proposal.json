@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "title": "Hackathon Voting for the DAO",
+  "body": "# Vot on your favorite Hackathon Submission\n![](https://i.ibb.co/vk9mdqj/53024314-m-1000x458.jpg)\nWith our first year under our belt, I'm thinking that it's time to attract \"fresh blood\" into the DAO. \n\nI'd like to create a marketing campaign centered around two things:\n\n* Bringing new people into the DAO\n* Highlighting how people can use the DAO for funding their endeavors within the Effect Network\n\nThis is purely sentiment gathering. If this passes with a \"Yes\", I'll devote time, energy, and reasearch and create a marketing plan to present to the DAO. \n\n ",
+  "files": [],
+  "author": "Effect.Network",
+  "content_hash": "QmajcCFiwdaMows9uGkTNLS8Ah9dcXEZ9a9VicEv7q8n1E",
+  "pay": [ { "field_0": { "quantity": "0.0000 EFX", "contract": "effecttokens" }, "field_1": "2022-01-05T11:45:10" } ],
+  "vote_counts": [ { "key": 0, "value": 0 }, { "key": 1, "value": 0 }, { "key": 2, "value": 0 } ],
+  "state": 0,
+  "cycle": 1,
+  "category": 1,
+  "proof_hash": null,
+  "transaction_hash": null
+}

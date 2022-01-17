@@ -1,8 +1,24 @@
 <template>
   <div>
+      <div class="content">
+        <h1 class="has-text-centered">Effect Network Hackathon Winner</h1>
+        <img src="https://effect.network/_nuxt/img/coins.00f8b5f.png" alt="">
+        <p>
+          Thank you every one for your participation 🤩
+          This has been an incredible hackathon!
+          With this we are incredibly proud and happy with the submissions of all of the hackathon participants.
+          But as stated in the rules, there are only 7 particpants that can win a prize from the DAO.
+          First prize gets $8K in EFX, second prize gets $6K in EFX, third up to seventh get $2.5K in EFX.
+          We would like to thank all of our DAO member who voted on this proposal and who are involved in seeing Effect Network continue growing in this new direction.
+          With this hackathon announcing the new Effect Network as a truly decentralized platform for one and all.
+          The voting page is availale at: <a href="/hackathon">hackathon</a>.
+        </p>
+        <p class="has-text-centered">
+          So drumroll please! 🥁
+        </p>
     <div class="box">
       <h4 class="box-title subtitle">
-        Token Map
+        Votin Distribution
       </h4>
       <div class="table-container">
         <table class="table is-striped is-hoverable is-fullwidth">
@@ -13,37 +29,38 @@
                 VoteWeight
               </th>
               <th class="has-text-centered">
-                Prize
+                Prize (in EFX)
               </th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(label, index) in sortedVotesList" :key="label">
               <td>
-                {{ label[1].name }}
+                <a :href="label[0].devpost">{{ label[1].name }}</a>
               </td>
               <td class="has-text-centered">
                 {{ parseInt(label[1].voteWeight) }}
               </td>
               <td class="has-text-centered" v-if="index === 0">
-                8K EFX
+                $8K
               </td>
               <td class="has-text-centered" v-else-if="index === 1">
-                6K EFX
+                $6K
               </td>
               <td class="has-text-centered" v-else-if="[2,3,4,5,6].includes(index)">
-                2K EFX
+                $2.5K
               </td>
               <td class="has-text-centered" v-else>
-                0K
+                0
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-      t{{loadingBalances}}t
       <pie-chart v-if="innerChartBalances" :data="chartData" :options="chartOptions" />
     </div>
+      </div>
+
     <div class="box">
       <h4 class="box-title subtitle">
         Stats
@@ -119,6 +136,11 @@ export default {
           value: this.totalMembers
         },
         {
+          name: 'Total DAO Voting Members',
+          description: 'Members with voting power',
+          value: 247
+        },
+        {
           name: 'Total Vote Weight',
           description: 'Sum of all vote-weight of members who participated',
           value: parseInt(this.totalHackathonVoteWeight) ?? ''
@@ -153,7 +175,7 @@ export default {
       }
     },
     innerChartBalances () {
-      return this.sortedVotesList ? this.sortedVotesList.map(el => el['1'].voteWeight) : null
+      return this.sortedVotesList ? this.sortedVotesList.map(el => el['1'].voteWeight).sort((a, b) => b - a) : null
     }
   },
   created () {
@@ -176,14 +198,14 @@ export default {
 
     applyVoteWeight (element, index, voteWeight) {
       switch (index) {
-        case 0: return { id: element, voteweight: Number(voteWeight) * 0.26 }
-        case 1: return { id: element, voteweight: Number(voteWeight) * 0.20 }
-        case 2: return { id: element, voteweight: Number(voteWeight) * 0.16 }
-        case 3: return { id: element, voteweight: Number(voteWeight) * 0.13 }
-        case 4: return { id: element, voteweight: Number(voteWeight) * 0.10 }
-        case 5: return { id: element, voteweight: Number(voteWeight) * 0.08 }
-        case 6: return { id: element, voteweight: Number(voteWeight) * 0.07 }
-        default: return { id: element, voteweight: Number(voteWeight) * 0.00 }
+        case 0: return { id: element, voteweight: parseInt(Number(voteWeight) * 0.26) }
+        case 1: return { id: element, voteweight: parseInt(Number(voteWeight) * 0.20) }
+        case 2: return { id: element, voteweight: parseInt(Number(voteWeight) * 0.16) }
+        case 3: return { id: element, voteweight: parseInt(Number(voteWeight) * 0.13) }
+        case 4: return { id: element, voteweight: parseInt(Number(voteWeight) * 0.10) }
+        case 5: return { id: element, voteweight: parseInt(Number(voteWeight) * 0.08) }
+        case 6: return { id: element, voteweight: parseInt(Number(voteWeight) * 0.07) }
+        default: return { id: element, voteweight: parseInt(Number(voteWeight) * 0.00) }
       }
     },
 
@@ -268,9 +290,6 @@ export default {
           })
         } else {
           const tallyOldVoteWeight = mapRows.get(element.id).voteWeight
-          if (tallyOldVoteWeight < 0) {
-            console.log(element)
-          }
           mapRows.set(element.id, {
             voteWeight: element.voteweight += tallyOldVoteWeight,
             name: this.applyName(element.id)
@@ -287,16 +306,14 @@ export default {
         sortedList.push(val)
       })
 
-      sortedList.map((el) => {
-        hackathon.submissions.map((element) => {
-          console.log(el[0], element.id)
-          if (element[0] === el.id) {
-            Object.assign(element, el)
-          }
-        })
-      })
+      // const upgradedList = sortedList.map((el) => {
+      //   hackathon.submissions.map((element) => {
+      //     if (element[0] === el.id) {
+      //       Object.assign(element, el)
+      //     }
+      //   })
+      // })
 
-      console.log(totalVoteWeight, totalVotes, checkTotalVotes, sortedList, sortedMap)
       this.totalHackathonVoteWeight = totalVoteWeight
       this.totalVotes = totalVotes
       this.checkTotalVotes = checkTotalVotes

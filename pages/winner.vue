@@ -175,7 +175,7 @@ export default {
       }
     },
     innerChartBalances () {
-      return this.sortedVotesList ? this.sortedVotesList.map(el => el['1'].voteWeight).sort((a, b) => a.toString().localeCompare(b)) : null
+      return this.sortedVotesList ? this.sortedVotesList.map(el => el['1'].voteWeight).sort((a, b) => b - a) : null
     }
   },
   created () {

@@ -18,7 +18,7 @@
         </p>
     <div class="box">
       <h4 class="box-title subtitle">
-        Votin Distribution
+        Voting Distribution
       </h4>
       <div class="table-container">
         <table class="table is-striped is-hoverable is-fullwidth">
@@ -175,7 +175,7 @@ export default {
       }
     },
     innerChartBalances () {
-      return this.sortedVotesList ? this.sortedVotesList.map(el => el['1'].voteWeight).sort((a, b) => b - a) : null
+      return this.sortedVotesList ? this.sortedVotesList.map(el => el['1'].voteWeight).sort((a, b) => a.toString().localeCompare(b)) : null
     }
   },
   created () {

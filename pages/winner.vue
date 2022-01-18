@@ -9,10 +9,16 @@
       <section class="section">
         <div class="container is-fullheight">
           <h1 class="title has-text-centered">Devpost Jury Winners</h1>
-          <p class="content">
-            The official judges from Devpost have made their decisions and are happy to announce the winners for Effect Network's first hackathon!
-            We are very proud of these participants and we wish them a bright future on the Effect Network platform.
-          </p>
+            <p>Effect Network's first hackathon has finally come to a close.
+              This has been an incredible hackathon! 🔥
+            </p>
+            <p>
+              It's been an exciting hackathon and it was difficult to choose between all of the great submissions.
+              We would like to thank all of the participants of the Effect Network Hackathon for their hardwork, creativity and late nights. You have helped us achieve a new mile stone with this new direction for Effect Network.
+            </p>
+            <p>
+              The official judges from Devpost have announced the winners of Effect Network's first hackathon! We are really proud of these participants and wish them the best of luck in their future endeavors on the Effect Network platform.
+            </p>
           <div class="my-6">
             <div class="columns is-multiline mt-6 is-fullheight">
               <div class="column has-special-hover is-fullheight">
@@ -102,12 +108,14 @@
         <div class="content">
           <h2 class="has-text-centered">DAO Winners</h2>
           <p>
-            Thank you every one for your participation 🤩
-            This has been an incredible hackathon!
-            With this we are incredibly proud and happy with the submissions of all of the hackathon participants.
-            But as stated in the rules, there are only 7 particpants that can win a prize from the DAO.
+            The DAO is a corner stone of our platform and it's our great honor that we would like to present to you the judgment of the DAO.
+            The votes have been tallied, and there are 7 winners that can win a prize from the DAO.
+          </p>
+          <p>
             First prize gets $8K in EFX, second prize gets $6K in EFX, third up to seventh get $2.5K in EFX.
             We would like to thank all of our DAO member who voted on this proposal and who are involved in seeing Effect Network continue growing in this new direction.
+          </p>
+          <p>
             With this hackathon announcing the new Effect Network as a truly decentralized platform for one and all.
             The voting page is availale at: <a href="/hackathon">hackathon</a>.
           </p>

@@ -8,7 +8,7 @@
 
       <section class="section">
         <div class="container is-fullheight">
-          <h1 class="title has-text-centered">Devpost Jury Winners</h1>
+          <h1 class="title has-text-centered">Category 1:<br> Devpost Jury Winners</h1>
             <p><a href="https://effect-network-hackathon.devpost.com/">Effect Network's first hackathon</a> has finally come to a close.
               This has been an incredible hackathon! 🔥
             </p>
@@ -106,7 +106,7 @@
 
       <section>
         <div class="content">
-          <h2 class="has-text-centered">DAO Winners</h2>
+          <h2 class="has-text-centered">Category 2:<br>DAO Winners</h2>
           <p>
             The DAO is a corner stone of our platform and it's our great honor that we would like to present to you the judgment of the DAO.
             The votes have been tallied, and there are 7 winners that can win a prize from the DAO.
@@ -126,7 +126,7 @@
       </section>
       <div class="box">
         <h4 class="box-title subtitle">
-          DAO Distribution
+          Catagory 2: DAO Distribution
         </h4>
         <div class="table-container">
           <table class="table is-striped is-hoverable is-fullwidth">
@@ -257,7 +257,7 @@ export default {
     chartData () {
       return {
         // labels: ['Circulating', 'Foundation'],
-        labels: hackathon.submissions.map(val => val.group_name),
+        labels: this.chartLabels,
         datasets: [
           {
             name: 'Token Map',
@@ -265,13 +265,17 @@ export default {
             weight: 0.55,
             meta: hackathon.submissions,
             data: this.innerChartBalances,
-            labels: hackathon.submissions.map(val => val.group_name)
+            labels: this.chartLabels
           }
         ]
       }
     },
     innerChartBalances () {
-      return this.sortedVotesList ? this.sortedVotesList.map(el => el['1'].voteWeight).sort((a, b) => b - a) : null
+      return this.sortedVotesList ? this.sortedVotesList.map(el => el['1'].voteWeight) : null
+    },
+    chartLabels () {
+      console.log(this.sortedList)
+      return this.sortedVotesList ? this.sortedVotesList.map(el => el['1'].name) : null
     }
   },
   watch: {

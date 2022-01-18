@@ -25,10 +25,10 @@
     <div class="testnet">
       <div class="container is-max-widescreen">
         <p class="is-hidden-mobile">
-          <a href="/hackathon">💸 - The DAO Hackathon voting is now open - 💸</a>
+          <a href="/winner">💸 - The DAO Hackathon Winner Announcement - 💸</a>
         </p>
         <p class="is-hidden-tablet">
-          <a href="/hackathon">💸 - The DAO Hackathon voting is now open - 💸</a>
+          <a href="/winner">💸 - The DAO Hackathon Winner Announcement - 💸</a>
         </p>
          <!-- <button class="discord-btn">
           <nuxt-link to="/hackathon">

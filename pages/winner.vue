@@ -1,65 +1,67 @@
 <template>
   <div>
-      <div class="content">
-        <h1 class="has-text-centered">Effect Network Hackathon Winner</h1>
-        <img src="https://effect.network/_nuxt/img/coins.00f8b5f.png" alt="">
-        <p>
-          Thank you every one for your participation 🤩
-          This has been an incredible hackathon!
-          With this we are incredibly proud and happy with the submissions of all of the hackathon participants.
-          But as stated in the rules, there are only 7 particpants that can win a prize from the DAO.
-          First prize gets $8K in EFX, second prize gets $6K in EFX, third up to seventh get $2.5K in EFX.
-          We would like to thank all of our DAO member who voted on this proposal and who are involved in seeing Effect Network continue growing in this new direction.
-          With this hackathon announcing the new Effect Network as a truly decentralized platform for one and all.
-          The voting page is availale at: <a href="/hackathon">hackathon</a>.
-        </p>
-        <p class="has-text-centered">
-          So drumroll please! 🥁
-        </p>
-    <div class="box">
-      <h4 class="box-title subtitle">
-        Voting Distribution
-      </h4>
-      <div class="table-container">
-        <table class="table is-striped is-hoverable is-fullwidth">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th class="has-text-centered">
-                VoteWeight
-              </th>
-              <th class="has-text-centered">
-                Prize (in EFX)
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(label, index) in sortedVotesList" :key="label">
-              <td>
-                <a :href="label[0].devpost">{{ label[1].name }}</a>
-              </td>
-              <td class="has-text-centered">
-                {{ parseInt(label[1].voteWeight) }}
-              </td>
-              <td class="has-text-centered" v-if="index === 0">
-                $8K
-              </td>
-              <td class="has-text-centered" v-else-if="index === 1">
-                $6K
-              </td>
-              <td class="has-text-centered" v-else-if="[2,3,4,5,6].includes(index)">
-                $2.5K
-              </td>
-              <td class="has-text-centered" v-else>
-                0
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="content">
+      <h1 class="has-text-centered">
+        Effect Network Hackathon Winner
+      </h1>
+      <img src="https://effect.network/_nuxt/img/coins.00f8b5f.png" alt="">
+      <p>
+        Thank you every one for your participation 🤩
+        This has been an incredible hackathon!
+        With this we are incredibly proud and happy with the submissions of all of the hackathon participants.
+        But as stated in the rules, there are only 7 particpants that can win a prize from the DAO.
+        First prize gets $8K in EFX, second prize gets $6K in EFX, third up to seventh get $2.5K in EFX.
+        We would like to thank all of our DAO member who voted on this proposal and who are involved in seeing Effect Network continue growing in this new direction.
+        With this hackathon announcing the new Effect Network as a truly decentralized platform for one and all.
+        The voting page is availale at: <a href="/hackathon">hackathon</a>.
+      </p>
+      <p class="has-text-centered">
+        So drumroll please! 🥁
+      </p>
+      <div class="box">
+        <h4 class="box-title subtitle">
+          Voting Distribution
+        </h4>
+        <div class="table-container">
+          <table class="table is-striped is-hoverable is-fullwidth">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th class="has-text-centered">
+                  VoteWeight
+                </th>
+                <th class="has-text-centered">
+                  Prize (in EFX)
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(label, index) in sortedVotesList" :key="label">
+                <td>
+                  <a :href="label[0].devpost">{{ label[1].name }}</a>
+                </td>
+                <td class="has-text-centered">
+                  {{ parseInt(label[1].voteWeight) }}
+                </td>
+                <td v-if="index === 0" class="has-text-centered">
+                  $8K
+                </td>
+                <td v-else-if="index === 1" class="has-text-centered">
+                  $6K
+                </td>
+                <td v-else-if="[2,3,4,5,6].includes(index)" class="has-text-centered">
+                  $2.5K
+                </td>
+                <td v-else class="has-text-centered">
+                  0
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <pie-chart v-if="innerChartBalances" :data="chartData" :options="chartOptions" />
       </div>
-      <pie-chart v-if="innerChartBalances" :data="chartData" :options="chartOptions" />
     </div>
-      </div>
 
     <div class="box">
       <h4 class="box-title subtitle">
@@ -96,11 +98,6 @@ export default {
   components: {
     PieChart
   },
-  head () {
-    return {
-      title: 'Hackathon Winners'
-    }
-  },
   data () {
     return {
       loadingBalances: false,
@@ -115,15 +112,6 @@ export default {
       membersLowerBound: '13528614985990483600', // Hardcode lower bound from 300 members to minimize amount of fetches
       chartOptions: {
         cutoutPercentage: 10
-      }
-    }
-  },
-  watch: {
-    // eslint-disable-next-line
-    '$dao.cycleConfig': function (value) {
-      console.log('cycle config ready')
-      if (value) {
-        this.getTotalVoteWeight()
       }
     }
   },
@@ -176,6 +164,15 @@ export default {
     },
     innerChartBalances () {
       return this.sortedVotesList ? this.sortedVotesList.map(el => el['1'].voteWeight).sort((a, b) => b - a) : null
+    }
+  },
+  watch: {
+    // eslint-disable-next-line
+    '$dao.cycleConfig': function (value) {
+      console.log('cycle config ready')
+      if (value) {
+        this.getTotalVoteWeight()
+      }
     }
   },
   created () {
@@ -298,7 +295,7 @@ export default {
       })
 
       const sortedMap = new Map([...mapRows.entries()].sort((a, b) => {
-        return a[1].voteWeight < b[1].voteWeight
+        return b[1].voteWeight - a[1].voteWeight
       }))
 
       const sortedList = []
@@ -319,6 +316,11 @@ export default {
       this.checkTotalVotes = checkTotalVotes
       this.sortedVotesMap = sortedMap
       this.sortedVotesList = sortedList
+    }
+  },
+  head () {
+    return {
+      title: 'Hackathon Winners'
     }
   }
 }

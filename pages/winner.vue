@@ -5,22 +5,120 @@
         Effect Network Hackathon Winner
       </h1>
       <img src="https://effect.network/_nuxt/img/coins.00f8b5f.png" alt="">
-      <p>
-        Thank you every one for your participation 🤩
-        This has been an incredible hackathon!
-        With this we are incredibly proud and happy with the submissions of all of the hackathon participants.
-        But as stated in the rules, there are only 7 particpants that can win a prize from the DAO.
-        First prize gets $8K in EFX, second prize gets $6K in EFX, third up to seventh get $2.5K in EFX.
-        We would like to thank all of our DAO member who voted on this proposal and who are involved in seeing Effect Network continue growing in this new direction.
-        With this hackathon announcing the new Effect Network as a truly decentralized platform for one and all.
-        The voting page is availale at: <a href="/hackathon">hackathon</a>.
-      </p>
-      <p class="has-text-centered">
-        So drumroll please! 🥁
-      </p>
+
+      <section class="section">
+        <div class="container is-fullheight">
+          <h1 class="title has-text-centered">Devpost Jury Winners</h1>
+          <p class="content">
+            The official judges from Devpost have made their decisions and are happy to announce the winners for Effect Network's first hackathon!
+            We are very proud of these participants and we wish them a bright future on the Effect Network platform.
+          </p>
+          <div class="my-6">
+            <div class="columns is-multiline mt-6 is-fullheight">
+              <div class="column has-special-hover is-fullheight">
+                <a target="_blank" href="https://devpost.com/software/delos">
+                  <div class="card has-text-centered has-gradient">
+                    <div class="card-content">
+                      <div class="content">
+                        <div class="block">
+                          <p class="has-text-weight-bold is-size-5">
+                            <strong>1st 🥇</strong>
+                          </p>
+                        </div>
+                        <div class="block">
+                          <img :src="require('@/assets/img/delos.jpg')" class="is-icon-size-medium has-radius" style="height: 128px;"/>
+                        </div>
+                        <div class="block">
+                          <span class="is-5 mt-1 has-text-weight-bold">Delos</span>
+                          <p class="has-text-accent">$8,000 in USDT and $8,000 in EFX</p>
+                          <div class="is-divider" />
+                        </div>
+                        <div class="block">
+                          <p class="is-5"> Delos 💥 an Effect Network UI, specifically thought for image labeling tasks. </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="column has-special-hover is-large">
+                <a target="_blank" href="https://devpost.com/software/catalogue-16tlek">
+                  <div class="card has-text-centered has-gradient">
+                    <div class="card-content">
+                      <div class="content">
+                        <div class="block">
+                          <p class="has-text-weight-bold is-size-5">
+                            <strong>2nd 🥈</strong>
+                          </p>
+                        </div>
+                        <div class="block">
+                          <img :src="require('@/assets/img/catalogue.png')" class="is-icon-size-medium has-radius" style="height: 128px;"/>
+                        </div>
+                        <div class="block">
+                          <span class="is-5 mt-1 has-text-weight-bold">Catalogue</span>
+                          <p class="has-text-accent">$5,000 in USDT and $5,000 in EFX</p>
+                          <div class="is-divider" />
+                        </div>
+                        <div class="block">
+                            <p class="is-5 is-link">Catalogue is an app built on Shopify, a platform used by 1.7M+ merchants.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="column has-special-hover">
+                <a target="_blank" href="https://devpost.com/software/effect-notebooks">
+                  <div class="card has-text-centered has-gradient">
+                    <div class="card-content">
+                      <div class="content">
+                        <div class="block">
+                          <p class="has-text-weight-bold is-size-5">
+                            <strong>3rd 🥉</strong>
+                          </p>
+                        </div>
+                        <div class="block">
+                          <img :src="require('@/assets/img/effect_notebooks.jpg')" class="is-icon-size-medium has-radius" style="height: 128px;"/>
+                        </div>
+                        <div class="block">
+                          <span class="is-5 mt-1 has-text-weight-bold">Effect Notebooks</span>
+                          <p class="has-text-accent">$2,500 in USDT and $2,500</p>
+                          <div class="is-divider" />
+                        </div>
+                        <div class="block">
+                            <p class="is-5 is-link">Effect Notebooks is a campaign for workers to automate the cleaning of data. </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="content">
+          <h2 class="has-text-centered">DAO Winners</h2>
+          <p>
+            Thank you every one for your participation 🤩
+            This has been an incredible hackathon!
+            With this we are incredibly proud and happy with the submissions of all of the hackathon participants.
+            But as stated in the rules, there are only 7 particpants that can win a prize from the DAO.
+            First prize gets $8K in EFX, second prize gets $6K in EFX, third up to seventh get $2.5K in EFX.
+            We would like to thank all of our DAO member who voted on this proposal and who are involved in seeing Effect Network continue growing in this new direction.
+            With this hackathon announcing the new Effect Network as a truly decentralized platform for one and all.
+            The voting page is availale at: <a href="/hackathon">hackathon</a>.
+          </p>
+          <p class="has-text-centered">
+            So drumroll please! 🥁
+          </p>
+        </div>
+      </section>
       <div class="box">
         <h4 class="box-title subtitle">
-          Voting Distribution
+          DAO Distribution
         </h4>
         <div class="table-container">
           <table class="table is-striped is-hoverable is-fullwidth">
@@ -335,6 +433,10 @@ table {
   .tag {
     font-size: 0.9em;
     height: inherit;
+  }
+
+  .column {
+      display: flex;
   }
 }
 </style>

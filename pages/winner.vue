@@ -26,6 +26,7 @@
           <table class="table is-striped is-hoverable is-fullwidth">
             <thead>
               <tr>
+                <th></th>
                 <th>Name</th>
                 <th class="has-text-centered">
                   VoteWeight
@@ -37,8 +38,9 @@
             </thead>
             <tbody>
               <tr v-for="(label, index) in sortedVotesList" :key="label">
+                <td>{{index + 1}}</td>
                 <td>
-                  <a :href="label[0].devpost">{{ label[1].name }}</a>
+                  {{ label[1].name }}
                 </td>
                 <td class="has-text-centered">
                   {{ parseInt(label[1].voteWeight) }}

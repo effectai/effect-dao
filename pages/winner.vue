@@ -9,7 +9,7 @@
       <section class="section">
         <div class="container is-fullheight">
           <h1 class="title has-text-centered">Devpost Jury Winners</h1>
-            <p>Effect Network's first hackathon has finally come to a close.
+            <p><a href="https://effect-network-hackathon.devpost.com/">Effect Network's first hackathon</a> has finally come to a close.
               This has been an incredible hackathon! 🔥
             </p>
             <p>

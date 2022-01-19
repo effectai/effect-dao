@@ -163,6 +163,13 @@
               </td>
               <td>PDF</td>
             </tr>
+            <tr>
+              <td>
+                <a href="https://effect-dao-docs.gitbook.io/effectdaocc/" target="_blank">The Effect Network
+                  Community Documentation</a>
+              </td>
+              <td>Website</td>
+            </tr>
           </tbody>
         </table>
       </div>

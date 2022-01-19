@@ -88,7 +88,7 @@
                         </div>
                         <div class="block">
                           <span class="is-5 mt-1 has-text-weight-bold">Effect Notebooks</span>
-                          <p class="has-text-accent">$2,500 in USDT and $2,500</p>
+                          <p class="has-text-accent">$2,500 in USDT and $2,500 in EFX</p>
                           <div class="is-divider" />
                         </div>
                         <div class="block">

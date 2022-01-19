@@ -331,7 +331,7 @@ export default {
         case '10': return 'Effect Research'
         case '11': return 'Vibelyze'
         case '12': return 'Gitstar'
-        case '13': return 'Egrasia'
+        case '13': return 'Ergasia'
         case '14': return 'BlockSage'
         case '15': return 'EYEFX'
         case '16': return 'Authentic'

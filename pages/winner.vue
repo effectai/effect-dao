@@ -122,6 +122,7 @@
           <p class="has-text-centered">
             So drumroll please! 🥁
           </p>
+          <br>
         </div>
       </section>
       <div class="box">

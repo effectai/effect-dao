@@ -124,7 +124,7 @@
     },
     {
       "id": 13,
-      "group_name": "Egrasia",
+      "group_name": "Ergasia",
       "description": "It is a task distribution platform powered by Effect Network. It allows companies and individuals to upload tasks and get them done quickly. It currently has 5 campaigns which are Converting handwritten images to text, Editing Images, Technical Code Debug, Feedback for posters and asking Academic Course related questions.",
       "github_url": "https://github.com/effectai/hackathon-submission-repo/tree/main/ergasia",
       "campaign_url": "https://testnet.effect.network/campaigns/205",

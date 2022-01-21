@@ -148,7 +148,7 @@ export default {
       {
         hid: 'og:image',
         property: 'og:image',
-        content: 'https://effect.network/_nuxt/img/effect-dao_h100.62b6528.png'
+        content: 'https://effect.network/img/logo/effect-dao-new.png'
       },
       {
         hid: 'twitter:card',
@@ -178,7 +178,7 @@ export default {
       {
         hid: 'twitter:image',
         property: 'twitter:image',
-        content: 'https://effect.network/_nuxt/img/effect-dao_h100.62b6528.png'
+        content: 'https://effect.network/img/logo/effect-dao-new.png'
       }
     ],
     link: [

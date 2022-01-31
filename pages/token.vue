@@ -206,6 +206,7 @@ export default {
       balances: {
         daoBalance: 0,
         liquidBalance: 0,
+        liquidBalanceBsc: 0,
         stakeBalance: 0,
         unswappedBalance: 0,
         // foundationBalance: 195375000,
@@ -251,16 +252,13 @@ export default {
           source: 'https://github.com/effectai/effect-network-eos/blob/proposals/contracts/effect-proposals/effect-proposals.cpp'
         },
         {
-          name: 'Effect.AI Token on NEO (legacy)',
-          description: 'Smart Contract on the NEO blockchain for the NEP5 EFX token',
-          account: 'acbc5...7e6f9',
-          link: 'https://neotracker.io/asset/acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
-          source: 'https://github.com/effectai/effect-network-neo/blob/master/contracts/java/token/src/ai/effect/token/EffectToken.java'
+          name: 'Effect.AI Token on BSC',
+          description: 'Smart contract on the BSC blockchain',
+          account: '0xC51...5aD0',
+          link: 'https://bscscan.com/token/0xC51Ef828319b131B595b7ec4B28210eCf4d05aD0',
+          source: null
         }
-      ],
-      chartOptions: {
-        cutoutPercentage: 10
-      }
+      ]
     }
   },
   watch: {
@@ -314,7 +312,7 @@ export default {
     chartData () {
       return {
         // labels: ['Circulating', 'Foundation'],
-        labels: ['Liquid Supply', 'Stake Pool', 'Liquidity & Partnerships', 'EffectDAO', 'Foundation'],
+        labels: ['Liquid Supply (EOS)', 'Liquid Supply (BSC)', 'Stake Pool', 'Liquidity & Partnerships', 'EffectDAO', 'Foundation'],
         datasets: [
           {
             name: 'Token Map',
@@ -326,6 +324,12 @@ export default {
                 link: 'https://bloks.io/tokens/EFX-eos-effecttokens',
                 description: null, // 'Current supply in circulation and not locked in any staking or timelock.',
                 balanceKey: 'liquidBalance'
+              },
+              {
+                addressName: '0xC51Ef828319b131B595b7ec4B28210eCf4d05aD0',
+                link: 'https://bscscan.com/token/0xC51Ef828319b131B595b7ec4B28210eCf4d05aD0',
+                description: null,
+                balanceKey: 'liquidBalanceBsc'
               },
               {
                 addressName: 'efxstakepool',
@@ -357,7 +361,7 @@ export default {
               }
             ],
             data: this.innerChartBalances,
-            labels: ['Liquid Supply', 'Stake Pool', 'Liquidity & Partnerships', 'EffectDAO', 'Foundation']
+            labels: ['Liquid Supply (EOS)', 'Liquid Supply (BSC)', 'Stake Pool', 'Liquidity & Partnerships', 'EffectDAO', 'Foundation']
           }
         ]
       }
@@ -420,14 +424,13 @@ export default {
     async getBalances () {
       this.loadingBalances = true
       const circSupply = parseInt((await fetch('https://www.api.bloks.io/tokens/EFX-eos-effecttokens').then(data => data.json()))[0].supply.circulating)
+      this.balances.liquidBalanceBsc = parseInt(await this.getBscBalance())
       this.balances.daoBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'treasury.efx', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.stakeBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'efxstakepool', process.env.efxToken))[0].replace(' EFX', ''))
-      this.balances.liquidBalance = circSupply - this.balances.daoBalance - this.balances.stakeBalance - this.balances.liquidityBalance - this.balances.foundationBalance
+      this.balances.liquidBalance = circSupply - this.balances.daoBalance - this.balances.stakeBalance - this.balances.liquidityBalance - this.balances.foundationBalance - this.balances.liquidBalanceBsc
       this.balances.unswappedBalance = 650000000 - (this.balances.liquidBalance + this.balances.stakeBalance + this.balances.foundationBalance + this.balances.liquidityBalance + this.balances.daoBalance)
       this.loadingBalances = false
     },
-
-    // FIXME is this still right?
     async getTotalVoteWeight () {
       const cycleData = await this.$eos.rpc.get_table_rows({
         code: process.env.proposalContract,

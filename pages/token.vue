@@ -4,6 +4,13 @@
       <h4 class="box-title subtitle">DAO Agenda Form</h4>
         <div class="has-text-centered">
           <a href="https://docs.google.com/forms/d/e/1FAIpQLSfeYTVK1aFkoIO8G7Di540-cf7bS4O98KzSfMAwjRNf_I2uvg/viewform" target="_blank">Add topic to DAO Agenda for biweekly DAO meetings.</a>
+          <!-- <iframe
+          src="https://docs.google.com/forms/d/e/1FAIpQLSfeYTVK1aFkoIO8G7Di540-cf7bS4O98KzSfMAwjRNf_I2uvg/viewform?embedded=true"
+          width="640"
+          height="1417"
+          frameborder="0"
+          marginheight="0"
+          marginwidth="0">Loading…</iframe> -->
           </div>
     </div>
     <div class="box">
@@ -26,7 +33,7 @@
           <tbody>
             <tr v-for="(label, index) in chartData.datasets[0].labels" :key="label">
               <td>
-                {{ label }} <span v-if="chartData.datasets[0].meta[index].locked" class="tag">locked</span>
+                {{ label }}
                 <span v-if="chartData.datasets[0].meta[index].description" class="is-pulled-right" :data-tooltip="chartData.datasets[0].meta[index].description">
                   <font-awesome-icon :icon="['fas', 'info-circle']" />
                 </span>
@@ -40,31 +47,6 @@
                   target="_blank"
                 >{{ chartData.datasets[0].meta[index].addressName }}</a>
               </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="box">
-      <h4 class="box-title subtitle">
-        Smart Contracts
-      </h4>
-      <div class="table-container">
-        <table class="table is-striped is-hoverable is-fullwidth">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Address</th>
-              <th>Source</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="contract in contracts" :key="contract.account">
-              <td>{{ contract.name }}</td>
-              <td>{{ contract.description }}</td>
-              <td><a :href="contract.link" target="_blank">{{ contract.account }}</a></td>
-              <td><a :href="contract.source" target="_blank">view source</a></td>
             </tr>
           </tbody>
         </table>
@@ -95,7 +77,7 @@
     </div>
     <div class="box">
       <h4 class="box-title subtitle">
-        Other Resources
+        Resources
       </h4>
       <div class="table-container">
         <table class="table is-striped is-hoverable is-fullwidth">
@@ -173,6 +155,32 @@
         </table>
       </div>
     </div>
+    <div class="box">
+      <h4 class="box-title subtitle">
+        Smart Contracts
+      </h4>
+      <div class="table-container">
+        <table class="table is-striped is-hoverable is-fullwidth">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Address</th>
+              <th>Source</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="contract in contracts" :key="contract.account">
+              <td>{{ contract.name }}</td>
+              <td>{{ contract.description }}</td>
+              <td><a :href="contract.link" target="_blank">{{ contract.account }}</a></td>
+              <td><a :href="contract.source" target="_blank">view source</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -202,7 +210,6 @@ export default {
         foundationBalance: 100000000,
         liquidityBalance: 88447533,
         communityBalance: 5000000,
-        teamBalance: 32125000,
         maxSupply: 650000000
       },
       contracts: [
@@ -305,7 +312,7 @@ export default {
     chartData () {
       return {
         // labels: ['Circulating', 'Foundation'],
-        labels: ['Liquid Supply', 'Stake Pool', 'Liquidity & Partnerships', 'Unswapped on NEO', 'Team Tokens', 'EffectDAO', 'Foundation'],
+        labels: ['Liquid Supply', 'Stake Pool', 'Liquidity & Partnerships', 'EffectDAO', 'Foundation'],
         datasets: [
           {
             name: 'Token Map',
@@ -333,19 +340,6 @@ export default {
                 balanceKey: 'liquidityBalance'
               },
               {
-                addressName: 'acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
-                link: 'https://neotracker.io/asset/acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
-                description: 'EFX tokens that did not swap to EOS yet.',
-                balanceKey: 'unswappedBalance'
-              },
-              {
-                addressName: 'AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
-                locked: true,
-                link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
-                description: null,
-                balanceKey: 'teamBalance'
-              },
-              {
                 addressName: 'treasury.efx',
                 link: 'https://bloks.io/account/treasury.efx',
                 locked: true,
@@ -361,7 +355,7 @@ export default {
               }
             ],
             data: this.innerChartBalances,
-            labels: ['Liquid Supply', 'Stake Pool', 'Liquidity & Partnerships', 'Unswapped on NEO', 'Team Tokens', 'EffectDAO', 'Foundation']
+            labels: ['Liquid Supply', 'Stake Pool', 'Liquidity & Partnerships', 'EffectDAO', 'Foundation']
           }
         ]
       }
@@ -370,7 +364,7 @@ export default {
       return [
         // this.balances.liquidBalance + this.balances.unswappedBalance + this.balances.feepoolBalance + this.balances.marketingBalance + this.balances.liquidityBalance + this.balances.communityBalance,
         this.balances.liquidBalance + this.balances.liquidityBalance,
-        this.balances.foundationBalance + this.balances.teamBalance + this.balances.stakeBalance + this.balances.daoBalance
+        this.balances.foundationBalance + this.balances.stakeBalance + this.balances.daoBalance
       ]
     },
     innerChartBalances () {
@@ -379,7 +373,6 @@ export default {
         this.balances.stakeBalance,
         this.balances.liquidityBalance,
         this.balances.unswappedBalance,
-        this.balances.teamBalance,
         this.balances.daoBalance,
         this.balances.foundationBalance
       ]
@@ -398,7 +391,7 @@ export default {
       this.balances.daoBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'treasury.efx', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.stakeBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'efxstakepool', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.liquidBalance = circSupply - this.balances.daoBalance - this.balances.stakeBalance - this.balances.liquidityBalance - this.balances.foundationBalance
-      this.balances.unswappedBalance = 650000000 - (this.balances.liquidBalance + this.balances.stakeBalance + this.balances.foundationBalance + this.balances.teamBalance + this.balances.liquidityBalance + this.balances.daoBalance)
+      this.balances.unswappedBalance = 650000000 - (this.balances.liquidBalance + this.balances.stakeBalance + this.balances.foundationBalance + this.balances.liquidityBalance + this.balances.daoBalance)
       this.loadingBalances = false
     },
 

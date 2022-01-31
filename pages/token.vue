@@ -185,6 +185,8 @@
 </template>
 
 <script>
+// import { Contract } from 'Web3-eth-contract'
+import Web3 from 'web3'
 
 export default {
   components: {
@@ -387,29 +389,33 @@ export default {
   },
   methods: {
     async getBscBalance () {
+      const provider = 'https://bsc-dataseed.binance.org/'
       const efxAddress = '0xC51Ef828319b131B595b7ec4B28210eCf4d05aD0'
-      const abi = {
+
+      const json = [{
         inputs: [],
         name: 'totalSupply',
-        outputs: [
-          {
-            internalType: 'uint256',
-            name: '',
-            type: 'uint256'
-          }
-        ],
+        outputs: [{
+          internalType: 'uint256',
+          name: '',
+          type: 'uint256'
+        }],
         stateMutability: 'view',
         type: 'function'
-      }
+      }]
 
-      const Contract = await import('https://cdn.jsdelivr.net/npm/web3-eth-contract@1.7.0/lib/index.js').catch(console.log)
-      const provider = 'https://bsc-dataseed.binance.org/'
-      Contract.setProvider(provider)
-      const efxContract = new Contract(abi, efxAddress)
+      const w3 = new Web3(provider)
+      const efxContract = new w3.eth.Contract(json, efxAddress)
+      // returns an int like this: 23153044824406508517219986
+      const balance = await efxContract.methods.totalSupply().call().catch(console.log)
 
-      const balance = await efxContract.methods.totalSupply().catch(console.log)
-      console.log(`EFX TOTAL SUPPLY BALANCE: ${balance}`)
-      return balance
+      // https://bscscan.com/unitconverter?wei=23153044824406508517219986
+      // Formatted should look like this: 23153044.824406508517219986
+
+      const formattedBalance = w3.utils.fromWei(balance)
+      // fromWei return: 23153044.824406508517219986
+      console.log(formattedBalance)
+      return formattedBalance
     },
     async getBalances () {
       this.loadingBalances = true

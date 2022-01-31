@@ -379,12 +379,38 @@ export default {
     }
   },
   mounted () {
+    this.getBscBalance()
     this.getBalances()
     this.getTotalVoteWeight()
     this.getNextCycleDate()
     this.getDaoMembers()
   },
   methods: {
+    async getBscBalance () {
+      const efxAddress = '0xC51Ef828319b131B595b7ec4B28210eCf4d05aD0'
+      const abi = {
+        inputs: [],
+        name: 'totalSupply',
+        outputs: [
+          {
+            internalType: 'uint256',
+            name: '',
+            type: 'uint256'
+          }
+        ],
+        stateMutability: 'view',
+        type: 'function'
+      }
+
+      const Contract = await import('https://cdn.jsdelivr.net/npm/web3-eth-contract@1.7.0/lib/index.js').catch(console.log)
+      const provider = 'https://bsc-dataseed.binance.org/'
+      Contract.setProvider(provider)
+      const efxContract = new Contract(abi, efxAddress)
+
+      const balance = await efxContract.methods.totalSupply().catch(console.log)
+      console.log(`EFX TOTAL SUPPLY BALANCE: ${balance}`)
+      return balance
+    },
     async getBalances () {
       this.loadingBalances = true
       const circSupply = parseInt((await fetch('https://www.api.bloks.io/tokens/EFX-eos-effecttokens').then(data => data.json()))[0].supply.circulating)

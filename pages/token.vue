@@ -44,7 +44,6 @@
           </tbody>
         </table>
       </div>
-      <pie-chart v-if="!loadingBalances" :data="chartData" :options="chartOptions" />
     </div>
     <div class="box">
       <h4 class="box-title subtitle">
@@ -178,11 +177,9 @@
 </template>
 
 <script>
-import PieChart from '@/components/PieChart.js'
 
 export default {
   components: {
-    PieChart
   },
   head () {
     return {

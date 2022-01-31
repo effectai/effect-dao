@@ -4,6 +4,13 @@
       <h4 class="box-title subtitle">DAO Agenda Form</h4>
         <div class="has-text-centered">
           <a href="https://docs.google.com/forms/d/e/1FAIpQLSfeYTVK1aFkoIO8G7Di540-cf7bS4O98KzSfMAwjRNf_I2uvg/viewform" target="_blank">Add topic to DAO Agenda for biweekly DAO meetings.</a>
+          <!-- <iframe
+          src="https://docs.google.com/forms/d/e/1FAIpQLSfeYTVK1aFkoIO8G7Di540-cf7bS4O98KzSfMAwjRNf_I2uvg/viewform?embedded=true"
+          width="640"
+          height="1417"
+          frameborder="0"
+          marginheight="0"
+          marginwidth="0">Loading…</iframe> -->
           </div>
     </div>
     <div class="box">
@@ -26,7 +33,7 @@
           <tbody>
             <tr v-for="(label, index) in chartData.datasets[0].labels" :key="label">
               <td>
-                {{ label }} <span v-if="chartData.datasets[0].meta[index].locked" class="tag">locked</span>
+                {{ label }}
                 <span v-if="chartData.datasets[0].meta[index].description" class="is-pulled-right" :data-tooltip="chartData.datasets[0].meta[index].description">
                   <font-awesome-icon :icon="['fas', 'info-circle']" />
                 </span>
@@ -40,32 +47,6 @@
                   target="_blank"
                 >{{ chartData.datasets[0].meta[index].addressName }}</a>
               </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <pie-chart v-if="!loadingBalances" :data="chartData" :options="chartOptions" />
-    </div>
-    <div class="box">
-      <h4 class="box-title subtitle">
-        Smart Contracts
-      </h4>
-      <div class="table-container">
-        <table class="table is-striped is-hoverable is-fullwidth">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Address</th>
-              <th>Source</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="contract in contracts" :key="contract.account">
-              <td>{{ contract.name }}</td>
-              <td>{{ contract.description }}</td>
-              <td><a :href="contract.link" target="_blank">{{ contract.account }}</a></td>
-              <td><a :href="contract.source" target="_blank">view source</a></td>
             </tr>
           </tbody>
         </table>
@@ -96,7 +77,7 @@
     </div>
     <div class="box">
       <h4 class="box-title subtitle">
-        Other Resources
+        Resources
       </h4>
       <div class="table-container">
         <table class="table is-striped is-hoverable is-fullwidth">
@@ -174,15 +155,41 @@
         </table>
       </div>
     </div>
+    <div class="box">
+      <h4 class="box-title subtitle">
+        Smart Contracts
+      </h4>
+      <div class="table-container">
+        <table class="table is-striped is-hoverable is-fullwidth">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Address</th>
+              <th>Source</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="contract in contracts" :key="contract.account">
+              <td>{{ contract.name }}</td>
+              <td>{{ contract.description }}</td>
+              <td><a :href="contract.link" target="_blank">{{ contract.account }}</a></td>
+              <td><a :href="contract.source" target="_blank">view source</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script>
-import PieChart from '@/components/PieChart.js'
+// import { Contract } from 'Web3-eth-contract'
+import Web3 from 'web3'
 
 export default {
   components: {
-    PieChart
   },
   head () {
     return {
@@ -199,13 +206,13 @@ export default {
       balances: {
         daoBalance: 0,
         liquidBalance: 0,
+        liquidBalanceBsc: 0,
         stakeBalance: 0,
         unswappedBalance: 0,
         // foundationBalance: 195375000,
         foundationBalance: 100000000,
         liquidityBalance: 88447533,
         communityBalance: 5000000,
-        teamBalance: 32125000,
         maxSupply: 650000000
       },
       contracts: [
@@ -245,16 +252,13 @@ export default {
           source: 'https://github.com/effectai/effect-network-eos/blob/proposals/contracts/effect-proposals/effect-proposals.cpp'
         },
         {
-          name: 'Effect.AI Token on NEO (legacy)',
-          description: 'Smart Contract on the NEO blockchain for the NEP5 EFX token',
-          account: 'acbc5...7e6f9',
-          link: 'https://neotracker.io/asset/acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
-          source: 'https://github.com/effectai/effect-network-neo/blob/master/contracts/java/token/src/ai/effect/token/EffectToken.java'
+          name: 'Effect.AI Token on BSC',
+          description: 'Smart contract on the BSC blockchain',
+          account: '0xC51...5aD0',
+          link: 'https://bscscan.com/token/0xC51Ef828319b131B595b7ec4B28210eCf4d05aD0',
+          source: null
         }
-      ],
-      chartOptions: {
-        cutoutPercentage: 10
-      }
+      ]
     }
   },
   watch: {
@@ -308,7 +312,7 @@ export default {
     chartData () {
       return {
         // labels: ['Circulating', 'Foundation'],
-        labels: ['Liquid Supply', 'Stake Pool', 'Liquidity & Partnerships', 'Unswapped on NEO', 'Team Tokens', 'EffectDAO', 'Foundation'],
+        labels: ['Liquid Supply (EOS)', 'Liquid Supply (BSC)', 'Stake Pool', 'Liquidity & Partnerships', 'EffectDAO', 'Foundation'],
         datasets: [
           {
             name: 'Token Map',
@@ -320,6 +324,12 @@ export default {
                 link: 'https://bloks.io/tokens/EFX-eos-effecttokens',
                 description: null, // 'Current supply in circulation and not locked in any staking or timelock.',
                 balanceKey: 'liquidBalance'
+              },
+              {
+                addressName: '0xC51Ef828319b131B595b7ec4B28210eCf4d05aD0',
+                link: 'https://bscscan.com/token/0xC51Ef828319b131B595b7ec4B28210eCf4d05aD0',
+                description: null,
+                balanceKey: 'liquidBalanceBsc'
               },
               {
                 addressName: 'efxstakepool',
@@ -334,19 +344,6 @@ export default {
                 locked: false,
                 description: 'Funds allocated for providing liquidity and partnership.',
                 balanceKey: 'liquidityBalance'
-              },
-              {
-                addressName: 'acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
-                link: 'https://neotracker.io/asset/acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
-                description: 'EFX tokens that did not swap to EOS yet.',
-                balanceKey: 'unswappedBalance'
-              },
-              {
-                addressName: 'AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
-                locked: true,
-                link: 'https://neotracker.io/address/AXRnUdHCY6W1G3mzYJ77mLj98Kv8MKqPno',
-                description: null,
-                balanceKey: 'teamBalance'
               },
               {
                 addressName: 'treasury.efx',
@@ -364,7 +361,7 @@ export default {
               }
             ],
             data: this.innerChartBalances,
-            labels: ['Liquid Supply', 'Stake Pool', 'Liquidity & Partnerships', 'Unswapped on NEO', 'Team Tokens', 'EffectDAO', 'Foundation']
+            labels: ['Liquid Supply (EOS)', 'Liquid Supply (BSC)', 'Stake Pool', 'Liquidity & Partnerships', 'EffectDAO', 'Foundation']
           }
         ]
       }
@@ -373,7 +370,7 @@ export default {
       return [
         // this.balances.liquidBalance + this.balances.unswappedBalance + this.balances.feepoolBalance + this.balances.marketingBalance + this.balances.liquidityBalance + this.balances.communityBalance,
         this.balances.liquidBalance + this.balances.liquidityBalance,
-        this.balances.foundationBalance + this.balances.teamBalance + this.balances.stakeBalance + this.balances.daoBalance
+        this.balances.foundationBalance + this.balances.stakeBalance + this.balances.daoBalance
       ]
     },
     innerChartBalances () {
@@ -382,30 +379,58 @@ export default {
         this.balances.stakeBalance,
         this.balances.liquidityBalance,
         this.balances.unswappedBalance,
-        this.balances.teamBalance,
         this.balances.daoBalance,
         this.balances.foundationBalance
       ]
     }
   },
   mounted () {
+    this.getBscBalance()
     this.getBalances()
     this.getTotalVoteWeight()
     this.getNextCycleDate()
     this.getDaoMembers()
   },
   methods: {
+    async getBscBalance () {
+      const provider = 'https://bsc-dataseed.binance.org/'
+      const efxAddress = '0xC51Ef828319b131B595b7ec4B28210eCf4d05aD0'
+
+      const json = [{
+        inputs: [],
+        name: 'totalSupply',
+        outputs: [{
+          internalType: 'uint256',
+          name: '',
+          type: 'uint256'
+        }],
+        stateMutability: 'view',
+        type: 'function'
+      }]
+
+      const w3 = new Web3(provider)
+      const efxContract = new w3.eth.Contract(json, efxAddress)
+      // returns an int like this: 23153044824406508517219986
+      const balance = await efxContract.methods.totalSupply().call().catch(console.log)
+
+      // https://bscscan.com/unitconverter?wei=23153044824406508517219986
+      // Formatted should look like this: 23153044.824406508517219986
+
+      const formattedBalance = w3.utils.fromWei(balance)
+      // fromWei return: 23153044.824406508517219986
+      console.log(formattedBalance)
+      return formattedBalance
+    },
     async getBalances () {
       this.loadingBalances = true
       const circSupply = parseInt((await fetch('https://www.api.bloks.io/tokens/EFX-eos-effecttokens').then(data => data.json()))[0].supply.circulating)
+      this.balances.liquidBalanceBsc = parseInt(await this.getBscBalance())
       this.balances.daoBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'treasury.efx', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.stakeBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'efxstakepool', process.env.efxToken))[0].replace(' EFX', ''))
-      this.balances.liquidBalance = circSupply - this.balances.daoBalance - this.balances.stakeBalance - this.balances.liquidityBalance - this.balances.foundationBalance
-      this.balances.unswappedBalance = 650000000 - (this.balances.liquidBalance + this.balances.stakeBalance + this.balances.foundationBalance + this.balances.teamBalance + this.balances.liquidityBalance + this.balances.daoBalance)
+      this.balances.liquidBalance = circSupply - this.balances.daoBalance - this.balances.stakeBalance - this.balances.liquidityBalance - this.balances.foundationBalance - this.balances.liquidBalanceBsc
+      this.balances.unswappedBalance = 650000000 - (this.balances.liquidBalance + this.balances.stakeBalance + this.balances.foundationBalance + this.balances.liquidityBalance + this.balances.daoBalance)
       this.loadingBalances = false
     },
-
-    // FIXME is this still right?
     async getTotalVoteWeight () {
       const cycleData = await this.$eos.rpc.get_table_rows({
         code: process.env.proposalContract,

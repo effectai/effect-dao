@@ -257,6 +257,14 @@ export default {
           account: '0xC51...5aD0',
           link: 'https://bscscan.com/token/0xC51Ef828319b131B595b7ec4B28210eCf4d05aD0',
           source: null
+        },
+        // TODO remove this when swap is closed
+        {
+          name: 'Effect.AI Token on NEO (legacy)',
+          description: 'Smart Contract on the NEO blockchain for the NEP5 EFX token',
+          account: 'acbc5...7e6f9',
+          link: 'https://neotracker.io/asset/acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
+          source: 'https://github.com/effectai/effect-network-neo/blob/master/contracts/java/token/src/ai/effect/token/EffectToken.java'
         }
       ]
     }
@@ -358,10 +366,17 @@ export default {
                 locked: true,
                 description: null, // 'EFX locked by the foundation until 2021-09.',
                 balanceKey: 'foundationBalance'
+              },
+              // TODO remove this when swap is closed.
+              {
+                addressName: 'acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
+                link: 'https://neotracker.io/asset/acbc532904b6b51b5ea6d19b803d78af70e7e6f9',
+                description: 'EFX tokens that did not swap to EOS yet.',
+                balanceKey: 'unswappedBalance'
               }
             ],
             data: this.innerChartBalances,
-            labels: ['Liquid Supply (EOS)', 'Liquid Supply (BSC)', 'Stake Pool', 'Liquidity & Partnerships', 'EffectDAO', 'Foundation']
+            labels: ['Liquid Supply (EOS)', 'Liquid Supply (BSC)', 'Stake Pool', 'Liquidity & Partnerships', 'EffectDAO', 'Foundation', 'Unswapped on NEO']
           }
         ]
       }
@@ -426,7 +441,7 @@ export default {
       this.balances.daoBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'treasury.efx', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.stakeBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'efxstakepool', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.liquidBalance = circSupply - this.balances.daoBalance - this.balances.stakeBalance - this.balances.liquidityBalance - this.balances.foundationBalance - this.balances.liquidBalanceBsc
-      this.balances.unswappedBalance = 650000000 - (this.balances.liquidBalance + this.balances.stakeBalance + this.balances.foundationBalance + this.balances.liquidityBalance + this.balances.daoBalance)
+      this.balances.unswappedBalance = 650e6 - this.balances.liquidBalanceBsc - circSupply // TODO remove this when neo swap is closed
       this.loadingBalances = false
     },
     async getTotalVoteWeight () {

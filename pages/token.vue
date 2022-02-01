@@ -278,7 +278,7 @@ export default {
     stats () {
       return [
         {
-          name: 'Members',
+          name: 'DAO Members',
           description: '',
           value: this.totalMembers
         },
@@ -410,21 +410,19 @@ export default {
 
       const w3 = new Web3(provider)
       const efxContract = new w3.eth.Contract(json, efxAddress)
+
       // returns an int like this: 23153044824406508517219986
       const balance = await efxContract.methods.totalSupply().call().catch(console.log)
 
-      // https://bscscan.com/unitconverter?wei=23153044824406508517219986
-      // Formatted should look like this: 23153044.824406508517219986
-
-      const formattedBalance = w3.utils.fromWei(balance)
       // fromWei return: 23153044.824406508517219986
-      console.log(formattedBalance)
+      const formattedBalance = w3.utils.fromWei(balance)
       return formattedBalance
     },
     async getBalances () {
       this.loadingBalances = true
       const circSupply = parseInt((await fetch('https://www.api.bloks.io/tokens/EFX-eos-effecttokens').then(data => data.json()))[0].supply.circulating)
       this.balances.liquidBalanceBsc = parseInt(await this.getBscBalance())
+      this.balances.liquidityBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'bsc.efx', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.daoBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'treasury.efx', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.stakeBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'efxstakepool', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.liquidBalance = circSupply - this.balances.daoBalance - this.balances.stakeBalance - this.balances.liquidityBalance - this.balances.foundationBalance - this.balances.liquidBalanceBsc

@@ -1,4 +1,5 @@
-# DashboardV2
+# Effect DAO
+https://dao.effect.network
 
 ## Build Setup
 

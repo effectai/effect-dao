@@ -142,7 +142,9 @@
                 <b>{{ $wallet.formatNumber(vote.weight) }}</b>
               </div>
               <div v-if="vote.comment_hash != null" class="column is-2 has-text-centered">
-                <a @click.prevent="commentModal(vote)"><font-awesome-icon :icon="['fas', 'comment-dots']"/></a>
+                <a :class="{'is-loading': commentLoading}" class="button is-primary is-outlined" @click.prevent="commentModal(vote)">
+                  <font-awesome-icon :icon="['fas', 'comment-dots']" />
+                </a>
               </div>
             </div>
           </div>
@@ -249,6 +251,7 @@ export default {
       quorum: 0,
       ipfsExplorer: process.env.ipfsExplorer,
       loading: false,
+      commentLoading: false,
       modalVisible: false,
       proposal: undefined,
       hideComment: true,
@@ -552,7 +555,9 @@ export default {
     },
     async commentModal (vote) {
       if (vote.comment_hash != null) {
+        this.commentLoading = true
         const comment = await this.$dao.getIpfsContent(vote.comment_hash)
+        this.commentLoading = false
         this.$modal.show({
           color: 'default',
           title: `Comment | ${vote.voter}`,

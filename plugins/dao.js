@@ -103,9 +103,16 @@ export default (context, inject) => {
         }
       },
       async getIpfsContent (hash) {
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        const data = await fetch(process.env.ipfsExplorer + '/ipfs/' + hash)
-        return data.json()
+        if (localStorage.getItem(hash) === null) {
+          const response = await fetch(process.env.ipfsExplorer + '/ipfs/' + hash)
+          if (response.ok) {
+            const json = await response.json()
+            localStorage.setItem(hash, JSON.stringify(json))
+            return json
+          }
+        } else {
+          return JSON.parse(localStorage.getItem(hash))
+        }
       }
     }
   })

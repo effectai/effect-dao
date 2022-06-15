@@ -22,7 +22,7 @@
             <b v-else>...</b>
             <div class="has-text-weight-light">
               <small v-if="Object.keys(proposal).includes('vote_status')" class="vote_indicator">
-                <span :class="{'is-dark': proposal.vote_status === 0, 'is-danger': proposal.vote_status === 2, 'is-success': proposal.vote_status === 1}" :data-tooltip="'Your vote answer is: ' + voteTypes.find((vt) => { if (vt.value === proposal.vote_status) return vt.name}).fullName">
+                <span :class="{'is-dark': proposal.vote_status === 0, 'is-danger': proposal.vote_status === 2, 'is-success': proposal.vote_status === 1}" :data-tooltip="'Your vote answer is: ' + voteTypes.find((vt) => vt.value === proposal.vote_status).fullName">
                   <font-awesome-icon :icon="['fas', 'check-square']" />
                 </span>
               </small>

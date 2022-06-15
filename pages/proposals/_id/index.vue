@@ -9,12 +9,12 @@
       Loading Proposal..
     </div>
     <div v-else-if="proposal" class="columns">
-
       <div class="column is-two-thirds">
-
-        <div class="message is-dark" v-if="proposalComment !== undefined">
-          <div class="message-header">High Guard Comment</div>
-          <div class="message-body" v-html="proposalComment"></div>
+        <div v-if="proposalComment !== undefined" class="message is-dark">
+          <div class="message-header">
+            High Guard Comment
+          </div>
+          <div class="message-body" v-html="proposalComment"/>
         </div>
 
         <div v-if="proposal.title" class="title is-4">
@@ -80,10 +80,10 @@
               </div>
             </div>
             <div class="rows">
-              <div class="has-text-centered mb-4" v-if="!hideComment">
+              <div v-if="!hideComment" class="has-text-centered mb-4">
                 <span>Comment section</span>
               </div>
-              <textarea v-if="!hideComment" class="control row" v-model="comment" cols="30" rows="4"></textarea>
+              <textarea v-if="!hideComment" v-model="comment" class="control row" cols="30" rows="4" />
             </div>
           </div>
           <div>
@@ -99,7 +99,7 @@
               <span v-else>Vote</span>
             </button>
             <small>
-              <a href="#" class="comment-button" v-on:click.prevent="hideComment = !hideComment">Toggle comment section</a>
+              <a href="#" class="comment-button" @click.prevent="hideComment = !hideComment">Toggle comment section</a>
             </small>
           </div>
         </div>
@@ -142,7 +142,7 @@
                 <b>{{ $wallet.formatNumber(vote.weight) }}</b>
               </div>
               <div v-if="vote.comment_hash != null" class="column is-2 has-text-centered">
-                <a :class="{'is-loading': commentLoading}" class="button is-primary is-outlined" @click.prevent="commentModal(vote)">
+                <a class="button is-primary is-outlined" @click.prevent="commentModal($event, vote)">
                   <font-awesome-icon :icon="['fas', 'comment-dots']" />
                 </a>
               </div>
@@ -203,8 +203,8 @@
           </div>
         </div>
         <div class="box">
-          <h5 class="box-title" :data-tooltip="'Total vote-weight: ' + this.totalVoteWeight">
-            Results: {{ $wallet.formatNumber(this.totalVoteWeight) }}
+          <h5 class="box-title" :data-tooltip="'Total vote-weight: ' + totalVoteWeight">
+            Results: {{ $wallet.formatNumber(totalVoteWeight) }}
           </h5>
           <div v-for="result in voteResults" :key="result.type">
             <div class="columns is-vcentered is-mobile">
@@ -220,7 +220,9 @@
             </div>
             <progress :class="['progress', 'is-small', 'progress-type-' + result.type, {'is-danger': result.type === 2}, {'is-success': result.type === 1}]" :value="result.weight" :max="totalVoteWeight" />
           </div>
-          <div class="has-text-centered is-italic mt-4 is-size-7">Quorum: {{ this.quorum }}</div>
+          <div class="has-text-centered is-italic mt-4 is-size-7">
+            Quorum: {{ quorum }}
+          </div>
         </div>
       </div>
     </div>
@@ -251,7 +253,6 @@ export default {
       quorum: 0,
       ipfsExplorer: process.env.ipfsExplorer,
       loading: false,
-      commentLoading: false,
       modalVisible: false,
       proposal: undefined,
       hideComment: true,
@@ -281,11 +282,6 @@ export default {
         3: 'Technical',
         4: 'Other'
       }
-    }
-  },
-  head () {
-    return {
-      title: 'Proposal ' + this.id
     }
   },
   computed: {
@@ -467,7 +463,6 @@ export default {
           await this.getVotes(parseInt(id))
           await this.getQuorum(this.proposalCycle)
         } catch (e) {
-          console.error('ERROR', e)
           this.$modal.show({
             color: 'danger',
             title: 'Error',
@@ -553,11 +548,11 @@ export default {
         }
       }
     },
-    async commentModal (vote) {
+    async commentModal (event, vote) {
       if (vote.comment_hash != null) {
-        this.commentLoading = true
+        event.target.classList.add('is-loading')
         const comment = await this.$dao.getIpfsContent(vote.comment_hash)
-        this.commentLoading = false
+        event.target.classList.remove('is-loading')
         this.$modal.show({
           color: 'default',
           title: `Comment | ${vote.voter}`,
@@ -607,6 +602,11 @@ export default {
           })
         }
       }
+    }
+  },
+  head () {
+    return {
+      title: 'Proposal ' + this.id
     }
   }
 }

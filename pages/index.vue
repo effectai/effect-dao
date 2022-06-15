@@ -94,7 +94,20 @@
             <span class="low">EFX in staking pool</span>
           </div>
         </div>
-        <div class="splitter"></div>
+        <div class="splitter" />
+        <div class="column">
+          <div class="icon">
+            <img src="@/assets/img/icons/staking.svg" class="">
+          </div>
+          <div class="text">
+            <span class="high">
+              <ICountUp v-if="nfxPoolBalance > 0" :end-val="nfxPoolBalance" />
+              <span v-else>..</span>
+            </span> <br>
+            <span class="low">NFX in staking pool</span>
+          </div>
+        </div>
+        <div class="splitter" />
         <div class="column">
           <div class="icon">
             <img src="@/assets/img/icons/usd.svg" class="">
@@ -104,10 +117,10 @@
               <ICountUp v-if="poolValue > 0" :options="{ prefix: '$' }" :end-val="poolValue" />
               <span v-else>..</span>
             </span> <br>
-            <span class="low">Staking pool value</span>
+            <span class="low">EFX Staking pool value</span>
           </div>
         </div>
-        <div class="splitter"></div>
+        <div class="splitter" />
         <div class="column">
           <div class="icon">
             <img src="@/assets/img/icons/supply.svg" class="">
@@ -117,7 +130,7 @@
               <ICountUp v-if="percentStaked > 0" :options="{ suffix: '%' }" :end-val="percentStaked" />
               <span v-else>..</span>
             </span> <br>
-            <span class="low">Of circ. supply staked</span>
+            <span class="low">Of circ. EFX supply staked</span>
           </div>
         </div>
       </div>
@@ -140,21 +153,21 @@
             <span class="low">Total transactions</span>
           </div>
         </div>
-        <div class="splitter"></div>
+        <div class="splitter" />
         <div class="column">
           <div class="icon">
             <img src="@/assets/img/icons/payouts.svg" class="">
           </div>
           <div class="text">
             <span class="high">
-              <ICountUp v-if="forceEfxPaid > 0"  :end-val="forceEfxPaid" />
+              <ICountUp v-if="forceEfxPaid > 0" :end-val="forceEfxPaid" />
               <span v-else>..</span>
               <span class="symbol">EFX</span>
             </span> <br>
             <span class="low">Total payouts</span>
           </div>
         </div>
-        <div class="splitter"></div>
+        <div class="splitter" />
         <div class="column">
           <div class="icon">
             <img src="@/assets/img/icons/workers.svg" class="">
@@ -181,15 +194,11 @@ export default {
     ICountUp,
     Avatar
   },
-  head () {
-    return {
-      title: 'Home'
-    }
-  },
   data () {
     return {
       efxPrice: 0,
       poolBalance: 0,
+      nfxPoolBalance: 0,
       circSupply: 0,
       forceTransactions: 0,
       forceEfxPaid: 0,
@@ -230,6 +239,7 @@ export default {
       this.getForceStats()
       this.getCircSupply()
       this.getPoolBalance()
+      this.getNFXPoolBalance()
       this.getEFXPrice()
     },
 
@@ -243,6 +253,11 @@ export default {
     async getPoolBalance () {
       const res = await this.$eos.rpc.get_currency_balance(process.env.tokenContract, process.env.stakingContract, process.env.efxToken)
       this.poolBalance = parseFloat(res[0].replace(` ${process.env.efxToken}`, ''))
+    },
+
+    async getNFXPoolBalance () {
+      const res = await this.$eos.rpc.get_currency_balance(process.env.tokenContract, process.env.stakingContract, process.env.nfxToken)
+      this.nfxPoolBalance = parseFloat(res[0].replace(` ${process.env.nfxToken}`, ''))
     },
 
     async getEFXPrice () {

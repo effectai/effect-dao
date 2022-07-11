@@ -211,7 +211,7 @@ export default {
         unswappedBalance: 0,
         // foundationBalance: 195375000,
         foundationBalance: 100000000,
-        liquidityBalance: 88447533,
+        liquidityBalance: 0,
         communityBalance: 5000000,
         maxSupply: 650000000
       },
@@ -427,6 +427,7 @@ export default {
       this.balances.liquidBalanceBsc = parseInt(await this.getBscBalance())
       this.balances.daoBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'treasury.efx', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.stakeBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'efxstakepool', process.env.efxToken))[0].replace(' EFX', ''))
+      this.balances.liquidityBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'bsc.efx', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.liquidBalance = circSupply - this.balances.daoBalance - this.balances.stakeBalance - this.balances.liquidityBalance - this.balances.foundationBalance - this.balances.liquidBalanceBsc
       this.balances.unswappedBalance = 650000000 - (this.balances.liquidBalance + this.balances.stakeBalance + this.balances.foundationBalance + this.balances.liquidityBalance + this.balances.daoBalance)
       this.loadingBalances = false

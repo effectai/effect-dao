@@ -49,7 +49,7 @@
             </div>
             <div @click="mobileMenu = false">
               <nuxt-link class="navbar-item" to="/token" exact-active-class="is-active">
-                Token Map
+                Resources
               </nuxt-link>
             </div>
             <div @click="mobileMenu = false">

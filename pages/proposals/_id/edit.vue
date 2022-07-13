@@ -104,21 +104,16 @@
               <div class="control">
                 <div class="select" style="width: 100%">
                   <select v-model="proposal.category" required style="width: 100%">
-                    <option :value="0" disabled>
-                      Governance Proposal
-                    </option>
-                    <option :value="1">
-                      Marketing
-                    </option>
-                    <option :value="2">
-                      Design
-                    </option>
-                    <option :value="3">
-                      Technical
-                    </option>
-                    <option :value="4">
-                      Other
-                    </option>
+                    <option :value="0" disabled>Governance</option>
+                    <option :value="2" hidden>Design</option>
+                    <option :value="3" hidden>Technical</option>
+                    <option :value="5">Sentiment</option>
+                    <option :value="6">Grant Request</option>
+                    <option :value="1">Marketing</option>
+                    <option :value="7">Cycle Budget</option>
+                    <option :value="8">Network Fees</option>
+                    <option :value="9">Smart Contract Updates</option>
+                    <option :value="4">Other</option>
                   </select>
                 </div>
               </div>

@@ -22,21 +22,6 @@
         </a>
       </div>
     </div> -->
-    <div class="testnet">
-      <div class="container is-max-widescreen">
-        <p class="is-hidden-mobile">
-          <a href="/winner">💸 - The DAO Hackathon Winner Announcement - 💸</a>
-        </p>
-        <p class="is-hidden-tablet">
-          <a href="/winner">💸 - The DAO Hackathon Winner Announcement - 💸</a>
-        </p>
-         <!-- <button class="discord-btn">
-          <nuxt-link to="/hackathon">
-              Go Vote!
-            </nuxt-link>
-         </button> -->
-      </div>
-    </div>
     <modal />
     <connect-wallet />
 

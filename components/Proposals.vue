@@ -33,6 +33,9 @@
               <small class="mr-1">&nbsp;by <nuxt-link :to="'/account/'+proposal.author">{{ proposal.author }}</nuxt-link></small>
               <small><span v-for="(pay, index) in proposal.pay" :key="index"><span v-if="index > 0">,</span> {{ $wallet.formatNumber(parseInt(pay.field_0.quantity)) }} EFX</span></small>
             </div>
+            <div class="has-text-weight-light">
+              <small>Created On: {{proposal.pay[0]["field_1"].split("T")[0]}}</small>
+            </div>
           </div>
           <div class="column is-2 has-text-left-mobile has-text-right-desktop has-text-left-tablet">
             <div class="tag" :class="{'is-success': proposal.status == 'ACTIVE', 'is-warning': proposal.status == 'DRAFT', 'is-link': proposal.status == 'PENDING', 'is-dark': proposal.status == 'CLOSED'}">{{ proposal.status }}</div>

@@ -141,6 +141,9 @@
               <div class="column is-2 has-text-centered" :data-tooltip="'Vote-weight: ' + vote.weight">
                 <b>{{ $wallet.formatNumber(vote.weight) }}</b>
               </div>
+              <div class="column is-2 has-text-centered" :data-tooltip="'Vote-percentage: ' + votePercentage(vote, proposal) + '%'">
+                <b>{{ votePercentage(vote, proposal) }}%</b>
+              </div>
               <div v-if="vote.comment_hash != null" class="column is-2 has-text-centered">
                 <a class="button is-primary is-outlined" @click.prevent="commentModal($event, vote)">
                   <font-awesome-icon :icon="['fas', 'comment-dots']" />
@@ -365,6 +368,9 @@ export default {
   },
 
   methods: {
+    votePercentage (vote, proposal) {
+      return (vote.weight / (proposal.vote_counts[0].value + proposal.vote_counts[1].value + proposal.vote_counts[2].value) * 100).toFixed(2)
+    },
     async assignToNextCycle () {
       if (this.$dao.proposalConfig && this.proposal) {
         const actions = [{

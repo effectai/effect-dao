@@ -57,6 +57,11 @@
                 Rewards
               </nuxt-link>
             </div>
+            <div @click="mobileMenu = false">
+              <a class="navbar-item" href="https://t.me/EffectNetworkDAO" target="_blank">
+                Telegram
+              </a>
+            </div>
           </div>
           <div class="navbar-end">
               <div class="pt-0 navbar-item">

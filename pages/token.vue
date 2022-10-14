@@ -38,8 +38,11 @@
                   <font-awesome-icon :icon="['fas', 'info-circle']" />
                 </span>
               </td>
-              <td class="has-text-right">
+              <td v-if="chartData.datasets[0].meta[index].token == 'EFX'" class="has-text-right">
                 {{ hello(balances[chartData.datasets[0].meta[index].balanceKey]) }} EFX
+              </td>
+              <td v-if="chartData.datasets[0].meta[index].token == 'NFX'" class="has-text-right">
+                {{ hello(balances[chartData.datasets[0].meta[index].balanceKey]) }} NFX
               </td>
               <td class="has-text-left">
                 <a
@@ -207,8 +210,12 @@ export default {
         daoBalance: 0,
         liquidBalance: 0,
         liquidBalanceBsc: 0,
-        stakeBalance: 0,
+        liquidNFXBalance: 0,
+        stakeEFXBalance: 0,
+        stakeNFXBalance: 0,
         unswappedBalance: 0,
+        realeffectaiBalance: 0,
+        defiboxBalance: 0,
         // foundationBalance: 195375000,
         foundationBalance: 100000000,
         liquidityBalance: 0,
@@ -323,45 +330,82 @@ export default {
                 addressName: 'effecttokens',
                 link: 'https://bloks.io/tokens/EFX-eos-effecttokens',
                 description: null, // 'Current supply in circulation and not locked in any staking or timelock.',
-                balanceKey: 'liquidBalance'
+                balanceKey: 'liquidBalance',
+                token: 'EFX'
               },
               {
                 addressName: '0xC51Ef828319b131B595b7ec4B28210eCf4d05aD0',
                 link: 'https://bscscan.com/token/0xC51Ef828319b131B595b7ec4B28210eCf4d05aD0',
                 description: null,
-                balanceKey: 'liquidBalanceBsc'
+                balanceKey: 'liquidBalanceBsc',
+                token: 'EFX'
               },
               {
                 addressName: 'efxstakepool',
                 locked: true,
                 link: 'https://bloks.io/account/efxstakepool',
                 description: 'Staked EFX.',
-                balanceKey: 'stakeBalance'
+                balanceKey: 'stakeEFXBalance',
+                token: 'EFX'
               },
               {
                 addressName: 'bsc.efx',
                 link: 'https://bloks.io/account/bsc.efx',
                 locked: false,
                 description: 'Funds allocated for providing liquidity and partnership.',
-                balanceKey: 'liquidityBalance'
+                balanceKey: 'liquidityBalance',
+                token: 'EFX'
               },
               {
                 addressName: 'treasury.efx',
                 link: 'https://bloks.io/account/treasury.efx',
                 locked: true,
                 description: 'Tokens governed by the DAO, from here proposals are funded.',
-                balanceKey: 'daoBalance'
+                balanceKey: 'daoBalance',
+                token: 'EFX'
               },
               {
                 addressName: 'efx',
                 link: 'https://bloks.io/account/efx',
                 locked: true,
                 description: null, // 'EFX locked by the foundation until 2021-09.',
-                balanceKey: 'foundationBalance'
+                balanceKey: 'foundationBalance',
+                token: 'EFX'
+              },
+              {
+                addressName: 'efxstakepool',
+                locked: true,
+                link: 'https://bloks.io/account/efxstakepool',
+                description: 'Staked NFX.',
+                balanceKey: 'stakeNFXBalance',
+                token: 'NFX'
+              },
+              {
+                addressName: 'realeffectai',
+                locked: true,
+                link: 'https://bloks.io/account/realeffectai',
+                description: null,
+                balanceKey: 'realeffectaiBalance',
+                token: 'NFX'
+              },
+              {
+                addressName: 'swap.defi',
+                locked: true,
+                link: 'https://bloks.io/account/swap.defi',
+                description: 'NFX in defibox.io',
+                balanceKey: 'defiboxBalance',
+                token: 'NFX'
+              },
+              {
+                addressName: 'effecttokens',
+                link: 'https://bloks.io/tokens/NFX-eos-effecttokens',
+                description: null, // 'Current supply in circulation and not locked in any staking or timelock.',
+                balanceKey: 'liquidNFXBalance',
+                token: 'NFX'
               }
             ],
             data: this.innerChartBalances,
-            labels: ['Liquid Supply (EOS)', 'Liquid Supply (BSC)', 'Stake Pool', 'Liquidity & Partnerships', 'EffectDAO', 'Foundation']
+            labels: ['Liquid Supply (EOS)', 'Liquid Supply (BSC)', 'EFX Stake Pool', 'Liquidity & Partnerships', 'EffectDAO', 'Foundation', 'NFX Stake Pool', 'realeffectai', 'Defibox', 'Liquid Supply NFX']
           }
         ]
       }
@@ -370,13 +414,13 @@ export default {
       return [
         // this.balances.liquidBalance + this.balances.unswappedBalance + this.balances.feepoolBalance + this.balances.marketingBalance + this.balances.liquidityBalance + this.balances.communityBalance,
         this.balances.liquidBalance + this.balances.liquidityBalance,
-        this.balances.foundationBalance + this.balances.stakeBalance + this.balances.daoBalance
+        this.balances.foundationBalance + this.balances.stakeEFXBalance + this.balances.daoBalance
       ]
     },
     innerChartBalances () {
       return [
         this.balances.liquidBalance,
-        this.balances.stakeBalance,
+        this.balances.stakeEFXBalance,
         this.balances.liquidityBalance,
         this.balances.unswappedBalance,
         this.balances.daoBalance,
@@ -423,14 +467,19 @@ export default {
     },
     async getBalances () {
       this.loadingBalances = true
+      const circNFXSupply = parseInt((await fetch('https://www.api.bloks.io/tokens/NFX-eos-effecttokens').then(data => data.json()))[0].supply.circulating)
       const circSupply = parseInt((await fetch('https://www.api.bloks.io/tokens/EFX-eos-effecttokens').then(data => data.json()))[0].supply.circulating)
       this.balances.liquidBalanceBsc = parseInt(await this.getBscBalance())
       this.balances.daoBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'treasury.efx', process.env.efxToken))[0].replace(' EFX', ''))
-      this.balances.stakeBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'efxstakepool', process.env.efxToken))[0].replace(' EFX', ''))
+      this.balances.stakeEFXBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'efxstakepool', process.env.efxToken))[0].replace(' EFX', ''))
       this.balances.liquidityBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'bsc.efx', process.env.efxToken))[0].replace(' EFX', ''))
-      this.balances.liquidBalance = circSupply - this.balances.daoBalance - this.balances.stakeBalance - this.balances.liquidityBalance - this.balances.foundationBalance - this.balances.liquidBalanceBsc
-      this.balances.unswappedBalance = 650000000 - (this.balances.liquidBalance + this.balances.stakeBalance + this.balances.foundationBalance + this.balances.liquidityBalance + this.balances.daoBalance)
+      this.balances.liquidBalance = circSupply - this.balances.daoBalance - this.balances.stakeEFXBalance - this.balances.liquidityBalance - this.balances.foundationBalance - this.balances.liquidBalanceBsc
+      this.balances.unswappedBalance = 650000000 - (this.balances.liquidBalance + this.balances.stakeEFXBalance + this.balances.foundationBalance + this.balances.liquidityBalance + this.balances.daoBalance)
       this.loadingBalances = false
+      this.balances.stakeNFXBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'efxstakepool', process.env.nfxToken))[0].replace(' NFX', ''))
+      this.balances.realeffectaiBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'realeffectai', process.env.nfxToken))[0].replace(' NFX', ''))
+      this.balances.defiboxBalance = parseInt((await this.$eos.rpc.get_currency_balance(process.env.tokenContract, 'swap.defi', process.env.nfxToken))[0].replace(' NFX', ''))
+      this.balances.liquidNFXBalance = circNFXSupply - this.balances.stakeNFXBalance - this.balances.realeffectaiBalance - this.balances.defiboxBalance
     },
     async getTotalVoteWeight () {
       const cycleData = await this.$eos.rpc.get_table_rows({

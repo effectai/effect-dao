@@ -200,7 +200,6 @@ export default {
     async init () {
       this.loading = true
       this.loadingMembers = true
-
       const data = await this.$eos.rpc.get_table_rows({
         code: process.env.daoContract,
         scope: process.env.daoContract,

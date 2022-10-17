@@ -429,7 +429,6 @@ export default {
     }
   },
   mounted () {
-    this.daoAgenda()
     this.getBscBalance()
     this.getBalances()
     this.getTotalVoteWeight()

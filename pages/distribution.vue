@@ -117,20 +117,24 @@
                 <tr>
                   <th>Distribution Type</th>
                   <th>Amount </th>
+                  <th>Distributed</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>Effect Network Fee Distribution III</td>
                   <td>{{ q1q2Airdrop.toFixed(0) }} EFX</td>
+                  <td class="center"> ✔ </td>
                 </tr>
                 <tr>
                   <td>Effect Network Fee Distribution II</td>
                   <td>{{ genesisAirdrop.toFixed(0) }} EFX</td>
+                  <td class="center"> ✔ </td>
                 </tr>
                 <tr>
                   <td>Effect Network Fee Distribution</td>
                   <td>{{ genesisAirdrop.toFixed(0) }} EFX</td>
+                  <td class="center"> ✔ </td>
                 </tr>
               </tbody>
             </table>
@@ -415,6 +419,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.center {
+  padding-left: 3em;
+}
 .buttons {
   margin-top: 25px;
   padding-bottom: 2px;

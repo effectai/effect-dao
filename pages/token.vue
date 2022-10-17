@@ -201,7 +201,6 @@ export default {
   },
   data () {
     return {
-      test: [],
       loadingBalances: false,
       totalVoteWeight: 0,
       totalMembers: 300,
@@ -439,16 +438,6 @@ export default {
   },
   methods: {
 
-    async daoAgenda () {
-      await fetch('https://sheets.googleapis.com/v4/spreadsheets/1ZGAS-zbiB_n-OtXzVCwKAuF44r_oHcwHcAn0wvQSYo0/?key=AIzaSyBi4FYy_J5vdJ_JnWrVxUtNfZJTarEruQw', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => (response.json()))
-        .then(data => console.log(data))
-    },
     async getBscBalance () {
       const provider = 'https://bsc-dataseed.binance.org/'
       const efxAddress = '0xC51Ef828319b131B595b7ec4B28210eCf4d05aD0'

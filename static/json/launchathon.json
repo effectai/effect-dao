@@ -3,6 +3,7 @@
     {
       "id": 1,
       "group_name": "Delos",
+      "description": "Delos allows anyone to submit a Document and using the amazing Effect Workforce, we categorize the data from the image and validate if it is in fact a useful document.",
       "github_url": " https://github.com/jgarciajovel/delos/tree/master ",
       "youtube_url": "https://youtu.be/VOw77SIIBHE",
       "voteWeight": ""

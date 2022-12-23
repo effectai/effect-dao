@@ -72,7 +72,7 @@
           </div>
         </div>
 
-        <div class="box mt-5">
+        <div class="box mt-5 has-text-centered">
           <h5>Selection List</h5>
 
           <ul>
@@ -80,7 +80,7 @@
               {{ index + 1 }} - {{ item.group_name }}
             </li>
           </ul>
-          <button class="button" @click="clearVotesList()">
+          <button class="button is-warning" @click="clearVotesList()">
             Clear
           </button>
         </div>
@@ -201,7 +201,7 @@
               <b>Edit</b>
             </nuxt-link>
           </div>
-          <div v-if="isMyProposal && $dao.hackathonConfig && proposal.cycle === 0" class="mt-2">
+          <div v-if="isMyProposal && $dao.hackathonConfig && proposal.cycle === 3" class="mt-2">
             <button class="button is-primary is-outlined is-fullwidth" @click.prevent="assignToNextCycle()">
               <b>Assign to next cycle</b>
             </button>
@@ -264,7 +264,7 @@ export default {
       hideComment: true,
       proposalCycle: null,
       id: '2',
-      cycle: 1,
+      cycle: 3,
       vote_type: null,
       comment: null,
       submissions: launchathonList,
@@ -372,8 +372,9 @@ export default {
 
   created () {
     // this.proposal = proposal
-    this.getProposal('0')
+    this.getProposal(this.id)
     // this.getQuorum()
+    console.log('hackathonConfig', this.$dao.hackathonConfig)
   },
 
   methods: {
@@ -446,7 +447,7 @@ export default {
           }).catch(error => console.error(`hackathon, getproposal error: ${error}`))
           // console.log(`getProposal::Data: ${JSON.stringify(data)}`)
           this.proposal = data.rows[parseInt(id)]
-          console.table(data)
+          // console.table(data)
           this.proposalCycle = await this.$dao.getHackathonCycleConfig(this.proposal.cycle)
           this.loading = false
           let status = 'CLOSED'
@@ -475,7 +476,7 @@ export default {
           this.$set(this.proposal, 'title', ipfsProposal.title)
           this.$set(this.proposal, 'body', ipfsProposal.body)
           this.$set(this.proposal, 'files', ipfsProposal.files ? ipfsProposal.files : [])
-          await this.getVotes(parseInt(this.cycle))
+          await this.getVotes(parseInt(this.id))
           await this.getQuorum(this.proposalCycle)
         } catch (e) {
           console.error('ERROR', e)

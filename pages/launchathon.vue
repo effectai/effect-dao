@@ -264,6 +264,7 @@ export default {
       hideComment: true,
       proposalCycle: null,
       id: '2',
+      cycle: 1,
       vote_type: null,
       comment: null,
       submissions: launchathonList,
@@ -474,7 +475,7 @@ export default {
           this.$set(this.proposal, 'title', ipfsProposal.title)
           this.$set(this.proposal, 'body', ipfsProposal.body)
           this.$set(this.proposal, 'files', ipfsProposal.files ? ipfsProposal.files : [])
-          await this.getVotes(parseInt(id))
+          await this.getVotes(parseInt(this.cycle))
           await this.getQuorum(this.proposalCycle)
         } catch (e) {
           console.error('ERROR', e)

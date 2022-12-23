@@ -3,12 +3,8 @@
     {
       "id": 1,
       "group_name": "Delos",
-      "description": "Delos allows anyone to submit a Document and using the amazing Effect Workforce, we categorize the data from the image and validate if it is in fact a useful document. When visiting the website use the email: efx@delos.co and password: delos09",
       "github_url": " https://github.com/jgarciajovel/delos/tree/master ",
-      "campaign_url": "https://testnet.effect.network/campaigns/81",
       "youtube_url": "https://youtu.be/VOw77SIIBHE",
-      "website": "https://delos-dashboard.herokuapp.com/",
-      "devpost": "https://effect-network-hackathon.devpost.com/submissions/289471-delos",
       "voteWeight": ""
     },
     {
@@ -16,10 +12,7 @@
       "group_name": "ChessForce",
       "description": "Play chess against workers on Effect Force!",
       "github_url": "https://github.com/effectai/hackathon-submission-repo/tree/main/chessforce",
-      "campaign_url": "https://testnet.effect.network/campaigns/151",
       "youtube_url": "https://youtu.be/3xVAG3cCZr8",
-      "website": "https://kevinlaan.github.io/hackathon-submission-repo/",
-      "devpost": "https://effect-network-hackathon.devpost.com/submissions/294465-chessforce",
       "voteWeight": ""
     },
     {
@@ -27,21 +20,7 @@
       "group_name": "QuickCat",
       "description": "QuickCat is an app built on Shopify, a platform used by over 1.7M merchants to run their online stores. The goal is to help merchants save time and increase sales by organizing their online product listing with the help of a global human workforce.",
       "github_url": "https://github.com/effectai/hackathon-submission-repo/tree/main/catalogue",
-      "campaign_url": "https://testnet.effect.network/campaigns/190",
       "youtube_url": "https://youtu.be/4-a0LISRtrs",
-      "website": "",
-      "devpost": "https://effect-network-hackathon.devpost.com/submissions/293030-catalogue",
-      "voteWeight": ""
-    },
-    {
-      "id": 7,
-      "group_name": "Ask A Stranger",
-      "description": "Ask any question, and wait for the answer from Effect Force!",
-      "github_url": "https://github.com/effectai/hackathon-submission-repo/tree/main/askastranger",
-      "campaign_url": "https://testnet.effect.network/campaigns/178",
-      "youtube_url": "",
-      "website": "https://askastranger.github.io/",
-      "devpost": "https://effect-network-hackathon.devpost.com/submissions/295751-askastranger",
       "voteWeight": ""
     },
     {
@@ -49,10 +28,7 @@
       "group_name": "Vibelyze",
       "description": "Vibelyze is an app that investigates music nuance. Vibelyze obtains information suitable for training your music-related machine algorithm or designing your DJ setlist by handing songs to thousands of Effect Network workers.",
       "github_url": "https://github.com/effectai/hackathon-submission-repo/tree/main/vibelyze",
-      "campaign_url": "https://testnet.effect.network/campaigns/198",
       "youtube_url": "https://www.youtube.com/watch?v=O6vbbiE918Y",
-      "website": "https://vibelyze.github.io/vibelyze/",
-      "devpost": "https://effect-network-hackathon.devpost.com/submissions/295633-vibelyze",
       "voteWeight": ""
     },
     {
@@ -60,10 +36,7 @@
       "group_name": "Gitstar",
       "description": "Have the Github users from the Effect Network interact and with you open source repositories to get more traction. The Effect workforce allows projects to easily tap into a fitting audience for their Github pages.",
       "github_url": "https://github.com/effectai/hackathon-submission-repo/tree/main/gitstar",
-      "campaign_url": "https://testnet.effect.network/campaigns/130/ ",
       "youtube_url": "https://youtu.be/kUSMbex6qz8",
-      "website": "https://gitstar.dev/",
-      "devpost": "https://devpost.com/software/gitstar",
       "voteWeight": ""
     },
     {
@@ -71,10 +44,7 @@
       "group_name": "Ergasia",
       "description": "It is a task distribution platform powered by Effect Network. It allows companies and individuals to upload tasks and get them done quickly. It currently has 5 campaigns which are Converting handwritten images to text, Editing Images, Technical Code Debug, Feedback for posters and asking Academic Course related questions.",
       "github_url": "https://github.com/effectai/hackathon-submission-repo/tree/main/ergasia",
-      "campaign_url": "https://testnet.effect.network/campaigns/205",
       "youtube_url": "https://youtu.be/LSPXKT6H_gQ",
-      "website": "https://ergasia.vercel.app/",
-      "devpost": "https://effect-network-hackathon.devpost.com/submissions/295276-ergasia",
       "voteWeight": ""
     },
     {
@@ -82,10 +52,7 @@
       "group_name": "EYEFX",
       "description": "EYEFX measures where the users are looking on the computer screen, for how long, and where do they go next. This provides valuable insights into the perception and interaction of users of these digital assets which can be used to optimize design towards specific targets. Through the Effect Force platform, a requester can submit their design and have it trialled by a number of users, throughout the world, otherwise impossible to reach in a practical fashion. Moreover, pooling thousands of users' interactions enables Machine Learning techniques to validate and combine the data in order to improve detection algorithms over time.",
       "github_url": "https://github.com/effectai/hackathon-submission-repo/tree/main/EYEFX",
-      "campaign_url": "https://testnet.effect.network/campaigns/84 ",
       "youtube_url": "https://www.youtube.com/watch?v=uXlsayVKdrA",
-      "website": "",
-      "devpost": "https://effect-network-hackathon.devpost.com/submissions/290789-eyefx",
       "voteWeight": ""
     },
     {
@@ -93,10 +60,7 @@
       "group_name": "Youtube Chapters",
       "description": "Chapters in videos help us to get idea of the content of video without watching it completely. Chapters save us lot of time when we watch tutorial videos. It inspired me to find a solution to easily create chapters. This application add chapters to videos by using Effect Network.",
       "github_url": "https://github.com/effectai/hackathon-submission-repo/tree/main/chapterfy",
-      "campaign_url": "https://testnet.effect.network/campaigns/351/1507533520896 ",
       "youtube_url": "https://youtu.be/Rmw6JJqs2z8",
-      "website": "",
-      "devpost": "https://effect-network-hackathon.devpost.com/submissions/292602-youtube-chapters",
       "voteWeight": ""
     }
   ]

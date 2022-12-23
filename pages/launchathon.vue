@@ -23,7 +23,7 @@
           <div v-else>Loading content..</div>
         </small>
         <div class="box mt-5">
-          <h2>Hackathon Submissions</h2>
+          <h2>Launchathon Submissions</h2>
           <div v-for="submission in submissions" :key="submission.group_name">
             <div class="card">
               <div class="card-content">
@@ -59,6 +59,7 @@
                   <a :href="submission.devpost" target="_blank" rel="noopener noreferrer">🞄 Devpost</a>
                   <hr>
                 </div>
+                <hr>
                 <button v-if="votes_list.find(v => v.id === submission.id)" disabled class="button is-centered is-fullwidth">
                   Added: #{{ votes_list.indexOf(votes_list.find(v => v.id === submission.id)) + 1 }}
                 </button>
@@ -262,7 +263,7 @@ export default {
       proposal: undefined,
       hideComment: true,
       proposalCycle: null,
-      id: '0',
+      id: '2',
       vote_type: null,
       comment: null,
       submissions: launchathonList,
@@ -443,7 +444,8 @@ export default {
             limit: 100
           }).catch(error => console.error(`hackathon, getproposal error: ${error}`))
           // console.log(`getProposal::Data: ${JSON.stringify(data)}`)
-          this.proposal = data.rows[0]
+          this.proposal = data.rows[parseInt(id)]
+          console.table(data)
           this.proposalCycle = await this.$dao.getHackathonCycleConfig(this.proposal.cycle)
           this.loading = false
           let status = 'CLOSED'

@@ -306,7 +306,7 @@ export default {
         const payoutTime = new Date()
         // payoutTime.setDate(payoutTime.getDate() + 14)
         const actions = []
-        const addPayment = true
+        const addPayment = false
         if (addPayment) {
           actions.push({
             account: 'effecttokens',

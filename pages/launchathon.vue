@@ -611,6 +611,7 @@ export default {
               }
             })
           }
+          setTimeout(() => this.getVotes(this.id), 5e3)
         } catch (e) {
           this.$modal.show({
             color: 'danger',

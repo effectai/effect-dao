@@ -78,7 +78,8 @@ export default {
         1: 'Marketing',
         2: 'Design',
         3: 'Technical',
-        4: 'Other'
+        4: 'Other',
+        5: 'Sentiment'
       }
     }
   },

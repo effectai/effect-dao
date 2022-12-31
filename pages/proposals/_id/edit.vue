@@ -127,7 +127,7 @@
           <div><small class="is-size-7"><i>coming soon</i></small></div>
         </div>
 
-        <fieldset v-show="false" class="collapsible" :class="{'is-expanded': advanced}">
+        <fieldset v-show="true" class="collapsible" :class="{'is-expanded': advanced}">
           <legend class="has-text-weight-bold">
             <a @click.prevent="advanced = !advanced">Advanced</a>
           </legend>
@@ -135,6 +135,12 @@
             <label class="label">Cycle</label>
             <div class="control">
               <input v-model="proposal.cycle" required class="input" type="number" min="0">
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">ATP eosio.msig transaction</label>
+            <div class="control">
+              <input v-model="proposal.msig" class="input" type="text">
             </div>
           </div>
         </fieldset>
@@ -345,7 +351,7 @@ export default {
             content_hash: this.proposal.content_hash,
             category: parseInt(this.proposal.category),
             cycle: parseInt(this.proposal.cycle),
-            transaction_hash: this.proposal.transaction_hash
+            msig: this.proposal.msig ? this.proposal.msig : null
           }
         }]
         try {

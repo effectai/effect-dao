@@ -386,7 +386,7 @@ export default {
             content_hash: this.proposal.content_hash,
             category: this.proposal.category,
             cycle: this.$dao.proposalConfig.current_cycle + 1,
-            transaction_hash: this.proposal.transaction_hash
+            msig: this.proposal.msig ? this.proposal.msig : null
           }
         }]
         try {

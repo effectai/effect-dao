@@ -109,12 +109,28 @@
           <div><small class="is-size-7"><i>coming soon</i></small></div>
         </div>
 
-        <fieldset v-show="false" class="collapsible" :class="{'is-expanded': advanced}">
+        <fieldset v-show="true" class="collapsible" :class="{'is-expanded': advanced}">
           <legend class="has-text-weight-bold"><a @click.prevent="advanced = !advanced">Advanced</a></legend>
+          <p>These settings should not be changed unless you have in-depth knowledge of the Effect DAO internals.</p>
+          <br/>
           <div class="field">
             <label class="label">Cycle</label>
+            <p>
+              Cycle 0 indicates a draft proposal.
+              Assigning a proposal to a future cycle means the proposal becomes active when the cycle starts.
+            </p>
             <div class="control">
               <input required class="input" v-model="proposal.cycle" type="number" min="0">
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Arbitrary Transaction Proposal</label>
+            <p>
+              To create an ATP enter the eosio.msig name that it will execute.
+              The msig transaction must be created under your EOS account name.
+            </p>
+            <div class="control">
+              <input v-model="proposal.msig" class="input" type="text">
             </div>
           </div>
         </fieldset>
@@ -370,7 +386,7 @@ export default {
               content_hash: this.proposal.content_hash,
               category: parseInt(this.proposal.category),
               cycle: parseInt(this.proposal.cycle),
-              transaction_hash: null
+              msig: this.proposal.msig ? this.proposal.msig : null
             }
           }
         )

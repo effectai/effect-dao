@@ -165,33 +165,35 @@
             Information
           </h5>
           <div class="block">
-            <i>author</i><br>
+            Author<br/>
             <nuxt-link :to="'/account/'+proposal.author">
-              <b>{{ proposal.author }}</b>
+              {{ proposal.author }}
             </nuxt-link>
           </div>
           <div class="block">
-            <i>Status</i><br>
+            Status<br/>
             <b class="tag" :class="{'is-success': proposal.status === 'ACTIVE' || proposal.status === 'EXECUTED' || proposal.status == 'ACCEPTED', 'is-warning': proposal.status === 'DRAFT', 'is-link': proposal.status === 'PENDING', 'is-dark': proposal.status === 'WARNING', 'is-danger': proposal.status === 'REJECTED'}">{{ proposal.status }}</b>
           </div>
           <div v-for="(pay, index) in proposal.pay" :key="index" class="block">
-            <i>requesting</i><br>
+            Requesting<br/>
             <b>{{ pay.field_0.quantity }}</b><br>
             <i v-if="false">requestable</i>
             <b v-if="false">{{ $moment(pay.field_1 + "Z").fromNow() }}</b>
           </div>
-          <div class="block">
-            IPFS Hash
+          <div class="block" v-if="proposal.msig">
+            ATP transaction
             <div class="hash">
-              <a target="_blank" :href="`${ipfsExplorer}/ipfs/${proposal.content_hash}`">{{ proposal.content_hash }}</a>
+              <a target="_blank" :href="`https://bloks.io/msig/${proposal.author}/${proposal.msig}`">
+                {{ proposal.msig }}↪
+              </a>
             </div>
           </div>
           <div class="block">
-            <i>cycle</i><br>
+            Cycle<br/>
             <b>{{ proposal.cycle }}</b>
           </div>
           <div class="block">
-            <i>Category</i><br>
+            Category<br/>
             <b>{{ categories[proposal.category] }}</b>
           </div>
           <div v-if="isMyProposal" class="mt-2">
@@ -227,6 +229,9 @@
             Quorum: {{ quorum }}
           </div>
         </div>
+        <p class="is-size-7 has-text-centered">
+          <a target="_blank" :href="`${ipfsExplorer}/ipfs/${proposal.content_hash}`">Open on IPFS ↪</a>
+        </p>
       </div>
     </div>
     <h4 v-else class="has-text-centered subtitle">
@@ -283,7 +288,8 @@ export default {
         1: 'Marketing',
         2: 'Design',
         3: 'Technical',
-        4: 'Other'
+        4: 'Other',
+        5: 'Sentiment'
       }
     }
   },
@@ -386,7 +392,7 @@ export default {
             content_hash: this.proposal.content_hash,
             category: this.proposal.category,
             cycle: this.$dao.proposalConfig.current_cycle + 1,
-            transaction_hash: this.proposal.transaction_hash
+            msig: this.proposal.msig ? this.proposal.msig : null
           }
         }]
         try {

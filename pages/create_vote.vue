@@ -344,7 +344,7 @@ export default {
               content_hash: this.proposal.content_hash,
               category: parseInt(1),
               cycle: parseInt(this.proposal.cycle),
-              transaction_hash: null
+              msig: this.proposal.msig ? this.proposal.msig : null
             }
           }
         )

@@ -34,7 +34,7 @@
               <small><span v-for="(pay, index) in proposal.pay" :key="index"><span v-if="index > 0">,</span> {{ $wallet.formatNumber(parseInt(pay.field_0.quantity)) }} EFX</span></small>
             </div>
             <div class="has-text-weight-light">
-              <small>Created On: {{proposal.pay[0]["field_1"].split("T")[0]}}</small>
+              <small>Created On: {{proposal.pay[0]["field_1"].split("T")[0]}}</small><br>
               <small>Category: {{ categories[proposal.category]}}</small>
             </div>
           </div>
@@ -75,11 +75,16 @@ export default {
         }
       ],
       categories: {
-        0: 'Governance Proposal',
+        0: 'Governance',
         1: 'Marketing',
         2: 'Design',
         3: 'Technical',
-        4: 'Other'
+        4: 'Other',
+        5: 'Sentiment',
+        6: 'Grant Request',
+        7: 'Cycle Budget',
+        8: 'Network Fees',
+        9: 'Smart Contract Updates'
       }
     }
   },

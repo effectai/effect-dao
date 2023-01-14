@@ -35,6 +35,7 @@
             </div>
             <div class="has-text-weight-light">
               <small>Created On: {{proposal.pay[0]["field_1"].split("T")[0]}}</small>
+              <small>Category: {{ categories[proposal.category]}}</small>
             </div>
           </div>
           <div class="column is-2 has-text-left-mobile has-text-right-desktop has-text-left-tablet">

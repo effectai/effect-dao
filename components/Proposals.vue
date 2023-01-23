@@ -3,7 +3,7 @@
     <div v-if="proposals.length > 0">
       <nuxt-link v-for="proposal in proposals" :key="proposal.id" :to="'/proposals/'+proposal.id" class="box has-shadow-outside is-narrow">
         <div class="columns is-desktop is-gapless">
-          <div class="has-text-weight-light column  is-10">
+          <div class="has-text-weight-light column  is-9">
             <b v-if="proposal.title">
               <!-- <span v-if="proposal.vote_counts[1] != undefined && proposal.vote_counts[2] != undefined" @click="print(proposals.vote_counts)">
                 <font-awesome-icon v-if="proposal.vote_counts[1].value > proposal.vote_counts[2].value" :icon="['fa', 'arrow-up']" style="font-size: 20px" class="has-text-success" />
@@ -38,11 +38,16 @@
               <small>Category: {{ categories[proposal.category]}}</small>
             </div>
           </div>
-          <div class="column is-2 has-text-left-mobile has-text-right-desktop has-text-left-tablet">
-            <div class="tag" :class="{'is-success': proposal.status == 'ACTIVE', 'is-warning': proposal.status == 'DRAFT', 'is-link': proposal.status == 'PENDING', 'is-dark': proposal.status == 'CLOSED'}">{{ proposal.status }}</div>
-            <!-- <span class="tag is-success" v-if="proposal.state === 3">EXECUTED</span>
-            <span class="tag is-danger" v-if="proposal.state === 2">REJECTED</span>
-            <span class="tag is-success" v-if="proposal.state === 1">ACCEPTED</span> -->
+          <div class="column is-3 has-text-right">
+            <div
+            class="tag"
+            :class="{'is-success': proposal.status == 'ACTIVE',
+                     'is-warning': proposal.status == 'DRAFT',
+                     'is-link': proposal.status == 'PENDING',
+                     'is-dark': proposal.status == 'CLOSED'}">
+              {{ proposal.status }}
+            </div>
+            <span class="tag is-info" v-if="proposal.msig">⚡ ATP</span>
           </div>
         </div>
       </nuxt-link>

@@ -306,7 +306,7 @@ export default {
         const payoutTime = new Date()
         // payoutTime.setDate(payoutTime.getDate() + 14)
         const actions = []
-        const addPayment = true
+        const addPayment = false
         if (addPayment) {
           actions.push({
             account: 'effecttokens',
@@ -344,7 +344,7 @@ export default {
               content_hash: this.proposal.content_hash,
               category: parseInt(1),
               cycle: parseInt(this.proposal.cycle),
-              transaction_hash: null
+              msig: this.proposal.msig ? this.proposal.msig : null
             }
           }
         )

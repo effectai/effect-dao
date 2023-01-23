@@ -22,6 +22,21 @@
         </a>
       </div>
     </div> -->
+    <div class="discord">
+      <div class="container is-max-widescreen">
+        <p class="is-hidden-mobile">
+          🚀 The Launch-a-thon Vote is now open!
+        </p>
+        <p class="is-hidden-tablet">
+          🚀 The Launch-a-thon Vote is now open!
+        </p>
+        <nuxt-link to="/launchathon">
+          <button class="discord-btn">
+            Vote
+          </button>
+        </nuxt-link>
+      </div>
+    </div>
     <modal />
     <connect-wallet />
 

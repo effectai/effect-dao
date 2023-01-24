@@ -121,6 +121,30 @@
         </div>
         <div class="box mt-5">
           <h5 class="box-title">
+            Comments
+          </h5>
+          <div class="buttons is-centered">
+            <div v-for="vote in votes" :key="vote.id + vote.voter" class="is-mobile">
+              <div v-if="vote.comment_hash != null" >
+                <div v-for="comment in commentsLoaded()" :key="comment.voter">
+                  <div v-if="comment.voter == vote.voter">
+                    <nuxt-link :to="'/account/'+vote.voter" >
+                    <b class="comment">{{ vote.voter }}</b>
+                    </nuxt-link>
+                    - Voted: <b :class="{'has-text-success': vote.type === 1, 'has-text-danger': vote.type === 2}">{{ voteTypes.find((vt) => vt.value === vote.type).name }}</b>
+                    <p class="comment">
+                      {{ comment.voteComment }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button v-if="voterComments === null || commentListLength < voterComments.length" class="button is-primary is-outlined" @click="commentListLength += commentIncrement">More Comments</button>
+            <button v-if="commentListLength > 2" class="button is-primary is-outlined" @click="commentListLength -= commentIncrement">Less Comments</button>
+          </div>
+        </div>
+        <div class="box mt-5">
+          <h5 class="box-title">
             Votes ({{ totalVotes }})
           </h5>
           <div v-if="votes && votes.length">
@@ -258,6 +282,9 @@ export default {
   },
   data () {
     return {
+      commentListLength: 2,
+      commentIncrement: 5,
+      voterComments: null,
       quorum: 0,
       ipfsExplorer: process.env.ipfsExplorer,
       loading: false,
@@ -359,12 +386,31 @@ export default {
       } else {
         return jsonComment[this.$route.params.id].text
       }
+    },
+    getVoterComment () {
+      const comments = []
+      if (this.votes) {
+        this.votes.forEach(async (vote) => {
+          if (vote.comment_hash != null) {
+            const comment = await this.$dao.getIpfsContent(vote.comment_hash)
+            comments.push({
+              voter: vote.voter,
+              voteComment: comment
+            })
+          }
+        })
+      }
+      return comments
     }
   },
-
   watch: {
     currentCycle () {
       this.getProposal(this.id)
+    },
+    getVoterComment: {
+      handler (comment) {
+        this.voterComments = comment
+      }
     }
   },
 
@@ -374,6 +420,12 @@ export default {
   },
 
   methods: {
+    commentsLoaded () {
+      if (this.voterComments != null) {
+        console.log(this.voterComments.length)
+        return this.voterComments.slice(0, this.commentListLength)
+      }
+    },
     votePercentage (vote, proposal) {
       return (vote.weight / (proposal.vote_counts[0].value + proposal.vote_counts[1].value + proposal.vote_counts[2].value) * 100).toFixed(2)
     },
@@ -645,5 +697,15 @@ export default {
   }
   textarea {
     width: 100%;
+  }
+
+  .comment {
+    padding-bottom: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+
+  p.comment {
+    font-style: italic;
   }
 </style>

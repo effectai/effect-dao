@@ -243,11 +243,12 @@ export default {
         code: process.env.feepoolContract,
         scope: process.env.feepoolContract,
         table: 'balance',
-        limit: 50
+        limit: 20,
+        reverse: true
       })
 
       if (feeData && feeData.rows.length > 0) {
-        this.balances = feeData.rows
+        this.balances = feeData.rows.reverse()
         this.getClaims(this.balances)
 
         const cycleData = await this.$eos.rpc.get_table_rows({

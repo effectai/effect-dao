@@ -57,11 +57,21 @@
                 Rewards
               </nuxt-link>
             </div>
-            <!-- <div @click="mobileMenu = false">
+            <div @click="mobileMenu = false">
+              <nuxt-link class="navbar-item" to="/socials" exact-active-class="is-active">
+                Socials
+              </nuxt-link>
+            </div>
+            <div @click="mobileMenu = false">
               <a class="navbar-item" href="https://t.me/EffectNetworkDAO" target="_blank">
-                Telegram
+                <img src="@/assets/img/telegram-icon.png" alt="Telegram icon">
               </a>
-            </div> -->
+            </div>
+            <div @click="mobileMenu = false">
+              <a class="navbar-item" href="https://discord.gg/effectnetwork" target="_blank">
+                <img src="@/assets/img/discord-icon.png" alt="Discord icon">
+              </a>
+            </div>
           </div>
           <div class="navbar-end">
               <div class="pt-0 navbar-item">

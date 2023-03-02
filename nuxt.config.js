@@ -196,6 +196,12 @@ export default {
 
   fontawesome: {
     icons: {
+      brands:[
+        'faDiscord',
+        'faTelegram',
+        'faGithub',
+        'faTwitter'
+      ],
       solid: [
         'faCaretSquareDown',
         'faStickyNote',
@@ -208,7 +214,9 @@ export default {
         'faArrowDown',
         'faMinus',
         'faCommentDots',
-        'faCheckSquare'
+        'faCheckSquare',
+        'faBlog',
+        'faFileWord'
       ]
     }
   },

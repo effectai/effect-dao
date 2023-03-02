@@ -15,23 +15,41 @@
               to chart a coordinated future for the EOS Network as a force for positive global change."
             </em>
           </p>
-          <font-awesome-icon :icon="['fas', 'check']"/>
-          <p class="mt-5">Website: <a href="https://eosnetwork.com/">https://eosnetwork.com/</a></p>
-          <p>Blog: <a href="https://eosnetwork.com/blog/">https://eosnetwork.com/blog/</a></p>
-          <p>Discord: <a href="https://discord.gg/eos-network">https://discord.gg/eos-network</a></p>
+          <div class="mt-5 columns is-centered">
+            <a href="https://eosnetwork.com/" target="_blank" class="has-text-grey has-tooltip-top" data-tooltip="EOS Network Foundation Website"><font-awesome-icon :icon="['fas', 'file-word']" class="icon is-medium mx-3"/> </a>
+            <a href="https://eosnetwork.com/blog/" target="_blank" class="has-text-grey has-tooltip-top" data-tooltip="EOS Network Foundation Blog"><font-awesome-icon :icon="['fas', 'blog']" class="icon is-medium mx-3"/></a>
+            <a href="https://discord.gg/eos-network" target="_blank" class="has-text-grey has-tooltip-top" data-tooltip="EOS Network Foundation Discord"><font-awesome-icon :icon="['fab', 'discord']" class="icon is-medium mx-3"/></a>
+          </div>
+          <!-- <p class="mt-5"><a href="https://eosnetwork.com/">Website: eosnetwork.com</a></p>
+          <p>Blog: <a href="https://eosnetwork.com/blog/">eosnetwork.com/blog</a></p>
+          <p>Discord: <a href="https://discord.gg/eos-network">discord.gg/eos-network</a></p> -->
         </div>
 
         <div class="box container">
-          <div class="box-title subtitle is-5 has-text-weight-bold">EOS Respect (EOS Support DAO)</div>
+          <div class="box-title subtitle is-5 has-text-weight-bold">EOS Support DAO</div>
+          <p>
+            <em>"EOS user support created by the community for the community. The goal
+              of EOS support is to help the average user onboard into EOS without any difficulties.
+              It is the concierge of the EOS Network DAO. The true meaning of a DAO (Decentralized Autonomous Organization)."</em>
+            </p>
+            <div class="mt-5 columns is-centered">
+            <a href="https://eossupport.io/" target="_blank" class="has-text-grey has-tooltip-top" data-tooltip="EOS Support Website"><font-awesome-icon :icon="['fas', 'file-word']" class="icon is-medium mx-3"/></a>
+          </div>
+        </div>
+
+        <div class="box container">
+          <div class="box-title subtitle is-5 has-text-weight-bold">EOS Respect</div>
           <p>
             <em>"EOS Respect creates the opportunity for community members to pool money,
             align with those that will be voted to receive funds and allocate those funds
             for EOS support's interest."</em>
             </p>
-            <p>Learn more here: <a href="https://eosrespect.io/">https://eosrespect.io/</a></p>
-            <p class="mt-5">Get EOS support here: <a href="https://eossupport.io/">https://eossupport.io/</a></p>
+            <!-- <p>Learn more here: <a href="https://eosrespect.io/">eosrespect.io</a></p> -->
+            <!-- <p class="mt-5">Get EOS support here: <a href="https://eossupport.io/">eossupport.io</a></p> -->
+            <div class="mt-5 columns is-centered">
+            <a href="https://eosrespect.io/" target="_blank" class="has-text-grey has-tooltip-top" data-tooltip="EOS Respect Website"><font-awesome-icon :icon="['fas', 'file-word']" class="icon is-medium mx-3"/></a>
+          </div>
         </div>
-
         <div class="box container">
           <div class="box-title subtitle is-5 has-text-weight-bold">EOS Powerup</div>
           <p>
@@ -40,19 +58,27 @@
               and businesses to easily handle their account resources."
             </em>
           </p>
-          <p class="mt-5">PowerUp your EOS account here: <a href="https://eospowerup.io">https://eospowerup.io</a></p>
+          <!-- <p class="mt-5">PowerUp your EOS account here: <a href="https://eospowerup.io">eospowerup.io</a></p> -->
+          <div class="mt-5 columns is-centered">
+            <a href="https://eospowerup.io" target="_blank" class="has-text-grey has-tooltip-top" data-tooltip="EOS PowerUp Website"><font-awesome-icon :icon="['fas', 'file-word']" class="icon is-medium mx-3"/></a>
+          </div>
         </div>
 
         <div class="box container">
           <h1 class="box-title subtitle is-5 has-text-weight-bold">Pomelo</h1>
-          <p>Pomelo Grants: <a href="https://pomelo.io/">https://pomelo.io/</a></p>
-          <p >Pomelo Telegram: <a href="https://t.me/pomelo_io">https://t.me/pomelo_io</a></p>
-          <p class="mt-5">
-            The ENF endorses Pomelo, a grant dapp that allows users to vote which dapps or people to
+          <p>
+            <em>"The ENF endorses Pomelo, a grant dapp that allows users to vote which dapps or people to
             provide financial support with their own EOS. Their grants work through a process called quadratic funding.
-            You can read more about their process on their wiki.
-            <a href="https://github.com/pomelo-io/pomelo-wiki/wiki/Pomelo-Grants-Wiki">https://github.com/pomelo-io/pomelo-wiki/wiki/Pomelo-Grants-Wiki</a>
+            You can read more about their process on their wiki."</em>
+            <!-- <a href="https://github.com/pomelo-io/pomelo-wiki/wiki/Pomelo-Grants-Wiki">github.com/pomelo-io/pomelo-wiki/wiki/Pomelo-Grants-Wiki</a> -->
           </p>
+          <!-- <p class="mt-5">Pomelo Grants: <a href="https://pomelo.io/">pomelo.io</a></p>
+          <p >Pomelo Telegram: <a href="https://t.me/pomelo_io">Telegram</a></p> -->
+          <div class="mt-5 columns is-centered">
+            <a href="https://pomelo.io/" target="_blank" class="has-text-grey has-tooltip-top" data-tooltip="Pomelo Website"><font-awesome-icon :icon="['fas', 'file-word']" class="icon is-medium mx-3"/></a>
+            <a href="https://github.com/pomelo-io/pomelo-wiki/wiki/Pomelo-Grants-Wiki" target="_blank" class="has-text-grey has-tooltip-top" data-tooltip="Pomelo Github"><font-awesome-icon :icon="['fab', 'github']" class="icon is-medium mx-3"/></a>
+            <a href="https://t.me/pomelo_io" target="_blank" class="has-text-grey has-tooltip-top" data-tooltip="Pomelo Telegram"><font-awesome-icon :icon="['fab', 'telegram']" class="icon is-medium mx-3"/></a>
+          </div>
         </div>
       </div>
     </div>

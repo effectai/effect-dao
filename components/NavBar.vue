@@ -63,14 +63,14 @@
               </nuxt-link>
             </div>
             <div @click="mobileMenu = false">
-              <a class="navbar-item" href="https://t.me/EffectNetworkDAO" target="_blank">
-                <img src="@/assets/img/telegram-icon.png" alt="Telegram icon">
-              </a>
+              <div class="pt-2">
+                <a href="https://t.me/EffectNetworkDAO" target="_blank" class="has-text-grey"><font-awesome-icon :icon="['fab', 'telegram']" class="icon fa-lg mx-3"/></a>
+              </div>
             </div>
             <div @click="mobileMenu = false">
-              <a class="navbar-item" href="https://discord.gg/effectnetwork" target="_blank">
-                <img src="@/assets/img/discord-icon.png" alt="Discord icon">
-              </a>
+              <div class="pt-2">
+                <a href="https://discord.gg/5QxXdmgU" target="_blank" class="has-text-grey"><font-awesome-icon :icon="['fab', 'discord']" class="icon fa-lg mx-3"/></a>
+              </div>
             </div>
           </div>
           <div class="navbar-end">

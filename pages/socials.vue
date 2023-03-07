@@ -2,7 +2,7 @@
   <div>
     <div>
       <div>
-        <div class="box container">
+        <div class="mt-5 box container">
           <div class="box-title subtitle is-5 has-text-weight-bold">
             Effect Network
           </div>

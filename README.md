@@ -1,5 +1,6 @@
 # Effect DAO
-https://dao.effect.network
+
+<https://dao.effect.network>
 
 ## Build Setup
 
@@ -18,6 +19,8 @@ $ npm run start
 $ npm run generate
 ```
 
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+For a detailed explanation of how things work, check out [Nuxt.js docs](https://nuxtjs.org).
 
-# Node version 14 required
+## Node Version
+
+To run this codebase you will need to use `v14` of Node.

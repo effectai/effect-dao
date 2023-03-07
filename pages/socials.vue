@@ -7,13 +7,11 @@
             Effect Network
           </div>
           <p>
-            <em>
-              "Effect Network is a decentralized, open-source, and community-driven
-              platform for the creation and management of the decentralized microtasking platform Effect Force."
-            </em>
+            Effect Network is a decentralized, open-source, and community-driven
+            platform for the creation and management of the decentralized microtasking platform Effect Force.
           </p>
           <div class="mt-5 columns is-centered">
-            <a href="https://effect.network/" target="_blank" class="has-text-grey has-tooltip-top" data-tooltip="Effect Network Webiste"><font-awesome-icon :icon="['fas', 'file-word']" class="icon is-medium mx-3" /> </a>
+            <a href="https://effect.network/" target="_blank" class="has-text-grey has-tooltip-top" data-tooltip="Effect Network Webiste"><font-awesome-icon icon="phone" class="icon is-medium mx-3" /> </a>
             <a href="https://github.com/effectai/effect-dao" target="_blank" class="has-text-grey has-tooltip-top" data-tooltip="Effect Network GitHub"><font-awesome-icon :icon="['fab', 'github']" class="icon is-medium mx-3"/></a>
             <a href="https://t.me/EffectNetworkDAO" target="_blank" class="has-text-grey has-tooltip-top" data-tooltip="Effect Network DAO Telegram"><font-awesome-icon :icon="['fab', 'telegram']" class="icon is-medium mx-3"/></a>
             <a href="https://discord.gg/effectnetwork" target="_blank" class="has-text-grey has-tooltip-top" data-tooltip="Effect Network Discord"><font-awesome-icon :icon="['fab', 'discord']" class="icon is-medium mx-3"/></a>
@@ -33,9 +31,9 @@
           </div>
           <p>
             <em>
-              "The EOS Network Foundation coordinates financial and non-financial support to encourage
+              The EOS Network Foundation coordinates financial and non-financial support to encourage
               the growth and development of the EOS Network. Harnessing the power of decentralization
-              to chart a coordinated future for the EOS Network as a force for positive global change."
+              to chart a coordinated future for the EOS Network as a force for positive global change.
             </em>
           </p>
           <div class="mt-5 columns is-centered">
@@ -51,9 +49,9 @@
           </div>
           <p>
             <em>
-              "EOS user support created by the community for the community. The goal
+              EOS user support created by the community for the community. The goal
               of EOS support is to help the average user onboard into EOS without any difficulties.
-              It is the concierge of the EOS Network DAO. The true meaning of a DAO (Decentralized Autonomous Organization)."
+              It is the concierge of the EOS Network DAO. The true meaning of a DAO (Decentralized Autonomous Organization).
             </em>
           </p>
           <div class="mt-5 columns is-centered">
@@ -83,8 +81,8 @@
           </div>
           <p>
             <em>
-              "Eospowerup.io is an essential tool for thousands of EOS community members
-              and businesses to easily handle their account resources."
+              Eospowerup.io is an essential tool for thousands of EOS community members
+              and businesses to easily handle their account resources.
             </em>
           </p>
           <div class="mt-5 columns is-centered">
@@ -98,9 +96,9 @@
           </div>
           <p>
             <em>
-              "The ENF endorses Pomelo, a grant dapp that allows users to vote which dapps or people to
+              The ENF endorses Pomelo, a grant dapp that allows users to vote which dapps or people to
               provide financial support with their own EOS. Their grants work through a process called quadratic funding.
-              You can read more about their process on their wiki."
+              You can read more about their process on their wiki.
             </em>
           </p>
           <div class="mt-5 columns is-centered">

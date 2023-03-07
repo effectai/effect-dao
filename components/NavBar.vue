@@ -23,11 +23,6 @@
         <div id="navbarBasicExample" class="navbar-menu" :class="{'is-active': mobileMenu}">
           <div class="navbar-start is-justify-content-center" style="width: 100%">
             <div @click="mobileMenu = false">
-              <nuxt-link class="navbar-item" to="/" exact-active-class="is-active">
-                Home
-              </nuxt-link>
-            </div>
-            <div @click="mobileMenu = false">
               <nuxt-link class="navbar-item" to="/stake" exact-active-class="is-active">
                 Stake
               </nuxt-link>
@@ -60,11 +55,6 @@
             <div @click="mobileMenu = false">
               <nuxt-link class="navbar-item" to="/socials" exact-active-class="is-active">
                 Socials
-              </nuxt-link>
-            </div>
-            <div @click="mobileMenu = false">
-              <nuxt-link class="navbar-item" to="/swap" exact-active-class="is-active">
-                Swap
               </nuxt-link>
             </div>
             <div @click="mobileMenu = false">

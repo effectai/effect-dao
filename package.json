@@ -12,6 +12,7 @@
     "deploy": "push-dir --dir=dist --branch=gh-pages --cleanup"
   },
   "dependencies": {
+    "@fortawesome/free-brands-svg-icons": "^6.3.0",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@nuxtjs/axios": "^5.12.2",
     "@nuxtjs/fontawesome": "^1.1.2",

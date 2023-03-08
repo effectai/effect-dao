@@ -22,7 +22,7 @@
         </a>
       </div>
     </div> -->
-    <div class="discord">
+    <div class="discord is-hidden">
       <div class="container is-max-widescreen">
         <p class="is-hidden-mobile">
           🚀 The Launch-a-thon Vote is now open!

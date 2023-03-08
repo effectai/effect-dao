@@ -23,11 +23,6 @@
         <div id="navbarBasicExample" class="navbar-menu" :class="{'is-active': mobileMenu}">
           <div class="navbar-start is-justify-content-center" style="width: 100%">
             <div @click="mobileMenu = false">
-              <nuxt-link class="navbar-item" to="/" exact-active-class="is-active">
-                Home
-              </nuxt-link>
-            </div>
-            <div @click="mobileMenu = false">
               <nuxt-link class="navbar-item" to="/stake" exact-active-class="is-active">
                 Stake
               </nuxt-link>
@@ -57,35 +52,45 @@
                 Rewards
               </nuxt-link>
             </div>
-            <!-- <div @click="mobileMenu = false">
-              <a class="navbar-item" href="https://t.me/EffectNetworkDAO" target="_blank">
-                Telegram
-              </a>
-            </div> -->
+            <div @click="mobileMenu = false">
+              <nuxt-link class="navbar-item" to="/socials" exact-active-class="is-active">
+                Socials
+              </nuxt-link>
+            </div>
+            <div @click="mobileMenu = false">
+              <div class="pt-2">
+                <a href="https://t.me/EffectNetworkDAO" target="_blank" class="has-text-grey"><font-awesome-icon :icon="['fab', 'telegram']" class="icon fa-lg mx-3"/></a>
+              </div>
+            </div>
+            <div @click="mobileMenu = false">
+              <div class="pt-2">
+                <a href="https://discord.gg/effectnetwork" target="_blank" class="has-text-grey"><font-awesome-icon :icon="['fab', 'discord']" class="icon fa-lg mx-3"/></a>
+              </div>
+            </div>
           </div>
           <div class="navbar-end">
-              <div class="pt-0 navbar-item">
-                <a v-if="!wallet" class="button is-primary" @click="$wallet.loginModal = true">
-                  <strong>Connect Wallet</strong>
-                </a>
-                <div v-else class="dropdown account-name-dropdown" :class="{'is-active': dropdown}">
-                  <div class="dropdown-trigger" @click="dropdown = !dropdown">
-                    <span>{{ wallet.auth.accountName }}</span>
-                    <font-awesome-icon :icon="['fas', 'caret-square-down']" style="font-size: 12px" />
-                  </div>
-                  <div id="dropdown-menu" class="dropdown-menu" role="menu">
-                    <div class="dropdown-content" @click="dropdown = false">
-                      <nuxt-link class="dropdown-item" :to="`/account/${wallet.auth.accountName}`">
-                        View Profile
-                      </nuxt-link>
-                      <hr class="dropdown-divider">
-                      <a href="#" class="dropdown-item" @click="$transit.logout()">
-                        Disconnect
-                      </a>
-                    </div>
+            <div class="pt-0 navbar-item">
+              <a v-if="!wallet" class="button is-primary" @click="$wallet.loginModal = true">
+                <strong>Connect Wallet</strong>
+              </a>
+              <div v-else class="dropdown account-name-dropdown" :class="{'is-active': dropdown}">
+                <div class="dropdown-trigger" @click="dropdown = !dropdown">
+                  <span>{{ wallet.auth.accountName }}</span>
+                  <font-awesome-icon :icon="['fas', 'caret-square-down']" style="font-size: 12px" />
+                </div>
+                <div id="dropdown-menu" class="dropdown-menu" role="menu">
+                  <div class="dropdown-content" @click="dropdown = false">
+                    <nuxt-link class="dropdown-item" :to="`/account/${wallet.auth.accountName}`">
+                      View Profile
+                    </nuxt-link>
+                    <hr class="dropdown-divider">
+                    <a href="#" class="dropdown-item" @click="$transit.logout()">
+                      Disconnect
+                    </a>
                   </div>
                 </div>
               </div>
+            </div>
           </div>
         </div>
       </div>

@@ -196,7 +196,7 @@ export default {
 
   fontawesome: {
     icons: {
-      brands:[
+      brands: [
         'faDiscord',
         'faTelegram',
         'faGithub',

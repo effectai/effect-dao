@@ -57,11 +57,6 @@
     </div>
 
     <div v-if="!loading && (!wallet || !wallet.auth)" class="has-text-centered is-outlined is-primary mb-0 has-text-weight-bold notif-w-btn">
-      <!-- <div class="notif-btn">
-        <a class="button is-primary" @click="$wallet.loginModal = true">
-          <strong>Connect Wallet</strong>
-        </a>
-      </div> -->
       <div class="notification is-primary is-outlined has-text-centered is-light has-text-weight-bold ">
         Connect your wallet to participate in the DAO.
       </div>

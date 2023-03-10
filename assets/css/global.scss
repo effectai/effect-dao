@@ -68,6 +68,34 @@ a {
   }
 }
 
+.table {
+  box-shadow: $box-shadow;
+  border-radius: 0.55rem;
+  box-sizing: border-box;
+  overflow: hidden;
+  &.has-shadow-outside {
+     box-shadow: $box-shadow-outside;
+  }
+  .cell {
+    padding: 1rem;
+    border-bottom: 1px solid #CDD4E6;
+    &.head {
+      background-color: rgba(38,40,51,.05);
+    }
+  }
+  .cell:last-child {
+    border-bottom: 0;
+  }
+}
+
+.is-flex-direction-row {
+  display: flex;
+  flex-direction: row;
+}
+.is-flex-grow-1 {
+  flex-grow: 1;
+}
+
 .box {
   position: relative;
   &.has-shadow-outside {
@@ -89,6 +117,10 @@ a {
   border-bottom: 2px solid #CDD4E6;
   padding-bottom: 20px;
   margin-top: 10px;
+}
+
+.subtitle {
+  color: #101D56;
 }
 
 .collapsible {

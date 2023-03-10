@@ -2,12 +2,16 @@
   <div>
     <div class="has-text-centered my-6">
       <div v-if="wallet && wallet.auth">
-        <div class="image is-64x64 avatar">
-          <avatar class="is-rounded" style="margin: 0 auto" :account-name="wallet.auth.accountName" />
+        <h1 class="title">Welcome {{wallet.auth.accountName}}!</h1>
+        <div class="value-circle big my-6 glow">
+          <h3 class="has-text-weight-bold is-size-2">
+            {{ $wallet.formatNumber(votes) }}
+          </h3>
+          <span>Your power</span>
         </div>
-        <h1 class="title">Hi, {{ wallet.auth.accountName }}!</h1>
-        <div class="subtitle">Effect Network DAO</div>
+        <!-- <div class="subtitle">Effect Network Dashboard</div> -->
       </div>
+
       <div v-else class="has-text-centered">
         <h1 class="title">Effect Network DAO</h1>
         <div class="subtitle">Stake, vote and swap all in one place!</div>
@@ -19,11 +23,73 @@
       </div>
     </div>
 
+    <h3 class="subtitle">Proposals now active:</h3>
+    <div class="table has-shadow-outside mb-6" v-if="proposals && proposals.length > 0">
+      <!-- <div class="cell head has-text-weight-bold is-size-6"> -->
+      <!--   Active proposals -->
+      <!-- </div> -->
+      <div class="cell" v-for="prop in proposals"   :key="prop.id">
+        <nuxt-link :to="'/proposals/'+prop.id" class="is-flex-direction-row">
+          <div class="is-size-6 has-text-primary is-flex-grow-1">
+            #{{ prop.id }}: {{ prop.title }}
+          </div>
+          <div>
+            <font-awesome-icon :icon="['fas', 'chevron-circle-right']" class="icon has-text-primary mx-3" />
+          </div>
+        </nuxt-link>
+      </div>
+    </div>
+
+    <!-- <h3 class="subtitle">Cycle information:</h3> -->
+    <div class="box mb-6">
+      <div class="columns has-text-centered py-2">
+        <div class="column">
+          <div class="text">
+            <span class="high is-size-3">
+              <ICountUp v-if="currentCycle" :end-val="currentCycle" />
+              <span v-else>..</span>
+            </span> <br>
+            <span class="low">Cycle</span>
+          </div>
+        </div>
+        <div class="splitter" />
+        <div class="column">
+          <div class="text">
+            <span v-if="nfxPoolBalance > 0" class="high is-size-3">
+              ${{ $wallet.formatNumber(nfxPoolBalance)  }}
+            </span>
+            <span v-else>..</span><br>
+            <span class="low">Rewards</span>
+          </div>
+        </div>
+        <div class="splitter" />
+        <div class="column">
+          <div class="text">
+            <span v-if="poolValue > 0" class="high is-size-3">
+              ${{ $wallet.formatNumber(poolValue) }}
+            </span>
+            <span v-else>..</span><br>
+            <span class="low">Some text</span>
+          </div>
+        </div>
+        <div class="splitter" />
+        <div class="column">
+          <div class="text">
+            <span v-if="percentStaked > 0" class="high is-size-3">
+              {{ percentStaked }}%
+            </span>
+            <span v-else>..</span><br>
+            <span class="low">Number staked</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div v-if="wallet" class="columns balances">
       <div class="column">
         <div class="box">
           <h5 class="box-title subtitle">
-            <img src="@/assets/img/efx-icon.png" class="token-icon">EFX Balance
+            <img src="@/assets/img/efx-icon.png" class="token-icon">Your EFX
           </h5>
           <div class="has-text-centered">
             <div class="mb-3">
@@ -51,7 +117,7 @@
       <div class="column">
         <div class="box">
           <h5 class="box-title subtitle">
-            <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">NFX Balance
+            <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">Your NFX
           </h5>
           <div class="has-text-centered">
             <div class="mb-3">
@@ -76,123 +142,15 @@
         </div>
       </div>
     </div>
-
-    <div class="box">
-      <h5 class="subtitle box-title">
-        Staking Overview
-      </h5>
-      <div class="columns has-text-centered py-4">
-        <div class="column">
-          <div class="icon">
-            <img src="@/assets/img/icons/staking.svg" class="">
-          </div>
-          <div class="text">
-            <span class="high">
-              <ICountUp v-if="poolBalance > 0" :end-val="poolBalance" />
-              <span v-else>..</span>
-            </span> <br>
-            <span class="low">EFX in staking pool</span>
-          </div>
-        </div>
-        <div class="splitter" />
-        <div class="column">
-          <div class="icon">
-            <img src="@/assets/img/icons/staking.svg" class="">
-          </div>
-          <div class="text">
-            <span class="high">
-              <ICountUp v-if="nfxPoolBalance > 0" :end-val="nfxPoolBalance" />
-              <span v-else>..</span>
-            </span> <br>
-            <span class="low">NFX in staking pool</span>
-          </div>
-        </div>
-        <div class="splitter" />
-        <div class="column">
-          <div class="icon">
-            <img src="@/assets/img/icons/usd.svg" class="">
-          </div>
-          <div class="text">
-            <span class="high">
-              <ICountUp v-if="poolValue > 0" :options="{ prefix: '$' }" :end-val="poolValue" />
-              <span v-else>..</span>
-            </span> <br>
-            <span class="low">EFX Staking pool value</span>
-          </div>
-        </div>
-        <div class="splitter" />
-        <div class="column">
-          <div class="icon">
-            <img src="@/assets/img/icons/supply.svg" class="">
-          </div>
-          <div class="text">
-            <span class="high">
-              <ICountUp v-if="percentStaked > 0" :options="{ suffix: '%' }" :end-val="percentStaked" />
-              <span v-else>..</span>
-            </span> <br>
-            <span class="low">Of circ. EFX supply staked</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="box mt-5 mb-6">
-      <h5 class="subtitle box-title">
-        Effect Force Overview
-      </h5>
-      <div class="columns has-text-centered py-4">
-        <div class="column">
-          <div class="icon">
-            <img src="@/assets/img/icons/transactions.svg" class="">
-          </div>
-          <div class="text">
-            <span class="high">
-              <ICountUp v-if="forceTransactions > 0" :end-val="forceTransactions" />
-              <span v-else>..</span>
-            </span> <br>
-            <span class="low">Total transactions</span>
-          </div>
-        </div>
-        <div class="splitter" />
-        <div class="column">
-          <div class="icon">
-            <img src="@/assets/img/icons/payouts.svg" class="">
-          </div>
-          <div class="text">
-            <span class="high">
-              <ICountUp v-if="forceEfxPaid > 0" :end-val="forceEfxPaid" />
-              <span v-else>..</span>
-              <span class="symbol">EFX</span>
-            </span> <br>
-            <span class="low">Total payouts</span>
-          </div>
-        </div>
-        <div class="splitter" />
-        <div class="column">
-          <div class="icon">
-            <img src="@/assets/img/icons/workers.svg" class="">
-          </div>
-          <div class="text">
-            <span class="high">
-              <ICountUp v-if="forceUsers > 0" :end-val="forceUsers" />
-              <span v-else>..</span>
-            </span> <br>
-            <span class="low">Registered workers</span>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
 import ICountUp from 'vue-countup-v2'
-import Avatar from '~/components/Avatar'
 
 export default {
   components: {
-    ICountUp,
-    Avatar
+    ICountUp
   },
   data () {
     return {
@@ -202,11 +160,15 @@ export default {
       circSupply: 0,
       forceTransactions: 0,
       forceEfxPaid: 0,
-      forceUsers: 0
+      forceUsers: 0,
+      proposals: null
     }
   },
 
   computed: {
+    votes () {
+      return this.$wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked)
+    },
     poolValue () {
       return parseInt(this.efxPrice * this.poolBalance)
     },
@@ -227,11 +189,20 @@ export default {
     },
     nfxStaked () {
       return this.$wallet.nfxStaked
+    },
+    currentCycle () {
+      return this.$dao.proposalConfig ? this.$dao.proposalConfig.current_cycle : null
     }
   },
 
   created () {
     this.init()
+  },
+
+  watch: {
+    currentCycle () {
+      this.getProposals()
+    }
   },
 
   methods: {
@@ -241,6 +212,7 @@ export default {
       this.getPoolBalance()
       this.getNFXPoolBalance()
       this.getEFXPrice()
+      this.getProposals()
     },
 
     async getCircSupply () {
@@ -276,6 +248,36 @@ export default {
           this.forceTransactions = data.total_transactions
           this.forceUsers = data.total_accounts
         })
+    },
+
+    async getProposals () {
+      if (this.$dao.proposalConfig) {
+        const config = {
+          code: process.env.proposalContract,
+          scope: process.env.proposalContract,
+          table: 'proposal',
+          key_type: 'i64',
+          index_position: 3,
+          upper_bound: 58,
+          lower_bound: 58,
+          limit: 20
+        }
+        const data = await this.$eos.rpc.get_table_rows(config)
+        this.proposals = data.rows
+        this.proposals.forEach(async (proposal) => {
+          if (!proposal.title) {
+            try {
+              const ipfsProposal = await this.$dao.getIpfsContent(proposal.content_hash)
+              this.$set(proposal, 'title', ipfsProposal.title)
+            } catch (e) {
+              console.error(e)
+            }
+          }
+        })
+        console.log(data)
+      } else {
+        console.log('Still waiting for cycle')
+      }
     }
   }
 }
@@ -303,13 +305,47 @@ export default {
   }
 }
 
-.avatar {
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-}
 .splitter {
   border-left: 1px solid #CDD4E6;
   margin: 0.75em 0 0.75em 0;
 }
+
+  @keyframes glow {
+    from {
+      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 29px -22px #d7ac00d4;
+    }
+    to {
+      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 40px 15px #d7ac00d4;
+    }
+  }
+  .circle {
+    .age-amount {
+      font-size: 0.75rem;
+    }
+  }
+  .value-circle {
+    height: 125px;
+    width: 125px;
+    &.big {
+      width: 175px;
+      height: 175px;
+    }
+
+    margin: -9px auto 0;
+
+    border-radius: 100%;
+    box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6;
+    &.glow {
+      animation: glow 2s infinite alternate ease-out;
+      //box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 29px -22px #39e7bfd4;
+    }
+    background-color: #F0F2F7;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    h1 {
+      margin-bottom: 0;
+    }
+  }
 </style>

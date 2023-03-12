@@ -23,10 +23,10 @@
       </div>
     </div>
 
-    <h3 class="subtitle">Proposals now active:</h3>
+    <h3 class="subtitle has-text-centered">Proposals now active:</h3>
     <div class="table has-shadow-outside mb-6" v-if="proposals && proposals.length > 0">
-      <!-- <div class="cell head has-text-weight-bold is-size-6"> -->
-      <!--   Active proposals -->
+      <!-- <div class="cell  has-text-weight-bold is-size-6"> -->
+      <!--   Proposals now active -->
       <!-- </div> -->
       <div class="cell" v-for="prop in proposals"   :key="prop.id">
         <nuxt-link :to="'/proposals/'+prop.id" class="is-flex-direction-row">

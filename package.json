@@ -17,6 +17,7 @@
     "@nuxtjs/axios": "^5.12.2",
     "@nuxtjs/fontawesome": "^1.1.2",
     "@nuxtjs/markdownit": "^1.2.10",
+    "atomicassets": "^1.5.1",
     "bulma": "^0.9.1",
     "bulma-slider": "^2.0.4",
     "bulma-tooltip": "^3.0.2",

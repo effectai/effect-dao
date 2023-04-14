@@ -229,6 +229,7 @@ export default {
     { src: '@/plugins/dao.js', mode: 'client' },
     '@/plugins/modal.js',
     '@/plugins/eos.js',
+    '@plugins/atomic.js',
     '@/plugins/helpers.js'
   ],
 

@@ -57,16 +57,16 @@
                 Socials
               </nuxt-link>
             </div>
-            <div @click="mobileMenu = false">
+            <!-- <div @click="mobileMenu = false">
               <div class="pt-2">
                 <a href="https://t.me/EffectNetworkDAO" target="_blank" class="has-text-grey"><font-awesome-icon :icon="['fab', 'telegram']" class="icon fa-lg mx-3"/></a>
               </div>
-            </div>
-            <div @click="mobileMenu = false">
+            </div> -->
+            <!-- <div @click="mobileMenu = false">
               <div class="pt-2">
                 <a href="https://discord.gg/effectnetwork" target="_blank" class="has-text-grey"><font-awesome-icon :icon="['fab', 'discord']" class="icon fa-lg mx-3"/></a>
               </div>
-            </div>
+            </div> -->
           </div>
           <div class="navbar-end">
             <div class="pt-0 navbar-item">

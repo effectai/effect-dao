@@ -1,7 +1,11 @@
 <template>
   <img
+    v-if="isLoading"
     :src="atomicAssetSrc"
   >
+  <div v-else class="loading">
+    Loading...
+  </div>
 </template>
 
 <script>
@@ -16,7 +20,8 @@ export default {
 
   data () {
     return {
-      imgsrc: null
+      imgsrc: null,
+      isLoading: false
     }
   },
 
@@ -36,6 +41,7 @@ export default {
       return `https://ui-avatars.com/api/?name=${this.accountName}&size=100`
     },
     async getAtomicAssets () {
+      this.isLoading = true
       try {
         const assets = await this.$atomic.getAssets({
           collection_name: 'pomelo',
@@ -45,12 +51,15 @@ export default {
 
         if (assets && assets.length > 0) {
           const [asset] = assets
+          // eslint-disable-next-line no-console
           console.log(`https://gateway.pinata.cloud/ipfs/${asset.data.img}`)
           this.imgsrc = `https://gateway.pinata.cloud/ipfs/${asset.data.img}`
         }
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(error)
       }
+      this.isLoading = false
     }
   }
 }

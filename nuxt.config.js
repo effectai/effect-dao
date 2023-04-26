@@ -217,7 +217,8 @@ export default {
         'faCheckSquare',
         'faBlog',
         'faFileWord',
-        'faChevronCircleRight'
+        'faChevronCircleRight',
+        'faEdit'
       ]
     }
   },

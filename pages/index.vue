@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <h3 class="subtitle has-text-centered">Proposals now active:</h3>
+    <h3 class="subtitle has-text-centered">Active Proposals:</h3>
     <div class="table has-shadow-outside mb-6" v-if="proposals && proposals.length > 0">
       <!-- <div class="cell  has-text-weight-bold is-size-6"> -->
       <!--   Proposals now active -->

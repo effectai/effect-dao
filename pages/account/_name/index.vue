@@ -48,14 +48,14 @@
       <div v-else>
         Could not retrieve proposals
       </div>
-    <div class="has-text-centered mt-4">
-      <nuxt-link v-if="myAccount" class="button is-primary is-wide m-2" to="/proposals/new">
-        New Proposal
-      </nuxt-link>
-      <nuxt-link class="button is-primary is-outlined is-wide m-2" to="/proposals">
-        All Proposals
-      </nuxt-link>
-    </div>
+      <div class="has-text-centered mt-4">
+        <nuxt-link v-if="myAccount" class="button is-primary is-wide m-2" to="/proposals/new">
+          New Proposal
+        </nuxt-link>
+        <nuxt-link class="button is-primary is-outlined is-wide m-2" to="/proposals">
+          All Proposals
+        </nuxt-link>
+      </div>
     </div>
     <div class="box">
       <h4 v-if="myAccount" class="box-title subtitle">
@@ -102,11 +102,6 @@ export default {
     Avatar,
     ICountUp,
     Proposals
-  },
-  head () {
-    return {
-      title: this.account.name + '\'s Account'
-    }
   },
   data () {
     return {
@@ -166,7 +161,7 @@ export default {
     async getAccountInfo () {
       try {
         const member = await this.$wallet.getDaoMember(this.account.name)
-        console.log(member)
+        // console.log(member)
         this.$set(this.account, 'signedConstitution', !!member)
         if (member) {
           this.$set(this.account, 'registration_time', new Date(`${member.registration_time}Z`))
@@ -192,7 +187,7 @@ export default {
           this.$set(this.account, 'votes', votes)
         }
       } catch (e) {
-        console.log(e)
+        console.error(e)
       }
     },
 
@@ -232,7 +227,7 @@ export default {
             }
           })
         } catch (e) {
-          console.log(e)
+          console.error(e)
         }
         this.loadingProposals = false
       }
@@ -263,7 +258,7 @@ export default {
           this.votes = this.votes.concat(data.rows)
         }
       } catch (e) {
-        console.log(e)
+        console.error(e)
       }
       // if (this.moreProposals) {
       //   this.getProposals()
@@ -276,6 +271,11 @@ export default {
       this.loadingLogout = true
       await this.$transit.logout()
       this.loadingLogout = false
+    }
+  },
+  head () {
+    return {
+      title: this.account.name + '\'s Account'
     }
   }
 }

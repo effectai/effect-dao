@@ -1,11 +1,5 @@
 <template>
-  <img
-    v-if="isLoading"
-    :src="atomicAssetSrc"
-  >
-  <div v-else class="loading">
-    Loading...
-  </div>
+  <img :src="atomicAssetSrc" alt="Atomic Asset NFT">
 </template>
 
 <script>
@@ -27,7 +21,7 @@ export default {
 
   computed: {
     atomicAssetSrc () {
-      return this.imgsrc || this.fallbackAvatar()
+      return this.imgsrc || `https://ui-avatars.com/api/?name=${this.accountName}&size=100`
     }
   },
 
@@ -37,8 +31,7 @@ export default {
 
   methods: {
     fallbackAvatar (event) {
-      // event.target.src = 'https://ui-avatars.com/api/?name=${this.accountName}&size=100'
-      return `https://ui-avatars.com/api/?name=${this.accountName}&size=100`
+      event.target.src = `https://ui-avatars.com/api/?name=${this.accountName}&size=100`
     },
     async getAtomicAssets () {
       this.isLoading = true

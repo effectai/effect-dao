@@ -5,7 +5,7 @@
         <div class="media">
           <div class="media-left">
             <div class="image is-128x128">
-              <nuxt-link :to="`/account/${account.name}/profile`">
+              <nuxt-link :to="`/account/${account.name}/avatar`">
                 <avatar
                   id="avatar"
                   :account-name="account.name"

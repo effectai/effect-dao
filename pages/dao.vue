@@ -92,6 +92,40 @@
     </div>
 
     <votes class="mt-5" />
+
+    <hr>
+
+    <div class="box mt-5">
+      <h5 class="box-title subtitle">
+        High Guard
+      </h5>
+      <div class="columns is-multiline mt-5 is-centered">
+        <div v-for="guard in highGuard" :key="guard" class="column is-half is-centered">
+          <nuxt-link :to="`/account/${guard}`" class="box has-shadow-outside is-narrow member columns is-gapless is-mobile">
+            <div class="column is-one-fifth" style="min-width: 70px">
+              <figure class="image is-64x64">
+                <avatar :account-name="guard" />
+              </figure>
+            </div>
+            <div class="column">
+              <div class="pl-2">
+                <h5>{{ guard }}</h5>
+                <div>
+                  <ICountUp v-if="guard.votes >= 0" class="power" :options="{ prefix: 'Votes: ' }" :end-val="guard.votes" />
+                  <div v-else>
+                    ...
+                  </div>
+                  <small>Joined {{ $moment(guard.registration_time).fromNow() }}</small>
+                </div>
+              </div>
+            </div>
+          </nuxt-link>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
     <div class="box mt-5">
       <h5 class="box-title subtitle">
         EffectDAO Members
@@ -149,11 +183,6 @@ export default {
     Votes,
     Avatar
   },
-  head () {
-    return {
-      title: 'The DAO'
-    }
-  },
   data () {
     return {
       loading: false,
@@ -165,7 +194,11 @@ export default {
       constitutionHash: '',
       moreMembers: true,
       nextKey: null,
-      constitutionMembers: null
+      constitutionMembers: null,
+
+      highGuard: ['cryptonode42', 'djstrikanova', 'hazdkmbxgene', 'laurenseosio', 'miggysmallz1', 'rochelle.ai', 'scarletalpha'],
+      highGuardInfo: [],
+      loadingHighGuard: false
     }
   },
 
@@ -189,6 +222,7 @@ export default {
 
   created () {
     this.init()
+    this.getAllHighGuardInfo()
   },
 
   methods: {
@@ -329,6 +363,53 @@ export default {
         .finally(() => {
           this.loading = false
         })
+    },
+
+    async getAllHighGuardInfo () {
+      this.loadingHighGuard = true
+      for (const guard of this.highGuard) {
+        const info = await this.getHighGuardInfo(guard)
+        this.highGuardInfo.push(info)
+      }
+      this.loadingHighGuard = false
+    },
+
+    async getHighGuardInfo (highGuardMember) {
+      try {
+        const member = await this.$wallet.getDaoMember(highGuardMember)
+        console.log(member)
+        this.$set(this.account, 'signedConstitution', !!member)
+        if (member) {
+          this.$set(this.account, 'registration_time', new Date(`${member.registration_time}Z`))
+          const stakeInfo = await this.$wallet.getStake(highGuardMember)
+          stakeInfo.map((row) => {
+            if (row.amount.includes(process.env.efxToken)) {
+              const efxStaked = parseFloat(row.amount.replace(` ${process.env.efxToken}`, ''))
+              const stakeAge = this.$wallet.calculateStakeAge(efxStaked, row.last_claim_time, row.last_claim_age)
+              const efxPower = this.$wallet.calculateEfxPower(efxStaked, stakeAge)
+              this.$set(this.account, 'efxStaked', efxStaked)
+              this.$set(this.account, 'stakeAge', stakeAge)
+              this.$set(this.account, 'power', efxPower)
+            } else if (row.amount.includes(process.env.nfxToken)) {
+              const nfxStaked = parseFloat(row.amount.replace(` ${process.env.nfxToken}`, ''))
+              this.$set(this.account, 'nfxStaked', nfxStaked)
+            }
+          })
+          if (!this.account.power) {
+            this.$set(this.account, 'power', 0)
+          }
+          const votes = this.$wallet.calculateVotePower(this.account.power, this.account.nfxStaked)
+          this.$set(this.account, 'canVote', this.$wallet.canVote())
+          this.$set(this.account, 'votes', votes)
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }
+  },
+  head () {
+    return {
+      title: 'The DAO'
     }
   }
 }

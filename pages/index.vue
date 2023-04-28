@@ -2,7 +2,9 @@
   <div>
     <div class="has-text-centered my-6">
       <div v-if="wallet && wallet.auth">
-        <h1 class="title">Welcome {{wallet.auth.accountName}}!</h1>
+        <h1 class="title">
+          Welcome {{ wallet.auth.accountName }}!
+        </h1>
         <div class="value-circle big my-6 glow">
           <h3 class="has-text-weight-bold is-size-2">
             {{ $wallet.formatNumber(votes) }}
@@ -13,8 +15,12 @@
       </div>
 
       <div v-else class="has-text-centered">
-        <h1 class="title">Effect Network DAO</h1>
-        <div class="subtitle">Stake, vote and swap all in one place!</div>
+        <h1 class="title">
+          Effect Network DAO
+        </h1>
+        <div class="subtitle">
+          Stake, vote and swap all in one place!
+        </div>
         <div class="has-text-centered my-4">
           <a class="button is-primary" @click="$wallet.loginModal = true">
             <strong>Connect Wallet</strong>
@@ -23,12 +29,33 @@
       </div>
     </div>
 
-    <h3 class="subtitle has-text-centered">Active Proposals:</h3>
-    <div class="table has-shadow-outside mb-6" v-if="proposals && proposals.length > 0">
+    <h3 v-if="proposals && proposals.length" class="subtitle has-text-centered">
+      Active Proposals:
+    </h3>
+    <div v-if="proposals && proposals.length > 0" class="table has-shadow-outside mb-6">
       <!-- <div class="cell  has-text-weight-bold is-size-6"> -->
       <!--   Proposals now active -->
       <!-- </div> -->
-      <div class="cell" v-for="prop in proposals"   :key="prop.id">
+      <div v-for="prop in proposals" :key="prop.id" class="cell">
+        <nuxt-link :to="'/proposals/'+prop.id" class="is-flex-direction-row">
+          <div class="is-size-6 has-text-primary is-flex-grow-1">
+            #{{ prop.id }}: {{ prop.title }}
+          </div>
+          <div>
+            <font-awesome-icon :icon="['fas', 'chevron-circle-right']" class="icon has-text-primary mx-3" />
+          </div>
+        </nuxt-link>
+      </div>
+    </div>
+
+    <h3 v-if="processed_proposals && processed_proposals.length" class="subtitle has-text-centered">
+      Latest Closed Proposals:
+    </h3>
+    <div v-if="processed_proposals && processed_proposals.length" class="table has-shadow-outside mb-6">
+      <!-- <div class="cell  has-text-weight-bold is-size-6"> -->
+      <!--   Proposals now active -->
+      <!-- </div> -->
+      <div v-for="prop in processed_proposals" :key="prop.id" class="cell">
         <nuxt-link :to="'/proposals/'+prop.id" class="is-flex-direction-row">
           <div class="is-size-6 has-text-primary is-flex-grow-1">
             #{{ prop.id }}: {{ prop.title }}
@@ -56,7 +83,7 @@
         <div class="column">
           <div class="text">
             <span v-if="nfxPoolBalance > 0" class="high is-size-3">
-              ${{ $wallet.formatNumber(nfxPoolBalance)  }}
+              ${{ $wallet.formatNumber(nfxPoolBalance) }}
             </span>
             <span v-else>..</span><br>
             <span class="low">Rewards</span>
@@ -93,19 +120,25 @@
           </h5>
           <div class="has-text-centered">
             <div class="mb-3">
-              <div class="is-size-6">Available</div>
+              <div class="is-size-6">
+                Available
+              </div>
               <div class="subtitle is-3 has-text-weight-semibold">
                 <ICountUp :end-val="efxAvailable" /> <span class="symbol">EFX</span>
               </div>
             </div>
             <div class="mb-3">
-              <div class="is-size-6">Staked</div>
+              <div class="is-size-6">
+                Staked
+              </div>
               <div class="subtitle is-5 has-text-weight-semibold">
                 <ICountUp :end-val="efxStaked" /> <span class="symbol">EFX</span>
               </div>
             </div>
             <div class="mb-3">
-              <div class="is-size-6">Total</div>
+              <div class="is-size-6">
+                Total
+              </div>
               <div class="subtitle is-5 has-text-weight-semibold">
                 <ICountUp :end-val="efxAvailable + efxStaked" /> <span class="symbol">EFX</span>
               </div>
@@ -121,19 +154,25 @@
           </h5>
           <div class="has-text-centered">
             <div class="mb-3">
-              <div class="is-size-6">Available</div>
+              <div class="is-size-6">
+                Available
+              </div>
               <div class="subtitle is-3 has-text-weight-semibold">
                 <ICountUp :end-val="nfxAvailable" /> <span class="symbol">NFX</span>
               </div>
             </div>
             <div class="mb-3">
-              <div class="is-size-6">Staked</div>
+              <div class="is-size-6">
+                Staked
+              </div>
               <div class="subtitle is-5 has-text-weight-semibold">
                 <ICountUp :end-val="nfxStaked" /> <span class="symbol">NFX</span>
               </div>
             </div>
             <div class="mb-3">
-              <div class="is-size-6">Total</div>
+              <div class="is-size-6">
+                Total
+              </div>
               <div class="subtitle is-5 has-text-weight-semibold">
                 <ICountUp :end-val="nfxAvailable + nfxStaked" /> <span class="symbol">NFX</span>
               </div>
@@ -161,7 +200,8 @@ export default {
       forceTransactions: 0,
       forceEfxPaid: 0,
       forceUsers: 0,
-      proposals: null
+      proposals: null,
+      processed_proposals: null
     }
   },
 
@@ -213,6 +253,7 @@ export default {
       this.getNFXPoolBalance()
       this.getEFXPrice()
       this.getProposals()
+      this.getProcessedProposals()
     },
 
     async getCircSupply () {
@@ -257,9 +298,9 @@ export default {
           scope: process.env.proposalContract,
           table: 'proposal',
           key_type: 'i64',
-          index_position: 3,
-          upper_bound: 58,
-          lower_bound: 58,
+          index_position: 3, // 1: by proposer, 2: by cycle, 3: by id
+          upper_bound: await this.currentCycle, // TODO: How to get the latest cycle?
+          lower_bound: await this.currentCycle,
           limit: 20
         }
         const data = await this.$eos.rpc.get_table_rows(config)
@@ -278,6 +319,32 @@ export default {
       } else {
         console.log('Still waiting for cycle')
       }
+    },
+
+    async getProcessedProposals () {
+      const config = {
+        code: process.env.proposalContract,
+        scope: process.env.proposalContract,
+        table: 'proposal',
+        key_type: 'i64',
+        index_position: 3,
+        upper_bound: await this.currentCycle - 1,
+        lower_bound: await this.currentCycle - 1,
+        limit: 20
+      }
+      const data = await this.$eos.rpc.get_table_rows(config)
+      this.processed_proposals = data.rows
+      this.processed_proposals.forEach(async (proposal) => {
+        if (!proposal.title) {
+          try {
+            const ipfsProposal = await this.$dao.getIpfsContent(proposal.content_hash)
+            this.$set(proposal, 'title', ipfsProposal.title)
+          } catch (e) {
+            console.error(e)
+          }
+        }
+      })
+      console.log(data)
     }
   }
 }

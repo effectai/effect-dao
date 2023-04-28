@@ -2,15 +2,24 @@
   <div class="mt-5">
     <div>
       <div class="box">
-        <!-- Generate a list nft -->
-        <div class="container">
-          <figure
-            class="image is-128x128 is-centered"
-            style="margin: 0 auto;"
-          >
-            <!-- TODO: Get the src of the currently set profile page image -->
-            <img :src="selectedNftSource">
-          </figure>
+        <div
+          class="has-text-centered"
+          style="max-height: 256px;"
+        >
+          <div class="title">
+            {{ account.name }}
+          </div>
+          <Avatar :account-name="account.name" />
+        </div>
+        <hr>
+        <div class="buttons is-centered">
+          <a href="https://eos.atomichub.io" target="_blank" rel="noopener noreferrer" class="button is-large is-primary">
+            <span class="icon">
+              <font-awesome-icon :icon="['fas', 'external-link-alt']" />
+            </span>
+            &nbsp;
+            AtomicHub
+          </a>
         </div>
         <hr>
         <div v-if="loadingNFTs">
@@ -24,7 +33,10 @@
               :key="nft.asset_id"
               class="column is-4 p-1 py-2 has-text-centered is-flex-direction-column is-align-self-stretch"
             >
-              <div class="card is-flex-direction-column is-align-self-stretch" style="height: 100%; display: flex; flex-direction: column;">
+              <div
+                class="card is-flex-direction-column is-align-self-stretch"
+                style="height: 100%; display: flex; flex-direction: column;"
+              >
                 <div
                   class="card-image has-background-image has-radius center-cropped"
                   style="margin: auto; background-position: center center; background-repeat: no-repeat;"
@@ -54,10 +66,10 @@
                 <div class="card-content">
                   <div class="media">
                     <div class="media-content">
-                      <p class="title is-4">
+                      <p class="title is-5">
                         {{ nft.data.name }}
                       </p>
-                      <p class="subtitle is-6">
+                      <p class="subtitle is-size-7">
                         {{ nft.collection.name }}
                       </p>
                     </div>
@@ -65,14 +77,21 @@
                   <div class="content">
                     <p>{{ nft.data.description }}</p>
                     <p>
-                      <a href="https://eos.atomichub.io/" target="_blank" rel="noopener noreferrer">
-                        AtomicAssets
+                      <a
+                        :href="`https://eos.atomichub.io/explorer/asset/${nft.asset_id}`"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <span class="icon">
+                          <font-awesome-icon :icon="['fas', 'external-link-alt']" />
+                        </span>
+                        AtomicHub
                       </a>
                     </p>
                   </div>
                 </div>
                 <footer class="card-footer" style="margin-top: auto;">
-                  <button class="button card-footer-item m-3">
+                  <button class="button card-footer-item m-3" @click.prevent="setAvatarTx(nft)">
                     <span class="icon is-small">
                       <font-awesome-icon :icon="['fas', 'edit']" />
                     </span>
@@ -103,29 +122,36 @@ export default {
   computed: {
     nft () {
       return ''
+    },
+    wallet () {
+      return (this.$wallet) ? this.$wallet.wallet : null
     }
   },
   created () {
     this.getNFTs()
     // TODO Get currently set profile image from the blockchain
-    // this.getCurrentProfileImage()
+    this.getCurrentAvatar()
   },
   methods: {
     fallbackAvatar (event) {
       event.target.src = `https://ui-avatars.com/api/?name=${this.account.name}&size=100`
     },
-    async getCurrentProfileImage () {
+    async getCurrentAvatar () {
       console.log('Get current profile image')
       const current = await this.$eos.rpc.get_table_rows({
         json: true,
-        code: 'eosio',
-        scope: this.account.name,
-        table: 'profiles',
+        code: process.env.daoContract,
+        scope: process.env.daoContract,
+        table: 'avatar',
+        lower_bound: this.account.name,
         limit: 1
       })
 
-      // TODO Somthing like this
-      this.selectedNftSource = current.rows[0].img
+      console.log('Current profile image', current)
+
+      if (current.rows.length > 0) {
+        this.selectedNftSource = `https://gateway.pinata.cloud/ipfs/${current.rows.pop().avatar}`
+      }
     },
     async getNFTs () {
       this.loadingNFTs = true
@@ -152,12 +178,55 @@ export default {
       this.selectedNftSource = `https://ui-avatars.com/api/?name=${this.account.name}&size=100`
       // event.target.src = `https://ui-avatars.com/api/?name=${this.account.name}&size=100`
     },
-    async setAvatarTx () {
+    async setAvatarTx (item) {
       // TODO
       // 1. Get the selected NFT
       // 2. Create a transaction to set the profile image
       // 3. Broadcast the transaction
       // 4. Update the profile image
+
+      console.log(`Seting avatar for ${this.account.name}`, item)
+
+      const actions = [
+        {
+          account: process.env.daoContract,
+          name: 'setavatar',
+          authorization: [{
+            actor: this.account.name,
+            // wallet.auth.permission
+            permission: this.wallet.auth.permission
+          }],
+          data: {
+            account: this.account.name,
+            asset_id: item.asset_id
+          }
+        }
+      ]
+
+      console.log('Actions', actions)
+      try {
+        await this.$wallet.handleTransaction(actions)
+        this.success = true
+        this.$modal.show({
+          color: 'success',
+          title: 'Transaction Sent',
+          persistent: true,
+          text: 'Setting avatar picture! It might take a couple of minutes before your proposals shows up.',
+          cancel: false,
+          onConfirm: () => {
+            console.log('Success! 🔥🔥')
+          }
+        })
+      } catch (e) {
+        this.$modal.show({
+          color: 'danger',
+          title: 'Error',
+          persistent: true,
+          text: e
+        })
+      }
+
+      await new Promise(resolve => setTimeout(() => console.log('resolved'), 1000))
     }
   }
 

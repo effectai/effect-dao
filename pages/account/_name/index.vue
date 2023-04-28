@@ -5,7 +5,20 @@
         <div class="media">
           <div class="media-left">
             <div class="image is-128x128">
-              <avatar :account-name="account.name" />
+              <nuxt-link :to="`/account/${account.name}/profile`">
+                <avatar
+                  id="avatar"
+                  :account-name="account.name"
+                  :class="{
+                    'has-background-grey-darker': showChangePicIcon,
+                    'has-shadow': showChangePicIcon,
+                    'is-clickable': showChangePicIcon,
+                    'is-rounded': true
+                  }"
+                  @mouseover="showChangePicIcon = true"
+                  @mouseout="showChangePicIcon = false"
+                />
+              </nuxt-link>
             </div>
           </div>
           <div class="media-content">
@@ -109,6 +122,8 @@ export default {
       loadingProposals: false,
       loadingVotes: false,
       loadingDiscord: false,
+      showChangePicIcon: false,
+      showProfilePictureModal: false,
       account: {
         name: this.$route.params.name
       },
@@ -282,4 +297,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#avatar:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  filter: blur(2px);
+}
 </style>

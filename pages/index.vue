@@ -195,14 +195,14 @@ export default {
     }
   },
 
-  created () {
-    this.init()
-  },
-
   watch: {
     currentCycle () {
       this.getProposals()
     }
+  },
+
+  created () {
+    this.init()
   },
 
   methods: {

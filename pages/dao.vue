@@ -99,28 +99,32 @@
       <h5 class="box-title subtitle">
         High Guard
       </h5>
-      <div class="columns is-multiline mt-5 is-centered">
-        <div v-for="guard in highGuard" :key="guard" class="column is-half is-centered">
-          <nuxt-link :to="`/account/${guard}`" class="box has-shadow-outside is-narrow member columns is-gapless is-mobile">
+      <div v-if="!loadingHighGuard" class="columns is-multiline mt-5 is-centered">
+        <div v-for="guard in highGuardList" :key="guard.account" class="column is-half is-centered">
+          <nuxt-link :to="`/account/${guard.account}`" class="box has-shadow-outside is-narrow member columns is-gapless is-mobile">
             <div class="column is-one-fifth" style="min-width: 70px">
               <figure class="image is-64x64">
-                <avatar :account-name="guard" />
+                <avatar :account-name="guard.account" />
               </figure>
             </div>
             <div class="column">
               <div class="pl-2">
-                <h5>{{ guard }}</h5>
+                <h5>{{ guard.account }}</h5>
                 <div>
                   <ICountUp v-if="guard.votes >= 0" class="power" :options="{ prefix: 'Votes: ' }" :end-val="guard.votes" />
                   <div v-else>
                     ...
                   </div>
-                  <small>Joined {{ $moment(guard.registration_time).fromNow() }}</small>
+                  <br>
+                  <small>Joined: {{ $moment(guard.registration_time).fromNow() }}</small>
                 </div>
               </div>
             </div>
           </nuxt-link>
         </div>
+      </div>
+      <div v-else>
+        Loading High Guards
       </div>
     </div>
 
@@ -196,8 +200,15 @@ export default {
       nextKey: null,
       constitutionMembers: null,
 
-      highGuard: ['cryptonode42', 'djstrikanova', 'hazdkmbxgene', 'laurenseosio', 'miggysmallz1', 'rochelle.ai', 'scarletalpha'],
-      highGuardInfo: [],
+      highGuardList: [
+        { account: 'cryptonode42', agreedtermsversion: 1, registration_time: '2021-03-07T14:58:47' },
+        { account: 'djstrikanova', agreedtermsversion: 1, registration_time: '2020-11-17T00:15:39' },
+        { account: 'hazdkmbxgene', agreedtermsversion: 1, registration_time: '2020-11-16T19:17:39' },
+        { account: 'laurenseosio', agreedtermsversion: 1, registration_time: '2020-11-16T18:47:12' },
+        { account: 'miggysmallz1', agreedtermsversion: 1, registration_time: '2021-03-06T17:31:32' },
+        { account: 'rochelle.ai', agreedtermsversion: 1, registration_time: '2020-11-16T20:58:30' },
+        { account: 'scarletalpha', agreedtermsversion: 1, registration_time: '2021-03-05T06:58:19' }
+      ],
       loadingHighGuard: false
     }
   },
@@ -221,14 +232,22 @@ export default {
   },
 
   created () {
+    this.shuffleArray(this.highGuardList)
     this.init()
-    this.getAllHighGuardInfo()
   },
 
   methods: {
+    shuffleArray (array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]]
+      }
+      return array
+    },
     async init () {
       this.loading = true
       this.loadingMembers = true
+      this.getAllHighGuardInfo()
       const data = await this.$eos.rpc.get_table_rows({
         code: process.env.daoContract,
         scope: process.env.daoContract,
@@ -367,44 +386,10 @@ export default {
 
     async getAllHighGuardInfo () {
       this.loadingHighGuard = true
-      for (const guard of this.highGuard) {
-        const info = await this.getHighGuardInfo(guard)
-        this.highGuardInfo.push(info)
+      for (const guard of this.highGuardList) {
+        await this.getMemberInfo(guard)
       }
       this.loadingHighGuard = false
-    },
-
-    async getHighGuardInfo (highGuardMember) {
-      try {
-        const member = await this.$wallet.getDaoMember(highGuardMember)
-        console.log(member)
-        this.$set(this.account, 'signedConstitution', !!member)
-        if (member) {
-          this.$set(this.account, 'registration_time', new Date(`${member.registration_time}Z`))
-          const stakeInfo = await this.$wallet.getStake(highGuardMember)
-          stakeInfo.map((row) => {
-            if (row.amount.includes(process.env.efxToken)) {
-              const efxStaked = parseFloat(row.amount.replace(` ${process.env.efxToken}`, ''))
-              const stakeAge = this.$wallet.calculateStakeAge(efxStaked, row.last_claim_time, row.last_claim_age)
-              const efxPower = this.$wallet.calculateEfxPower(efxStaked, stakeAge)
-              this.$set(this.account, 'efxStaked', efxStaked)
-              this.$set(this.account, 'stakeAge', stakeAge)
-              this.$set(this.account, 'power', efxPower)
-            } else if (row.amount.includes(process.env.nfxToken)) {
-              const nfxStaked = parseFloat(row.amount.replace(` ${process.env.nfxToken}`, ''))
-              this.$set(this.account, 'nfxStaked', nfxStaked)
-            }
-          })
-          if (!this.account.power) {
-            this.$set(this.account, 'power', 0)
-          }
-          const votes = this.$wallet.calculateVotePower(this.account.power, this.account.nfxStaked)
-          this.$set(this.account, 'canVote', this.$wallet.canVote())
-          this.$set(this.account, 'votes', votes)
-        }
-      } catch (e) {
-        console.error(e)
-      }
     }
   },
   head () {

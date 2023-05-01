@@ -2,26 +2,23 @@
   <div class="mt-5">
     <div>
       <div class="box">
-        <div
-          class="has-text-centered"
-        >
-          <div class="title">
-            {{ account.name }}
+        <div class="card">
+          <div class="card-image">
+            <figure class="image">
+              <Avatar :account-name="account.name" />
+            </figure>
           </div>
-          <figure class="image has-ratio" style="margin: auto auto;">
-            <Avatar :account-name="account.name" />
-          </figure>
+          <div class="card-content">
+            <div class="media">
+              <div class="media-content has-text-centered">
+                <p class="title is-5">
+                  {{ account.name }}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-        <hr>
-        <div class="buttons is-centered">
-          <a href="https://eos.atomichub.io" target="_blank" rel="noopener noreferrer" class="button is-large is-primary">
-            <span class="icon">
-              <font-awesome-icon :icon="['fas', 'external-link-alt']" />
-            </span>
-            &nbsp;
-            AtomicHub
-          </a>
-        </div>
+
         <hr>
         <div v-if="loadingNFTs">
           Loading NFTs..
@@ -136,8 +133,19 @@ export default {
     async getNFTs () {
       this.loadingNFTs = true
       try {
+        const { rows } = await this.$eos.rpc.get_table_rows({
+          code: process.env.daoContract,
+          scope: process.env.daoContract,
+          table: 'config',
+          limit: 1
+        })
+        const [data] = rows
+        // eslint-disable-next-line camelcase
+        const { allowed_collections } = data
+
         const assets = await this.$atomic.getAssets({
-          owner: this.account.name
+          owner: this.account.name,
+          collection_whitelist: allowed_collections
         })
         // console.log('AtomicAssets', assets)
 

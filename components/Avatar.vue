@@ -1,5 +1,5 @@
 <template>
-  <img :src="atomicAssetSrc" alt="Atomic Asset NFT">
+  <img :src="avatar_src" alt="Atomic Asset NFT">
 </template>
 
 <script>
@@ -20,39 +20,54 @@ export default {
   },
 
   computed: {
-    atomicAssetSrc () {
+    avatar_src () {
       return this.imgsrc || `https://ui-avatars.com/api/?name=${this.accountName}&size=100`
     }
   },
 
   created () {
-    this.getAtomicAssets()
+    // this.getAtomicAssets()
+    // this.getAvatar()
+    this.getCurrentAvatar()
   },
 
   methods: {
     fallbackAvatar (event) {
       event.target.src = `https://ui-avatars.com/api/?name=${this.accountName}&size=100`
     },
-    async getAtomicAssets () {
-      this.isLoading = true
-      try {
-        const assets = await this.$atomic.getAssets({
-          collection_name: 'pomelo',
-          owner: this.accountName
-        })
-        // console.log('AtomicAssets', assets)
+    async getCurrentAvatar () {
+      this.loading = true
 
-        if (assets && assets.length > 0) {
-          const [asset] = assets
-          // eslint-disable-next-line no-console
-          console.log(`https://gateway.pinata.cloud/ipfs/${asset.data.img}`)
-          this.imgsrc = `https://gateway.pinata.cloud/ipfs/${asset.data.img}`
+      try {
+        const config = {
+          json: true,
+          code: process.env.daoContract,
+          scope: this.accountName,
+          table: 'avatar',
+          limit: 1
+        }
+        const current = await this.$eos.rpc.get_table_rows(config)
+
+        if (current.rows && current.rows.length > 0) {
+          const asset = await this.$atomic.getAsset(current.rows[0].asset_id)
+
+          if (asset && asset.data) {
+            if (asset.data.img) {
+              this.imgsrc = `https://atomichub-ipfs.com/ipfs/${asset.data.img}`
+            } else if (asset.data.video) {
+              this.imgsrc = `https://atomichub-ipfs.com/ipfs/${asset.data.video}`
+            } else {
+              throw new Error('Asset has no image or video')
+            }
+          } else {
+            throw new Error('Error retrieving asset')
+          }
         }
       } catch (error) {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
-      this.isLoading = false
+
+      this.loading = false
     }
   }
 }

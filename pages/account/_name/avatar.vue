@@ -4,12 +4,13 @@
       <div class="box">
         <div
           class="has-text-centered"
-          style="max-height: 256px;"
         >
           <div class="title">
             {{ account.name }}
           </div>
-          <Avatar :account-name="account.name" />
+          <figure class="image has-ratio" style="margin: auto auto;">
+            <Avatar :account-name="account.name" />
+          </figure>
         </div>
         <hr>
         <div class="buttons is-centered">
@@ -43,16 +44,17 @@
                 >
                   <figure v-if="nft.data.img" class="pt-4">
                     <img
-                      :src="`https://gateway.pinata.cloud/ipfs/${nft.data.img}`"
+                      :src="`https://atomichub-ipfs.com/ipfs/${nft.data.img}`"
                       alt="Placeholder image"
                       class="is-centered mx-auto"
                     >
                   </figure>
                   <figure v-else-if="nft.data.video" class="pt-4">
                     <video
-                      :src="`https://gateway.pinata.cloud/ipfs/${nft.data.video}`"
+                      :src="`https://atomichub-ipfs.com/ipfs/${nft.data.video}`"
                       autoplay
                       loop
+                      muted
                       playsinline="true"
                     />
                   </figure>
@@ -129,30 +131,8 @@ export default {
   },
   created () {
     this.getNFTs()
-    // TODO Get currently set profile image from the blockchain
-    this.getCurrentAvatar()
   },
   methods: {
-    fallbackAvatar (event) {
-      event.target.src = `https://ui-avatars.com/api/?name=${this.account.name}&size=100`
-    },
-    async getCurrentAvatar () {
-      console.log('Get current profile image')
-      const current = await this.$eos.rpc.get_table_rows({
-        json: true,
-        code: process.env.daoContract,
-        scope: process.env.daoContract,
-        table: 'avatar',
-        lower_bound: this.account.name,
-        limit: 1
-      })
-
-      console.log('Current profile image', current)
-
-      if (current.rows.length > 0) {
-        this.selectedNftSource = `https://gateway.pinata.cloud/ipfs/${current.rows.pop().avatar}`
-      }
-    },
     async getNFTs () {
       this.loadingNFTs = true
       try {
@@ -162,8 +142,8 @@ export default {
         // console.log('AtomicAssets', assets)
 
         if (assets && assets.length > 0) {
-          console.log(assets)
-          // this.nfts = assets.map(asset => `https://gateway.pinata.cloud/ipfs/${asset.data.img || asset.data.video}`)
+          // console.log(assets)
+          // this.nfts = assets.map(asset => `https://atomichub-ipfs.com/ipfs/${asset.data.img || asset.data.video}`)
           this.nfts = assets
         } else {
           console.log('No NFTs found')
@@ -214,7 +194,7 @@ export default {
           text: 'Setting avatar picture! It might take a couple of minutes before your proposals shows up.',
           cancel: false,
           onConfirm: () => {
-            console.log('Success! 🔥🔥')
+            location.reload(true)
           }
         })
       } catch (e) {
@@ -225,8 +205,6 @@ export default {
           text: e
         })
       }
-
-      await new Promise(resolve => setTimeout(() => console.log('resolved'), 1000))
     }
   }
 

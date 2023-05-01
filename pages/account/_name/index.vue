@@ -5,7 +5,7 @@
         <div class="media">
           <div class="media-left">
             <div class="image is-128x128">
-              <nuxt-link :to="`/account/${account.name}/avatar`">
+              <nuxt-link v-if="myAccount" :to="`/account/${account.name}/avatar`">
                 <avatar
                   id="avatar"
                   :account-name="account.name"
@@ -18,7 +18,13 @@
                   @mouseover="showChangePicIcon = true"
                   @mouseout="showChangePicIcon = false"
                 />
+                <div>
+                  <span class="icon is-large is-pulled-right">
+                    <font-awesome-icon :icon="['fas', 'edit']" style="font-size: 12px" />
+                  </span>
+                </div>
               </nuxt-link>
+              <Avatar v-else :account-name="account.name" />
             </div>
           </div>
           <div class="media-content">

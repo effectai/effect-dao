@@ -83,20 +83,20 @@
         <div class="column">
           <div class="text">
             <span v-if="nfxPoolBalance > 0" class="high is-size-3">
-              ${{ $wallet.formatNumber(nfxPoolBalance) }}
+              {{ $wallet.formatNumber(nfxPoolBalance) }}
             </span>
             <span v-else>..</span><br>
-            <span class="low">Rewards</span>
+            <span class="low">NFX Pool Balance</span>
           </div>
         </div>
         <div class="splitter" />
         <div class="column">
           <div class="text">
             <span v-if="poolValue > 0" class="high is-size-3">
-              ${{ $wallet.formatNumber(poolValue) }}
+              {{ $wallet.formatNumber(poolValue) }}
             </span>
             <span v-else>..</span><br>
-            <span class="low">Some text</span>
+            <span class="low">EFX Pool Balance</span>
           </div>
         </div>
         <div class="splitter" />

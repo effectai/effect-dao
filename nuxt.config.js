@@ -25,6 +25,8 @@ export default {
     proposalContract: 'daoproposals',
     feepoolContract: 'feepool.efx',
     votingContract: 'effectvotess',
+    forceContract: 'force.efx',
+    vaccountContract: 'vaccount.efx',
     efxToken: 'EFX',
     nfxToken: 'NFX',
     discordGuildId: '519860537891487745',

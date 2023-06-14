@@ -4,9 +4,9 @@
       Connected to Kylin testnet ({{ node }})
     </div>
     <div class="discord">
-      <div class="container is-max-widescreen">
-        <p class="is-hidden-mobile">
-          You can now add change your profile picture! Connect and change in your account page.
+      <div class="container is-max-widescreen has-text-centered">
+        <p class="is-hidden-mobile has-text-centered">
+          You can now add change your profile picture! Get started by connecting your wallet.
         </p>
       </div>
     </div>

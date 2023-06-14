@@ -5,6 +5,14 @@
         <h1 class="title">
           Welcome {{ wallet.auth.accountName }}!
         </h1>
+        <br>
+        <div class="subtitle">
+          <p>You can now add a profile picture to your account.</p>
+          <br>
+          <nuxt-link :to="`/account/${wallet.auth.accountName}/avatar`" class="button">
+            Change your Profile Avatar
+          </nuxt-link>
+        </div>
         <div class="value-circle big my-6 glow">
           <h3 class="has-text-weight-bold is-size-2">
             {{ $wallet.formatNumber(votes) }}

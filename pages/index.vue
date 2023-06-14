@@ -14,12 +14,82 @@
         <!-- <div class="subtitle">Effect Network Dashboard</div> -->
       </div>
 
+      <div v-if="wallet" class="columns balances">
+        <div class="column">
+          <div class="box">
+            <h5 class="box-title subtitle">
+              <img src="@/assets/img/efx-icon.png" class="token-icon">Your EFX
+            </h5>
+            <div class="has-text-centered">
+              <div class="mb-3">
+                <div class="is-size-6">
+                  Available
+                </div>
+                <div class="subtitle is-3 has-text-weight-semibold">
+                  <ICountUp :end-val="efxAvailable" /> <span class="symbol">EFX</span>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="is-size-6">
+                  Staked
+                </div>
+                <div class="subtitle is-5 has-text-weight-semibold">
+                  <ICountUp :end-val="efxStaked" /> <span class="symbol">EFX</span>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="is-size-6">
+                  Total
+                </div>
+                <div class="subtitle is-5 has-text-weight-semibold">
+                  <ICountUp :end-val="efxAvailable + efxStaked" /> <span class="symbol">EFX</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="box">
+            <h5 class="box-title subtitle">
+              <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">Your NFX
+            </h5>
+            <div class="has-text-centered">
+              <div class="mb-3">
+                <div class="is-size-6">
+                  Available
+                </div>
+                <div class="subtitle is-3 has-text-weight-semibold">
+                  <ICountUp :end-val="nfxAvailable" /> <span class="symbol">NFX</span>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="is-size-6">
+                  Staked
+                </div>
+                <div class="subtitle is-5 has-text-weight-semibold">
+                  <ICountUp :end-val="nfxStaked" /> <span class="symbol">NFX</span>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="is-size-6">
+                  Total
+                </div>
+                <div class="subtitle is-5 has-text-weight-semibold">
+                  <ICountUp :end-val="nfxAvailable + nfxStaked" /> <span class="symbol">NFX</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div v-else class="has-text-centered">
         <h1 class="title">
           Effect Network DAO
         </h1>
         <div class="subtitle">
-          Stake, vote and swap all in one place!
+          Managing the world's first decentralized Micro Tasking Network
         </div>
         <div class="has-text-centered my-4">
           <a class="button is-primary" @click="$wallet.loginModal = true">
@@ -29,43 +99,69 @@
       </div>
     </div>
 
-    <h3 v-if="proposals && proposals.length" class="subtitle has-text-centered">
-      Active Proposals:
-    </h3>
-    <div v-if="proposals && proposals.length > 0" class="table has-shadow-outside mb-6">
-      <!-- <div class="cell  has-text-weight-bold is-size-6"> -->
-      <!--   Proposals now active -->
-      <!-- </div> -->
-      <div v-for="prop in proposals" :key="prop.id" class="cell">
-        <nuxt-link :to="'/proposals/'+prop.id" class="is-flex-direction-row">
-          <div class="is-size-6 has-text-primary is-flex-grow-1">
-            #{{ prop.id }}: {{ prop.title }}
-          </div>
-          <div>
-            <font-awesome-icon :icon="['fas', 'chevron-circle-right']" class="icon has-text-primary mx-3" />
-          </div>
-        </nuxt-link>
+    <div class="tabs is-centered is-boxed">
+      <ul>
+        <li :class="{'is-active' : proposalsTab === 'active'}">
+          <a @click="proposalsTab = 'active'">
+            <span>Active</span>
+          </a>
+        </li>
+        <li :class="{'is-active' : proposalsTab === 'closed'}">
+          <a @click="proposalsTab = 'closed'">
+            <span>Closed</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div v-if="proposalsTab==='active'">
+      <h3 class="subtitle has-text-centered">
+        Active Proposals:
+      </h3>
+      <div v-if="proposals && proposals.length > 0" class="table has-shadow-outside mb-6">
+        <!-- <div class="cell  has-text-weight-bold is-size-6"> -->
+        <!--   Proposals now active -->
+        <!-- </div> -->
+        <div v-for="prop in proposals" :key="prop.id" class="cell">
+          <nuxt-link :to="'/proposals/' + prop.id" class="is-flex-direction-row">
+            <div class="is-size-6 has-text-primary is-flex-grow-1">
+              #{{ prop.id }}: {{ prop.title }}
+            </div>
+            <div>
+              <font-awesome-icon :icon="['fas', 'chevron-circle-right']" class="icon has-text-primary mx-3" />
+            </div>
+          </nuxt-link>
+        </div>
       </div>
     </div>
 
-    <h3 v-if="processed_proposals && processed_proposals.length" class="subtitle has-text-centered">
-      Latest Closed Proposals:
-    </h3>
-    <div v-if="processed_proposals && processed_proposals.length" class="table has-shadow-outside mb-6">
-      <!-- <div class="cell  has-text-weight-bold is-size-6"> -->
-      <!--   Proposals now active -->
-      <!-- </div> -->
-      <div v-for="prop in processed_proposals" :key="prop.id" class="cell">
-        <nuxt-link :to="'/proposals/'+prop.id" class="is-flex-direction-row">
-          <div class="is-size-6 has-text-primary is-flex-grow-1">
-            #{{ prop.id }}: {{ prop.title }}
-          </div>
-          <div>
-            <font-awesome-icon :icon="['fas', 'chevron-circle-right']" class="icon has-text-primary mx-3" />
-          </div>
-        </nuxt-link>
+    <div v-if="proposalsTab === 'closed'">
+      <h3 class="subtitle has-text-centered">
+        Latest Closed Proposals:
+      </h3>
+      <div v-if="processed_proposals && processed_proposals.length" class="table has-shadow-outside mb-6">
+        <!-- <div class="cell  has-text-weight-bold is-size-6"> -->
+        <!--   Proposals now active -->
+        <!-- </div> -->
+        <div v-for="prop in processed_proposals" :key="prop.id" class="cell">
+          <nuxt-link :to="'/proposals/' + prop.id" class="is-flex-direction-row">
+            <div class="is-size-6 has-text-primary is-flex-grow-1">
+              #{{ prop.id }}: {{ prop.title }}
+            </div>
+            <div>
+              <font-awesome-icon :icon="['fas', 'chevron-circle-right']" class="icon has-text-primary mx-3" />
+            </div>
+          </nuxt-link>
+        </div>
+      </div>
+      <div v-else>
+        <div class="has-text-centered">
+          No proposals in last cycle.
+        </div>
       </div>
     </div>
+
+    <hr>
 
     <!-- <h3 class="subtitle">Cycle information:</h3> -->
     <div class="box mb-6">
@@ -83,20 +179,20 @@
         <div class="column">
           <div class="text">
             <span v-if="nfxPoolBalance > 0" class="high is-size-3">
-              ${{ $wallet.formatNumber(nfxPoolBalance) }}
+              {{ $wallet.formatNumber(nfxPoolBalance) }}
             </span>
             <span v-else>..</span><br>
-            <span class="low">Rewards</span>
+            <span class="low">NFX Pool Balance</span>
           </div>
         </div>
         <div class="splitter" />
         <div class="column">
           <div class="text">
-            <span v-if="poolValue > 0" class="high is-size-3">
-              ${{ $wallet.formatNumber(poolValue) }}
+            <span v-if="efxPoolValue > 0" class="high is-size-3">
+              ${{ $wallet.formatNumber(efxPoolValue) }}
             </span>
             <span v-else>..</span><br>
-            <span class="low">Some text</span>
+            <span class="low">EFX Pool Value</span>
           </div>
         </div>
         <div class="splitter" />
@@ -106,77 +202,49 @@
               {{ percentStaked }}%
             </span>
             <span v-else>..</span><br>
-            <span class="low">Number staked</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div v-if="wallet" class="columns balances">
-      <div class="column">
-        <div class="box">
-          <h5 class="box-title subtitle">
-            <img src="@/assets/img/efx-icon.png" class="token-icon">Your EFX
-          </h5>
-          <div class="has-text-centered">
-            <div class="mb-3">
-              <div class="is-size-6">
-                Available
-              </div>
-              <div class="subtitle is-3 has-text-weight-semibold">
-                <ICountUp :end-val="efxAvailable" /> <span class="symbol">EFX</span>
-              </div>
-            </div>
-            <div class="mb-3">
-              <div class="is-size-6">
-                Staked
-              </div>
-              <div class="subtitle is-5 has-text-weight-semibold">
-                <ICountUp :end-val="efxStaked" /> <span class="symbol">EFX</span>
-              </div>
-            </div>
-            <div class="mb-3">
-              <div class="is-size-6">
-                Total
-              </div>
-              <div class="subtitle is-5 has-text-weight-semibold">
-                <ICountUp :end-val="efxAvailable + efxStaked" /> <span class="symbol">EFX</span>
-              </div>
-            </div>
+            <span class="low">Staked EFX</span>
           </div>
         </div>
       </div>
 
-      <div class="column">
-        <div class="box">
-          <h5 class="box-title subtitle">
-            <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">Your NFX
-          </h5>
-          <div class="has-text-centered">
-            <div class="mb-3">
-              <div class="is-size-6">
-                Available
-              </div>
-              <div class="subtitle is-3 has-text-weight-semibold">
-                <ICountUp :end-val="nfxAvailable" /> <span class="symbol">NFX</span>
-              </div>
-            </div>
-            <div class="mb-3">
-              <div class="is-size-6">
-                Staked
-              </div>
-              <div class="subtitle is-5 has-text-weight-semibold">
-                <ICountUp :end-val="nfxStaked" /> <span class="symbol">NFX</span>
-              </div>
-            </div>
-            <div class="mb-3">
-              <div class="is-size-6">
-                Total
-              </div>
-              <div class="subtitle is-5 has-text-weight-semibold">
-                <ICountUp :end-val="nfxAvailable + nfxStaked" /> <span class="symbol">NFX</span>
-              </div>
-            </div>
+      <div class="columns has-text-centered py-2">
+        <div class="column">
+          <div class="text">
+            <span v-if="vaccount && vaccount.id" class="high is-size-3">
+              {{ vaccount.id }}
+            </span>
+            <span v-else>..</span><br>
+            <span class="low">Registered Workers</span>
+          </div>
+        </div>
+        <div class="splitter" />
+        <div class="column">
+          <div class="text">
+            <span v-if="taskSubmissions && taskSubmissions.id" class="high is-size-3">
+              {{ $wallet.formatNumber(taskSubmissions.id) }}
+            </span>
+            <span v-else>..</span><br>
+            <span class="low">Tasks Done</span>
+          </div>
+        </div>
+        <div class="splitter" />
+        <div class="column">
+          <div class="text">
+            <span v-if="forceSettings && forceSettings.fee_percentage" class="high is-size-3">
+              {{ Number(forceSettings.fee_percentage).toPrecision(2) }}%
+            </span>
+            <span v-else>..</span><br>
+            <span class="low">Fee % Per Task</span>
+          </div>
+        </div>
+        <div class="splitter" />
+        <div class="column">
+          <div class="text">
+            <span v-if="feePoolValue" class="high is-size-3">
+              ${{ $wallet.formatNumber(feePoolValue) }}
+            </span>
+            <span v-else>..</span><br>
+            <span class="low">Fee pool value cycle: {{ currentCycle }}</span>
           </div>
         </div>
       </div>
@@ -194,14 +262,21 @@ export default {
   data () {
     return {
       efxPrice: 0,
-      poolBalance: 0,
+      efxPoolBalance: 0,
       nfxPoolBalance: 0,
       circSupply: 0,
       forceTransactions: 0,
       forceEfxPaid: 0,
       forceUsers: 0,
       proposals: null,
-      processed_proposals: null
+      processed_proposals: null,
+      vaccount: null,
+      forceSettings: null,
+      forcePayment: null,
+      taskSubmissions: null,
+      daoMembers: null,
+      feePool: null,
+      proposalsTab: 'active'
     }
   },
 
@@ -209,11 +284,11 @@ export default {
     votes () {
       return this.$wallet.calculateVotePower(this.$wallet.power, this.$wallet.nfxStaked)
     },
-    poolValue () {
-      return parseInt(this.efxPrice * this.poolBalance)
+    efxPoolValue () {
+      return parseInt(this.efxPrice * this.efxPoolBalance)
     },
     percentStaked () {
-      return parseInt((this.poolBalance / this.circSupply) * 100)
+      return parseInt((this.efxPoolBalance / this.circSupply) * 100)
     },
     wallet () {
       return this.$wallet.wallet
@@ -232,6 +307,13 @@ export default {
     },
     currentCycle () {
       return this.$dao.proposalConfig ? this.$dao.proposalConfig.current_cycle : null
+    },
+    feePoolValue () {
+      if (this.feePool && this.feePool.balance && this.feePool.balance[0] && this.feePool.balance[0].value) {
+        return parseInt(this.feePool.balance[0].value * this.efxPrice)
+      } else {
+        return 0
+      }
     }
   },
 
@@ -247,7 +329,12 @@ export default {
 
   methods: {
     init () {
-      this.getForceStats()
+      this.getVAccountStats()
+      this.getForceSettings()
+      this.getForcePayment()
+      this.getTaskSubmissions()
+      this.getFeePoolBalanceLastCycle()
+      this.getDaoMembers()
       this.getCircSupply()
       this.getPoolBalance()
       this.getNFXPoolBalance()
@@ -256,23 +343,36 @@ export default {
       this.getProcessedProposals()
     },
 
+    /**
+     * Get current circluating supply of EFX
+     */
     async getCircSupply () {
       const res = await this.$eos.rpc.get_table_rows({ code: process.env.tokenContract, scope: process.env.efxToken, table: 'stat' })
       if (res && res.rows && res.rows.length === 1) {
+        // TODO Why are these amounts subtracted?
         this.circSupply = parseFloat(res.rows[0].supply.replace(` ${process.env.efxToken}`, '')) - 170331473 - 100000000 - 88447533
       }
     },
 
+    /**
+     * Get total staked EFX
+     */
     async getPoolBalance () {
       const res = await this.$eos.rpc.get_currency_balance(process.env.tokenContract, process.env.stakingContract, process.env.efxToken)
-      this.poolBalance = parseFloat(res[0].replace(` ${process.env.efxToken}`, ''))
+      this.efxPoolBalance = parseFloat(res[0].replace(` ${process.env.efxToken}`, ''))
     },
 
+    /**
+     * Get total staked NFX
+     */
     async getNFXPoolBalance () {
       const res = await this.$eos.rpc.get_currency_balance(process.env.tokenContract, process.env.stakingContract, process.env.nfxToken)
       this.nfxPoolBalance = parseFloat(res[0].replace(` ${process.env.nfxToken}`, ''))
     },
 
+    /**
+     * Get EFX price from Coingecko
+     */
     async getEFXPrice () {
       this.efxPrice = await fetch('https://api.coingecko.com/api/v3/coins/effect-network/tickers')
         .then(data => data.json())
@@ -281,14 +381,79 @@ export default {
         })
     },
 
-    async getForceStats () {
-      await fetch('https://worker.effect.ai/user/statistics')
-        .then(data => data.json())
-        .then((data) => {
-          this.forceEfxPaid = data.total_efx_spent
-          this.forceTransactions = data.total_transactions
-          this.forceUsers = data.total_accounts
-        })
+    async getVAccountStats () {
+      const vAccountResponse = await this.$eos.rpc.get_table_rows({
+        code: process.env.vaccountContract,
+        scope: process.env.vaccountContract,
+        table: 'account',
+        limit: 1,
+        reverse: true
+      })
+      const [vaccount] = vAccountResponse.rows
+      this.vaccount = vaccount
+    },
+
+    async getForceSettings () {
+      const forceSettingsResponse = await this.$eos.rpc.get_table_rows({
+        code: process.env.forceContract,
+        scope: process.env.forceContract,
+        table: 'settings',
+        limit: 1,
+        reverse: true
+      })
+      const [forceSettings] = forceSettingsResponse.rows
+      this.forceSettings = forceSettings
+    },
+
+    /**
+     * Get the latest force payment
+     *
+     */
+    async getForcePayment () {
+      const forcePaymentResponse = await this.$eos.rpc.get_table_rows({
+        code: process.env.forceContract,
+        scope: process.env.forceContract,
+        table: 'payment',
+        limit: 1,
+        reverse: true
+      })
+      const [forcePayment] = forcePaymentResponse.rows
+      this.forcePayment = forcePayment
+    },
+
+    async getDaoMembers () {
+      const daoMembersResponse = await this.$eos.rpc.get_table_rows({
+        code: process.env.daoContract,
+        scope: process.env.daoContract,
+        table: 'member',
+        limit: 1,
+        reverse: true
+      })
+      this.daoMembers = daoMembersResponse.rows
+    },
+
+    async getFeePoolBalanceLastCycle () {
+      const feePoolResponse = await this.$eos.rpc.get_table_rows({
+        code: process.env.feepoolContract,
+        scope: process.env.feepoolContract,
+        table: 'balance',
+        limit: 1,
+        reverse: true
+      })
+      const [feePool] = feePoolResponse.rows
+      this.feePool = feePool
+    },
+
+    async getTaskSubmissions () {
+      const taskSubmissionsResponse = await this.$eos.rpc.get_table_rows({
+        code: process.env.forceContract,
+        scope: process.env.forceContract,
+        table: 'submission',
+        limit: 1,
+        reverse: true
+      })
+      const [taskSubmission] = taskSubmissionsResponse.rows
+      this.taskSubmissions = taskSubmission
     },
 
     async getProposals () {
@@ -366,6 +531,7 @@ export default {
   margin-top: -11px;
   float: left;
   margin-right: -40px;
+
   &.nfx {
     height: 45px;
     margin-top: -13px;
@@ -377,42 +543,49 @@ export default {
   margin: 0.75em 0 0.75em 0;
 }
 
-  @keyframes glow {
-    from {
-      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 29px -22px #d7ac00d4;
-    }
-    to {
-      box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 40px 15px #d7ac00d4;
-    }
+@keyframes glow {
+  from {
+    box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 29px -22px #d7ac00d4;
   }
-  .circle {
-    .age-amount {
-      font-size: 0.75rem;
-    }
-  }
-  .value-circle {
-    height: 125px;
-    width: 125px;
-    &.big {
-      width: 175px;
-      height: 175px;
-    }
 
-    margin: -9px auto 0;
-
-    border-radius: 100%;
-    box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6;
-    &.glow {
-      animation: glow 2s infinite alternate ease-out;
-      //box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 29px -22px #39e7bfd4;
-    }
-    background-color: #F0F2F7;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    h1 {
-      margin-bottom: 0;
-    }
+  to {
+    box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 40px 15px #d7ac00d4;
   }
-</style>
+}
+
+.circle {
+  .age-amount {
+    font-size: 0.75rem;
+  }
+}
+
+.value-circle {
+  height: 125px;
+  width: 125px;
+
+  &.big {
+    width: 175px;
+    height: 175px;
+  }
+
+  margin: -9px auto 0;
+
+  border-radius: 100%;
+  box-shadow: -4px -4px 10px 0 #FFFFFF,
+  4px 4px 10px 0 #CDD4E6;
+
+  &.glow {
+    animation: glow 2s infinite alternate ease-out;
+    //box-shadow: -4px -4px 10px 0 #FFFFFF, 4px 4px 10px 0 #CDD4E6, 0px 0px 29px -22px #39e7bfd4;
+  }
+
+  background-color: #F0F2F7;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  h1 {
+    margin-bottom: 0;
+  }
+}</style>

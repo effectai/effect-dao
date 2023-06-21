@@ -3,28 +3,28 @@
     <div v-if="isTestnet" class="testnet">
       Connected to Kylin testnet ({{ node }})
     </div>
-    <div class="discord">
-      <div class="container is-max-widescreen has-text-centered">
-        <p class="is-hidden-mobile has-text-centered">
-          You can now add change your profile picture! Get started by connecting your wallet.
-        </p>
-      </div>
-    </div>
-    <div class="discord is-hidden">
-      <div class="container is-max-widescreen">
-        <p class="is-hidden-mobile">
-          🚀 The Launch-a-thon Vote is now open!
-        </p>
-        <p class="is-hidden-tablet">
-          🚀 The Launch-a-thon Vote is now open!
-        </p>
-        <nuxt-link to="/launchathon">
-          <button class="discord-btn">
-            Vote
-          </button>
-        </nuxt-link>
-      </div>
-    </div>
+    <!-- <div class="discord"> -->
+    <!-- <div class="container is-max-widescreen has-text-centered"> -->
+    <!-- <p class="is-hidden-mobile has-text-centered"> -->
+    <!-- You can now add change your profile picture! Get started by connecting your wallet. -->
+    <!-- </p> -->
+    <!-- </div> -->
+    <!-- </div> -->
+    <!-- <div class="discord is-hidden"> -->
+    <!-- <div class="container is-max-widescreen"> -->
+    <!-- <p class="is-hidden-mobile"> -->
+    <!-- 🚀 The Launch-a-thon Vote is now open! -->
+    <!-- </p> -->
+    <!-- <p class="is-hidden-tablet"> -->
+    <!-- 🚀 The Launch-a-thon Vote is now open! -->
+    <!-- </p> -->
+    <!-- <nuxt-link to="/launchathon"> -->
+    <!-- <button class="discord-btn"> -->
+    <!-- Vote -->
+    <!-- </button> -->
+    <!-- </nuxt-link> -->
+    <!-- </div> -->
+    <!-- </div> -->
     <modal />
     <connect-wallet />
 

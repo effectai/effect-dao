@@ -1,105 +1,14 @@
 <template>
   <div>
     <div class="has-text-centered my-6">
-      <div v-if="wallet && wallet.auth">
-        <h1 class="title">
-          Welcome {{ wallet.auth.accountName }}!
-        </h1>
-        <br>
-        <div class="subtitle">
-          <p>You can now add a profile picture to your account.</p>
-          <br>
-          <nuxt-link :to="`/account/${wallet.auth.accountName}/avatar`" class="button">
-            Change your Profile Avatar
-          </nuxt-link>
+      <div class="has-text-centered">
+        <div class="title">
+          Effect DAO
         </div>
-        <div class="value-circle big my-6 glow">
-          <h3 class="has-text-weight-bold is-size-2">
-            {{ $wallet.formatNumber(votes) }}
-          </h3>
-          <span>Your power</span>
-        </div>
-        <!-- <div class="subtitle">Effect Network Dashboard</div> -->
-      </div>
-
-      <div v-if="wallet" class="columns balances">
-        <div class="column">
-          <div class="box">
-            <h5 class="box-title subtitle">
-              <img src="@/assets/img/efx-icon.png" class="token-icon">Your EFX
-            </h5>
-            <div class="has-text-centered">
-              <div class="mb-3">
-                <div class="is-size-6">
-                  Available
-                </div>
-                <div class="subtitle is-3 has-text-weight-semibold">
-                  <ICountUp :end-val="efxAvailable" /> <span class="symbol">EFX</span>
-                </div>
-              </div>
-              <div class="mb-3">
-                <div class="is-size-6">
-                  Staked
-                </div>
-                <div class="subtitle is-5 has-text-weight-semibold">
-                  <ICountUp :end-val="efxStaked" /> <span class="symbol">EFX</span>
-                </div>
-              </div>
-              <div class="mb-3">
-                <div class="is-size-6">
-                  Total
-                </div>
-                <div class="subtitle is-5 has-text-weight-semibold">
-                  <ICountUp :end-val="efxAvailable + efxStaked" /> <span class="symbol">EFX</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="column">
-          <div class="box">
-            <h5 class="box-title subtitle">
-              <img src="@/assets/img/nfx-icon.png" class="token-icon nfx">Your NFX
-            </h5>
-            <div class="has-text-centered">
-              <div class="mb-3">
-                <div class="is-size-6">
-                  Available
-                </div>
-                <div class="subtitle is-3 has-text-weight-semibold">
-                  <ICountUp :end-val="nfxAvailable" /> <span class="symbol">NFX</span>
-                </div>
-              </div>
-              <div class="mb-3">
-                <div class="is-size-6">
-                  Staked
-                </div>
-                <div class="subtitle is-5 has-text-weight-semibold">
-                  <ICountUp :end-val="nfxStaked" /> <span class="symbol">NFX</span>
-                </div>
-              </div>
-              <div class="mb-3">
-                <div class="is-size-6">
-                  Total
-                </div>
-                <div class="subtitle is-5 has-text-weight-semibold">
-                  <ICountUp :end-val="nfxAvailable + nfxStaked" /> <span class="symbol">NFX</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div v-else class="has-text-centered">
-        <h1 class="title">
-          Effect Network DAO
-        </h1>
         <div class="subtitle">
           Managing the world's first decentralized Micro Tasking Network
         </div>
-        <div class="has-text-centered my-4">
+        <div v-show="wallet && !wallet.auth" class="has-text-centered my-4">
           <a class="button is-primary" @click="$wallet.loginModal = true">
             <strong>Connect Wallet</strong>
           </a>
@@ -107,72 +16,174 @@
       </div>
     </div>
 
-    <div class="tabs is-centered is-boxed">
-      <ul>
-        <li :class="{'is-active' : proposalsTab === 'active'}">
-          <a @click="proposalsTab = 'active'">
-            <span>Active</span>
-          </a>
-        </li>
-        <li :class="{'is-active' : proposalsTab === 'closed'}">
-          <a @click="proposalsTab = 'closed'">
-            <span>Closed</span>
-          </a>
-        </li>
-      </ul>
+    <div class="box mb-6">
+      <div class="subtitle box-title has-text-centered">
+        News
+      </div>
+      <!-- loop through news items and display in table -->
+      <div class="table-container">
+        <table class="table is-fullwidth is-hoverable">
+          <tbody>
+            <nuxt-link v-for="newsItem in newsItems" :key="newsItem.id" to="/proposals/139" tag="tr">
+              <td>{{ newsItem.description }}</td>
+            </nuxt-link>
+
+            <!-- <tr v-for="newsItem in newsItems" :key="newsItem.id" @click="goToNewsLink(newsItem.link)">
+              <td>{{ newsItem.title }}</td>
+              <td>{{ newsItem.description }}</td>
+            </tr> -->
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <div v-if="proposalsTab==='active'">
-      <h3 class="subtitle has-text-centered">
-        Active Proposals:
-      </h3>
-      <div v-if="proposals && proposals.length > 0" class="table has-shadow-outside mb-6">
-        <!-- <div class="cell  has-text-weight-bold is-size-6"> -->
-        <!--   Proposals now active -->
-        <!-- </div> -->
-        <div v-for="prop in proposals" :key="prop.id" class="cell">
-          <nuxt-link :to="'/proposals/' + prop.id" class="is-flex-direction-row">
-            <div class="is-size-6 has-text-primary is-flex-grow-1">
-              #{{ prop.id }}: {{ prop.title }}
-            </div>
-            <div>
-              <font-awesome-icon :icon="['fas', 'chevron-circle-right']" class="icon has-text-primary mx-3" />
-            </div>
-          </nuxt-link>
+    <div class="box">
+      <div class="box-title subtitle">
+        Agenda
+      </div>
+      <div class="has-text-centered">
+        <!-- parse date in a beautiful way -->
+        Next DAO meeting is at: <br>
+        <a class="button is-secondary is-light" href="https://discord.gg/C3sXe8kv" target="_blank" rel="noopener noreferrer">{{ nextDaoMeeting }}, 18:00 UTC 📞</a>
+      </div>
+      <hr>
+      <div class="buttons is-centered">
+        <a class="button is-secondary is-light" href="https://docs.google.com/spreadsheets/d/1dkPST_CZPePwpmdzvHw5WTG2HubM_FtymTKRAJEWfPs/edit" target="_blank" rel="noopener noreferrer">Upcoming Agenda ↗️</a>
+        <br>
+        <a class="button is-secondary is-light" href="https://forms.gle/6QjEBwJYF4zV5ZJ78" target="_blank">Add topic to Agenda ↗️</a>
+        <br>
+        <a class="button is-secondary is-light" href="https://docs.effectdao.tools/dao-archive/master" target="_blank" rel="noopener noreferrer">DAO Call Archives ↗️</a>
+        <!-- <iframe
+          src="https://docs.google.com/forms/d/e/1FAIpQLSfeYTVK1aFkoIO8G7Di540-cf7bS4O98KzSfMAwjRNf_I2uvg/viewform?embedded=true"
+          width="640"
+          height="1417"
+          frameborder="0"
+          marginheight="0"
+          marginwidth="0">Loading…</iframe> -->
+      </div>
+
+      <!-- <div class="has-text-centered"> -->
+      <!-- <a @click="toggle = !toggle" class="button is-primary"> -->
+      <!-- <strong>Toggle</strong> -->
+      <!-- </a> -->
+      <!-- </div> -->
+
+      <!-- Table -->
+      <!-- <div> -->
+      <!-- <table class="table is-striped is-fullwidth"> -->
+      <!-- <thead> -->
+      <!-- <tr> -->
+      <!-- <th>Topic</th> -->
+      <!-- <th>Link</th> -->
+      <!-- </tr> -->
+      <!-- </thead> -->
+      <!-- <tbody> -->
+      <!-- <tr v-for="(date, index) in dates" :key="date.id"> -->
+      <!-- <td> -->
+      <!-- {{ index }} -->
+      <!-- </td> -->
+      <!-- <td> -->
+      <!-- {{ date }} -->
+      <!-- </td> -->
+      <!-- </tr> -->
+      <!-- </tbody> -->
+      <!-- </table> -->
+      <!-- </div> -->
+    </div>
+
+    <div class="box mb-6">
+      <div class="subtitle box-title has-text-centered">
+        Proposals
+      </div>
+      <div class="is-size-6 mt-2 has-text-centered">
+        <small>
+          <span v-if="$dao.cycleConfig && $moment($dao.cycleConfig.start_time + 'Z').add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isAfter()">
+            <span v-if="currentCycle">Cycle {{ currentCycle }}
+              <span v-if="$dao.cycleConfig">
+                started {{ $moment($dao.cycleConfig.start_time + "Z").fromNow() }} and ends {{
+                  $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow()
+                }} <br>
+                Voting ends {{ $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').fromNow() }}
+              </span>
+            </span>
+          </span>
+          <span v-else-if="$dao.cycleConfig && currentCycle">
+            New cycle starts {{ $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow() }}
+          </span>
+          <span v-else-if="$dao.cycleConfig">
+            <!-- Genesis cycle!-->
+            Waiting for <i>Genesis Cycle</i>
+            <span v-if="$dao.cycleConfig">start {{
+              $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow()
+            }}</span>
+          </span>
+        </small>
+      </div>
+      <br>
+      <div class="tabs is-centered is-boxed">
+        <ul>
+          <li :class="{'is-active' : proposalsTab === 'active'}">
+            <a @click="proposalsTab = 'active'">
+              <span>Active</span>
+            </a>
+          </li>
+          <li :class="{'is-active' : proposalsTab === 'closed'}">
+            <a @click="proposalsTab = 'closed'">
+              <span>Closed</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div v-if="proposalsTab==='active'">
+        <div v-if="proposals && proposals.length > 0" class="table has-shadow-outside mb-6">
+          <!-- <div class="cell  has-text-weight-bold is-size-6"> -->
+          <!--   Proposals now active -->
+          <!-- </div> -->
+          <div v-for="prop in proposals" :key="prop.id" class="cell">
+            <nuxt-link :to="'/proposals/' + prop.id" class="is-flex-direction-row">
+              <div class="is-size-6 has-text-primary is-flex-grow-1">
+                #{{ prop.id }}: {{ prop.title }}
+              </div>
+              <div>
+                <font-awesome-icon :icon="['fas', 'chevron-circle-right']" class="icon has-text-primary mx-3" />
+              </div>
+            </nuxt-link>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="proposalsTab === 'closed'">
+        <div v-if="processed_proposals && processed_proposals.length" class="table has-shadow-outside mb-6">
+          <!-- <div class="cell  has-text-weight-bold is-size-6"> -->
+          <!--   Proposals now active -->
+          <!-- </div> -->
+          <div v-for="prop in processed_proposals" :key="prop.id" class="cell">
+            <nuxt-link :to="'/proposals/' + prop.id" class="is-flex-direction-row">
+              <div class="is-size-6 has-text-primary is-flex-grow-1">
+                #{{ prop.id }}: {{ prop.title }}
+              </div>
+              <div>
+                <font-awesome-icon :icon="['fas', 'chevron-circle-right']" class="icon has-text-primary mx-3" />
+              </div>
+            </nuxt-link>
+          </div>
+        </div>
+        <div v-else>
+          <div class="has-text-centered">
+            No proposals in last cycle.
+          </div>
         </div>
       </div>
     </div>
 
-    <div v-if="proposalsTab === 'closed'">
-      <h3 class="subtitle has-text-centered">
-        Latest Closed Proposals:
-      </h3>
-      <div v-if="processed_proposals && processed_proposals.length" class="table has-shadow-outside mb-6">
-        <!-- <div class="cell  has-text-weight-bold is-size-6"> -->
-        <!--   Proposals now active -->
-        <!-- </div> -->
-        <div v-for="prop in processed_proposals" :key="prop.id" class="cell">
-          <nuxt-link :to="'/proposals/' + prop.id" class="is-flex-direction-row">
-            <div class="is-size-6 has-text-primary is-flex-grow-1">
-              #{{ prop.id }}: {{ prop.title }}
-            </div>
-            <div>
-              <font-awesome-icon :icon="['fas', 'chevron-circle-right']" class="icon has-text-primary mx-3" />
-            </div>
-          </nuxt-link>
-        </div>
-      </div>
-      <div v-else>
-        <div class="has-text-centered">
-          No proposals in last cycle.
-        </div>
-      </div>
-    </div>
-
-    <hr>
+    <br>
 
     <!-- <h3 class="subtitle">Cycle information:</h3> -->
     <div class="box mb-6">
+      <div class="box-title subtitle has-text-centered">
+        Effect Force Overview
+      </div>
       <div class="columns has-text-centered py-2">
         <div class="column">
           <div class="text">
@@ -249,10 +260,10 @@
         <div class="column">
           <div class="text">
             <span v-if="feePoolValue" class="high is-size-3">
-              ${{ $wallet.formatNumber(feePoolValue) }}
+              {{ $wallet.formatNumber(feePoolValue) }}
             </span>
             <span v-else>..</span><br>
-            <span class="low">Fee pool value cycle: {{ currentCycle }}</span>
+            <span class="low">Fee pool amount</span>
           </div>
         </div>
       </div>
@@ -284,7 +295,17 @@ export default {
       taskSubmissions: null,
       daoMembers: null,
       feePool: null,
-      proposalsTab: 'active'
+      proposalsTab: 'active',
+      dates: [],
+      newsItems: [
+        {
+          id: 1,
+          date: new Date(2023, 5, 22),
+          title: 'NFT Profile Pictures',
+          description: 'Since proposal 139 passed, you can now set your profile picture on the Effect Network DAO. Get started by connecting your wallet and going to your profile page.',
+          link: 'https://dao.effect.network/profile'
+        }
+      ]
     }
   },
 
@@ -318,9 +339,19 @@ export default {
     },
     feePoolValue () {
       if (this.feePool && this.feePool.balance && this.feePool.balance[0] && this.feePool.balance[0].value) {
-        return parseInt(this.feePool.balance[0].value * this.efxPrice)
+        return parseInt(this.feePool.balance[0].value * 0.0001)
       } else {
         return 0
+      }
+    },
+    nextDaoMeeting () {
+      if (this.dates && this.dates.length) {
+        const [nextDate] = this.dates
+        const parsedDate = new Date(nextDate)
+        const options = { weekday: 'long', month: 'long', day: 'numeric' }
+        return parsedDate.toLocaleDateString('en-US', options)
+      } else {
+        return null
       }
     }
   },
@@ -337,6 +368,7 @@ export default {
 
   methods: {
     init () {
+      this.getDaoMeetingDates()
       this.getVAccountStats()
       this.getForceSettings()
       this.getForcePayment()
@@ -350,7 +382,18 @@ export default {
       this.getProposals()
       this.getProcessedProposals()
     },
-
+    /**
+     * Generate a list of the next 3 dates that fall on a wednesday every two weeks.
+     */
+    getDaoMeetingDates () {
+      // start date is 28 of july 2022 (first meeting) at 12:00 UTC
+      const startDate = new Date(2023, 5, 14, 18, 0, 0)
+      const nextWednesday = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + (3 + 7 - startDate.getDay()) % 7)
+      for (let i = 0; i < 10; i++) {
+        const nextDate = new Date(nextWednesday.getFullYear(), nextWednesday.getMonth(), nextWednesday.getDate() + (i * 14))
+        this.dates.push(nextDate)
+      }
+    },
     /**
      * Get current circluating supply of EFX
      */

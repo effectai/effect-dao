@@ -5,7 +5,7 @@ import {
 } from 'atomicassets'
 
 export default (_context, inject) => {
-  const apiurl = 'https://eos.api.atomicassets.io'
+  const apiurl = 'http://api.eoseoul.io'
   const namespace = 'atomicassets'
   const api = new ExplorerApi(apiurl, namespace, { fetch })
 

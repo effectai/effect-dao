@@ -346,7 +346,16 @@ export default {
     },
     nextDaoMeeting () {
       if (this.dates && this.dates.length) {
-        const [nextDate] = this.dates
+        // find the next date in this.dates
+
+        const nextDate = this.dates.find((date) => {
+          const parsedDate = new Date(date)
+          const now = new Date()
+          if (parsedDate > now) {
+            return true
+          }
+        })
+
         const parsedDate = new Date(nextDate)
         const options = { weekday: 'long', month: 'long', day: 'numeric' }
         return parsedDate.toLocaleDateString('en-US', options)

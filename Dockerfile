@@ -1,11 +1,15 @@
 FROM node:14-alpine
 
-ENV NODE_ENV=production \
-    APP_ENV=production
-
-COPY . /app
 WORKDIR /app
-RUN npm ci
+
+RUN apk update && apk upgrade
+RUN apk add git
+
+COPY ./package.json /app/
+
+RUN npm install && npm cache clean --force
+
+COPY . .
 
 EXPOSE 3000
-ENTRYPOINT ["npm", "run", "dev"]
+ENV PATH ./node_modules/.bin/:$PATH

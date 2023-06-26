@@ -225,7 +225,8 @@ export default {
         'faBlog',
         'faFileWord',
         'faChevronCircleRight',
-        'faEdit'
+        'faEdit',
+        'faCalendarAlt'
       ]
     }
   },

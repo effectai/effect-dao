@@ -16,43 +16,37 @@
       </div>
     </div>
 
-    <div class="box mb-6">
-      <div class="subtitle box-title has-text-centered">
-        News
-      </div>
+    <div class="subtitle box-title has-text-centered">
+      News
+    </div>
+    <div class="box has-shadow-outside mb-6">
       <!-- loop through news items and display in table -->
-      <div class="table-container">
-        <table class="table is-fullwidth is-hoverable">
-          <tbody>
-            <nuxt-link v-for="newsItem in newsItems" :key="newsItem.id" to="/proposals/139" tag="tr">
-              <td>{{ newsItem.description }}</td>
-            </nuxt-link>
-
-            <!-- <tr v-for="newsItem in newsItems" :key="newsItem.id" @click="goToNewsLink(newsItem.link)">
-              <td>{{ newsItem.title }}</td>
-              <td>{{ newsItem.description }}</td>
-            </tr> -->
-          </tbody>
-        </table>
+      <div class="columns">
+        <div v-for="newsItem in newsItems" :key="newsItem.id" class="column">
+          <div class="subtitle">
+            {{ newsItem.title }}
+          </div>
+          <p>
+            {{ newsItem.description }}
+          </p>
+        </div>
       </div>
     </div>
 
-    <div class="box">
-      <div class="box-title subtitle">
-        Agenda
-      </div>
-      <div class="has-text-centered">
-        <!-- parse date in a beautiful way -->
-        Next DAO meeting is at: <br>
-        <a class="button is-secondary is-light" href="https://discord.gg/C3sXe8kv" target="_blank" rel="noopener noreferrer">{{ nextDaoMeeting }}, 18:00 UTC 📞</a>
-      </div>
-      <hr>
+    <div class="box-title subtitle">
+      Agenda
+    </div>
+    <div class="has-text-centered">
+      <!-- parse date in a beautiful way -->
+      Next DAO meeting: <strong>{{ nextDaoMeeting }}, 18:00 UTC</strong><br><br>
+    </div>
+    <div class="box has-shadow-outside">
       <div class="buttons is-centered">
-        <a class="button is-secondary is-light" href="https://docs.google.com/spreadsheets/d/1dkPST_CZPePwpmdzvHw5WTG2HubM_FtymTKRAJEWfPs/edit" target="_blank" rel="noopener noreferrer">Upcoming Agenda ↗️</a>
-        <br>
-        <a class="button is-secondary is-light" href="https://forms.gle/6QjEBwJYF4zV5ZJ78" target="_blank">Add topic to Agenda ↗️</a>
-        <br>
-        <a class="button is-secondary is-light" href="https://docs.effectdao.tools/dao-archive/master" target="_blank" rel="noopener noreferrer">DAO Call Archives ↗️</a>
+        <a class="button has-shadow-outside is-primary is-light" href="https://discord.gg/C3sXe8kv" target="_blank" rel="noopener noreferrer">Join DAO Call</a>
+        <a class="button has-shadow-outside is-primary is-light" href="https://docs.google.com/spreadsheets/d/1dkPST_CZPePwpmdzvHw5WTG2HubM_FtymTKRAJEWfPs/edit" target="_blank" rel="noopener noreferrer">Upcoming Agenda</a>
+        <a class="button has-shadow-outside is-primary is-light" href="https://forms.gle/6QjEBwJYF4zV5ZJ78" target="_blank">Add topic to Agenda</a>
+        <a class="button has-shadow-outside is-primary is-light" href="https://docs.effectdao.tools/dao-archive/master" target="_blank" rel="noopener noreferrer">DAO Call Archives</a>
+        <!-- It's also possible to add an iframe -->
         <!-- <iframe
           src="https://docs.google.com/forms/d/e/1FAIpQLSfeYTVK1aFkoIO8G7Di540-cf7bS4O98KzSfMAwjRNf_I2uvg/viewform?embedded=true"
           width="640"
@@ -61,40 +55,13 @@
           marginheight="0"
           marginwidth="0">Loading…</iframe> -->
       </div>
-
-      <!-- <div class="has-text-centered"> -->
-      <!-- <a @click="toggle = !toggle" class="button is-primary"> -->
-      <!-- <strong>Toggle</strong> -->
-      <!-- </a> -->
-      <!-- </div> -->
-
-      <!-- Table -->
-      <!-- <div> -->
-      <!-- <table class="table is-striped is-fullwidth"> -->
-      <!-- <thead> -->
-      <!-- <tr> -->
-      <!-- <th>Topic</th> -->
-      <!-- <th>Link</th> -->
-      <!-- </tr> -->
-      <!-- </thead> -->
-      <!-- <tbody> -->
-      <!-- <tr v-for="(date, index) in dates" :key="date.id"> -->
-      <!-- <td> -->
-      <!-- {{ index }} -->
-      <!-- </td> -->
-      <!-- <td> -->
-      <!-- {{ date }} -->
-      <!-- </td> -->
-      <!-- </tr> -->
-      <!-- </tbody> -->
-      <!-- </table> -->
-      <!-- </div> -->
     </div>
 
-    <div class="box mb-6">
-      <div class="subtitle box-title has-text-centered">
-        Proposals
-      </div>
+    <br>
+    <div class="subtitle box-title has-text-centered">
+      Proposals
+    </div>
+    <div class="mb-6">
       <div class="is-size-6 mt-2 has-text-centered">
         <small>
           <span v-if="$dao.cycleConfig && $moment($dao.cycleConfig.start_time + 'Z').add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isAfter()">
@@ -120,59 +87,34 @@
         </small>
       </div>
       <br>
-      <div class="tabs is-centered is-boxed">
-        <ul>
-          <li :class="{'is-active' : proposalsTab === 'active'}">
-            <a @click="proposalsTab = 'active'">
-              <span>Active</span>
-            </a>
-          </li>
-          <li :class="{'is-active' : proposalsTab === 'closed'}">
-            <a @click="proposalsTab = 'closed'">
-              <span>Closed</span>
-            </a>
-          </li>
-        </ul>
-      </div>
 
-      <div v-if="proposalsTab==='active'">
-        <div v-if="proposals && proposals.length > 0" class="table has-shadow-outside mb-6">
-          <!-- <div class="cell  has-text-weight-bold is-size-6"> -->
-          <!--   Proposals now active -->
-          <!-- </div> -->
-          <div v-for="prop in proposals" :key="prop.id" class="cell">
-            <nuxt-link :to="'/proposals/' + prop.id" class="is-flex-direction-row">
-              <div class="is-size-6 has-text-primary is-flex-grow-1">
-                #{{ prop.id }}: {{ prop.title }}
-              </div>
-              <div>
-                <font-awesome-icon :icon="['fas', 'chevron-circle-right']" class="icon has-text-primary mx-3" />
-              </div>
-            </nuxt-link>
-          </div>
+      <div v-if="proposals && proposals.length > 0" class="table has-shadow-outside mb-6">
+        <!-- <div class="cell  has-text-weight-bold is-size-6"> -->
+        <!--   Proposals now active -->
+        <!-- </div> -->
+        <div v-for="prop in proposals" :key="prop.id" class="cell">
+          <nuxt-link :to="'/proposals/' + prop.id" class="is-flex-direction-row">
+            <div class="is-size-6 has-text-primary is-flex-grow-1">
+              #{{ prop.id }}: {{ prop.title }}
+            </div>
+            <div v-if="prop.status === 'active'" class="tag is-success">
+              Active
+            </div>
+            <div v-else-if="prop.status === 'processed'" class="tag is-link">
+              Processing
+            </div>
+            <div v-else>
+              Other
+            </div>
+            <div>
+              <font-awesome-icon :icon="['fas', 'chevron-circle-right']" class="icon has-text-primary mx-3" />
+            </div>
+          </nuxt-link>
         </div>
       </div>
-
-      <div v-if="proposalsTab === 'closed'">
-        <div v-if="processed_proposals && processed_proposals.length" class="table has-shadow-outside mb-6">
-          <!-- <div class="cell  has-text-weight-bold is-size-6"> -->
-          <!--   Proposals now active -->
-          <!-- </div> -->
-          <div v-for="prop in processed_proposals" :key="prop.id" class="cell">
-            <nuxt-link :to="'/proposals/' + prop.id" class="is-flex-direction-row">
-              <div class="is-size-6 has-text-primary is-flex-grow-1">
-                #{{ prop.id }}: {{ prop.title }}
-              </div>
-              <div>
-                <font-awesome-icon :icon="['fas', 'chevron-circle-right']" class="icon has-text-primary mx-3" />
-              </div>
-            </nuxt-link>
-          </div>
-        </div>
-        <div v-else>
-          <div class="has-text-centered">
-            No proposals in last cycle.
-          </div>
+      <div v-else>
+        <div class="has-text-centered">
+          No proposals in last cycle.
         </div>
       </div>
     </div>
@@ -180,10 +122,10 @@
     <br>
 
     <!-- <h3 class="subtitle">Cycle information:</h3> -->
-    <div class="box mb-6">
-      <div class="box-title subtitle has-text-centered">
-        Effect Force Overview
-      </div>
+    <div class="box-title subtitle has-text-centered">
+      Effect Network Stats
+    </div>
+    <div class="box has-shadow-outside mb-6">
       <div class="columns has-text-centered py-2">
         <div class="column">
           <div class="text">
@@ -287,15 +229,13 @@ export default {
       forceTransactions: 0,
       forceEfxPaid: 0,
       forceUsers: 0,
-      proposals: null,
-      processed_proposals: null,
+      proposals: [],
       vaccount: null,
       forceSettings: null,
       forcePayment: null,
       taskSubmissions: null,
       daoMembers: null,
       feePool: null,
-      proposalsTab: 'active',
       dates: [],
       newsItems: [
         {
@@ -389,7 +329,6 @@ export default {
       this.getNFXPoolBalance()
       this.getEFXPrice()
       this.getProposals()
-      this.getProcessedProposals()
     },
     /**
      * Generate a list of the next 3 dates that fall on a wednesday every two weeks.
@@ -409,7 +348,7 @@ export default {
     async getCircSupply () {
       const res = await this.$eos.rpc.get_table_rows({ code: process.env.tokenContract, scope: process.env.efxToken, table: 'stat' })
       if (res && res.rows && res.rows.length === 1) {
-        // TODO Why are these amounts subtracted?
+        // TODO Figure out why are these amounts subtracted?
         this.circSupply = parseFloat(res.rows[0].supply.replace(` ${process.env.efxToken}`, '')) - 170331473 - 100000000 - 88447533
       }
     },
@@ -518,7 +457,8 @@ export default {
 
     async getProposals () {
       if (this.$dao.proposalConfig) {
-        const config = {
+        // Get active proposals
+        const activeConfig = {
           code: process.env.proposalContract,
           scope: process.env.proposalContract,
           table: 'proposal',
@@ -528,8 +468,26 @@ export default {
           lower_bound: await this.currentCycle,
           limit: 20
         }
-        const data = await this.$eos.rpc.get_table_rows(config)
-        this.proposals = data.rows
+        const activeData = await this.$eos.rpc.get_table_rows(activeConfig)
+        const activeProposals = activeData.rows.map(proposal => ({ ...proposal, status: 'active' }))
+        this.proposals.push(...activeProposals)
+
+        // Get proposals from previous cycle
+        const config = {
+          code: process.env.proposalContract,
+          scope: process.env.proposalContract,
+          table: 'proposal',
+          key_type: 'i64',
+          index_position: 3, // 1: by proposer, 2: by cycle, 3: by id
+          upper_bound: await this.currentCycle - 1,
+          lower_bound: await this.currentCycle - 1,
+          limit: 20
+        }
+        const processedData = await this.$eos.rpc.get_table_rows(config)
+        const processedProposals = processedData.rows.map(proposal => ({ ...proposal, status: 'processed' }))
+        this.proposals.push(...processedProposals)
+
+        // Get proposals from IPFS for each entry
         this.proposals.forEach(async (proposal) => {
           if (!proposal.title) {
             try {
@@ -540,36 +498,10 @@ export default {
             }
           }
         })
-        console.log(data)
+        // console.log(data)
       } else {
         console.log('Still waiting for cycle')
       }
-    },
-
-    async getProcessedProposals () {
-      const config = {
-        code: process.env.proposalContract,
-        scope: process.env.proposalContract,
-        table: 'proposal',
-        key_type: 'i64',
-        index_position: 3,
-        upper_bound: await this.currentCycle - 1,
-        lower_bound: await this.currentCycle - 1,
-        limit: 20
-      }
-      const data = await this.$eos.rpc.get_table_rows(config)
-      this.processed_proposals = data.rows
-      this.processed_proposals.forEach(async (proposal) => {
-        if (!proposal.title) {
-          try {
-            const ipfsProposal = await this.$dao.getIpfsContent(proposal.content_hash)
-            this.$set(proposal, 'title', ipfsProposal.title)
-          } catch (e) {
-            console.error(e)
-          }
-        }
-      })
-      console.log(data)
     }
   }
 }

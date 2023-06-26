@@ -47,15 +47,23 @@ export default {
           limit: 1
         }
         const current = await this.$eos.rpc.get_table_rows(config)
+        // console.log('current', current)
 
         if (current.rows && current.rows.length > 0) {
-          const asset = await this.$atomic.getAsset(current.rows[0].asset_id)
+          const [currentData] = current.rows
+          // eslint-disable-next-line camelcase
+          const { asset_id } = currentData
 
-          if (asset && asset.data) {
-            if (asset.data.img) {
-              this.imgsrc = `https://atomichub-ipfs.com/ipfs/${asset.data.img}`
-            } else if (asset.data.video) {
-              this.imgsrc = `https://atomichub-ipfs.com/ipfs/${asset.data.video}`
+          const asset = await this.$atomic.getAsset(this.accountName, asset_id)
+          // console.log('asset', asset)
+          const assetData = await asset.data()
+          // console.log('assetData', assetData)
+
+          if (assetData) {
+            if (assetData.img) {
+              this.imgsrc = `https://atomichub-ipfs.com/ipfs/${assetData.img}`
+            } else if (assetData.video) {
+              this.imgsrc = `https://atomichub-ipfs.com/ipfs/${assetData.video}`
             } else {
               throw new Error('Asset has no image or video')
             }

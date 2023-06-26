@@ -27,8 +27,8 @@
           <!-- // generate a list of figures and img tags -->
           <div class="columns is-multiline is-centered is-vcentered">
             <div
-              v-for="nft in nfts"
-              :key="nft.asset_id"
+              v-for="asset in dataAssets"
+              :key="asset.id"
               class="column is-4 p-1 py-2 has-text-centered is-flex-direction-column is-align-self-stretch"
             >
               <div
@@ -39,16 +39,16 @@
                   class="card-image has-background-image has-radius center-cropped"
                   style="margin: auto; background-position: center center; background-repeat: no-repeat;"
                 >
-                  <figure v-if="nft.data.img" class="pt-4">
+                  <figure v-if="asset && asset.data && asset.data.img" class="pt-4">
                     <img
-                      :src="`https://atomichub-ipfs.com/ipfs/${nft.data.img}`"
+                      :src="asset.asset_media"
                       alt="Placeholder image"
                       class="is-centered mx-auto"
                     >
                   </figure>
-                  <figure v-else-if="nft.data.video" class="pt-4">
+                  <figure v-else-if="asset && asset.data && asset.data.video" class="pt-4">
                     <video
-                      :src="`https://atomichub-ipfs.com/ipfs/${nft.data.video}`"
+                      :src="asset.asset_media"
                       autoplay
                       loop
                       muted
@@ -66,18 +66,18 @@
                   <div class="media">
                     <div class="media-content">
                       <p class="title is-5">
-                        {{ nft.data.name }}
+                        {{ asset.name }}
                       </p>
                       <p class="subtitle is-size-7">
-                        {{ nft.collection.name }}
+                        {{ asset.name }}
                       </p>
                     </div>
                   </div>
                   <div class="content">
-                    <p>{{ nft.data.description }}</p>
+                    <p>{{ asset.description }}</p>
                     <p>
                       <a
-                        :href="`https://eos.atomichub.io/explorer/asset/${nft.asset_id}`"
+                        :href="asset.asset_link"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -90,7 +90,7 @@
                   </div>
                 </div>
                 <footer class="card-footer" style="margin-top: auto;">
-                  <button class="button card-footer-item m-3" @click.prevent="setAvatarTx(nft)">
+                  <button class="button card-footer-item m-3" @click.prevent="setAvatarTx(asset)">
                     <span class="icon is-small">
                       <font-awesome-icon :icon="['fas', 'edit']" />
                     </span>
@@ -115,7 +115,10 @@ export default {
       },
       selectedNftSource: null,
       loadingNFTs: true,
-      nfts: []
+      nfts: [],
+      dataAssets: null,
+      accountAssets: null,
+      resolvedAccountAssets: null
     }
   },
   computed: {
@@ -133,29 +136,45 @@ export default {
     async getNFTs () {
       this.loadingNFTs = true
       try {
+        // get allowed collections
         const { rows } = await this.$eos.rpc.get_table_rows({
           code: process.env.daoContract,
           scope: process.env.daoContract,
           table: 'config',
           limit: 1
         })
-        const [data] = rows
-        // eslint-disable-next-line camelcase
-        const { allowed_collections } = data
+        const [rowsData] = rows
+        // eslint-disable-next-line camelcase, no-unused-vars
+        const { allowed_collections } = rowsData
+        // console.log('allowed_collections', allowed_collections)
 
-        const assets = await this.$atomic.getAssets({
-          owner: this.account.name,
-          collection_whitelist: allowed_collections
-        })
-        // console.log('AtomicAssets', assets)
+        // get account assets
+        const accountAssets = await this.$atomic.getAccountAssets(this.account.name)
 
-        if (assets && assets.length > 0) {
-          // console.log(assets)
-          // this.nfts = assets.map(asset => `https://atomichub-ipfs.com/ipfs/${asset.data.img || asset.data.video}`)
-          this.nfts = assets
-        } else {
-          console.log('No NFTs found')
-        }
+        this.accountAssets = accountAssets
+        // console.log('accountAssets', accountAssets)
+
+        // get data assets
+        const dataAssets = await Promise.all(accountAssets.map(async (asset) => {
+          const collection = await asset.collection()
+          // Check if collection is allowed
+          if (allowed_collections.includes(collection.name)) {
+            const data = await asset.data()
+            return {
+              ...asset,
+              data,
+              collection,
+              asset_link: `https://eos.atomichub.io/explorer/asset/${asset.id}`,
+              asset_media: `https://atomichub-ipfs.com/ipfs/${data?.img || data?.video}`,
+              asset_type: data?.img ? 'image' : 'video'
+            }
+          }
+        }))
+
+        // Filter out null values
+        const fileteredDataAssets = dataAssets.filter(asset => asset)
+        this.dataAssets = fileteredDataAssets
+        // console.log('dataAssets', this.dataAssets)
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error)
@@ -166,14 +185,14 @@ export default {
       this.selectedNftSource = `https://ui-avatars.com/api/?name=${this.account.name}&size=100`
       // event.target.src = `https://ui-avatars.com/api/?name=${this.account.name}&size=100`
     },
-    async setAvatarTx (item) {
+    async setAvatarTx (asset) {
       // TODO
       // 1. Get the selected NFT
       // 2. Create a transaction to set the profile image
       // 3. Broadcast the transaction
       // 4. Update the profile image
 
-      console.log(`Seting avatar for ${this.account.name}`, item)
+      // console.log(`Seting avatar for ${this.account.name}`, asset)
 
       const actions = [
         {
@@ -186,12 +205,12 @@ export default {
           }],
           data: {
             account: this.account.name,
-            asset_id: item.asset_id
+            asset_id: asset.id
           }
         }
       ]
 
-      console.log('Actions', actions)
+      // console.log('Actions', actions)
       try {
         await this.$wallet.handleTransaction(actions)
         this.success = true

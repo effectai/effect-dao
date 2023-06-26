@@ -16,6 +16,29 @@
       </div>
     </div>
 
+    <div class="box-title subtitle">
+      Agenda
+    </div>
+    <div class="has-text-centered">
+      <!-- parse date in a beautiful way -->
+      Next DAO meeting: <strong>{{ nextDaoMeeting }}, 18:00 UTC</strong><br><br>
+    </div>
+    <div class="buttons is-centered">
+      <a class="button has-shadow-outside is-primary is-light" href="https://discord.gg/C3sXe8kv" target="_blank" rel="noopener noreferrer">Join DAO Call</a>
+      <a class="button has-shadow-outside is-primary is-light" href="https://docs.google.com/spreadsheets/d/1dkPST_CZPePwpmdzvHw5WTG2HubM_FtymTKRAJEWfPs/edit" target="_blank" rel="noopener noreferrer">Upcoming Agenda</a>
+      <a class="button has-shadow-outside is-primary is-light" href="https://forms.gle/6QjEBwJYF4zV5ZJ78" target="_blank">Add topic to Agenda</a>
+      <a class="button has-shadow-outside is-primary is-light" href="https://docs.effectdao.tools/dao-archive/master" target="_blank" rel="noopener noreferrer">DAO Call Archives</a>
+      <!-- It's also possible to add an iframe -->
+      <!-- <iframe
+          src="https://docs.google.com/forms/d/e/1FAIpQLSfeYTVK1aFkoIO8G7Di540-cf7bS4O98KzSfMAwjRNf_I2uvg/viewform?embedded=true"
+          width="640"
+          height="1417"
+          frameborder="0"
+          marginheight="0"
+          marginwidth="0">Loading…</iframe> -->
+    </div>
+    <br>
+
     <div class="subtitle box-title has-text-centered">
       News
     </div>
@@ -37,30 +60,6 @@
             {{ newsItem.description }}
           </p>
         </div>
-      </div>
-    </div>
-
-    <div class="box-title subtitle">
-      Agenda
-    </div>
-    <div class="has-text-centered">
-      <!-- parse date in a beautiful way -->
-      Next DAO meeting: <strong>{{ nextDaoMeeting }}, 18:00 UTC</strong><br><br>
-    </div>
-    <div class="box has-shadow-outside">
-      <div class="buttons is-centered">
-        <a class="button has-shadow-outside is-primary is-light" href="https://discord.gg/C3sXe8kv" target="_blank" rel="noopener noreferrer">Join DAO Call</a>
-        <a class="button has-shadow-outside is-primary is-light" href="https://docs.google.com/spreadsheets/d/1dkPST_CZPePwpmdzvHw5WTG2HubM_FtymTKRAJEWfPs/edit" target="_blank" rel="noopener noreferrer">Upcoming Agenda</a>
-        <a class="button has-shadow-outside is-primary is-light" href="https://forms.gle/6QjEBwJYF4zV5ZJ78" target="_blank">Add topic to Agenda</a>
-        <a class="button has-shadow-outside is-primary is-light" href="https://docs.effectdao.tools/dao-archive/master" target="_blank" rel="noopener noreferrer">DAO Call Archives</a>
-        <!-- It's also possible to add an iframe -->
-        <!-- <iframe
-          src="https://docs.google.com/forms/d/e/1FAIpQLSfeYTVK1aFkoIO8G7Di540-cf7bS4O98KzSfMAwjRNf_I2uvg/viewform?embedded=true"
-          width="640"
-          height="1417"
-          frameborder="0"
-          marginheight="0"
-          marginwidth="0">Loading…</iframe> -->
       </div>
     </div>
 

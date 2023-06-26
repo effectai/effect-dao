@@ -26,6 +26,13 @@
           <div class="subtitle">
             {{ newsItem.title }}
           </div>
+          <div class="icon-text">
+            <span class="icon">
+              <font-awesome-icon :icon="['fas', 'calendar-alt']" class="icon is-small mx-3" />
+            </span>
+            <span>{{ showDate(newsItem.date) }}</span>
+          </div>
+          <br>
           <p>
             {{ newsItem.description }}
           </p>
@@ -329,6 +336,14 @@ export default {
       this.getNFXPoolBalance()
       this.getEFXPrice()
       this.getProposals()
+    },
+    /**
+     * Show the date of a newsItem
+     */
+    showDate (date) {
+      const parsedDate = new Date(date)
+      const options = { weekday: 'long', month: 'long', day: 'numeric' }
+      return parsedDate.toLocaleDateString('en-US', options)
     },
     /**
      * Generate a list of the next 3 dates that fall on a wednesday every two weeks.

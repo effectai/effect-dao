@@ -20,11 +20,10 @@
         </div>
 
         <hr>
-        <div v-if="loadingNFTs">
-          Loading NFTs..
+        <div v-if="loadingNFTs" class="has-text-centered is-loading">
+          Loading NFTs...
         </div>
         <div v-else>
-          <!-- // generate a list of figures and img tags -->
           <div class="columns is-multiline is-centered is-vcentered">
             <div
               v-for="asset in dataAssets"

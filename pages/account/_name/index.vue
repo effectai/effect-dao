@@ -19,7 +19,7 @@
                   @mouseout="showChangePicIcon = false"
                 />
                 <div>
-                  <span class="icon is-large is-pulled-right">
+                  <span class="icon is-large is-pulled-right is-overlay">
                     <font-awesome-icon :icon="['fas', 'edit']" style="font-size: 12px" />
                   </span>
                 </div>

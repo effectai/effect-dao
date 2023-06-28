@@ -260,6 +260,7 @@ export default {
         const nextDate = this.dates.find((date) => {
           const parsedDate = new Date(date)
           const now = new Date()
+          console.log(parsedDate, now)
           if (parsedDate > now) {
             return true
           }
@@ -315,7 +316,7 @@ export default {
       const startDate = new Date(2023, 5, 14, 18, 0, 0)
       const nextWednesday = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + (3 + 7 - startDate.getDay()) % 7)
       for (let i = 0; i < 10; i++) {
-        const nextDate = new Date(nextWednesday.getFullYear(), nextWednesday.getMonth(), nextWednesday.getDate() + (i * 14))
+        const nextDate = new Date(nextWednesday.getFullYear(), nextWednesday.getMonth(), nextWednesday.getDate() + (i * 14), 18, 0, 0)
         this.dates.push(nextDate)
       }
     },
@@ -446,7 +447,7 @@ export default {
           limit: 20
         }
         const activeData = await this.$eos.rpc.get_table_rows(activeConfig)
-        const activeProposals = activeData.rows.map(proposal => ({ ...proposal, status: 'active' }))
+        const activeProposals = activeData.rows.map(proposal => ({ ...proposal, status: `cycle: ${proposal.cycle}` }))
         this.proposals.push(...activeProposals)
 
         // Get proposals from previous cycle
@@ -461,7 +462,7 @@ export default {
           limit: 20
         }
         const processedData = await this.$eos.rpc.get_table_rows(config)
-        const processedProposals = processedData.rows.map(proposal => ({ ...proposal, status: 'processed' }))
+        const processedProposals = processedData.rows.map(proposal => ({ ...proposal, status: `cycle: ${proposal.cycle}` }))
         this.proposals.push(...processedProposals)
 
         // Get proposals from IPFS for each entry

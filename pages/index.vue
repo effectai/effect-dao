@@ -161,7 +161,7 @@
         <div class="column">
           <div class="text">
             <span v-if="forceSettings && forceSettings.fee_percentage" class="high is-size-3">
-              {{ Number(forceSettings.fee_percentage).toPrecision(2) }}%
+              {{ Number(forceSettings.fee_percentage).toPrecision(2) * 100 }}%
             </span>
             <span v-else>..</span><br>
             <span class="low">Fee % Per Task</span>

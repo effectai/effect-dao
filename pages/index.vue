@@ -1,33 +1,22 @@
 <template>
   <div>
     <div class="has-text-centered my-6">
-      <div class="has-text-centered">
-        <div class="title">
-          Effect DAO
+      <div v-if="wallet && wallet.auth">
+        <h1 class="subtitle">Welcome {{wallet.auth.accountName}}!</h1>
+        <!-- <div class="subtitle">Effect Network Dashboard</div> -->
         </div>
-        <div class="subtitle">
-          Managing the world's first decentralized Micro Tasking Network
-        </div>
-        <div v-show="wallet && !wallet.auth" class="has-text-centered my-4">
-          <a class="button is-primary" @click="$wallet.loginModal = true">
-            <strong>Connect Wallet</strong>
-          </a>
-        </div>
-      </div>
     </div>
 
-    <div class="box-title subtitle">
-      Agenda
-    </div>
-    <div class="has-text-centered">
+    <div class="box has-shadow-outside">
+    <div class="">
       <!-- parse date in a beautiful way -->
       Next DAO meeting: <strong>{{ nextDaoMeeting }}, 18:00 UTC</strong><br><br>
     </div>
-    <div class="buttons is-centered">
-      <a class="button has-shadow-outside is-primary is-light" href="https://discord.gg/C3sXe8kv" target="_blank" rel="noopener noreferrer">Join DAO Call</a>
-      <a class="button has-shadow-outside is-primary is-light" href="https://docs.google.com/spreadsheets/d/1dkPST_CZPePwpmdzvHw5WTG2HubM_FtymTKRAJEWfPs/edit" target="_blank" rel="noopener noreferrer">Upcoming Agenda</a>
-      <a class="button has-shadow-outside is-primary is-light" href="https://forms.gle/6QjEBwJYF4zV5ZJ78" target="_blank">Add topic to Agenda</a>
-      <a class="button has-shadow-outside is-primary is-light" href="https://docs.effectdao.tools/dao-archive/master" target="_blank" rel="noopener noreferrer">DAO Call Archives</a>
+    <div class="buttons">
+      <a class="button has-shadow-outside  is-light" href="https://discord.gg/C3sXe8kv" target="_blank" rel="noopener noreferrer">Join DAO Call</a>
+      <a class="button has-shadow-outside  is-light" href="https://docs.google.com/spreadsheets/d/1dkPST_CZPePwpmdzvHw5WTG2HubM_FtymTKRAJEWfPs/edit" target="_blank" rel="noopener noreferrer">Upcoming Agenda</a>
+      <a class="button has-shadow-outside  is-light" href="https://forms.gle/6QjEBwJYF4zV5ZJ78" target="_blank">Add topic to Agenda</a>
+      <a class="button has-shadow-outside  is-light" href="https://docs.effectdao.tools/dao-archive/master" target="_blank" rel="noopener noreferrer">DAO Call Archives</a>
       <!-- It's also possible to add an iframe -->
       <!-- <iframe
           src="https://docs.google.com/forms/d/e/1FAIpQLSfeYTVK1aFkoIO8G7Di540-cf7bS4O98KzSfMAwjRNf_I2uvg/viewform?embedded=true"
@@ -37,11 +26,9 @@
           marginheight="0"
           marginwidth="0">Loading…</iframe> -->
     </div>
+    </div>
     <br>
 
-    <div class="subtitle box-title has-text-centered">
-      News
-    </div>
     <div class="box has-shadow-outside mb-6">
       <!-- loop through news items and display in table -->
       <div class="columns">
@@ -64,37 +51,11 @@
     </div>
 
     <br>
-    <div class="subtitle box-title has-text-centered">
+    <div class="subtitle has-text-centered">
       Proposals
     </div>
     <div class="mb-6">
-      <div class="is-size-6 mt-2 has-text-centered">
-        <small>
-          <span v-if="$dao.cycleConfig && $moment($dao.cycleConfig.start_time + 'Z').add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').isAfter()">
-            <span v-if="currentCycle">Cycle {{ currentCycle }}
-              <span v-if="$dao.cycleConfig">
-                started {{ $moment($dao.cycleConfig.start_time + "Z").fromNow() }} and ends {{
-                  $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow()
-                }} <br>
-                Voting ends {{ $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_voting_duration_sec, 'seconds').fromNow() }}
-              </span>
-            </span>
-          </span>
-          <span v-else-if="$dao.cycleConfig && currentCycle">
-            New cycle starts {{ $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow() }}
-          </span>
-          <span v-else-if="$dao.cycleConfig">
-            <!-- Genesis cycle!-->
-            Waiting for <i>Genesis Cycle</i>
-            <span v-if="$dao.cycleConfig">start {{
-              $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow()
-            }}</span>
-          </span>
-        </small>
-      </div>
-      <br>
-
-      <div v-if="proposals && proposals.length > 0" class="table has-shadow-outside mb-6">
+      <div v-if="proposals && proposals.length > 0" class="table has-shadow-outside">
         <!-- <div class="cell  has-text-weight-bold is-size-6"> -->
         <!--   Proposals now active -->
         <!-- </div> -->
@@ -103,8 +64,14 @@
             <div class="is-size-6 has-text-primary is-flex-grow-1">
               #{{ prop.id }}: {{ prop.title }}
             </div>
-            <div class="tag is-link">
-              Cycle: {{ prop.cycle }}
+            <div v-if="prop.status === 'active'" class="tag">
+              Active
+            </div>
+            <div v-else-if="prop.status === 'processed'" class="tag">
+              Processing
+            </div>
+            <div v-else>
+              Other
             </div>
             <div>
               <font-awesome-icon :icon="['fas', 'chevron-circle-right']" class="icon has-text-primary mx-3" />
@@ -117,13 +84,15 @@
           No proposals in last cycle.
         </div>
       </div>
+      <div class="has-text-centered">
+      <a href="/proposals/new" class="button has-shadow-outside is-light">+ New proposal</a>
+      </div>
     </div>
-
     <br>
 
     <!-- <h3 class="subtitle">Cycle information:</h3> -->
-    <div class="box-title subtitle has-text-centered">
-      Effect Network Stats
+    <div class="subtitle has-text-centered">
+      Network Stats
     </div>
     <div class="box has-shadow-outside mb-6">
       <div class="columns has-text-centered py-2">

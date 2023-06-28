@@ -71,7 +71,6 @@
               Processing
             </div>
             <div v-else>
-              Other
             </div>
             <div>
               <font-awesome-icon :icon="['fas', 'chevron-circle-right']" class="icon has-text-primary mx-3" />
@@ -144,7 +143,7 @@
               {{ vaccount.id }}
             </span>
             <span v-else>..</span><br>
-            <span class="low">Registered Workers</span>
+            <span class="low">Registered workers</span>
           </div>
         </div>
         <div class="splitter" />
@@ -154,7 +153,7 @@
               {{ $wallet.formatNumber(taskSubmissions.id) }}
             </span>
             <span v-else>..</span><br>
-            <span class="low">Tasks Done</span>
+            <span class="low">Tasks done</span>
           </div>
         </div>
         <div class="splitter" />
@@ -164,7 +163,7 @@
               {{ Number(forceSettings.fee_percentage).toPrecision(2) * 100 }}%
             </span>
             <span v-else>..</span><br>
-            <span class="low">Fee % Per Task</span>
+            <span class="low">Fee % per task</span>
           </div>
         </div>
         <div class="splitter" />
@@ -174,7 +173,7 @@
               {{ $wallet.formatNumber(feePoolValue) }}
             </span>
             <span v-else>..</span><br>
-            <span class="low">Fee pool amount</span>
+            <span class="low">EFX fees this cycle</span>
           </div>
         </div>
       </div>
@@ -442,8 +441,8 @@ export default {
           table: 'proposal',
           key_type: 'i64',
           index_position: 3, // 1: by proposer, 2: by cycle, 3: by id
-          upper_bound: await this.currentCycle, // TODO: How to get the latest cycle?
-          lower_bound: await this.currentCycle,
+          upper_bound: this.currentCycle,
+          lower_bound: this.currentCycle,
           limit: 20
         }
         const activeData = await this.$eos.rpc.get_table_rows(activeConfig)
@@ -457,8 +456,8 @@ export default {
           table: 'proposal',
           key_type: 'i64',
           index_position: 3, // 1: by proposer, 2: by cycle, 3: by id
-          upper_bound: await this.currentCycle - 1,
-          lower_bound: await this.currentCycle - 1,
+          upper_bound: this.currentCycle - 1,
+          lower_bound: this.currentCycle - 1,
           limit: 20
         }
         const processedData = await this.$eos.rpc.get_table_rows(config)

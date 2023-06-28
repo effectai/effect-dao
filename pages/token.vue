@@ -1,19 +1,6 @@
 <template>
   <div>
     <div class="box">
-      <h4 class="box-title subtitle">DAO Agenda Form</h4>
-        <div class="has-text-centered">
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfeYTVK1aFkoIO8G7Di540-cf7bS4O98KzSfMAwjRNf_I2uvg/viewform" target="_blank">Add topic to DAO Agenda for biweekly DAO meetings.</a>
-          <!-- <iframe
-          src="https://docs.google.com/forms/d/e/1FAIpQLSfeYTVK1aFkoIO8G7Di540-cf7bS4O98KzSfMAwjRNf_I2uvg/viewform?embedded=true"
-          width="640"
-          height="1417"
-          frameborder="0"
-          marginheight="0"
-          marginwidth="0">Loading…</iframe> -->
-          </div>
-    </div>
-    <div class="box">
       <h4 class="box-title subtitle">
         Token Map
       </h4>

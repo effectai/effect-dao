@@ -8,6 +8,11 @@ export default {
     fallback: true
   },
 
+  server: {
+    port: 3000,
+    host: '0.0.0.0'
+  },
+
   /**
    * Production
    */
@@ -25,6 +30,8 @@ export default {
     proposalContract: 'daoproposals',
     feepoolContract: 'feepool.efx',
     votingContract: 'effectvotess',
+    forceContract: 'force.efx',
+    vaccountContract: 'vaccount.efx',
     efxToken: 'EFX',
     nfxToken: 'NFX',
     discordGuildId: '519860537891487745',
@@ -218,7 +225,8 @@ export default {
         'faBlog',
         'faFileWord',
         'faChevronCircleRight',
-        'faEdit'
+        'faEdit',
+        'faCalendarAlt'
       ]
     }
   },

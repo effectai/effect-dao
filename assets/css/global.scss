@@ -153,6 +153,9 @@ a {
 }
 
 .button {
+  &.has-shadow-outside {
+     box-shadow: $box-shadow-outside;
+  }
   &.is-wide {
     min-width: 200px;
   }

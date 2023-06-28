@@ -217,7 +217,7 @@ export default {
           color: 'success',
           title: 'Transaction Sent',
           persistent: true,
-          text: 'Setting avatar picture! It might take a couple of minutes before your proposals shows up.',
+          text: 'Setting avatar picture! It might take a minute to update.',
           cancel: false,
           onConfirm: () => {
             location.reload(true)

@@ -20,7 +20,7 @@
         </div>
 
     <div class="box">
-      <h4 class="box-title subtitle">
+      <h4 class="box-title subtitle has-text-weight-bold">
         Token Map
       </h4>
       <div class="table-container">
@@ -62,7 +62,7 @@
       </div>
     </div>
     <div class="box">
-      <h4 class="box-title subtitle">
+      <h4 class="box-title subtitle has-text-weight-bold">
         Stats
       </h4>
       <div class="table-container">
@@ -85,7 +85,7 @@
       </div>
     </div>
     <div class="box">
-      <h4 class="box-title subtitle">
+      <h4 class="box-title subtitle has-text-weight-bold">
         Resources
       </h4>
       <div class="table-container">
@@ -165,7 +165,7 @@
       </div>
     </div>
     <div class="box">
-      <h4 class="box-title subtitle">
+      <h4 class="box-title subtitle has-text-weight-bold">
         Smart Contracts
       </h4>
       <div class="table-container">

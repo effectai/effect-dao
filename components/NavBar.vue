@@ -24,13 +24,8 @@
           <div class="navbar-start is-justify-content-center" style="width: 100%">
             <div @click="mobileMenu = false">
               <nuxt-link class="navbar-item" to="/stake" exact-active-class="is-active">
-                Stake
+                Staking
               </nuxt-link>
-            </div>
-            <div @click="mobileMenu = false">
-              <a class="navbar-item" href="https://bridge.effect.network/" target="_blank">
-                BSC Bridge
-              </a>
             </div>
             <div @click="mobileMenu = false">
               <nuxt-link class="navbar-item" to="/proposals" exact-active-class="is-active">
@@ -39,7 +34,7 @@
             </div>
             <div @click="mobileMenu = false">
               <nuxt-link class="navbar-item" to="/dao" exact-active-class="is-active">
-                DAO
+                Members
               </nuxt-link>
             </div>
             <div @click="mobileMenu = false">
@@ -52,21 +47,16 @@
                 Rewards
               </nuxt-link>
             </div>
-            <div @click="mobileMenu = false">
-              <nuxt-link class="navbar-item" to="/socials" exact-active-class="is-active">
-                Socials
-              </nuxt-link>
-            </div>
-            <div @click="mobileMenu = false">
+            <!-- <div @click="mobileMenu = false">
               <div class="pt-2">
                 <a href="https://t.me/EffectNetworkDAO" target="_blank" class="has-text-grey"><font-awesome-icon :icon="['fab', 'telegram']" class="icon fa-lg mx-3"/></a>
               </div>
-            </div>
-            <div @click="mobileMenu = false">
+            </div> -->
+            <!-- <div @click="mobileMenu = false">
               <div class="pt-2">
                 <a href="https://discord.gg/effectnetwork" target="_blank" class="has-text-grey"><font-awesome-icon :icon="['fab', 'discord']" class="icon fa-lg mx-3"/></a>
               </div>
-            </div>
+            </div> -->
           </div>
           <div class="navbar-end">
             <div class="pt-0 navbar-item">

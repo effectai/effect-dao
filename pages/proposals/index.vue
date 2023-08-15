@@ -41,11 +41,11 @@
           </small>
         </div>
       </h4>
-      <div class="tabs">
+      <div class="tabs is-centered">
         <ul>
           <li v-for="status in statuses" :key="status.id" :class="{'is-active': filter === status.id}">
             <a
-            v-if="status.name != 'Pending'"
+              v-if="status.name != 'Pending'"
               @click.prevent="filter = status.id"
             >{{ status.name }}</a>
           </li>
@@ -53,9 +53,7 @@
       </div>
       <template v-if="$dao.cycleConfig">
         <template v-if="currentCycle">
-          <h5 v-if="filter === 'ACTIVE'">
-
-          </h5>
+          <h5 v-if="filter === 'ACTIVE'" />
           <h5 v-else-if="filter === 'PENDING'">
             Proposals for cycle {{ currentCycle + 1 }} starting {{
               $moment($dao.cycleConfig.start_time + "Z").add($dao.proposalConfig.cycle_duration_sec, 'seconds').fromNow()
@@ -76,10 +74,10 @@
           </h5>
         </template>
       </template>
-      <h5 v-if="filter === 'DRAFT'">
+      <h5 v-if="filter === 'DRAFT'" class="subtitle has-text-centered">
         Not yet assigned to a cycle
       </h5>
-      <h5 v-else-if="filter === 'CLOSED'">
+      <h5 v-else-if="filter === 'CLOSED'" class="subtitle has-text-centered">
         Accepted or rejected proposals
       </h5>
       <proposals v-if="proposals && proposals.length > 0" :proposals="proposalsFiltered" />
@@ -100,11 +98,6 @@ export default {
   components: {
     Proposals,
     ConnectWallet
-  },
-  head () {
-    return {
-      title: 'Proposals'
-    }
   },
   data () {
     return {
@@ -275,6 +268,11 @@ export default {
         }
         this.loading = false
       }
+    }
+  },
+  head () {
+    return {
+      title: 'Proposals'
     }
   }
 }

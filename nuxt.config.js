@@ -8,6 +8,11 @@ export default {
     fallback: true
   },
 
+  server: {
+    port: 3000,
+    host: '0.0.0.0'
+  },
+
   /**
    * Production
    */
@@ -25,6 +30,8 @@ export default {
     proposalContract: 'daoproposals',
     feepoolContract: 'feepool.efx',
     votingContract: 'effectvotess',
+    forceContract: 'force.efx',
+    vaccountContract: 'vaccount.efx',
     efxToken: 'EFX',
     nfxToken: 'NFX',
     discordGuildId: '519860537891487745',
@@ -216,7 +223,10 @@ export default {
         'faCommentDots',
         'faCheckSquare',
         'faBlog',
-        'faFileWord'
+        'faFileWord',
+        'faChevronCircleRight',
+        'faEdit',
+        'faCalendarAlt'
       ]
     }
   },
@@ -228,6 +238,7 @@ export default {
     { src: '@/plugins/dao.js', mode: 'client' },
     '@/plugins/modal.js',
     '@/plugins/eos.js',
+    '@plugins/atomic.js',
     '@/plugins/helpers.js'
   ],
 

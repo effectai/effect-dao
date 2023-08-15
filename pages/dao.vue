@@ -57,11 +57,6 @@
     </div>
 
     <div v-if="!loading && (!wallet || !wallet.auth)" class="has-text-centered is-outlined is-primary mb-0 has-text-weight-bold notif-w-btn">
-      <!-- <div class="notif-btn">
-        <a class="button is-primary" @click="$wallet.loginModal = true">
-          <strong>Connect Wallet</strong>
-        </a>
-      </div> -->
       <div class="notification is-primary is-outlined has-text-centered is-light has-text-weight-bold ">
         Connect your wallet to participate in the DAO.
       </div>
@@ -97,6 +92,44 @@
     </div>
 
     <votes class="mt-5" />
+
+    <hr>
+
+    <div class="box mt-5">
+      <h5 class="box-title subtitle">
+        High Guard
+      </h5>
+      <div v-if="!loadingHighGuard" class="columns is-multiline mt-5 is-centered">
+        <div v-for="guard in highGuardList" :key="guard.account" class="column is-half is-centered">
+          <nuxt-link :to="`/account/${guard.account}`" class="box has-shadow-outside is-narrow member columns is-gapless is-mobile">
+            <div class="column is-one-fifth" style="min-width: 70px">
+              <figure class="image is-64x64">
+                <avatar :account-name="guard.account" />
+              </figure>
+            </div>
+            <div class="column">
+              <div class="pl-2">
+                <h5>{{ guard.account }}</h5>
+                <div>
+                  <ICountUp v-if="guard.votes >= 0" class="power" :options="{ prefix: 'Votes: ' }" :end-val="guard.votes" />
+                  <div v-else>
+                    ...
+                  </div>
+                  <br>
+                  <small>Joined: {{ $moment(guard.registration_time).fromNow() }}</small>
+                </div>
+              </div>
+            </div>
+          </nuxt-link>
+        </div>
+      </div>
+      <div v-else>
+        Loading High Guards
+      </div>
+    </div>
+
+    <hr>
+
     <div class="box mt-5">
       <h5 class="box-title subtitle">
         EffectDAO Members
@@ -154,11 +187,6 @@ export default {
     Votes,
     Avatar
   },
-  head () {
-    return {
-      title: 'The DAO'
-    }
-  },
   data () {
     return {
       loading: false,
@@ -170,7 +198,18 @@ export default {
       constitutionHash: '',
       moreMembers: true,
       nextKey: null,
-      constitutionMembers: null
+      constitutionMembers: null,
+
+      highGuardList: [
+        { account: 'cryptonode42', agreedtermsversion: 1, registration_time: '2021-03-07T14:58:47' },
+        { account: 'djstrikanova', agreedtermsversion: 1, registration_time: '2020-11-17T00:15:39' },
+        { account: 'hazdkmbxgene', agreedtermsversion: 1, registration_time: '2020-11-16T19:17:39' },
+        { account: 'laurenseosio', agreedtermsversion: 1, registration_time: '2020-11-16T18:47:12' },
+        { account: 'miggysmallz1', agreedtermsversion: 1, registration_time: '2021-03-06T17:31:32' },
+        { account: 'rochelle.ai', agreedtermsversion: 1, registration_time: '2020-11-16T20:58:30' },
+        { account: 'scarletalpha', agreedtermsversion: 1, registration_time: '2021-03-05T06:58:19' }
+      ],
+      loadingHighGuard: false
     }
   },
 
@@ -193,13 +232,22 @@ export default {
   },
 
   created () {
+    this.shuffleArray(this.highGuardList)
     this.init()
   },
 
   methods: {
+    shuffleArray (array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]]
+      }
+      return array
+    },
     async init () {
       this.loading = true
       this.loadingMembers = true
+      this.getAllHighGuardInfo()
       const data = await this.$eos.rpc.get_table_rows({
         code: process.env.daoContract,
         scope: process.env.daoContract,
@@ -334,6 +382,19 @@ export default {
         .finally(() => {
           this.loading = false
         })
+    },
+
+    async getAllHighGuardInfo () {
+      this.loadingHighGuard = true
+      for (const guard of this.highGuardList) {
+        await this.getMemberInfo(guard)
+      }
+      this.loadingHighGuard = false
+    }
+  },
+  head () {
+    return {
+      title: 'The DAO'
     }
   }
 }

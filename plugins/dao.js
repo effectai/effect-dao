@@ -75,20 +75,20 @@ export default (context, inject) => {
         }
       },
       async getHackathonVotesConfig () {
-        console.log(`GetHackathonVotesConfig:: ${process.env.hackathonContract}`)
+        // console.log(`GetHackathonVotesConfig:: ${process.env.hackathonContract}`)
         const data = await this.eos.rpc.get_table_rows({
           code: process.env.votingContract,
           scope: process.env.votingContract,
           table: 'config'
         }).catch(err => console.error(`Error getting hackathon config: ${err}`))
-        console.log(data)
+        // console.log(data)
         if (data.rows.length > 0) {
           this.hackathonConfig = data.rows[0]
           this.hackathonCycleConfig = await this.getHackathonCycleConfig(data.rows[0].current_cycle)
         }
       },
       async getHackathonCycleConfig (cycle) {
-        console.log('getHackathonCycleConfig')
+        // console.log('getHackathonCycleConfig')
         const data = await this.eos.rpc.get_table_rows({
           code: process.env.votingContract,
           scope: process.env.votingContract,
@@ -96,9 +96,9 @@ export default (context, inject) => {
           lower_bound: cycle,
           limit: 1
         }).catch(error => console.log(`getHackathonCycleConfig Error: ${error}`))
-        console.log(data)
+        // console.log(data)
         if (data.rows.length > 0) {
-          console.log(`Hackathon cycles: ${JSON.stringify(data)}`)
+          // console.log(`Hackathon cycles: ${JSON.stringify(data)}`)
           return data.rows[0]
         }
       },

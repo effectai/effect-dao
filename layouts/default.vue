@@ -3,40 +3,28 @@
     <div v-if="isTestnet" class="testnet">
       Connected to Kylin testnet ({{ node }})
     </div>
-    <!-- <div class="discord">
-      <div class="container is-max-widescreen">
-        <img src="@/assets/img/discord.png" alt="Discord logo">
-        <p class="is-hidden-mobile">
-          The DAO Discord is now open with
-          <b>
-            <span v-if="discordMembersOnline">{{ discordMembersOnline }}</span><span v-else>..</span> members
-          </b> online!
-        </p>
-        <p class="is-hidden-tablet">
-          The DAO Discord is now open!
-        </p>
-        <a :href="discordUrl" target="_blank">
-          <button class="discord-btn">
-            Join
-          </button>
-        </a>
-      </div>
-    </div> -->
-    <div class="discord is-hidden">
-      <div class="container is-max-widescreen">
-        <p class="is-hidden-mobile">
-          🚀 The Launch-a-thon Vote is now open!
-        </p>
-        <p class="is-hidden-tablet">
-          🚀 The Launch-a-thon Vote is now open!
-        </p>
-        <nuxt-link to="/launchathon">
-          <button class="discord-btn">
-            Vote
-          </button>
-        </nuxt-link>
-      </div>
-    </div>
+    <!-- <div class="discord"> -->
+    <!-- <div class="container is-max-widescreen has-text-centered"> -->
+    <!-- <p class="is-hidden-mobile has-text-centered"> -->
+    <!-- You can now add change your profile picture! Get started by connecting your wallet. -->
+    <!-- </p> -->
+    <!-- </div> -->
+    <!-- </div> -->
+    <!-- <div class="discord is-hidden"> -->
+    <!-- <div class="container is-max-widescreen"> -->
+    <!-- <p class="is-hidden-mobile"> -->
+    <!-- 🚀 The Launch-a-thon Vote is now open! -->
+    <!-- </p> -->
+    <!-- <p class="is-hidden-tablet"> -->
+    <!-- 🚀 The Launch-a-thon Vote is now open! -->
+    <!-- </p> -->
+    <!-- <nuxt-link to="/launchathon"> -->
+    <!-- <button class="discord-btn"> -->
+    <!-- Vote -->
+    <!-- </button> -->
+    <!-- </nuxt-link> -->
+    <!-- </div> -->
+    <!-- </div> -->
     <modal />
     <connect-wallet />
 
@@ -85,6 +73,12 @@ export default {
   },
 
   computed: {
+    wallet () {
+      return (this.$wallet) ? this.$wallet.wallet : null
+    },
+    myAccount () {
+      return this.wallet && this.wallet.auth && this.wallet.auth.accountName
+    },
     transaction () {
       return this.$wallet.transaction
     },

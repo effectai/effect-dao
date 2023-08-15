@@ -40,14 +40,14 @@
           </div>
           <div class="column is-3 has-text-right">
             <div
-            class="tag"
-            :class="{'is-success': proposal.status == 'ACTIVE',
-                     'is-warning': proposal.status == 'DRAFT',
-                     'is-link': proposal.status == 'PENDING',
-                     'is-dark': proposal.status == 'CLOSED'}">
+              class="tag"
+              :class="{'is-success': proposal.status == 'ACTIVE',
+                       'is-warning': proposal.status == 'DRAFT',
+                       'is-link': proposal.status == 'PENDING',
+                       'is-dark': proposal.status == 'CLOSED'}">
               {{ proposal.status }}
             </div>
-            <span class="tag is-info" v-if="proposal.msig">⚡ ATP</span>
+            <span v-if="proposal.msig" class="tag is-info">⚡ ATP</span>
           </div>
         </div>
       </nuxt-link>

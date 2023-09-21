@@ -107,7 +107,7 @@
               <td>Github</td>
             </tr>
             <tr>
-              <td><a href="https://docs.effect.ai/" target="_blank">The Effect Network Documentation</a></td>
+              <td><a href="https://docs.effect.network/" target="_blank">The Effect Network Documentation</a></td>
               <td>Website</td>
             </tr>
             <tr>

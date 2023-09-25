@@ -104,7 +104,7 @@
                   target="_blank"
                 >The EffectDAO Constitution</a>
               </td>
-              <td>Github</td>
+              <td>GitHub</td>
             </tr>
             <tr>
               <td><a href="https://docs.effect.ai/" target="_blank">The Effect Network Documentation</a></td>
@@ -159,6 +159,33 @@
                   Community Documentation</a>
               </td>
               <td>Website</td>
+            </tr>
+            <tr>
+              <td>
+                <a
+                  href="https://t.me/EffectNetworkDAO"
+                  target="_blank"
+                >The EffectDAO Telegram Channel</a>
+              </td>
+              <td>Telegram</td>
+            </tr>
+            <tr>
+              <td>
+                <a
+                  href="https://t.me/effectai"
+                  target="_blank"
+                >The Effect Network Telegram Channel</a>
+              </td>
+              <td>Telegram</td>
+            </tr>
+            <tr>
+              <td>
+                <a
+                  href="https://discord.gg/effectnetwork"
+                  target="_blank"
+                >The Effect Network Discord Server</a>
+              </td>
+              <td>Discord</td>
             </tr>
           </tbody>
         </table>

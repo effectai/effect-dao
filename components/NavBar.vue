@@ -28,6 +28,15 @@
               </nuxt-link>
             </div>
             <div @click="mobileMenu = false">
+              <a
+                href="https://bridge.effect.network/"
+                class="navbar-item"
+                target="_blank"
+                rel="noopener noreferrer">
+                  Bridge
+              </a>
+            </div>
+            <div @click="mobileMenu = false">
               <nuxt-link class="navbar-item" to="/proposals" exact-active-class="is-active">
                 Proposals
               </nuxt-link>

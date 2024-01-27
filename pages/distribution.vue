@@ -228,14 +228,15 @@ export default {
     }
   },
 
-  created () {
-    this.init()
+  async created () {
+    await this.init()
   },
 
   methods: {
     async init () {
       this.loading = true
       if (!this.lastCycleId) {
+        console.error('Could not find last Cycle ID')
         return
       }
 

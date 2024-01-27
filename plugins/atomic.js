@@ -8,10 +8,9 @@ import {
  * https://api.eosrio.io
  * https://eos.greymass.com
  */
-
 export default (_context, inject) => {
   // const apiurl = 'https://eos.api.atomicassets.io' // This api endpoint is not working.
-  const apiurl = 'https://api.eosrio.io'
+  const apiurl = 'https://eos.greymass.com'
   const namespace = 'atomicassets'
   const api = new RpcApi(apiurl, namespace, { fetch, rateLimit: 10 })
   // const api = new ExplorerApi(apiurl, namespace, { fetch })

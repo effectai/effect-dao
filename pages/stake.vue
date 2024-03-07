@@ -211,8 +211,12 @@
               <div class="has-text-centered is-italic"><small>Unstaking takes 15 days</small></div>
               <hr class="has-background-grey-lighter">
               <div>
-                <a href=" https://defibox.io/pool-market-details/437" target="_blank" rel="noopener noreferrer" data-tooltip="NFX can only be bought with EFX">
-                Get NFX <font-awesome-icon :icon="['fas', 'external-link-alt']"/>
+                <a href="https://defibox.io/marketDetail/437" target="_blank" rel="noopener noreferrer" data-tooltip="NFX can only be bought with EFX">
+                Get NFX/EFX <font-awesome-icon :icon="['fas', 'external-link-alt']"/>
+                </a>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="https://defibox.io/marketDetail/947" target="_blank" rel="noopener noreferrer" data-tooltip="NFX can only be bought with EOS">
+                Get NFX/EOS <font-awesome-icon :icon="['fas', 'external-link-alt']"/>
                 </a>
               </div>
             </div>

@@ -129,15 +129,6 @@
         </div>
       </div>
 
-      <div v-if="nfxStillClaimable > 0" class="notification is-primary unstake mb-0 is-outlined notif-w-btn">
-        You can claim <b>{{ nfxStillClaimable }}</b> NFX.
-        <div class="is-pulled-right notif-btn">
-          <button class="button is-success claim-nfx" @click="claimNfx">
-            Claim
-          </button>
-        </div>
-      </div>
-
       <div v-if="!efxCanRefund && efxUnstaking > 0" class="notification is-primary has-text-centered unstake mb-0 is-outlined">
         You have a pending unstake of <b>{{ efxUnstaking }} EFX</b> refundable <b>{{ $moment(efxUnstakingTime+"Z").fromNow() }}</b>.
       </div>
@@ -444,18 +435,6 @@ export default {
 
       this.loading = true
       const actions = [
-        {
-          account: process.env.stakingContract,
-          name: 'claim',
-          authorization: [{
-            actor: this.wallet.auth.accountName,
-            permission: this.wallet.auth.permission
-          }],
-          data: {
-            owner: this.wallet.auth.accountName,
-            symbol: `4,${(this.stakingModalEfx) ? process.env.efxToken : process.env.nfxToken}`
-          }
-        },
         {
           account: process.env.stakingContract,
           name: 'unstake',

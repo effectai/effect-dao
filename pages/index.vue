@@ -10,7 +10,7 @@
     <div class="box has-shadow-outside">
     <div class="">
       <!-- parse date in a beautiful way -->
-      Next DAO meeting: <strong>{{ nextDaoMeeting }}, 18:00 UTC</strong><br><br>
+      Next DAO meeting: <strong>{{ nextDaoMeeting }}</strong><br><br>
     </div>
     <div class="buttons">
       <a class="button has-shadow-outside  is-light" href="https://discord.gg/C3sXe8kv" target="_blank" rel="noopener noreferrer">Join DAO Call</a>
@@ -190,6 +190,13 @@ export default {
   },
   data () {
     return {
+      // start of the bi-weekly schedule (should be a wednesday)
+      daoCall: {
+        startSchedule: new Date('2024-03-06'),
+        startUTCHours: 18,
+        startUTCMinutes: 0,
+        expectedDuration: 2 // in hours
+      },
       efxPrice: 0,
       efxPoolBalance: 0,
       nfxPoolBalance: 0,
@@ -204,7 +211,6 @@ export default {
       taskSubmissions: null,
       daoMembers: null,
       feePool: null,
-      dates: [],
       newsItems: [
         {
           id: 1,
@@ -253,24 +259,25 @@ export default {
       }
     },
     nextDaoMeeting () {
-      if (this.dates && this.dates.length) {
-        // find the next date in this.dates
+      const now = new Date()
+      const nextMeeting = this.getNextBiWeeklyMeeting(now)
 
-        const nextDate = this.dates.find((date) => {
-          const parsedDate = new Date(date)
-          const now = new Date()
-          console.log(parsedDate, now)
-          if (parsedDate > now) {
-            return true
-          }
-        })
+      // format the start time in minutes for DAO. eg 0 = 00, 1 = 01 etc.
+      const formattedMinutes = this.daoCall.startUTCMinutes < 10 ? '0' + this.daoCall.startUTCMinutes : this.daoCall.startUTCMinutes
 
-        const parsedDate = new Date(nextDate)
-        const options = { weekday: 'long', month: 'long', day: 'numeric' }
-        return parsedDate.toLocaleDateString('en-US', options)
-      } else {
-        return null
+      // calc time until next meeting
+      const timeUntilMeeting = nextMeeting.getTime() - now.getTime()
+      const daysUntilMeeting = Math.floor(timeUntilMeeting / (1000 * 60 * 60 * 24))
+      const hoursUntilMeeting = Math.floor((timeUntilMeeting % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+      const minutesUntilMeeting = Math.floor((timeUntilMeeting % (1000 * 60 * 60)) / (1000 * 60))
+
+      const timeUntilMeetingString = daysUntilMeeting + ' days, ' + hoursUntilMeeting + ' hours, ' + minutesUntilMeeting + ' minutes'
+
+      if (timeUntilMeeting <= 0) {
+        return 'DAO meeting in progress'
       }
+
+      return nextMeeting.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) + ` at ${this.daoCall.startUTCHours}:${formattedMinutes} UTC (In ${timeUntilMeetingString})`
     }
   },
 
@@ -286,7 +293,6 @@ export default {
 
   methods: {
     init () {
-      this.getDaoMeetingDates()
       this.getVAccountStats()
       this.getForceSettings()
       this.getForcePayment()
@@ -306,18 +312,6 @@ export default {
       const parsedDate = new Date(date)
       const options = { weekday: 'long', month: 'long', day: 'numeric' }
       return parsedDate.toLocaleDateString('en-US', options)
-    },
-    /**
-     * Generate a list of the next 3 dates that fall on a wednesday every two weeks.
-     */
-    getDaoMeetingDates () {
-      // start date is 28 of july 2022 (first meeting) at 12:00 UTC
-      const startDate = new Date(2023, 5, 14, 18, 0, 0)
-      const nextWednesday = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + (3 + 7 - startDate.getDay()) % 7)
-      for (let i = 0; i < 10; i++) {
-        const nextDate = new Date(nextWednesday.getFullYear(), nextWednesday.getMonth(), nextWednesday.getDate() + (i * 14), 18, 0, 0)
-        this.dates.push(nextDate)
-      }
     },
     /**
      * Get current circluating supply of EFX
@@ -478,6 +472,25 @@ export default {
         // console.log(data)
       } else {
         console.log('Still waiting for cycle')
+      }
+    },
+
+    getNextBiWeeklyMeeting (now) {
+      const startDate = this.daoCall.startSchedule
+      const timeDiff = now.getTime() - startDate.getTime()
+      const weeksPassed = Math.floor(timeDiff / (1000 * 3600 * 24 * 7 * 2)) // Calculate how many bi-weekly cycles have passed
+
+      // Calculate the expected bi-weekly Wednesday based on the start date
+      const expectedBiWeeklyWednesday = new Date(startDate.getTime() + ((weeksPassed * 14)) * 24 * 60 * 60 * 1000)
+      expectedBiWeeklyWednesday.setUTCHours(this.daoCall.startUTCHours, this.daoCall.startUTCMinutes, 0, 0)
+
+      // Check if the given dateTime is before the dao call.
+      if (now.getUTCHours() < (this.daoCall.startUTCHours + this.daoCall.expectedDuration) && now.toDateString() === expectedBiWeeklyWednesday.toDateString()) {
+        return expectedBiWeeklyWednesday
+      } else {
+        const nextBiWeeklyWednesday = new Date(startDate.getTime() + (weeksPassed * 14 + 14) * 24 * 60 * 60 * 1000)
+        nextBiWeeklyWednesday.setUTCHours(this.daoCall.startUTCHours, this.daoCall.startUTCMinutes, 0, 0)
+        return nextBiWeeklyWednesday
       }
     }
   }

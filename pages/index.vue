@@ -192,7 +192,7 @@ export default {
     return {
       daoCall: {
         // starting date of the bi-weekly cycle
-        startSchedule: new Date('2024-03-06'),
+        startSchedule: new Date('2024-03-06T18:00:00Z'),
         startUTCHours: 18,
         startUTCMinutes: 0,
         expectedDuration: 2 // in hours

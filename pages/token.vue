@@ -112,42 +112,6 @@
             </tr>
             <tr>
               <td>
-                <a
-                  href="https://medium.com/effect-ai/the-effect-dao-effect-staking-protocol-2-0-774dc5c2b857"
-                  target="_blank"
-                >Effect Staking Protocol 2.0</a>
-              </td>
-              <td>Blog</td>
-            </tr>
-            <tr>
-              <td>
-                <a
-                  href="https://medium.com/effect-ai/the-effect-dao-voting-adopt-to-survive-c17252a90a47"
-                  target="_blank"
-                >The EffectDAO Voting</a>
-              </td>
-              <td>Blog</td>
-            </tr>
-            <tr>
-              <td>
-                <a
-                  href="https://medium.com/effect-ai/the-effect-dao-the-guardians-of-the-galaxy-pool-cb7c671984a9"
-                  target="_blank"
-                >The Effect Guardians</a>
-              </td>
-              <td>Blog</td>
-            </tr>
-            <tr>
-              <td>
-                <a
-                  href="https://medium.com/effect-ai/effectdao-proposal-system-is-now-live-on-eos-mainnet-e05710b79d21"
-                  target="_blank"
-                >EffectDAO Proposal System</a>
-              </td>
-              <td>Blog</td>
-            </tr>
-            <tr>
-              <td>
                 <a href="https://effect.ai/download/effect_whitepaper.pdf" target="_blank">The Effect Network
                   Whitepaper</a>
               </td>

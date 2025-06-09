@@ -7,30 +7,20 @@
         </div>
     </div>
 
-    <div class="box has-shadow-outside">
-    <div class="">
-      <!-- parse date in a beautiful way -->
-      Next DAO meeting: <strong>{{ nextDaoMeeting }}</strong><br><br>
+    <!-- <div class="box has-shadow-outside">
+      <div class="">
+        Next DAO meeting: <strong>{{ nextDaoMeeting }}</strong><br><br>
+      </div>
+      <div class="buttons">
+        <a class="button has-shadow-outside  is-light" href="https://discord.gg/C3sXe8kv" target="_blank" rel="noopener noreferrer">Join DAO Call</a>
+        <a class="button has-shadow-outside  is-light" href="https://docs.google.com/spreadsheets/d/1dkPST_CZPePwpmdzvHw5WTG2HubM_FtymTKRAJEWfPs/edit" target="_blank" rel="noopener noreferrer">Upcoming Agenda</a>
+        <a class="button has-shadow-outside  is-light" href="https://forms.gle/6QjEBwJYF4zV5ZJ78" target="_blank">Add topic to Agenda</a>
+        <a class="button has-shadow-outside  is-light" href="https://docs.effectdao.tools/dao-archive/master" target="_blank" rel="noopener noreferrer">DAO Call Archives</a>
+      </div>
     </div>
-    <div class="buttons">
-      <a class="button has-shadow-outside  is-light" href="https://discord.gg/C3sXe8kv" target="_blank" rel="noopener noreferrer">Join DAO Call</a>
-      <a class="button has-shadow-outside  is-light" href="https://docs.google.com/spreadsheets/d/1dkPST_CZPePwpmdzvHw5WTG2HubM_FtymTKRAJEWfPs/edit" target="_blank" rel="noopener noreferrer">Upcoming Agenda</a>
-      <a class="button has-shadow-outside  is-light" href="https://forms.gle/6QjEBwJYF4zV5ZJ78" target="_blank">Add topic to Agenda</a>
-      <a class="button has-shadow-outside  is-light" href="https://docs.effectdao.tools/dao-archive/master" target="_blank" rel="noopener noreferrer">DAO Call Archives</a>
-      <!-- It's also possible to add an iframe -->
-      <!-- <iframe
-          src="https://docs.google.com/forms/d/e/1FAIpQLSfeYTVK1aFkoIO8G7Di540-cf7bS4O98KzSfMAwjRNf_I2uvg/viewform?embedded=true"
-          width="640"
-          height="1417"
-          frameborder="0"
-          marginheight="0"
-          marginwidth="0">Loading…</iframe> -->
-    </div>
-    </div>
-    <br>
+    <br> -->
 
-    <div class="box has-shadow-outside mb-6">
-      <!-- loop through news items and display in table -->
+    <!-- <div class="box has-shadow-outside mb-6">
       <div class="columns">
         <div v-for="newsItem in newsItems" :key="newsItem.id" class="column">
           <div class="subtitle">
@@ -48,7 +38,7 @@
           </p>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <br>
     <div class="subtitle has-text-centered">

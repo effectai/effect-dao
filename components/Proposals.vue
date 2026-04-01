@@ -10,7 +10,7 @@
                 <font-awesome-icon v-else-if="proposal.vote_counts[1].value < proposal.vote_counts[2].value" :icon="['fa', 'arrow-down']" style="font-size: 20px" class="has-text-danger" />
                 <font-awesome-icon v-else :icon="['fa', 'minus']" style="font-size: 20px"/>
               </span> -->
-              <span v-if="proposal.vote_counts[1] != undefined && proposal.vote_counts[2] != undefined" class="icon">
+              <span v-if="proposal.vote_counts && Array.isArray(proposal.vote_counts) && proposal.vote_counts.length > 2 && proposal.vote_counts[1] != undefined && proposal.vote_counts[2] != undefined" class="icon">
                 <img src="@/assets/img/up.svg" class="" v-if="proposal.vote_counts[1].value > proposal.vote_counts[2].value">
                 <img src="@/assets/img/down.svg" class="" v-else-if="proposal.vote_counts[1].value < proposal.vote_counts[2].value">
                 <img src="@/assets/img/empty.svg" class="" v-else>

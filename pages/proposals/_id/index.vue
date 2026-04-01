@@ -427,7 +427,15 @@ export default {
       }
     },
     votePercentage (vote, proposal) {
-      return (vote.weight / (proposal.vote_counts[0].value + proposal.vote_counts[1].value + proposal.vote_counts[2].value) * 100).toFixed(2)
+      if (!proposal.vote_counts || !Array.isArray(proposal.vote_counts) || proposal.vote_counts.length < 3 ||
+          proposal.vote_counts[0] == null || proposal.vote_counts[1] == null || proposal.vote_counts[2] == null) {
+        return '0.00'
+      }
+      const totalWeight = (proposal.vote_counts[0].value || 0) + (proposal.vote_counts[1].value || 0) + (proposal.vote_counts[2].value || 0)
+      if (totalWeight === 0) {
+        return '0.00'
+      }
+      return (vote.weight / totalWeight * 100).toFixed(2)
     },
     async assignToNextCycle () {
       if (this.$dao.proposalConfig && this.proposal) {

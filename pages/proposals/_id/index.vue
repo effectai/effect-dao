@@ -427,7 +427,14 @@ export default {
       }
     },
     votePercentage (vote, proposal) {
-      return (vote.weight / (proposal.vote_counts[0].value + proposal.vote_counts[1].value + proposal.vote_counts[2].value) * 100).toFixed(2)
+      const totalVoteWeight = (proposal.vote_counts || [])
+        .reduce((total, voteCount) => total + Number(voteCount.value || 0), 0)
+
+      if (!totalVoteWeight) {
+        return '0.00'
+      }
+
+      return (Number(vote.weight || 0) / totalVoteWeight * 100).toFixed(2)
     },
     async assignToNextCycle () {
       if (this.$dao.proposalConfig && this.proposal) {

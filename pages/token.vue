@@ -86,6 +86,37 @@
     </div>
     <div class="box">
       <h4 class="box-title subtitle has-text-weight-bold">
+        DAO Agenda
+      </h4>
+      <div class="table-container">
+        <table class="table is-striped is-hoverable is-fullwidth">
+          <thead>
+            <tr>
+              <th>Resource</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="resource in daoAgendaResources" :key="resource.name">
+              <td>
+                <a
+                  :href="resource.link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >{{ resource.name }}</a>
+              </td>
+              <td>{{ resource.description }}</td>
+            </tr>
+            <tr>
+              <td>Next DAO cycle</td>
+              <td>{{ nextCycleStartDate }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="box">
+      <h4 class="box-title subtitle has-text-weight-bold">
         Resources
       </h4>
       <div class="table-container">
@@ -324,6 +355,28 @@ export default {
           account: '0xC51...5aD0',
           link: 'https://bscscan.com/token/0xC51Ef828319b131B595b7ec4B28210eCf4d05aD0',
           source: null
+        }
+      ],
+      daoAgendaResources: [
+        {
+          name: 'Upcoming Agenda',
+          description: 'Review the latest DAO agenda submissions.',
+          link: 'https://docs.google.com/spreadsheets/d/1dkPST_CZPePwpmdzvHw5WTG2HubM_FtymTKRAJEWfPs/edit'
+        },
+        {
+          name: 'Add topic to Agenda',
+          description: 'Submit a topic for the next DAO call.',
+          link: 'https://forms.gle/6QjEBwJYF4zV5ZJ78'
+        },
+        {
+          name: 'DAO Call Archives',
+          description: 'Browse notes and recordings from previous DAO calls.',
+          link: 'https://docs.effectdao.tools/dao-archive/master'
+        },
+        {
+          name: 'Join DAO Call',
+          description: 'Join the community call when it is live.',
+          link: 'https://discord.gg/C3sXe8kv'
         }
       ]
     }

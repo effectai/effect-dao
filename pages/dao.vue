@@ -284,7 +284,7 @@ export default {
 
       return members.slice().sort((a, b) => {
         if (this.memberSort === 'account') {
-          return a.account.localeCompare(b.account)
+          return a.account.localeCompare(b.account, undefined, { sensitivity: 'base' })
         }
         if (this.memberSort === 'joined') {
           return this.memberTime(b) - this.memberTime(a)
@@ -314,7 +314,8 @@ export default {
       return array
     },
     memberNumber (value) {
-      return Number.isFinite(value) ? value : 0
+      const parsedValue = typeof value === 'number' ? value : parseFloat(value)
+      return Number.isFinite(parsedValue) ? parsedValue : 0
     },
     memberTime (member) {
       const time = new Date(member.registration_time).getTime()
@@ -569,6 +570,11 @@ small a:first-child {
       font-size: 14px;
       margin-bottom: 8px;
       display: block;
+    }
+    .member-stake {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
     }
     .image {
       img {

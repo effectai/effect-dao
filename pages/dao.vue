@@ -134,8 +134,34 @@
       <h5 class="box-title subtitle">
         EffectDAO Members
       </h5>
-      <div v-if="constitutionMembers" class="members columns is-multiline mt-5">
-        <div v-for="member in constitutionMembers" :key="member.account" class="column is-half">
+      <div v-if="constitutionMembers" class="columns is-mobile is-multiline is-vcentered mt-5">
+        <div class="column is-full-mobile">
+          <input v-model="memberSearch" class="input" type="text" placeholder="Search account">
+        </div>
+        <div class="column is-narrow">
+          <div class="select">
+            <select v-model="memberSort">
+              <option value="votes">
+                Most voting power
+              </option>
+              <option value="joined">
+                Newest members
+              </option>
+              <option value="efx">
+                Most staked EFX
+              </option>
+              <option value="nfx">
+                Most staked NFX
+              </option>
+              <option value="account">
+                Account name
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div v-if="constitutionMembers && displayedMembers.length" class="members columns is-multiline mt-5">
+        <div v-for="member in displayedMembers" :key="member.account" class="column is-half">
           <nuxt-link :to="'/account/'+member.account" class="box has-shadow-outside is-narrow member columns is-gapless is-mobile">
             <div class="column is-one-fifth" style="min-width: 70px">
               <figure class="image is-64x64">
@@ -151,12 +177,17 @@
                     ...
                   </div>
                   <small>Joined {{ $moment(member.registration_time).fromNow() }}</small>
+                  <br>
+                  <small>{{ formatMemberStake(member.efxStaked) }} EFX / {{ formatMemberStake(member.nfxStaked) }} NFX staked</small>
                 </div>
               </div>
             </div>
           </nuxt-link>
         </div>
       </div>
+      <h4 v-else-if="constitutionMembers" class="has-text-centered">
+        No members found
+      </h4>
       <h4 v-else class="has-text-centered">
         Loading members..
       </h4>
@@ -199,6 +230,8 @@ export default {
       moreMembers: true,
       nextKey: null,
       constitutionMembers: null,
+      memberSearch: '',
+      memberSort: 'votes',
 
       highGuardList: [
         { account: 'cryptonode42', agreedtermsversion: 1, registration_time: '2021-03-07T14:58:47' },
@@ -228,6 +261,27 @@ export default {
     },
     signedLastConstitution () {
       return this.$wallet.signedConstitutionVersion === this.constitutionVersion
+    },
+    displayedMembers () {
+      const search = this.memberSearch.trim().toLowerCase()
+      const constitutionMembers = this.constitutionMembers || []
+      const members = search
+        ? constitutionMembers.filter(member => member.account.toLowerCase().includes(search))
+        : constitutionMembers
+
+      return members.slice().sort((a, b) => {
+        if (this.memberSort === 'joined') {
+          return this.memberTimestamp(b) - this.memberTimestamp(a)
+        } else if (this.memberSort === 'efx') {
+          return this.memberNumber(b.efxStaked) - this.memberNumber(a.efxStaked)
+        } else if (this.memberSort === 'nfx') {
+          return this.memberNumber(b.nfxStaked) - this.memberNumber(a.nfxStaked)
+        } else if (this.memberSort === 'account') {
+          return a.account.localeCompare(b.account)
+        }
+
+        return this.memberNumber(b.votes) - this.memberNumber(a.votes)
+      })
     }
   },
 
@@ -243,6 +297,15 @@ export default {
         [array[i], array[j]] = [array[j], array[i]]
       }
       return array
+    },
+    memberNumber (value) {
+      return Number.isFinite(value) ? value : 0
+    },
+    memberTimestamp (member) {
+      return member.registration_time ? new Date(member.registration_time).getTime() : 0
+    },
+    formatMemberStake (value) {
+      return this.$wallet.formatNumber(this.memberNumber(value))
     },
     async init () {
       this.loading = true

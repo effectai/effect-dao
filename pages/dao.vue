@@ -134,8 +134,42 @@
       <h5 class="box-title subtitle">
         EffectDAO Members
       </h5>
+      <div v-if="constitutionMembers" class="columns is-multiline is-vcentered mt-4">
+        <div class="column is-two-thirds">
+          <input
+            v-model="memberSearch"
+            class="input"
+            type="search"
+            placeholder="Filter members by account"
+          >
+        </div>
+        <div class="column">
+          <div class="select is-fullwidth">
+            <select v-model="memberSort">
+              <option value="account">
+                Account name
+              </option>
+              <option value="votes">
+                Most voting power
+              </option>
+              <option value="joined">
+                Newest joined
+              </option>
+              <option value="efx">
+                Most staked EFX
+              </option>
+              <option value="nfx">
+                Most staked NFX
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="column is-full has-text-centered is-size-7">
+          Showing {{ displayedMembers.length }} of {{ constitutionMembers.length }} loaded members
+        </div>
+      </div>
       <div v-if="constitutionMembers" class="members columns is-multiline mt-5">
-        <div v-for="member in constitutionMembers" :key="member.account" class="column is-half">
+        <div v-for="member in displayedMembers" :key="member.account" class="column is-half">
           <nuxt-link :to="'/account/'+member.account" class="box has-shadow-outside is-narrow member columns is-gapless is-mobile">
             <div class="column is-one-fifth" style="min-width: 70px">
               <figure class="image is-64x64">
@@ -152,9 +186,16 @@
                   </div>
                   <small>Joined {{ $moment(member.registration_time).fromNow() }}</small>
                 </div>
+                <div class="member-stake is-size-7 mt-2">
+                  <span>EFX: {{ formatMemberNumber(member.efxStaked) }}</span>
+                  <span>NFX: {{ formatMemberNumber(member.nfxStaked) }}</span>
+                </div>
               </div>
             </div>
           </nuxt-link>
+        </div>
+        <div v-if="displayedMembers.length === 0" class="column is-full has-text-centered">
+          No matching members
         </div>
       </div>
       <h4 v-else class="has-text-centered">
@@ -199,6 +240,8 @@ export default {
       moreMembers: true,
       nextKey: null,
       constitutionMembers: null,
+      memberSearch: '',
+      memberSort: 'votes',
 
       highGuardList: [
         { account: 'cryptonode42', agreedtermsversion: 1, registration_time: '2021-03-07T14:58:47' },
@@ -228,6 +271,32 @@ export default {
     },
     signedLastConstitution () {
       return this.$wallet.signedConstitutionVersion === this.constitutionVersion
+    },
+    displayedMembers () {
+      if (!this.constitutionMembers) {
+        return []
+      }
+
+      const search = this.memberSearch.trim().toLowerCase()
+      const members = this.constitutionMembers.filter((member) => {
+        return !search || member.account.toLowerCase().includes(search)
+      })
+
+      return members.slice().sort((a, b) => {
+        if (this.memberSort === 'account') {
+          return a.account.localeCompare(b.account, undefined, { sensitivity: 'base' })
+        }
+        if (this.memberSort === 'joined') {
+          return this.memberTime(b) - this.memberTime(a)
+        }
+        if (this.memberSort === 'efx') {
+          return this.memberNumber(b.efxStaked) - this.memberNumber(a.efxStaked)
+        }
+        if (this.memberSort === 'nfx') {
+          return this.memberNumber(b.nfxStaked) - this.memberNumber(a.nfxStaked)
+        }
+        return this.memberNumber(b.votes) - this.memberNumber(a.votes)
+      })
     }
   },
 
@@ -243,6 +312,17 @@ export default {
         [array[i], array[j]] = [array[j], array[i]]
       }
       return array
+    },
+    memberNumber (value) {
+      const parsedValue = typeof value === 'number' ? value : parseFloat(value)
+      return Number.isFinite(parsedValue) ? parsedValue : 0
+    },
+    memberTime (member) {
+      const time = new Date(member.registration_time).getTime()
+      return Number.isFinite(time) ? time : 0
+    },
+    formatMemberNumber (value) {
+      return this.memberNumber(value).toLocaleString(undefined, { maximumFractionDigits: 2 })
     },
     async init () {
       this.loading = true
@@ -490,6 +570,11 @@ small a:first-child {
       font-size: 14px;
       margin-bottom: 8px;
       display: block;
+    }
+    .member-stake {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
     }
     .image {
       img {

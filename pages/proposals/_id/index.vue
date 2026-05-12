@@ -426,8 +426,21 @@ export default {
         return this.voterComments.slice(0, this.commentListLength)
       }
     },
+    totalProposalVoteWeight (proposal) {
+      if (!proposal || !Array.isArray(proposal.vote_counts)) {
+        return 0
+      }
+
+      return proposal.vote_counts.reduce((total, voteCount) => total + Number(voteCount.value || 0), 0)
+    },
     votePercentage (vote, proposal) {
-      return (vote.weight / (proposal.vote_counts[0].value + proposal.vote_counts[1].value + proposal.vote_counts[2].value) * 100).toFixed(2)
+      const totalWeight = this.totalProposalVoteWeight(proposal)
+
+      if (!totalWeight) {
+        return '0.00'
+      }
+
+      return (vote.weight / totalWeight * 100).toFixed(2)
     },
     async assignToNextCycle () {
       if (this.$dao.proposalConfig && this.proposal) {

@@ -10,10 +10,10 @@
                 <font-awesome-icon v-else-if="proposal.vote_counts[1].value < proposal.vote_counts[2].value" :icon="['fa', 'arrow-down']" style="font-size: 20px" class="has-text-danger" />
                 <font-awesome-icon v-else :icon="['fa', 'minus']" style="font-size: 20px"/>
               </span> -->
-              <span v-if="proposal.vote_counts[1] != undefined && proposal.vote_counts[2] != undefined" class="icon">
-                <img src="@/assets/img/up.svg" class="" v-if="proposal.vote_counts[1].value > proposal.vote_counts[2].value">
-                <img src="@/assets/img/down.svg" class="" v-else-if="proposal.vote_counts[1].value < proposal.vote_counts[2].value">
-                <img src="@/assets/img/empty.svg" class="" v-else>
+              <span v-if="hasVoteCounts(proposal)" class="icon">
+                <img v-if="proposalVoteWeight(proposal, 1) > proposalVoteWeight(proposal, 2)" src="@/assets/img/up.svg" class="">
+                <img v-else-if="proposalVoteWeight(proposal, 1) < proposalVoteWeight(proposal, 2)" src="@/assets/img/down.svg" class="">
+                <img v-else src="@/assets/img/empty.svg" class="">
               </span>
               <span v-else class="icon">
                 <img src="@/assets/img/empty.svg" class="">
@@ -94,6 +94,16 @@ export default {
     }
   },
   methods: {
+    hasVoteCounts (proposal) {
+      return proposal && Array.isArray(proposal.vote_counts) && proposal.vote_counts.length > 0
+    },
+    proposalVoteWeight (proposal, voteType) {
+      if (!this.hasVoteCounts(proposal)) {
+        return 0
+      }
+      const voteCount = proposal.vote_counts.find(voteCount => parseInt(voteCount.key) === voteType)
+      return voteCount ? Number(voteCount.value) || 0 : 0
+    },
     print (x) {
       console.log(x)
     }

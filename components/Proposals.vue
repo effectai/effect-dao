@@ -10,9 +10,9 @@
                 <font-awesome-icon v-else-if="proposal.vote_counts[1].value < proposal.vote_counts[2].value" :icon="['fa', 'arrow-down']" style="font-size: 20px" class="has-text-danger" />
                 <font-awesome-icon v-else :icon="['fa', 'minus']" style="font-size: 20px"/>
               </span> -->
-              <span v-if="proposal.vote_counts[1] != undefined && proposal.vote_counts[2] != undefined" class="icon">
-                <img src="@/assets/img/up.svg" class="" v-if="proposal.vote_counts[1].value > proposal.vote_counts[2].value">
-                <img src="@/assets/img/down.svg" class="" v-else-if="proposal.vote_counts[1].value < proposal.vote_counts[2].value">
+              <span v-if="proposal.vote_counts" class="icon">
+                <img src="@/assets/img/up.svg" class="" v-if="hasMoreYesVotes(proposal)">
+                <img src="@/assets/img/down.svg" class="" v-else-if="hasMoreNoVotes(proposal)">
                 <img src="@/assets/img/empty.svg" class="" v-else>
               </span>
               <span v-else class="icon">
@@ -96,6 +96,21 @@ export default {
   methods: {
     print (x) {
       console.log(x)
+    },
+    hasMoreYesVotes (proposal) {
+      const yes = proposal.vote_counts[1]
+      const no = proposal.vote_counts[2]
+      if (yes && !no) return true
+      if (!yes && no) return false
+      if (yes && no) return yes.value > no.value
+      return false
+    },
+    hasMoreNoVotes (proposal) {
+      const yes = proposal.vote_counts[1]
+      const no = proposal.vote_counts[2]
+      if (no && !yes) return true
+      if (yes && no) return no.value > yes.value
+      return false
     }
   }
 }

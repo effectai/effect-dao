@@ -427,7 +427,9 @@ export default {
       }
     },
     votePercentage (vote, proposal) {
-      return (vote.weight / (proposal.vote_counts[0].value + proposal.vote_counts[1].value + proposal.vote_counts[2].value) * 100).toFixed(2)
+      const vc = proposal.vote_counts || {}
+      const total = [0, 1, 2].reduce((sum, i) => sum + ((vc[i] && vc[i].value) || 0), 0)
+      return total > 0 ? (vote.weight / total * 100).toFixed(2) : '0.00'
     },
     async assignToNextCycle () {
       if (this.$dao.proposalConfig && this.proposal) {

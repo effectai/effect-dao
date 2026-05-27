@@ -154,6 +154,56 @@
       </div>
     </div>
 
+    <div class="box">
+      <h4 class="box-title subtitle has-text-weight-bold">
+        DAO Agenda & Schedule
+      </h4>
+      <div class="columns is-multiline">
+        <div class="column is-8">
+          <p>
+            View upcoming agenda items for the next Effect DAO community call.
+            You can also submit new topics for discussion.
+          </p>
+          <div class="mt-4 buttons">
+            <a
+              href="https://docs.google.com/spreadsheets/d/1dkPST_CZPePwpmdzvHw5WTG2HubM_FtymTKRAJEWfPs/edit"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="button is-primary is-outlined"
+            >
+              <font-awesome-icon :icon="['fas', 'list']" class="mr-2" />
+              View Full Agenda
+            </a>
+            <a
+              href="https://forms.gle/6QjEBwJYF4zV5ZJ78"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="button is-warning is-outlined"
+            >
+              <font-awesome-icon :icon="['fas', 'plus']" class="mr-2" />
+              Add Topic to Agenda
+            </a>
+          </div>
+        </div>
+        <div class="column is-4 has-text-centered">
+          <div class="box is-shadowless" style="background: #fafafa;">
+            <p class="has-text-weight-bold is-size-6 mb-2">
+              Next DAO Call
+            </p>
+            <p class="is-size-3 has-text-primary">
+              <font-awesome-icon :icon="['fas', 'calendar-alt']" />
+            </p>
+            <p class="mt-2">
+              {{ nextCycleStartDate }}
+            </p>
+            <p class="is-size-7 has-text-grey mt-1">
+              Weekly — check the agenda for exact time
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
         <hr>
 
         <div class="subtitle has-text-centered">

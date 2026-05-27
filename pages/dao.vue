@@ -134,8 +134,30 @@
       <h5 class="box-title subtitle">
         EffectDAO Members
       </h5>
-      <div v-if="constitutionMembers" class="members columns is-multiline mt-5">
-        <div v-for="member in constitutionMembers" :key="member.account" class="column is-half">
+      <div class="field has-addons mb-4" v-if="constitutionMembers">
+        <div class="control is-expanded">
+          <input class="input" type="text" v-model="memberSearch" placeholder="Search members by account name..." />
+        </div>
+        <div class="control">
+          <span class="select">
+            <select v-model="sortField">
+              <option value="account">Name</option>
+              <option value="votes">Votes</option>
+              <option value="power">Power</option>
+              <option value="efxStaked">EFX Staked</option>
+              <option value="registration_time">Join Date</option>
+            </select>
+          </span>
+        </div>
+        <div class="control">
+          <button class="button" @click="sortDir = sortDir === 'asc' ? 'desc' : 'asc'">
+            <span v-if="sortDir === 'asc'">&#9650;</span>
+            <span v-else>&#9660;</span>
+          </button>
+        </div>
+      </div>
+      <div v-if="sortedMembers && sortedMembers.length" class="members columns is-multiline mt-5">
+        <div v-for="member in sortedMembers" :key="member.account" class="column is-half">
           <nuxt-link :to="'/account/'+member.account" class="box has-shadow-outside is-narrow member columns is-gapless is-mobile">
             <div class="column is-one-fifth" style="min-width: 70px">
               <figure class="image is-64x64">
@@ -151,12 +173,16 @@
                     ...
                   </div>
                   <small>Joined {{ $moment(member.registration_time).fromNow() }}</small>
+                  <small v-if="member.efxStaked" class="is-block">EFX: {{ member.efxStaked.toFixed(2) }}</small>
                 </div>
               </div>
             </div>
           </nuxt-link>
         </div>
       </div>
+      <h4 v-else-if="constitutionMembers && constitutionMembers.length" class="has-text-centered">
+        No members match your search
+      </h4>
       <h4 v-else class="has-text-centered">
         Loading members..
       </h4>
@@ -199,6 +225,9 @@ export default {
       moreMembers: true,
       nextKey: null,
       constitutionMembers: null,
+      memberSearch: '',
+      sortField: 'votes',
+      sortDir: 'desc',
 
       highGuardList: [
         { account: 'cryptonode42', agreedtermsversion: 1, registration_time: '2021-03-07T14:58:47' },
@@ -228,6 +257,36 @@ export default {
     },
     signedLastConstitution () {
       return this.$wallet.signedConstitutionVersion === this.constitutionVersion
+    },
+    sortedMembers () {
+      if (!this.constitutionMembers) return []
+      const query = (this.memberSearch || '').toLowerCase().trim()
+      let members = this.constitutionMembers
+      // Filter
+      if (query) {
+        members = members.filter(m => (m.account || '').toLowerCase().includes(query))
+      }
+      // Sort
+      const sorted = [...members]
+      const field = this.sortField
+      const dir = this.sortDir === 'asc' ? 1 : -1
+      sorted.sort((a, b) => {
+        let aVal = a[field]
+        let bVal = b[field]
+        // Handle dates
+        if (field === 'registration_time') {
+          aVal = aVal ? new Date(aVal).getTime() : 0
+          bVal = bVal ? new Date(bVal).getTime() : 0
+        }
+        // Handle undefined/null - sort to end
+        if (aVal == null) return 1
+        if (bVal == null) return -1
+        if (typeof aVal === 'string') {
+          return dir * aVal.localeCompare(bVal)
+        }
+        return dir * (aVal - bVal)
+      })
+      return sorted
     }
   },
 

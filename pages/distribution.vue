@@ -79,24 +79,48 @@
             Cycle Distribution History
           </h5>
           <div>
-            <table class="table">
+            <p
+              v-if="distributionBalances.length === 0"
+              class="has-text-centered has-text-grey py-4"
+              role="status"
+              aria-live="polite"
+            >
+              <span v-if="loading">Loading cycle history&hellip;</span>
+              <span v-else>No cycle distribution history available yet.</span>
+            </p>
+            <table v-else class="table">
               <thead>
                 <tr>
-                  <th>Cycle</th>
-                  <th><abbr title="Total EFX">Total</abbr></th>
-                  <th><abbr title="Total vote weight">Vote weight</abbr></th>
-                  <th><abbr title="Unique voters who participated">Voters</abbr></th>
-                  <th><abbr title="Votes cast across cycle proposals">Votes</abbr></th>
-                  <th><abbr title="Your Claimed EFX">You claimed</abbr></th>
+                  <th scope="col">
+                    Cycle
+                  </th>
+                  <th scope="col">
+                    <abbr title="Total EFX distributed in this cycle">Total</abbr>
+                  </th>
+                  <th scope="col">
+                    <abbr title="Total vote weight">Vote weight</abbr>
+                  </th>
+                  <th scope="col">
+                    <abbr title="Unique voters who participated in this cycle">Voters</abbr>
+                  </th>
+                  <th scope="col">
+                    <abbr title="Votes cast across cycle proposals in this cycle">Votes</abbr>
+                  </th>
+                  <th scope="col">
+                    <abbr title="Your Claimed EFX from this cycle">You claimed</abbr>
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="balance in distributionBalances" :key="balance.cycle_id">
-                  <td>{{ balance.cycle_id }}</td>
+                  <th scope="row">
+                    {{ balance.cycle_id }}
+                  </th>
                   <td>
                     <span v-if="balance.balance.length > 0">
                       {{ balance.balance[0].value / 10000 }} {{ efxToken }}
                     </span>
+                    <span v-else class="has-text-grey">&mdash;</span>
                   </td>
                   <td>{{ formatCycleMetric(balance.cycle_id, 'totalVoteWeight') }}</td>
                   <td>{{ formatCycleMetric(balance.cycle_id, 'voterCount') }}</td>
@@ -108,7 +132,7 @@
                     {{ getUserCycleClaim(balance.cycle_id) }} {{ efxToken }}
                   </td>
                   <td v-else>
-                    -
+                    &mdash;
                   </td>
                 </tr>
               </tbody>

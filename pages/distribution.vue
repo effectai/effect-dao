@@ -79,22 +79,52 @@
             Cycle Distribution History
           </h5>
           <div>
-            <table class="table">
+            <p
+              v-if="distributionBalances.length === 0"
+              class="has-text-centered has-text-grey py-4"
+              role="status"
+              aria-live="polite"
+            >
+              <span v-if="loading">Loading cycle history&hellip;</span>
+              <span v-else>No cycle distribution history available yet.</span>
+            </p>
+            <table v-else class="table">
               <thead>
                 <tr>
-                  <th>Cycle</th>
-                  <th><abbr title="Total EFX">Total</abbr></th>
-                  <th><abbr title="Your Claimed EFX">You claimed</abbr></th>
+                  <th scope="col">
+                    Cycle
+                  </th>
+                  <th scope="col">
+                    <abbr title="Total EFX distributed in this cycle">Total</abbr>
+                  </th>
+                  <th scope="col">
+                    <abbr title="Total vote weight">Vote weight</abbr>
+                  </th>
+                  <th scope="col">
+                    <abbr title="Unique voters who participated in this cycle">Voters</abbr>
+                  </th>
+                  <th scope="col">
+                    <abbr title="Votes cast across cycle proposals in this cycle">Votes</abbr>
+                  </th>
+                  <th scope="col">
+                    <abbr title="Your Claimed EFX from this cycle">You claimed</abbr>
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="balance in distributionBalances" :key="balance.cycle_id">
-                  <td>{{ balance.cycle_id }}</td>
+                  <th scope="row">
+                    {{ balance.cycle_id }}
+                  </th>
                   <td>
                     <span v-if="balance.balance.length > 0">
                       {{ balance.balance[0].value / 10000 }} {{ efxToken }}
                     </span>
+                    <span v-else class="has-text-grey">&mdash;</span>
                   </td>
+                  <td>{{ formatCycleMetric(balance.cycle_id, 'totalVoteWeight') }}</td>
+                  <td>{{ formatCycleMetric(balance.cycle_id, 'voterCount') }}</td>
+                  <td>{{ formatCycleMetric(balance.cycle_id, 'voteCount') }}</td>
                   <td v-if="balance.cycle_id > lastCycleId">
                     Can be claimed in next cycle
                   </td>
@@ -102,7 +132,7 @@
                     {{ getUserCycleClaim(balance.cycle_id) }} {{ efxToken }}
                   </td>
                   <td v-else>
-                    -
+                    &mdash;
                   </td>
                 </tr>
               </tbody>
@@ -177,6 +207,7 @@ export default {
 
       balances: [],
       claims: {},
+      cycleMetrics: {},
       totalFees: null,
       lastCycleTotalFees: null,
       lastCycleTotalWeight: null,
@@ -196,8 +227,7 @@ export default {
       return (this.accountOverride) ? this.accountOverride : (this.$wallet && this.$wallet.wallet) ? this.$wallet.wallet.auth.accountName : null
     },
     distributionBalances () {
-      const tbl = this.balances
-      return tbl.reverse() // reverse the temp var instead of the original var
+      return [...this.balances].reverse()
     },
     lastCycleId () {
       return (this.cycleOverride) ? this.cycleOverride : (this.$dao.cycleConfig) ? this.$dao.cycleConfig.id - 1 : null
@@ -251,6 +281,7 @@ export default {
       if (feeData && feeData.rows.length > 0) {
         this.balances = feeData.rows.reverse()
         this.getClaims(this.balances)
+        this.getCycleMetrics(this.balances)
 
         const cycleData = await this.$eos.rpc.get_table_rows({
           code: process.env.proposalContract,
@@ -292,7 +323,90 @@ export default {
           }
           return acc + item.balance[0].value / 10000
         }
+        return acc
       }, 0)
+    },
+    async getCycleMetrics (balances) {
+      const metrics = {}
+      const cycleIds = [...new Set(balances.map(balance => balance.cycle_id).filter(Boolean))]
+
+      await Promise.all(cycleIds.map(async (cycleId) => {
+        try {
+          metrics[cycleId] = await this.getCycleMetric(cycleId)
+        } catch {
+          metrics[cycleId] = {
+            totalVoteWeight: null,
+            voterCount: null,
+            voteCount: null
+          }
+        }
+      }))
+
+      this.cycleMetrics = metrics
+    },
+    async getCycleMetric (cycleId) {
+      const [cycleData, proposalData] = await Promise.all([
+        this.$eos.rpc.get_table_rows({
+          code: process.env.proposalContract,
+          scope: process.env.proposalContract,
+          table: 'cycle',
+          lower_bound: cycleId,
+          upper_bound: cycleId,
+          limit: 1
+        }),
+        this.$eos.rpc.get_table_rows({
+          code: process.env.proposalContract,
+          scope: process.env.proposalContract,
+          table: 'proposal',
+          key_type: 'i64',
+          index_position: 3,
+          lower_bound: cycleId,
+          upper_bound: cycleId,
+          limit: 100
+        })
+      ])
+      const proposalIds = proposalData.rows
+        .filter(proposal => Number(proposal.cycle) === Number(cycleId))
+        .map(proposal => proposal.id)
+      const voteRows = await this.getCycleVotes(proposalIds)
+      const voters = new Set(voteRows.map(vote => vote.voter))
+      const totalVoteWeight = cycleData.rows.length
+        ? Number.parseFloat(cycleData.rows[0].total_vote_weight)
+        : 0
+
+      return {
+        totalVoteWeight,
+        voterCount: voters.size,
+        voteCount: voteRows.length
+      }
+    },
+    async getCycleVotes (proposalIds) {
+      const voteData = await Promise.all(proposalIds.map(proposalId => this.$eos.rpc.get_table_rows({
+        code: process.env.proposalContract,
+        scope: process.env.proposalContract,
+        table: 'vote',
+        index_position: 4,
+        key_type: 'i64',
+        lower_bound: proposalId,
+        upper_bound: proposalId,
+        limit: 1000
+      })))
+
+      return voteData.reduce((votes, data) => votes.concat(data.rows), [])
+    },
+    formatCycleMetric (cycleId, key) {
+      const metric = this.cycleMetrics[cycleId]
+
+      if (!metric) {
+        return '...'
+      }
+
+      const value = metric[key]
+      if (value === null || value === undefined) {
+        return '-'
+      }
+
+      return this.$wallet && this.$wallet.formatNumber ? this.$wallet.formatNumber(value) : value
     },
     getLastCycleUserWeight (proposalIds) {
       this.lastCycleUserWeight = 0
